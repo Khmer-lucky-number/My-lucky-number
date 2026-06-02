@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ប្រព័ន្ធលេខសំណាង ២៤ ម៉ោង</title>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruuy+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>1000 lucky number prediction tables</title>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Kantumruuy Pro', sans-serif;
+            /* ប្រើពុម្ពអក្សរ Battambang សម្រាប់អក្សរខ្មែរ */
+            font-family: 'Battambang', 'Poppins', sans-serif;
         }
 
         body {
@@ -24,41 +25,86 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
             width: 100%;
-            max-width: 430px;
-            padding: 30px 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            max-width: 440px;
+            padding: 35px 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             text-align: center;
         }
 
-        .header-title {
-            color: #4ade80;
-            font-size: 1.2rem;
-            font-weight: 600;
+        .main-title {
+            color: #fbd38d; 
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .sub-title {
+            color: #a0aec0;
+            font-size: 0.85rem;
             margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        .live-time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #2b6cb0; 
+            border-radius: 30px;
+            padding: 6px 18px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+        }
+
+        .section-indicator {
+            color: #4ade80; 
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .lucky-circle {
             width: 140px;
             height: 140px;
-            background: radial-gradient(circle, #5a2a00 0%, #200b00 100%);
+            background: radial-gradient(circle, #f6ad55 0%, #dd6b20 100%);
             border-radius: 50%;
-            margin: 0 auto 30px auto;
+            margin: 0 auto 15px auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 3.5rem;
+            font-size: 3.8rem;
             font-weight: 700;
             color: #ffffff;
-            box-shadow: 0 0 30px rgba(218, 107, 0, 0.3);
-            border: 2px solid #da6b00;
+            box-shadow: 0 0 35px rgba(221, 107, 32, 0.4);
+            border: 3px solid #ffffff;
+            font-family: 'Poppins', sans-serif; /* រក្សាលេខឱ្យនៅម៉ូដអង់គ្លេសស្អាត */
+        }
+
+        .countdown-box {
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 10px;
+        }
+
+        .countdown-time {
+            color: #fc8181; 
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
         }
 
         .history-box {
@@ -66,11 +112,10 @@
             border-radius: 16px;
             padding: 20px 10px;
             text-align: left;
-            max-height: 500px;
-            overflow-y: auto; /* អនុញ្ញាតឱ្យអូសចុះក្រោមបានដោយសារម៉ោងច្រើន */
+            max-height: 380px;
+            overflow-y: auto;
         }
 
-        /* រចនារបារ Scrollbar ឱ្យស្អាត */
         .history-box::-webkit-scrollbar {
             width: 6px;
         }
@@ -80,13 +125,10 @@
         }
 
         .history-title {
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 0.95rem;
+            font-weight: 700;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #e2e8f0;
+            color: #cbd5e1;
             padding-left: 5px;
         }
 
@@ -104,46 +146,46 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 4px solid #4a5568;
         }
 
         .time-item.active {
             background: rgba(74, 222, 128, 0.05);
             border-color: #4ade80;
-            border-left-width: 4px;
+            border-left: 4px solid #4ade80;
         }
 
         .time-info .time-label {
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 700;
             color: #ffffff;
         }
 
         .time-info .date-label {
             font-size: 0.75rem;
             color: #718096;
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .result-number {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #f6ad55;
-            background: rgba(246, 173, 85, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             padding: 4px 14px;
             border-radius: 20px;
             min-width: 55px;
             text-align: center;
+            font-family: 'Poppins', sans-serif;
         }
 
         .time-item.active .result-number {
             color: #ffffff;
-            background: #166534;
+            background: #2f855a;
         }
         
         .waiting-text {
             font-size: 0.85rem;
-            color: #a0aec0;
+            color: #718096;
             font-style: italic;
         }
     </style>
@@ -151,15 +193,26 @@
 <body>
 
     <div class="container">
-        <div class="header-title">
-            🔮 លេខសំណាងក្នុងម៉ោងនេះគឺ៖
+        <h1 class="main-title">លេខសំណាងទាំង​ 12 🎁🎉</h1>
+        <p class="sub-title">ប្រព័ន្ធទស្សន៍ទាយ និងកត់ត្រាលេខសំណាងដោយស្វ័យប្រវត្តិ 24 ម៉ោង</p>
+
+        <div class="live-time-badge" id="live-clock">
+            📅 --/--/---- | ⏰ --:--:--
+        </div>
+
+        <div class="section-indicator" id="current-hour-text">
+            🔮 លេខសំណាងសម្រាប់ម៉ោងនេះគឺ៖
         </div>
 
         <div class="lucky-circle" id="main-lucky-number">?</div>
 
+        <div class="countdown-box">
+            លេខបន្ទាប់នឹងចេញក្នុងរយៈពេល៖ <span class="countdown-time" id="countdown-timer">--:--</span>
+        </div>
+
         <div class="history-box">
             <div class="history-title">
-                📋 ប្រវត្តិនៃការចេញលេខ (២៤ ម៉ោង)
+                📋 ប្រវត្តិលេខដែលបានចេញ (ចាប់ពីម៉ោង ០៧:០០ ព្រឹក)
             </div>
             
             <div class="time-list" id="schedule-list">
@@ -168,20 +221,23 @@
     </div>
 
     <script>
-        // បង្កើតបញ្ជីម៉ោងពេញមួយថ្ងៃ ២៤ ម៉ោង (ចាប់ពី ០០:០០ ដល់ ២៣:០០)
-        const hoursLayout = [];
-        for (let i = 0; i < 24; i++) {
-            let strHour = i < 10 ? '0' + i : '' + i;
-            hoursLayout.push({ time: `${strHour}:00`, hour: i });
-        }
+        // លំដាប់ម៉ោងដែលបានកំណត់៖ ចាប់ពីម៉ោង 07:00 ដល់ 23:00 និងបន្ត 00:00 ដល់ 06:00
+        const hoursLayout = [
+            { time: "07:00", hour: 7 }, { time: "08:00", hour: 8 }, { time: "09:00", hour: 9 },
+            { time: "10:00", hour: 10 }, { time: "11:00", hour: 11 }, { time: "12:00", hour: 12 },
+            { time: "13:00", hour: 13 }, { time: "14:00", hour: 14 }, { time: "15:00", hour: 15 },
+            { time: "16:00", hour: 16 }, { time: "17:00", hour: 17 }, { time: "18:00", hour: 18 },
+            { time: "19:00", hour: 19 }, { time: "20:00", hour: 20 }, { time: "21:00", hour: 21 },
+            { time: "22:00", hour: 22 }, { time: "23:00", hour: 23 },
+            { time: "00:00", hour: 0 }, { time: "01:00", hour: 1 }, { time: "02:00", hour: 2 },
+            { time: "03:00", hour: 3 }, { time: "04:00", hour: 4 }, { time: "05:00", hour: 5 },
+            { time: "06:00", hour: 6 }
+        ];
 
-        // មុខងារបង្កើតលេខឆ្លាស់គ្នាពី 01 ដល់ 12 ចំនួន ២ វគ្គមិនឱ្យជាន់គ្នាសម្រាប់ថ្ងៃនេះ
-        function generate24HourNumbers() {
-            const now = new Date();
-            const dateSeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
-            
-            // បង្កើតក្បួនក្រឡុកលេខ (Shuffle) ដោយប្រើ Seed ថ្ងៃខែដដែល
+        function generate24HourNumbers(targetDate) {
+            const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
             let seed = dateSeed;
+            
             function random() {
                 let x = Math.sin(seed++) * 10000;
                 return x - Math.floor(x);
@@ -196,50 +252,82 @@
                 return pool.map(num => num < 10 ? '0' + num : '' + num);
             }
 
-            // ក្រឡុកលេខសម្រាប់ ១២ ម៉ោងដំបូង (០០:០០ - ១១:០០) និង ១២ ម៉ោងចុងក្រោយ (១២:០០ - ២៣:០០)
-            const firstHalf = shufflePool();
-            const secondHalf = shufflePool();
-
-            // បញ្ចូលគ្នាឱ្យបាន ២៤ លេខសម្រាប់ ២៤ ម៉ោង
-            return [...firstHalf, ...secondHalf];
+            return [...shufflePool(), ...shufflePool()];
         }
 
         function updateLuckySystem() {
             const now = new Date();
             const currentHour = now.getHours();
-            const dateString = `កាលបរិច្ឆេទ: ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+            const currentMinute = now.getMinutes();
+            const currentSecond = now.getSeconds();
             
-            // ទទួលបានបញ្ជីលេខ ២៤ គ្រាប់សម្រាប់ថ្ងៃនេះ
-            const daily24Numbers = generate24HourNumbers();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+
+            const yesterday = new Date(now);
+            yesterday.setDate(now.getDate() - 1);
+            
+            const formatDate = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+            const todayStr = formatDate(now);
+            const tomorrowStr = formatDate(tomorrow);
+            const yesterdayStr = formatDate(yesterday);
+            
+            // ១. ធ្វើឱ្យម៉ោងបច្ចុប្បន្នដើររស់រវើក (Live Clock)
+            const hourPrint = currentHour < 10 ? '0' + currentHour : currentHour;
+            const minPrint = currentMinute < 10 ? '0' + currentMinute : currentMinute;
+            const secPrint = currentSecond < 10 ? '0' + currentSecond : currentSecond;
+            document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
+
+            // ២. បង្ហាញការបញ្ជាក់ប្រាប់ពីម៉ោងសំណាងបច្ចុប្បន្នជាភាសាខ្មែរ
+            document.getElementById("current-hour-text").innerHTML = `🔮 លេខសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
+
+            // ៣. គណនាម៉ោងរាប់ថយក្រោយ (Countdown) ទៅម៉ោងបន្ទាប់
+            let diffMinutes = 59 - currentMinute;
+            let diffSeconds = 59 - currentSecond;
+            const strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
+            const strSecs = diffSeconds < 10 ? '0' + diffSeconds : diffSeconds;
+            document.getElementById("countdown-timer").innerHTML = `${strMins}:${strSecs}`;
+            
+            const todayNumbers = generate24HourNumbers(now);
+            const tomorrowNumbers = generate24HourNumbers(tomorrow);
+            const yesterdayNumbers = generate24HourNumbers(yesterday);
             
             let currentActiveNumber = "?";
             let listHtml = "";
 
+            let currentLayoutIndex = hoursLayout.findIndex(h => h.hour === currentHour);
+
             hoursLayout.forEach((slot, index) => {
                 let isCurrentHour = (currentHour === slot.hour);
-                let hasPassed = (currentHour >= slot.hour);
-                
-                let displayNumber = "?";
                 let itemClass = "time-item";
                 let timeLabelText = `ម៉ោង ${slot.time}`;
-                let assignedNumber = daily24Numbers[index];
+                
+                let displayNumber = "?";
+                let slotDateStr = todayStr; 
+                let assignedNumber = todayNumbers[slot.hour];
 
-                if (isCurrentHour) {
-                    itemClass += " active";
-                    timeLabelText += " (ម៉ោងបច្ចុប្បន្ន)";
+                if (index < currentLayoutIndex) {
+                    if (currentHour < 7 && slot.hour >= 7) {
+                        slotDateStr = yesterdayStr;
+                        assignedNumber = yesterdayNumbers[slot.hour];
+                    }
                     displayNumber = assignedNumber;
-                    currentActiveNumber = assignedNumber; // បង្ហាញក្នុងរង្វង់ធំ
-                } else if (hasPassed) {
-                    displayNumber = assignedNumber; // ម៉ោងកន្លងហួស បង្ហាញលេខរួចរាល់
+                } else if (index === currentLayoutIndex) {
+                    itemClass += " active";
+                    displayNumber = assignedNumber;
+                    currentActiveNumber = assignedNumber;
                 } else {
-                    displayNumber = `<span class="waiting-text">រង់ចាំ</span>`; // មិនទាន់ដល់ម៉ោង បង្ហាញពាក្យរង់ចាំ
+                    displayNumber = `<span class="waiting-text">រង់ចាំ</span>`;
+                    if (currentHour >= 7 && slot.hour < 7) {
+                        slotDateStr = tomorrowStr;
+                    }
                 }
 
                 listHtml += `
                     <div class="${itemClass}">
                         <div class="time-info">
                             <div class="time-label">${timeLabelText}</div>
-                            <div class="date-label">${dateString}</div>
+                            <div class="date-label">កាលបរិច្ឆេទ៖ ${slotDateStr}</div>
                         </div>
                         <div class="result-number">${displayNumber}</div>
                     </div>
@@ -250,10 +338,8 @@
             document.getElementById("schedule-list").innerHTML = listHtml;
         }
 
-        // ដំណើរការប្រព័ន្ធភ្លាមៗ
         updateLuckySystem();
-        // ឆែកម៉ោងឡើងវិញរៀងរាល់ ១ នាទី
-        setInterval(updateLuckySystem, 60000);
+        setInterval(updateLuckySystem, 1000);
     </script>
 </body>
 </html>
