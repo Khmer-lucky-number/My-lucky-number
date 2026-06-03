@@ -108,6 +108,9 @@
             transform: translateY(-1px);
         }
 
+        /* ----------------------------------------------------- */
+        /* ស្ទីលសម្រាប់ផ្ទាំង Pop-up Modal */
+        /* ----------------------------------------------------- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -153,7 +156,13 @@
             font-weight: 700;
         }
 
-        .pin-input {
+        .modal-desc {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            margin-bottom: 15px;
+        }
+
+        .pin-input, .amount-input {
             width: 100%;
             background: #0b0816;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -162,14 +171,33 @@
             color: #ffffff;
             font-size: 1.3rem;
             text-align: center;
-            letter-spacing: 4px;
             margin-bottom: 20px;
             font-family: 'Poppins', sans-serif;
         }
 
-        .pin-input:focus {
+        .pin-input:focus, .amount-input:focus {
             outline: none;
             border-color: #4ade80;
+        }
+
+        /* បន្ថែមរូបសញ្ញា $ នៅខាងមុខប្រអប់វាយលុយ */
+        .amount-input-wrapper {
+            position: relative;
+        }
+        .amount-input-wrapper::before {
+            content: "$";
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            font-size: 1.3rem;
+            color: #4ade80;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+        .amount-input {
+            padding-left: 40px;
+            color: #4ade80;
+            font-weight: 700;
         }
 
         .modal-buttons {
@@ -179,23 +207,34 @@
 
         .modal-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: none;
             border-radius: 8px;
             font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
+            transition: background 0.2s;
         }
 
         .btn-cancel {
             background: #4a5568;
             color: #ffffff;
         }
+        .btn-cancel:hover { background: #3e4654; }
 
         .btn-confirm {
             background: #3182ce;
             color: #ffffff;
         }
+        .btn-confirm:hover { background: #2b6cb0; }
+
+        .btn-success {
+            background: #4ade80;
+            color: #0f0c20;
+        }
+        .btn-success:hover { background: #22c55e; }
+
+        /* ----------------------------------------------------- */
 
         .section-indicator {
             color: #4ade80; 
@@ -522,12 +561,29 @@
 
     <div class="modal-overlay" id="depositModal">
         <div class="modal-box">
-            <div class="modal-title">🔐 សូមវាយលេខកូដសម្ងាត់</div>
-            <input type="text" class="pin-input" id="pinCodeField" maxlength="10" placeholder="បញ្ចូលកូដទីនេះ">
-            <div class="modal-buttons">
-                <button class="modal-btn btn-cancel" id="closeModalBtn">បោះបង់</button>
-                <button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button>
+            
+            <div id="step-pin-section">
+                <div class="modal-title">🔐 សូមវាយលេខកូដសម្ងាត់</div>
+                <p class="modal-desc">វាយកូដសម្ងាត់ត្រឹមត្រូវដើម្បីបើកប្រព័ន្ធបញ្ចូលលុយ</p>
+                <input type="text" class="pin-input" id="pinCodeField" maxlength="10" placeholder="បញ្ចូលកូដទីនេះ">
+                <div class="modal-buttons">
+                    <button class="modal-btn btn-cancel" id="closeModalBtn">បោះបង់</button>
+                    <button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button>
+                </div>
             </div>
+
+            <div id="step-amount-section" style="display: none;">
+                <div class="modal-title">💵 បញ្ចូលទឹកប្រាក់ដោយដៃ</div>
+                <p class="modal-desc">សូមវាយបញ្ចូលចំនួនទឹកប្រាក់ដែលបងចង់បាន</p>
+                <div class="amount-input-wrapper">
+                    <input type="number" class="amount-input" id="amountField" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal">
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn btn-cancel" id="cancelAmountBtn">ត្រឡប់ក្រោយ</button>
+                    <button class="modal-btn btn-success" id="submitDepositBtn">យល់ព្រមបញ្ចូល</button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -543,29 +599,69 @@
         const pinCodeField = document.getElementById('pinCodeField');
         const userBalanceSpan = document.getElementById('user-balance');
 
+        // ធាតុពាក់ព័ន្ធនឹងជំហានបញ្ចូលលុយដោយដៃ
+        const stepPinSection = document.getElementById('step-pin-section');
+        const stepAmountSection = document.getElementById('step-amount-section');
+        const amountField = document.getElementById('amountField');
+        const cancelAmountBtn = document.getElementById('cancelAmountBtn');
+        const submitDepositBtn = document.getElementById('submitDepositBtn');
+
+        // បើកផ្ទាំង Pop-up (ចាប់ផ្តើមដោយជំហានកូដសម្ងាត់)
         openDepositBtn.addEventListener('click', () => {
             pinCodeField.value = "";
+            amountField.value = "";
+            stepPinSection.style.display = 'block';
+            stepAmountSection.style.display = 'none';
             depositModal.classList.add('show');
             pinCodeField.focus();
         });
 
+        // បិទផ្ទាំង Pop-up
         closeModalBtn.addEventListener('click', () => {
             depositModal.classList.remove('show');
         });
 
+        // ត្រឡប់ក្រោយពីផ្ទាំងវាយលុយ មកផ្ទាំងវាយកូដវិញ
+        cancelAmountBtn.addEventListener('click', () => {
+            pinCodeField.value = "";
+            stepAmountSection.style.display = 'none';
+            stepPinSection.style.display = 'block';
+            pinCodeField.focus();
+        });
+
+        // ផ្ទៀងផ្ទាត់លេខកូដសម្ងាត់ (ជំហានទី១)
         confirmPinBtn.addEventListener('click', () => {
             const enteredPin = pinCodeField.value;
             if (enteredPin === SECRET_PIN) {
-                currentBalance += 10.00; 
-                userBalanceSpan.textContent = currentBalance.toFixed(2);
-                alert("🎉 បញ្ចូលទឹកប្រាក់ចំនួន $10.00 បានជោគជ័យ!");
-                depositModal.classList.remove('show');
+                // បើកូដត្រូវ គឺប្តូរទៅជំហានទី២ (វាយទឹកប្រាក់)
+                stepPinSection.style.display = 'none';
+                stepAmountSection.style.display = 'block';
+                amountField.focus();
             } else {
                 alert("❌ លេខកូដសម្ងាត់មិនត្រឹមត្រូវទេ! សូមពិនិត្យអក្សរធំ-តូចឱ្យបានច្បាស់លាស់។");
                 pinCodeField.value = "";
                 pinCodeField.focus();
             }
         });
+
+        // យល់ព្រមបញ្ចូលទឹកប្រាក់តាមចិត្ត (ជំហានទី២)
+        submitDepositBtn.addEventListener('click', () => {
+            const depositAmount = parseFloat(amountField.value);
+            
+            if (isNaN(depositAmount) || depositAmount <= 0) {
+                alert("❌ សូមបញ្ចូលចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ (ធំជាង 0)!");
+                amountField.focus();
+                return;
+            }
+
+            // បូកបញ្ចូលទឹកប្រាក់ទៅក្នុងគណនីបច្ចុប្បន្ន
+            currentBalance += depositAmount;
+            userBalanceSpan.textContent = currentBalance.toFixed(2);
+            
+            alert(`🎉 បញ្ចូលទឹកប្រាក់ចំនួន $${depositAmount.toFixed(2)} បានជោគជ័យ!`);
+            depositModal.classList.remove('show');
+        });
+
 
         // ទិន្នន័យឆ្នាំទាំង ១២ សម្រាប់យកទៅប្រើប្រាស់ក្នុងរូបមន្ត Random
         const zodiacMap = {
@@ -631,7 +727,6 @@
             document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
             document.getElementById("current-hour-text").innerHTML = `🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
 
-            // បានកែសម្រួលជួសជុលកំហុស Syntax Error ត្រង់ចំណុច Countdown នេះរួចរាល់
             let diffMinutes = 59 - currentMinute; 
             let diffSeconds = 59 - currentSecond;
             let strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
