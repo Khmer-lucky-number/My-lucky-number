@@ -386,4 +386,353 @@
             border-left: 4px solid #4ade80;
         }
 
-        .time
+        .time-info .time-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .time-info .date-label {
+            font-size: 0.75rem;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .result-number {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #f6ad55;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 14px;
+            border-radius: 20px;
+            min-width: 90px;
+            text-align: center;
+        }
+
+        .time-item.active .result-number {
+            color: #ffffff;
+            background: #2f855a;
+        }
+        
+        .waiting-text {
+            font-size: 0.85rem;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .law-section {
+            margin-top: 5px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .law-btn {
+            background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .law-box {
+            background: rgba(11, 8, 22, 0.8);
+            border: 1px solid rgba(246, 173, 85, 0.3);
+            border-radius: 16px;
+            padding: 18px 15px;
+            margin-top: 15px;
+            text-align: left;
+            max-height: 140px; 
+            overflow-y: auto; 
+        }
+
+        .telegram-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .telegram-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: #0088cc; 
+            border-radius: 50%; 
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .telegram-icon {
+            width: 32px;
+            height: 32px;
+            fill: #ffffff;
+        }
+
+        .telegram-label {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="main-title">ឆ្នាំសំណាងទាំង​ 12 🎁🎉</h1>
+        <p class="sub-title">ប្រព័ន្ធទស្សន៍ទាយ និងកត់ត្រាលេខសំណាងដោយស្វ័យប្រវត្តិ 24 ម៉ោង</p>
+
+        <div class="live-time-badge" id="live-clock">
+            📅 --/--/---- | ⏰ --:--:--
+        </div>
+
+        <div class="balance-card">
+            <div class="balance-info">
+                <div class="balance-label">សមតុល្យទឹកប្រាក់បច្ចុប្បន្ន</div>
+                <div class="balance-amount">$<span id="user-balance">0.00</span></div>
+            </div>
+            <button class="deposit-btn" id="openDepositBtn">💵 បញ្ចូលទឹកប្រាក់</button>
+        </div>
+
+        <div class="section-indicator" id="current-hour-text">
+            🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោងនេះគឺ៖
+        </div>
+
+        <div class="lucky-circle" id="main-lucky-number">?</div>
+
+        <div class="countdown-box">
+            លទ្ធផលបន្ទាប់នឹងចេញក្នុងរយៈពេល៖ <span class="countdown-time" id="countdown-timer">--:--</span>
+        </div>
+
+        <div class="zodiac-box-container">
+            <div class="zodiac-big-box">
+                <div class="zodiac-box-title">📦 ប្រអប់ទី១ (ឆ្នាំទី ១ ដល់ ទី ៤)</div>
+                <div class="zodiac-grid-4" id="zodiac-box-1"></div>
+            </div>
+            <div class="zodiac-big-box">
+                <div class="zodiac-box-title">📦 ប្រអប់ទី២ (ឆ្នាំទី ៥ ដល់ ទី ៨)</div>
+                <div class="zodiac-grid-4" id="zodiac-box-2"></div>
+            </div>
+            <div class="zodiac-big-box">
+                <div class="zodiac-box-title">📦 ប្រអប់ទី៣ (ឆ្នាំទី ៩ ដល់ ទី ឡ១២)</div>
+                <div class="zodiac-grid-4" id="zodiac-box-3"></div>
+            </div>
+        </div>
+
+        <div class="history-box">
+            <div class="history-title">
+                📋 ប្រវត្តិឆ្នាំសំណាងដែលបានចេញ (ចាប់ពីម៉ោង ០៧:០០ ព្រឹក)
+            </div>
+            <div class="time-list" id="schedule-list"></div>
+        </div>
+
+        <div class="law-section">
+            <button class="law-btn" id="toggleLawBtn">ចុចដើម្បីអានអំពីច្បាប់</button>
+            <div class="law-box" id="lawContent" style="display: none;">
+                <p class="law-text">
+                    គោលបំណងរបស់ខ្ញុំគ្រាន់តែសិក្សាអំពីការបង្កើតគេហទំព័រតែប៉ុណ្ណោះសម្រាប់អ្នកដែលចូលមើលគេហទំព័រនេះសូមកុំចែកចាយដំណុលភ្ជាប់របស់ខ្ញុំទៅអ្នកដទៃ។
+                </p>
+            </div>
+        </div>
+
+        <div class="telegram-section">
+            <a href="https://t.me/Application_Receiving_Officer" target="_blank" class="telegram-btn">
+                <svg class="telegram-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.62.15-.15 2.7-2.46 2.75-2.67.01-.03.01-.15-.06-.21-.07-.06-.17-.04-.25-.02-.11.02-1.78 1.14-5.05 3.34-.48.33-.91.49-1.29.48-.42-.01-1.22-.24-1.82-.44-.74-.24-1.33-.37-1.28-.79.03-.22.33-.44.89-.67 3.49-1.52 5.83-2.52 7.02-3 .11-.04.22-.07.33-.07.23 0 .28.23.23.42z"/>
+                </svg>
+            </a>
+            <span class="telegram-label">ចុចដើម្បីទាក់ទងខ្ញុំ</span>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal-box">
+            
+            <div id="step-pin-section">
+                <div class="modal-title">🔐 សូមវាយលេខកូដសម្ងាត់</div>
+                <p class="modal-desc">វាយកូដសម្ងាត់ត្រឹមត្រូវដើម្បីបើកប្រព័ន្ធបញ្ចូលលុយ</p>
+                <input type="text" class="pin-input" id="pinCodeField" maxlength="10" placeholder="បញ្ចូលកូដទីនេះ">
+                <div class="modal-buttons">
+                    <button class="modal-btn btn-cancel" id="closeModalBtn">បោះបង់</button>
+                    <button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button>
+                </div>
+            </div>
+
+            <div id="step-amount-section" style="display: none;">
+                <div class="modal-title">💵 បញ្ចូលទឹកប្រាក់ដោយដៃ</div>
+                <p class="modal-desc">សូមវាយបញ្ចូលចំនួនទឹកប្រាក់ដែលបងចង់បាន</p>
+                <div class="amount-input-wrapper">
+                    <input type="number" class="amount-input" id="amountField" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal">
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn btn-cancel" id="cancelAmountBtn">ត្រឡប់ក្រោយ</button>
+                    <button class="modal-btn btn-success" id="submitDepositBtn">យល់ព្រមបញ្ចូល</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // បង្កើតប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ និងរក្សាទុកទឹកប្រាក់ (localStorage)
+        let currentBalance = 0.00;
+        const SECRET_PIN = "Qq2026"; 
+
+        // ទិន្នន័យឆ្នាំទាំង ១២ ថេរ
+        const zodiacMap = {
+            "01": { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១" }, "02": { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២" },
+            "03": { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣" }, "04": { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤" },
+            "05": { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥" }, "06": { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦" },
+            "07": { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧" }, "08": { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨" },
+            "09": { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩" }, "10": { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០" },
+            "11": { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១" }, "12": { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២" }
+        };
+
+        const zodiacDataStatic = [
+            { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១" }, { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២" },
+            { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣" }, { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤" },
+            { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥" }, { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦" },
+            { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧" }, { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨" },
+            { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩" }, { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០" },
+            { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១" }, { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២" }
+        ];
+
+        const hoursLayout = [
+            { time: "07:00", hour: 7 }, { time: "08:00", hour: 8 }, { time: "09:00", hour: 9 },
+            { time: "10:00", hour: 10 }, { time: "11:00", hour: 11 }, { time: "12:00", hour: 12 },
+            { time: "13:00", hour: 13 }, { time: "14:00", hour: 14 }, { time: "15:00", hour: 15 },
+            { time: "16:00", hour: 16 }, { time: "17:00", hour: 17 }, { time: "18:00", hour: 18 },
+            { time: "19:00", hour: 19 }, { time: "20:00", hour: 20 }, { time: "21:00", hour: 21 },
+            { time: "22:00", hour: 22 }, { time: "23:00", hour: 23 },
+            { time: "00:00", hour: 0 }, { time: "01:00", hour: 1 }, { time: "02:00", hour: 2 },
+            { time: "03:00", hour: 3 }, { time: "04:00", hour: 4 }, { time: "05:00", hour: 5 },
+            { time: "06:00", hour: 6 }
+        ];
+
+        function generate24HourNumbers(targetDate) {
+            const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
+            let seed = dateSeed;
+            function random() { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
+            function shufflePool() {
+                let pool = Array.from({ length: 12 }, (_, i) => i + 1);
+                for (let i = pool.length - 1; i > 0; i--) {
+                    const j = Math.floor(random() * (i + 1));
+                    [pool[i], pool[j]] = [pool[j], pool[i]];
+                }
+                return pool.map(num => num < 10 ? '0' + num : '' + num);
+            }
+            return [...shufflePool(), ...shufflePool()];
+        }
+
+        function updateLuckySystem() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const currentSecond = now.getSeconds();
+            
+            const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
+            const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
+            
+            const formatDate = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+            const todayStr = formatDate(now); const tomorrowStr = formatDate(tomorrow); const yesterdayStr = formatDate(yesterday);
+            
+            const hourPrint = currentHour < 10 ? '0' + currentHour : currentHour;
+            const minPrint = currentMinute < 10 ? '0' + currentMinute : currentMinute;
+            const secPrint = currentSecond < 10 ? '0' + currentSecond : currentSecond;
+            
+            // ផ្ទៀងផ្ទាត់ធាតុ HTML មុននឹងបញ្ចូលទិន្នន័យដើម្បីការពារការគាំងកូដ
+            if(document.getElementById("live-clock")) {
+                document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
+            }
+            if(document.getElementById("current-hour-text")) {
+                document.getElementById("current-hour-text").innerHTML = `🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
+            }
+
+            let diffMinutes = 59 - currentMinute; 
+            let diffSeconds = 59 - currentSecond;
+            let strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
+            let strSecs = diffSeconds < 10 ? '0' + diffSeconds : diffSeconds;
+            if(document.getElementById("countdown-timer")) {
+                document.getElementById("countdown-timer").innerHTML = strMins + ":" + strSecs;
+            }
+            
+            const todayNumbers = generate24HourNumbers(now);
+            const tomorrowNumbers = generate24HourNumbers(tomorrow);
+            const yesterdayNumbers = generate24HourNumbers(yesterday);
+            
+            let currentActiveContent = "?"; let listHtml = "";
+            let currentLayoutIndex = hoursLayout.findIndex(h => h.hour === currentHour);
+
+            hoursLayout.forEach((slot, index) => {
+                let itemClass = "time-item";
+                let displayResult = "?"; let slotDateStr = todayStr; let assignedNumber = todayNumbers[slot.hour];
+
+                if (index < currentLayoutIndex) {
+                    if (currentHour < 7 && slot.hour >= 7) { slotDateStr = yesterdayStr; assignedNumber = yesterdayNumbers[slot.hour]; }
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
+                } else if (index === currentLayoutIndex) {
+                    itemClass += " active";
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
+                    currentActiveContent = zInfo ? `${zInfo.icon} ${zInfo.name}` : "?";
+                } else {
+                    displayResult = `<span class="waiting-text">រង់ចាំ</span>`;
+                    if (currentHour >= 7 && slot.hour < 7) { slotDateStr = tomorrowStr; }
+                }
+
+                listHtml += `
+                    <div class="${itemClass}">
+                        <div class="time-info">
+                            <div class="time-label">ម៉ោង ${slot.time}</div>
+                            <div class="date-label">កាលបរិច្ឆេទ៖ ${slotDateStr}</div>
+                        </div>
+                        <div class="result-number">${displayResult}</div>
+                    </div>
+                `;
+            });
+
+            if(document.getElementById("main-lucky-number")) {
+                document.getElementById("main-lucky-number").innerHTML = currentActiveContent;
+            }
+            if(document.getElementById("schedule-list")) {
+                document.getElementById("schedule-list").innerHTML = listHtml;
+            }
+        }
+
+        function initZodiacBoxes() {
+            let htmlBox1 = "", htmlBox2 = "", htmlBox3 = "";
+            zodiacDataStatic.forEach((zodiac, i) => {
+                let cardHtml = `<div class="zodiac-card"><div class="zodiac-header"><span class="zodiac-card-icon">${zodiac.icon}</span><span>${zodiac.name}</span></div><span class="zodiac-card-order">${zodiac.order}</span></div>`;
+                if (i < 4) htmlBox1 += cardHtml; else if (i < 8) htmlBox2 += cardHtml; else htmlBox3 += cardHtml;
+            });
+            if(document.getElementById("zodiac-box-1")) document.getElementById("zodiac-box-1").innerHTML = htmlBox1;
+            if(document.getElementById("zodiac-box-2")) document.getElementById("zodiac-box-2").innerHTML = htmlBox2;
+            if(document.getElementById("zodiac-box-3")) document.getElementById("zodiac-box-3").innerHTML = htmlBox3;
+        }
+
+        // ដំណើរការបន្ទាប់ពីទំព័រ HTML ដើរពេញលេញ (ការពារផ្ទាំងខ្មៅ)
+        window.addEventListener('DOMContentLoaded', () => {
+            initZodiacBoxes();
+            updateLuckySystem();
+            setInterval(updateLuckySystem, 1000);
+
+            // ទាញយកលុយដែលបានរក្សាទុក
+            let savedBalance = localStorage.getItem('user_current_balance');
+            currentBalance = savedBalance ? parseFloat(savedBalance) : 0.00;
+            
+            const userBalanceSpan = document.getElementById('user-balance');
+            if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
+
+            // រៀបចំ Event សម្រាប់ប៊ូតុងផ្សេងៗ
+            const openDepositBtn = document.getElementById('openDepositBtn');
+            const depositModal = document.getElementById('depositModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const confirmPinBtn = document.getElementById('confirmPinBtn');
+            const pinCodeField = document
