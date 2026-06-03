@@ -532,9 +532,9 @@
     </div>
 
     <script>
-        // ប្រព័ន្ធគ្រប់គ្រងទឹកប្រាក់ និងកូដសម្ងាត់ដែលបានកែប្រែថ្មី
+        // ប្រព័ន្ធគ្រប់គ្រងទឹកប្រាក់ និងកូដសម្ងាត់
         let currentBalance = 0.00;
-        const SECRET_PIN = "Qq2026"; // 👈 បានកែសម្រួលមកជាកូដសម្ងាត់ថ្មីតាមបំណងរបស់បងរួចរាល់!
+        const SECRET_PIN = "Qq2026"; 
 
         const openDepositBtn = document.getElementById('openDepositBtn');
         const depositModal = document.getElementById('depositModal');
@@ -573,4 +573,129 @@
             "03": { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣" }, "04": { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤" },
             "05": { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥" }, "06": { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦" },
             "07": { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧" }, "08": { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨" },
-            "0
+            "09": { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩" }, "10": { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០" },
+            "11": { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១" }, "12": { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២" }
+        };
+
+        const zodiacDataStatic = [
+            { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១" }, { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២" },
+            { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣" }, { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤" },
+            { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥" }, { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦" },
+            { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧" }, { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨" },
+            { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩" }, { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០" },
+            { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១" }, { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២" }
+        ];
+
+        const hoursLayout = [
+            { time: "07:00", hour: 7 }, { time: "08:00", hour: 8 }, { time: "09:00", hour: 9 },
+            { time: "10:00", hour: 10 }, { time: "11:00", hour: 11 }, { time: "12:00", hour: 12 },
+            { time: "13:00", hour: 13 }, { time: "14:00", hour: 14 }, { time: "15:00", hour: 15 },
+            { time: "16:00", hour: 16 }, { time: "17:00", hour: 17 }, { time: "18:00", hour: 18 },
+            { time: "19:00", hour: 19 }, { time: "20:00", hour: 20 }, { time: "21:00", hour: 21 },
+            { time: "22:00", hour: 22 }, { time: "23:00", hour: 23 },
+            { time: "00:00", hour: 0 }, { time: "01:00", hour: 1 }, { time: "02:00", hour: 2 },
+            { time: "03:00", hour: 3 }, { time: "04:00", hour: 4 }, { time: "05:00", hour: 5 },
+            { time: "06:00", hour: 6 }
+        ];
+
+        function generate24HourNumbers(targetDate) {
+            const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
+            let seed = dateSeed;
+            function random() { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
+            function shufflePool() {
+                let pool = Array.from({ length: 12 }, (_, i) => i + 1);
+                for (let i = pool.length - 1; i > 0; i--) {
+                    const j = Math.floor(random() * (i + 1));
+                    [pool[i], pool[j]] = [pool[j], pool[i]];
+                }
+                return pool.map(num => num < 10 ? '0' + num : '' + num);
+            }
+            return [...shufflePool(), ...shufflePool()];
+        }
+
+        function updateLuckySystem() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            const currentSecond = now.getSeconds();
+            
+            const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
+            const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
+            
+            const formatDate = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+            const todayStr = formatDate(now); const tomorrowStr = formatDate(tomorrow); const yesterdayStr = formatDate(yesterday);
+            
+            const hourPrint = currentHour < 10 ? '0' + currentHour : currentHour;
+            const minPrint = currentMinute < 10 ? '0' + currentMinute : currentMinute;
+            const secPrint = currentSecond < 10 ? '0' + currentSecond : currentSecond;
+            document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
+            document.getElementById("current-hour-text").innerHTML = `🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
+
+            // បានកែសម្រួលជួសជុលកំហុស Syntax Error ត្រង់ចំណុច Countdown នេះរួចរាល់
+            let diffMinutes = 59 - currentMinute; 
+            let diffSeconds = 59 - currentSecond;
+            let strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
+            let strSecs = diffSeconds < 10 ? '0' + diffSeconds : diffSeconds;
+            document.getElementById("countdown-timer").innerHTML = strMins + ":" + strSecs;
+            
+            const todayNumbers = generate24HourNumbers(now);
+            const tomorrowNumbers = generate24HourNumbers(tomorrow);
+            const yesterdayNumbers = generate24HourNumbers(yesterday);
+            
+            let currentActiveContent = "?"; let listHtml = "";
+            let currentLayoutIndex = hoursLayout.findIndex(h => h.hour === currentHour);
+
+            hoursLayout.forEach((slot, index) => {
+                let itemClass = "time-item";
+                let displayResult = "?"; let slotDateStr = todayStr; let assignedNumber = todayNumbers[slot.hour];
+
+                if (index < currentLayoutIndex) {
+                    if (currentHour < 7 && slot.hour >= 7) { slotDateStr = yesterdayStr; assignedNumber = yesterdayNumbers[slot.hour]; }
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
+                } else if (index === currentLayoutIndex) {
+                    itemClass += " active";
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
+                    currentActiveContent = zInfo ? `${zInfo.icon} ${zInfo.name}` : "?";
+                } else {
+                    displayResult = `<span class="waiting-text">រង់ចាំ</span>`;
+                    if (currentHour >= 7 && slot.hour < 7) { slotDateStr = tomorrowStr; }
+                }
+
+                listHtml += `
+                    <div class="${itemClass}">
+                        <div class="time-info">
+                            <div class="time-label">ម៉ោង ${slot.time}</div>
+                            <div class="date-label">កាលបរិច្ឆេទ៖ ${slotDateStr}</div>
+                        </div>
+                        <div class="result-number">${displayResult}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById("main-lucky-number").innerHTML = currentActiveContent;
+            document.getElementById("schedule-list").innerHTML = listHtml;
+        }
+
+        function initZodiacBoxes() {
+            let htmlBox1 = "", htmlBox2 = "", htmlBox3 = "";
+            zodiacDataStatic.forEach((zodiac, i) => {
+                let cardHtml = `<div class="zodiac-card"><div class="zodiac-header"><span class="zodiac-card-icon">${zodiac.icon}</span><span>${zodiac.name}</span></div><span class="zodiac-card-order">${zodiac.order}</span></div>`;
+                if (i < 4) htmlBox1 += cardHtml; else if (i < 8) htmlBox2 += cardHtml; else htmlBox3 += cardHtml;
+            });
+            document.getElementById("zodiac-box-1").innerHTML = htmlBox1;
+            document.getElementById("zodiac-box-2").innerHTML = htmlBox2;
+            document.getElementById("zodiac-box-3").innerHTML = htmlBox3;
+        }
+
+        initZodiacBoxes();
+        updateLuckySystem();
+        setInterval(updateLuckySystem, 1000);
+
+        document.getElementById('toggleLawBtn').addEventListener('click', function() {
+            const lawBox = document.getElementById('lawContent');
+            if (lawBox.style.display === 'none') { lawBox.style.display = 'block'; this.textContent = 'ចុចដើម្បីលាក់ច្បាប់'; }
+            else { lawBox.style.display = 'none'; this.textContent = 'ចុចដើម្បីអានអំពីច្បាប់'; }
+        });
+    </script>
+</body>
+</html>
