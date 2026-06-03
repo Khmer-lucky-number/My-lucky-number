@@ -107,6 +107,9 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        /* ----------------------------------------------------- */
+        /* ការកែច្នៃថ្មី៖ រៀបចំប្រអប់ប្រវត្តិឱ្យទៅជាប្រអប់ឆ្នាំទាំង១២ */
+        /* ----------------------------------------------------- */
         .history-box {
             background: #0b0816;
             border-radius: 16px;
@@ -131,70 +134,67 @@
             margin-bottom: 15px;
             color: #cbd5e1;
             padding-left: 5px;
+            text-align: center;
         }
 
-        .time-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        /* ប្លង់តម្រៀបប្រអប់ឆ្នាំជា ២ជួរទន្ទឹមគ្នា (Grid 2 columns) */
+        .zodiac-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
         }
 
-        .time-item {
+        .zodiac-item {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 12px 15px;
+            border-radius: 14px;
+            padding: 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
         }
 
-        .time-item.active {
-            background: rgba(74, 222, 128, 0.05);
-            border-color: #4ade80;
-            border-left: 4px solid #4ade80;
+        /* ហាយឡាយពណ៌បៃតងសម្រាប់ឆ្នាំបច្ចុប្បន្ន ឬឆ្នាំលេចធ្លោ */
+        .zodiac-item.highlight {
+            background: rgba(246, 173, 85, 0.05);
+            border-color: #f6ad55;
+            box-shadow: 0 0 10px rgba(246, 173, 85, 0.1);
         }
 
-        .time-info .time-label {
-            font-size: 0.9rem;
+        .zodiac-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .zodiac-icon {
+            font-size: 1.5rem; /* ទំហំរូបសត្វ Emoji */
+        }
+
+        .zodiac-name {
+            font-size: 0.85rem;
             font-weight: 700;
             color: #ffffff;
         }
 
-        .time-info .date-label {
-            font-size: 0.75rem;
-            color: #718096;
-            margin-top: 4px;
-        }
-
-        .result-number {
-            font-size: 1.1rem;
+        .zodiac-number {
+            font-size: 1rem;
             font-weight: 700;
             color: #f6ad55;
             background: rgba(255, 255, 255, 0.05);
-            padding: 4px 14px;
-            border-radius: 20px;
-            min-width: 55px;
+            padding: 4px 10px;
+            border-radius: 10px;
+            min-width: 40px;
             text-align: center;
             font-family: 'Poppins', sans-serif;
-        }
-
-        .time-item.active .result-number {
-            color: #ffffff;
-            background: #2f855a;
-        }
-        
-        .waiting-text {
-            font-size: 0.85rem;
-            color: #718096;
-            font-style: italic;
         }
 
         /* ស្ទីលសម្រាប់ប៊ូតុងចុច និងប្រអប់បង្ហាញច្បាប់ */
         .law-section {
             margin-top: 5px;
             text-align: center;
-            margin-bottom: 25px; /* បន្ថែមគម្លាតទៅខាងក្រោមបន្តិចសម្រាប់ប៊ូតុង Telegram */
+            margin-bottom: 25px;
         }
 
         .law-btn {
@@ -248,9 +248,7 @@
             text-align: justify;
         }
 
-        /* ----------------------------------------------------- */
-        /* ស្ទីលបន្ថែមថ្មី៖ សម្រាប់ប៊ូតុងតេឡេក្រាមរាងមូល */
-        /* ----------------------------------------------------- */
+        /* ស្ទីលសម្រាប់ប៊ូតុងតេឡេក្រាមរាងមូល */
         .telegram-section {
             display: flex;
             flex-direction: column;
@@ -266,8 +264,8 @@
             justify-content: center;
             width: 60px;
             height: 60px;
-            background: #0088cc; /* ពណ៌ផ្លូវការរបស់ Telegram */
-            border-radius: 50%; /* ធ្វើឱ្យរាងមូលបេះបិទ */
+            background: #0088cc; 
+            border-radius: 50%; 
             box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
             transition: all 0.3s ease;
             text-decoration: none;
@@ -275,7 +273,7 @@
 
         .telegram-btn:hover {
             background: #24a1de;
-            transform: scale(1.1); /* រីកធំបន្តិចពេលយកដងកាំបិតទៅដាក់លើ */
+            transform: scale(1.1); 
             box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
         }
 
@@ -318,11 +316,11 @@
 
         <div class="history-box">
             <div class="history-title">
-                📋 ប្រវត្តិលេខដែលបានចេញ (ចាប់ពីម៉ោង ០៧:០០ ព្រឹក)
+                📋 ហោរាសាស្ត្រលេខសំណាងឆ្នាំទាំង ១២ 
             </div>
             
-            <div class="time-list" id="schedule-list">
-            </div>
+            <div class="zodiac-grid" id="zodiac-list">
+                </div>
         </div>
 
         <div class="law-section">
@@ -346,19 +344,17 @@
     </div>
 
     <script>
-        // លំដាប់ម៉ោងដែលបានកំណត់៖ ចាប់ពីម៉ោង 07:00 ដល់ 23:00 និងបន្ត 00:00 ដល់ 06:00
-        const hoursLayout = [
-            { time: "07:00", hour: 7 }, { time: "08:00", hour: 8 }, { time: "09:00", hour: 9 },
-            { time: "10:00", hour: 10 }, { time: "11:00", hour: 11 }, { time: "12:00", hour: 12 },
-            { time: "13:00", hour: 13 }, { time: "14:00", hour: 14 }, { time: "15:00", hour: 15 },
-            { time: "16:00", hour: 16 }, { time: "17:00", hour: 17 }, { time: "18:00", hour: 18 },
-            { time: "19:00", hour: 19 }, { time: "20:00", hour: 20 }, { time: "21:00", hour: 21 },
-            { time: "22:00", hour: 22 }, { time: "23:00", hour: 23 },
-            { time: "00:00", hour: 0 }, { time: "01:00", hour: 1 }, { time: "02:00", hour: 2 },
-            { time: "03:00", hour: 3 }, { time: "04:00", hour: 4 }, { time: "05:00", hour: 5 },
-            { time: "06:00", hour: 6 }
+        // បញ្ជីឈ្មោះឆ្នាំ និងរូបតំណាងសត្វទាំង១២ តាមក្បួនតម្រៀបចិន-ខ្មែរ
+        const zodiacLayout = [
+            { name: "ឆ្នាំជូត", icon: "🐭", id: 0 }, { name: "ឆ្នាំឆ្លូវ", icon: "🐮", id: 1 },
+            { name: "ឆ្នាំខាល", icon: "🐯", id: 2 }, { name: "ឆ្នាំថោះ", icon: "🐰", id: 3 },
+            { name: "ឆ្នាំរោង", icon: "🐉", id: 4 }, { name: "ឆ្នាំម្សាញ់", icon: "🐍", id: 5 },
+            { name: "ឆ្នាំមមី", icon: "🐴", id: 6 }, { name: "ឆ្នាំមមែ", icon: "🐐", id: 7 },
+            { name: "ឆ្នាំវក", icon: "🐵", id: 8 }, { name: "ឆ្នាំរកា", icon: "🐔", id: 9 },
+            { name: "ឆ្នាំច", icon: "🐶", id: 10 }, { name: "ឆ្នាំកុរ", icon: "🐷", id: 11 }
         ];
 
+        // រក្សារូបមន្តបង្កើតគ្រាប់ពូជលេខចៃដន្យដើមរបស់បង ១០០% ដើម្បីកុំឱ្យបាត់បង់មុខងារចាស់
         function generate24HourNumbers(targetDate) {
             const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
             let seed = dateSeed;
@@ -386,87 +382,59 @@
             const currentMinute = now.getMinutes();
             const currentSecond = now.getSeconds();
             
-            const tomorrow = new Date(now);
-            tomorrow.setDate(now.getDate() + 1);
-
-            const yesterday = new Date(now);
-            yesterday.setDate(now.getDate() - 1);
-            
             const formatDate = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
             const todayStr = formatDate(now);
-            const tomorrowStr = formatDate(tomorrow);
-            const yesterdayStr = formatDate(yesterday);
             
-            // ១. ធ្វើឱ្យម៉ោងបច្ចុប្បន្នដើររស់រវើក (Live Clock)
+            // ១. រក្សាមុខងារ Live Clock ដដែល
             const hourPrint = currentHour < 10 ? '0' + currentHour : currentHour;
             const minPrint = currentMinute < 10 ? '0' + currentMinute : currentMinute;
             const secPrint = currentSecond < 10 ? '0' + currentSecond : currentSecond;
             document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
 
-            // ២. បង្ហាញការបញ្ជាក់ប្រាប់ពីម៉ោងសំណាងបច្ចុប្បន្នជាភាសាខ្មែរ
+            // ២. រក្សាមុខងារបង្ហាញភាសាខ្មែរដដែល
             document.getElementById("current-hour-text").innerHTML = `🔮 លេខសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
 
-            // ៣. គណនាម៉ោងរាប់ថយក្រោយ (Countdown) ទៅម៉ោងបន្ទាប់
+            // ៣. រក្សាមុខងាររាប់ថយក្រោយ (Countdown) ដដែល
             let diffMinutes = 59 - currentMinute;
             let diffSeconds = 59 - currentSecond;
             const strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
             const strSecs = diffSeconds < 10 ? '0' + diffSeconds : diffSeconds;
             document.getElementById("countdown-timer").innerHTML = `${strMins}:${strSecs}`;
             
+            // ប្រើប្រាស់រូបមន្តទាញលេខសំណាង ២៤ គ្រាប់ ដូចមុនបេះបិទ
             const todayNumbers = generate24HourNumbers(now);
-            const tomorrowNumbers = generate24HourNumbers(tomorrow);
-            const yesterdayNumbers = generate24HourNumbers(yesterday);
             
-            let currentActiveNumber = "?";
-            let listHtml = "";
+            // លេខធំកណ្តាលវង់មូល គឺទាញចេញពីលេខប្រចាំម៉ោងបច្ចុប្បន្ន (ចន្លោះ 0-23 ម៉ោង ត្រូវនឹង array index)
+            let currentActiveNumber = todayNumbers[currentHour];
+            document.getElementById("main-lucky-number").innerHTML = currentActiveNumber;
 
-            let currentLayoutIndex = hoursLayout.findIndex(h => h.hour === currentHour);
-
-            hoursLayout.forEach((slot, index) => {
-                let isCurrentHour = (currentHour === slot.hour);
-                let itemClass = "time-item";
-                let timeLabelText = `ម៉ោង ${slot.time}`;
+            // ៤. ចាក់ទិន្នន័យលេខសំណាង ចូលទៅក្នុងប្រអប់ Icon ឆ្នាំទាំង១២ ស្វ័យប្រវត្តិ
+            let gridHtml = "";
+            zodiacLayout.forEach((zodiac) => {
+                // បោះលេខសំណាងចេញពី array ទៅតាមឆ្នាំនីមួយៗ (ពីលិបិក្រម 0 ដល់ 11)
+                let assignedNumber = todayNumbers[zodiac.id];
                 
-                let displayNumber = "?";
-                let slotDateStr = todayStr; 
-                let assignedNumber = todayNumbers[slot.hour];
+                // បង្កើត Effect ហាយឡាយប្រអប់ឆ្នាំណាដែលត្រូវនឹងម៉ោងបច្ចុប្បន្ន (ឧទាហរណ៍៖ ម៉ោង១ ត្រូវនឹងឆ្នាំឆ្លូវ)
+                let isHighlight = (currentHour % 12 === zodiac.id) ? "highlight" : "";
 
-                if (index < currentLayoutIndex) {
-                    if (currentHour < 7 && slot.hour >= 7) {
-                        slotDateStr = yesterdayStr;
-                        assignedNumber = yesterdayNumbers[slot.hour];
-                    }
-                    displayNumber = assignedNumber;
-                } else if (index === currentLayoutIndex) {
-                    itemClass += " active";
-                    displayNumber = assignedNumber;
-                    currentActiveNumber = assignedNumber;
-                } else {
-                    displayNumber = `<span class="waiting-text">រង់ចាំ</span>`;
-                    if (currentHour >= 7 && slot.hour < 7) {
-                        slotDateStr = tomorrowStr;
-                    }
-                }
-
-                listHtml += `
-                    <div class="${itemClass}">
-                        <div class="time-info">
-                            <div class="time-label">${timeLabelText}</div>
-                            <div class="date-label">កាលបរិច្ឆេទ៖ ${slotDateStr}</div>
+                gridHtml += `
+                    <div class="zodiac-item ${isHighlight}">
+                        <div class="zodiac-info">
+                            <span class="zodiac-icon">${zodiac.icon}</span>
+                            <span class="zodiac-name">${zodiac.name}</span>
                         </div>
-                        <div class="result-number">${displayNumber}</div>
+                        <div class="zodiac-number">${assignedNumber}</div>
                     </div>
                 `;
             });
 
-            document.getElementById("main-lucky-number").innerHTML = currentActiveNumber;
-            document.getElementById("schedule-list").innerHTML = listHtml;
+            document.getElementById("zodiac-list").innerHTML = gridHtml;
         }
 
         updateLuckySystem();
         setInterval(updateLuckySystem, 1000);
 
-        // កូដ JavaScript សម្រាប់បញ្ជាប៊ូតុង បើក/លាក់ ច្បាប់
+        // រក្សាមុខងារ ប៊ូតុងបើក/លាក់ ច្បាប់ ដដែល
         document.getElementById('toggleLawBtn').addEventListener('click', function() {
             const lawBox = document.getElementById('lawContent');
             if (lawBox.style.display === 'none') {
