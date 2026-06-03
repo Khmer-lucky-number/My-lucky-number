@@ -804,4 +804,427 @@
             const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
             
             const formatDate = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
-            const todayStr =
+            const todayStr = formatDate(now); const tomorrowStr = formatDate(tomorrow); const yesterdayStr = formatDate(yesterday);
+            
+            const hourPrint = currentHour < 10 ? '0' + currentHour : currentHour;
+            const minPrint = currentMinute < 10 ? '0' + currentMinute : currentMinute;
+            const secPrint = currentSecond < 10 ? '0' + currentSecond : currentSecond;
+            
+            if(document.getElementById("live-clock")) {
+                document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
+            }
+            if(document.getElementById("current-hour-text")) {
+                document.getElementById("current-hour-text").innerHTML = `🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
+            }
+
+            let diffMinutes = 59 - currentMinute; 
+            let diffSeconds = 59 - currentSecond;
+            let strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
+            let strSecs = diffSeconds < 10 ? '0' + diffSeconds : diffSeconds;
+            if(document.getElementById("countdown-timer")) {
+                document.getElementById("countdown-timer").innerHTML = strMins + ":" + strSecs;
+            }
+            
+            const todayNumbers = generate24HourNumbers(now);
+            const tomorrowNumbers = generate24HourNumbers(tomorrow);
+            const yesterdayNumbers = generate24HourNumbers(yesterday);
+            
+            checkAndSettleHourlyBets(currentHour, todayNumbers, todayStr);
+
+            let currentActiveContent = "?"; let listHtml = "";
+            let currentLayoutIndex = hoursLayout.findIndex(h => h.hour === currentHour);
+
+            hoursLayout.forEach((slot, index) => {
+                let itemClass = "time-item";
+                let displayResult = "?"; let slotDateStr = todayStr; let assignedNumber = todayNumbers[slot.hour];
+
+                if (index < currentLayoutIndex) {
+                    if (currentHour < 7 && slot.hour >= 7) { slotDateStr = yesterdayStr; assignedNumber = yesterdayNumbers[slot.hour]; }
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
+                } else if (index === currentLayoutIndex) {
+                    itemClass += " active";
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
+                    currentActiveContent = zInfo ? `${zInfo.icon} ${zInfo.name}` : "?";
+                } else {
+                    displayResult = `<span class="waiting-text">រង់ចាំម៉ោង</span>`;
+                    if (currentHour >= 7 && slot.hour < 7) { slotDateStr = tomorrowStr; }
+                }
+
+                listHtml += `
+                    <div class="${itemClass}">
+                        <div class="time-info">
+                            <div class="time-label">ម៉ោង ${slot.time}</div>
+                            <div class="date-label">កាលបរិច្ឆេទ៖ ${slotDateStr}</div>
+                        </div>
+                        <div class="result-number">${displayResult}</div>
+                    </div>
+                `;
+            });
+
+            if(document.getElementById("main-lucky-number")) {
+                document.getElementById("main-lucky-number").innerHTML = currentActiveContent;
+            }
+            if(document.getElementById("schedule-list")) {
+                document.getElementById("schedule-list").innerHTML = listHtml;
+            }
+        }
+
+        function initZodiacBoxes() {
+            let singleGridHtml = "", selectGridHtml = "";
+            zodiacDataStatic.forEach((zodiac, i) => {
+                singleGridHtml += `
+                    <div class="zodiac-card">
+                        <div class="zodiac-header">
+                            <span class="zodiac-card-icon">${zodiac.icon}</span>
+                            <span>${zodiac.name}</span>
+                        </div>
+                        <span class="zodiac-card-order">${zodiac.order}</span>
+                    </div>
+                `;
+                selectGridHtml += `<button class="zodiac-select-btn" data-name="${zodiac.name}"><span>${zodiac.icon}</span><span style="font-size:0.7rem;">${zodiac.name}</span></button>`;
+            });
+            
+            if(document.getElementById("zodiac-single-grid-area")) document.getElementById("zodiac-single-grid-area").innerHTML = singleGridHtml;
+            if(document.getElementById("zodiacSelectGridArea")) document.getElementById("zodiacSelectGridArea").innerHTML = selectGridHtml;
+        }
+
+        function calculatePreviewRates() {
+            const inputField = document.getElementById('predictAmountField');
+            const preCurrent = document.getElementById('pre-current-bal');
+            const preCost = document.getElementById('pre-cost-bal');
+            const preRemain = document.getElementById('pre-remain-bal');
+
+            let cost = parseFloat(inputField.value);
+            if (isNaN(cost) || cost < 0) cost = 0.00;
+            let remain = currentBalance - cost;
+            if (remain < 0) remain = 0.00;
+
+            if(preCurrent) preCurrent.textContent = currentBalance.toFixed(2);
+            if(preCost) preCost.textContent = cost.toFixed(2);
+            if(preRemain) preRemain.textContent = remain.toFixed(2);
+        }
+
+        function renderDepositHistory() {
+            const container = document.getElementById('deposit-history-list');
+            if(!container) return;
+            if(depositHistory.length === 0) {
+                container.innerHTML = `<div class="no-data-text">មិនទាន់មានប្រវត្តិបញ្ចូលលុយនៅឡើយទេ</div>`;
+                return;
+            }
+            let html = "";
+            depositHistory.forEach(item => {
+                html += `
+                    <div class="history-item-row">
+                        <div class="time-info">
+                            <div class="row-main-title">📥 បញ្ចូលលុយជោគជ័យ</div>
+                            <div class="row-sub-title">${item.date}</div>
+                        </div>
+                        <div class="row-status-badge" style="color:#4ade80; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.2);">+$${item.amount.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderBetHistory() {
+            const container = document.getElementById('bet-history-list');
+            if(!container) return;
+            if(betHistory.length === 0) {
+                container.innerHTML = `<div class="no-data-text">មិនទាន់មានប្រវត្តិទស្សន៍ទាយនៅឡើយទេ</div>`;
+                return;
+            }
+            let html = "";
+            betHistory.forEach(item => {
+                let badgeStyle = "color:#f6ad55; background:rgba(246,173,85,0.1);";
+                let rewardText = `លុយចាក់: $${item.bet.toFixed(2)}`;
+                
+                if (item.status === "ឈ្នះ") {
+                    badgeStyle = "color:#4ade80; background:rgba(74,222,128,0.1);";
+                    rewardText = `ឈ្នះបាន: +$${item.reward.toFixed(2)}`;
+                } else if (item.status === "ចាញ់") {
+                    badgeStyle = "color:#fc8181; background:rgba(252,129,129,0.1);";
+                    rewardText = `បាត់បង់: -$${item.bet.toFixed(2)}`;
+                }
+
+                html += `
+                    <div class="history-item-row">
+                        <div class="time-info">
+                            <div class="row-main-title">ចាក់៖ ${item.picked} | ចេញ៖ ${item.result}</div>
+                            <div class="row-sub-title">ម៉ោងចាក់៖ ${item.date} (ចាក់សម្រាប់ម៉ោង ${item.targetHour}:00)</div>
+                        </div>
+                        <div class="row-status-badge" style="${badgeStyle}">${item.status}<br><span style="font-size:0.65rem;">${rewardText}</span></div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function startApp() {
+            initZodiacBoxes();
+            updateLuckySystem();
+            setInterval(updateLuckySystem, 1000);
+
+            let savedBalance = localStorage.getItem('user_current_balance');
+            currentBalance = savedBalance ? parseFloat(savedBalance) : 0.00;
+            
+            const userBalanceSpan = document.getElementById('user-balance');
+            if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
+
+            renderDepositHistory();
+            renderBetHistory();
+
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const targetTab = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    document.getElementById(targetTab + '-content').style.display = 'block';
+                });
+            });
+
+            const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+            const historyBoxSection = document.getElementById('historyBoxSection');
+            if(toggleHistoryBtn && historyBoxSection) {
+                toggleHistoryBtn.addEventListener('click', function() {
+                    if (historyBoxSection.style.display === 'none') {
+                        historyBoxSection.style.display = 'block';
+                        this.textContent = '👁️ លាក់';
+                    } else {
+                        historyBoxSection.style.display = 'none';
+                        this.textContent = '👁️ បង្ហាញ';
+                    }
+                });
+            }
+
+            // ផ្ទាំងទស្សន៍ទាយ (Prediction Modal)
+            const openPredictModalBtn = document.getElementById('openPredictModalBtn');
+            const predictModal = document.getElementById('predictModal');
+            const closePredictModalBtn = document.getElementById('closePredictModalBtn');
+            const predictAmountField = document.getElementById('predictAmountField');
+            const confirmPredictBtn = document.getElementById('confirmPredictBtn');
+
+            if (openPredictModalBtn && predictModal) {
+                openPredictModalBtn.addEventListener('click', () => {
+                    predictAmountField.value = "";
+                    selectedZodiacName = "";
+                    document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
+                    calculatePreviewRates();
+                    predictModal.classList.add('show');
+                    predictAmountField.focus();
+                });
+            }
+
+            if (closePredictModalBtn) {
+                closePredictModalBtn.addEventListener('click', () => { predictModal.classList.remove('show'); });
+            }
+
+            if (predictAmountField) {
+                predictAmountField.addEventListener('input', calculatePreviewRates);
+            }
+
+            const shortcutButtons = document.querySelectorAll('.shortcut-btn');
+            shortcutButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const amountValue = this.getAttribute('data-amount');
+                    if (predictAmountField) {
+                        predictAmountField.value = amountValue;
+                        calculatePreviewRates();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.zodiac-select-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedZodiacName = this.getAttribute('data-name');
+                });
+            });
+
+            if (confirmPredictBtn) {
+                confirmPredictBtn.addEventListener('click', () => {
+                    const betAmount = parseFloat(predictAmountField.value);
+                    if (isNaN(betAmount) || betAmount <= 0) {
+                        alert("❌ សូមបញ្ចូលទឹកប្រាក់សម្រាប់ទស្សន៍ទាយឱ្យបានត្រឹមត្រូវ!");
+                        predictAmountField.focus();
+                        return;
+                    }
+                    if (!selectedZodiacName) {
+                        alert("❌ សូមជ្រើសរើសឆ្នាំដែលបងចង់ទស្សន៍ទាយចាក់ជាមុនសិន!");
+                        return;
+                    }
+                    if (currentBalance < betAmount) {
+                        alert("❌ សមតុល្យទឹកប្រាក់របស់បងមិនគ្រប់គ្រាន់ទេ! សូមបញ្ចូលលុយបន្ថែម។");
+                        return;
+                    }
+
+                    predictModal.classList.remove('show');
+                    currentBalance -= betAmount;
+                    localStorage.setItem('user_current_balance', currentBalance);
+                    if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
+
+                    const nowTime = new Date();
+                    const currentHour = nowTime.getHours();
+                    const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
+                    
+                    betHistory.unshift({
+                        date: timeStr,
+                        targetHour: currentHour, 
+                        picked: selectedZodiacName,
+                        result: "រង់ចាំម៉ោងបង្គ្រប់",
+                        status: "រង់ចាំលទ្ធផល",
+                        bet: betAmount,
+                        reward: 0
+                    });
+                    
+                    localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
+                    renderBetHistory();
+                    alert(`🎯 ចាក់ទស្សន៍ទាយលើ [${selectedZodiacName}] ចំនួន $${betAmount.toFixed(2)} បានជោគជ័យ! ប្រព័ន្ធកំពុងរង់ចាំលទ្ធផលផ្លូវការនៅពេលប្តូរម៉ោងថ្មី។`);
+                });
+            }
+
+            // ប្រព័ន្ធបញ្ចូលទឹកប្រាក់ និង លុបទិន្នន័យ Admin
+            const openDepositBtn = document.getElementById('openDepositBtn');
+            const depositModal = document.getElementById('depositModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const confirmPinBtn = document.getElementById('confirmPinBtn');
+            const pinCodeField = document.getElementById('pinCodeField');
+            const stepPinSection = document.getElementById('step-pin-section');
+            const stepAmountSection = document.getElementById('step-amount-section');
+            const amountField = document.getElementById('amountField');
+            const cancelAmountBtn = document.getElementById('cancelAmountBtn');
+            const submitDepositBtn = document.getElementById('submitDepositBtn');
+
+            const securityModalTitle = document.getElementById('security-modal-title');
+            const securityModalDesc = document.getElementById('security-modal-desc');
+
+            const clearDepositHistoryBtn = document.getElementById('clearDepositHistoryBtn');
+            const clearBetHistoryBtn = document.getElementById('clearBetHistoryBtn');
+            const clearBalanceBtn = document.getElementById('clearBalanceBtn');
+
+            function triggerSecurityModal(actionType, title, desc) {
+                currentAdminAction = actionType;
+                securityModalTitle.textContent = title;
+                securityModalDesc.textContent = desc;
+                pinCodeField.value = "";
+                amountField.value = "";
+                stepPinSection.style.display = 'block';
+                stepAmountSection.style.display = 'none';
+                depositModal.classList.add('show');
+                pinCodeField.focus();
+            }
+
+            if(openDepositBtn) {
+                openDepositBtn.addEventListener('click', () => {
+                    triggerSecurityModal("deposit", "🔐 សូមវាយលេខកូដសម្ងាត់", "វាយកូដសម្ងាត់ត្រឹមត្រូវដើម្បីបើកប្រព័ន្ធបញ្ចូលលុយ");
+                });
+            }
+
+            if(clearDepositHistoryBtn) {
+                clearDepositHistoryBtn.addEventListener('click', () => {
+                    triggerSecurityModal("clear_deposit", "🔐 សហការី៖ លុបប្រវត្តិបញ្ចូលលុយ", "សូមវាយលេខកូដសម្ងាត់ដើម្បីលុបប្រវត្តិបញ្ចូលលុយទាំងអស់");
+                });
+            }
+            if(clearBetHistoryBtn) {
+                clearBetHistoryBtn.addEventListener('click', () => {
+                    triggerSecurityModal("clear_bet", "🔐 សហការី៖ លុបប្រវត្តិទស្សន៍ទាយ", "សូមវាយលេខកូដសម្ងាត់ដើម្បីលុបប្រវត្តិទស្សន៍ទាយទាំងអស់");
+                });
+            }
+            if(clearBalanceBtn) {
+                clearBalanceBtn.addEventListener('click', () => {
+                    triggerSecurityModal("clear_balance", "🔐 សហការី៖ លុបទឹកប្រាក់គណនី", "សូមវាយលេខកូដសម្ងាត់ដើម្បីកំណត់លុយត្រឡប់ទៅ $0.00 វិញ");
+                });
+            }
+
+            if(closeModalBtn) closeModalBtn.addEventListener('click', () => { depositModal.classList.remove('show'); });
+
+            if(cancelAmountBtn) {
+                cancelAmountBtn.addEventListener('click', () => {
+                    pinCodeField.value = "";
+                    stepAmountSection.style.display = 'none';
+                    stepPinSection.style.display = 'block';
+                    pinCodeField.focus();
+                });
+            }
+
+            if(confirmPinBtn) {
+                confirmPinBtn.addEventListener('click', () => {
+                    if (pinCodeField.value === SECRET_PIN) {
+                        if (currentAdminAction === "deposit") {
+                            stepPinSection.style.display = 'none';
+                            stepAmountSection.style.display = 'block';
+                            amountField.focus();
+                        } else if (currentAdminAction === "clear_deposit") {
+                            depositModal.classList.remove('show');
+                            depositHistory = [];
+                            localStorage.removeItem('user_deposit_history');
+                            renderDepositHistory();
+                            alert("🗑️ បានលុបប្រវត្តិបញ្ចូលទឹកប្រាក់ទាំងអស់ដោយជោគជ័យ!");
+                        } else if (currentAdminAction === "clear_bet") {
+                            depositModal.classList.remove('show');
+                            betHistory = [];
+                            localStorage.removeItem('user_bet_history');
+                            renderBetHistory();
+                            alert("🗑️ បានលុបប្រវត្តិទស្សន៍ទាយចាក់លុយទាំងអស់ដោយជោគជ័យ!");
+                        } else if (currentAdminAction === "clear_balance") {
+                            depositModal.classList.remove('show');
+                            currentBalance = 0.00;
+                            localStorage.setItem('user_current_balance', currentBalance);
+                            if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
+                            alert("💰 បានលុបសំអាតទឹកប្រាក់ក្នុងគណនីមកត្រឹម $0.00 រួចរាល់!");
+                        }
+                    } else {
+                        alert("❌ លេខកូដសម្ងាត់មិនត្រឹមត្រូវទេ!");
+                        pinCodeField.value = "";
+                        pinCodeField.focus();
+                    }
+                });
+            }
+
+            if(submitDepositBtn) {
+                submitDepositBtn.addEventListener('click', () => {
+                    const depositAmount = parseFloat(amountField.value);
+                    if (isNaN(depositAmount) || depositAmount <= 0) {
+                        alert("❌ សូមបញ្ចូលចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!");
+                        amountField.focus();
+                        return;
+                    }
+                    
+                    currentBalance += depositAmount;
+                    if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
+                    localStorage.setItem('user_current_balance', currentBalance);
+
+                    const nowTime = new Date();
+                    const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1}/${nowTime.getFullYear()} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
+                    depositHistory.unshift({ date: timeStr, amount: depositAmount });
+                    localStorage.setItem('user_deposit_history', JSON.stringify(depositHistory));
+                    renderDepositHistory();
+
+                    alert(`🎉 បញ្ចូលទឹកប្រាក់ចំនួន $${depositAmount.toFixed(2)} បានជោគជ័យ!`);
+                    depositModal.classList.remove('show');
+                });
+            }
+
+            const toggleLawBtn = document.getElementById('toggleLawBtn');
+            if(toggleLawBtn) {
+                toggleLawBtn.addEventListener('click', function() {
+                    const lawBox = document.getElementById('lawContent');
+                    if (lawBox.style.display === 'none') { lawBox.style.display = 'block'; this.textContent = 'ចុចដើម្បីលាក់ច្បាប់'; }
+                    else { lawBox.style.display = 'none'; this.textContent = 'ចុចដើម្បីអានអំពីច្បាប់'; }
+                });
+            }
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", startApp);
+        } else {
+            startApp();
+        }
+    </script>
+</body>
+</html>
