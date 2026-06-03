@@ -135,7 +135,7 @@
             border-radius: 20px;
             padding: 25px;
             width: 90%;
-            max-width: 340px;
+            max-width: 360px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             transform: scale(0.8);
@@ -159,7 +159,7 @@
             margin-bottom: 15px;
         }
 
-        .pin-input, .amount-input {
+        .pin-input, .amount-input, .predict-amount-input {
             width: 100%;
             background: #0b0816;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -168,11 +168,11 @@
             color: #ffffff;
             font-size: 1.3rem;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-family: 'Poppins', sans-serif;
         }
 
-        .pin-input:focus, .amount-input:focus {
+        .pin-input:focus, .amount-input:focus, .predict-amount-input:focus {
             outline: none;
             border-color: #4ade80;
         }
@@ -190,10 +190,87 @@
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
         }
-        .amount-input {
+        .amount-input, .predict-amount-input {
             padding-left: 40px;
             color: #4ade80;
             font-weight: 700;
+        }
+
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+        .shortcut-btn {
+            background: #2d3748;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s ease;
+        }
+        .shortcut-btn:hover {
+            background: #f6ad55;
+            color: #0f0c20;
+            border-color: #f6ad55;
+        }
+
+        /* ផ្ទាំងរើសឆ្នាំចាក់ */
+        .zodiac-select-title {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            text-align: left;
+            margin-bottom: 6px;
+        }
+        .zodiac-select-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+        .zodiac-select-btn {
+            background: #0b0816;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 6px 0;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            transition: all 0.2s;
+        }
+        .zodiac-select-btn.selected {
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            border-color: #f43f5e;
+            box-shadow: 0 0 10px rgba(244, 63, 94, 0.5);
+        }
+
+        .preview-balance-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .preview-val {
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
         }
 
         .modal-buttons {
@@ -258,6 +335,32 @@
             color: #ffffff;
             box-shadow: 0 0 35px rgba(221, 107, 32, 0.4);
             border: 3px solid #ffffff;
+        }
+
+        .predict-action-btn {
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .predict-action-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(244, 63, 94, 0.6);
+        }
+        .predict-action-btn:disabled {
+            background: #4a5568;
+            box-shadow: none;
+            cursor: not-allowed;
         }
 
         .countdown-box {
@@ -338,39 +441,69 @@
             border-radius: 6px;
         }
 
+        /* ប្រព័ន្ធថេបរបាយការណ៍ប្តូរចុច (Tabs UI) */
+        .history-wrapper {
+            margin-bottom: 25px;
+        }
+        .history-header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .report-tabs {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 10px;
+            width: 100%;
+            gap: 2px;
+        }
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #a0aec0;
+            padding: 8px 0;
+            font-size: 0.78rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: #2b6cb0;
+            color: #ffffff;
+        }
+        .toggle-history-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+
         .history-box {
             background: #0b0816;
             border-radius: 16px;
-            padding: 20px 10px;
-            text-align: left;
-            max-height: 380px;
+            padding: 15px 10px;
+            max-height: 320px;
             overflow-y: auto;
-            margin-bottom: 25px;
+            text-align: left;
         }
 
-        .history-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        .history-box::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .history-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #cbd5e1;
-            padding-left: 5px;
-        }
-
-        .time-list {
+        .time-list, .deposit-list, .bet-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .time-item {
+        .time-item, .history-item-row {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -386,26 +519,25 @@
             border-left: 4px solid #4ade80;
         }
 
-        .time-info .time-label {
+        .time-info .time-label, .row-main-title {
             font-size: 0.9rem;
             font-weight: 700;
             color: #ffffff;
         }
 
-        .time-info .date-label {
+        .time-info .date-label, .row-sub-title {
             font-size: 0.75rem;
             color: #718096;
             margin-top: 4px;
         }
 
-        .result-number {
+        .result-number, .row-status-badge {
             font-size: 0.85rem;
             font-weight: 700;
             color: #f6ad55;
             background: rgba(255, 255, 255, 0.05);
             padding: 6px 14px;
             border-radius: 20px;
-            min-width: 90px;
             text-align: center;
         }
 
@@ -414,18 +546,10 @@
             background: #2f855a;
         }
         
-        .waiting-text {
-            font-size: 0.85rem;
-            color: #718096;
-            font-style: italic;
-        }
+        .waiting-text { font-size: 0.85rem; color: #718096; font-style: italic; }
+        .no-data-text { font-size: 0.85rem; color: #4a5568; text-align: center; padding: 20px 0; font-style: italic; }
 
-        .law-section {
-            margin-top: 5px;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
+        .law-section { margin-top: 5px; text-align: center; margin-bottom: 25px; }
         .law-btn {
             background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -436,9 +560,7 @@
             border-radius: 14px;
             cursor: pointer;
             width: 100%;
-            transition: all 0.3s ease;
         }
-
         .law-box {
             background: rgba(11, 8, 22, 0.8);
             border: 1px solid rgba(246, 173, 85, 0.3);
@@ -450,38 +572,13 @@
             overflow-y: auto; 
         }
 
-        .telegram-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
+        .telegram-section { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 10px; }
         .telegram-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            background: #0088cc; 
-            border-radius: 50%; 
-            transition: all 0.3s ease;
-            text-decoration: none;
+            display: flex; align-items: center; justify-content: center; width: 60px; height: 60px;
+            background: #0088cc; border-radius: 50%; text-decoration: none;
         }
-
-        .telegram-icon {
-            width: 32px;
-            height: 32px;
-            fill: #ffffff;
-        }
-
-        .telegram-label {
-            font-size: 0.85rem;
-            color: #a0aec0;
-            font-weight: 400;
-        }
+        .telegram-icon { width: 32px; height: 32px; fill: #ffffff; }
+        .telegram-label { font-size: 0.85rem; color: #a0aec0; }
     </style>
 </head>
 <body>
@@ -490,9 +587,7 @@
         <h1 class="main-title">ឆ្នាំសំណាងទាំង​ 12 🎁🎉</h1>
         <p class="sub-title">ប្រព័ន្ធទស្សន៍ទាយ និងកត់ត្រាលេខសំណាងដោយស្វ័យប្រវត្តិ 24 ម៉ោង</p>
 
-        <div class="live-time-badge" id="live-clock">
-            📅 --/--/---- | ⏰ --:--:--
-        </div>
+        <div class="live-time-badge" id="live-clock">📅 --/--/---- | ⏰ --:--:--</div>
 
         <div class="balance-card">
             <div class="balance-info">
@@ -502,11 +597,12 @@
             <button class="deposit-btn" id="openDepositBtn">💵 បញ្ចូលទឹកប្រាក់</button>
         </div>
 
-        <div class="section-indicator" id="current-hour-text">
-            🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោងនេះគឺ៖
-        </div>
-
+        <div class="section-indicator" id="current-hour-text">🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោងនេះគឺ៖</div>
         <div class="lucky-circle" id="main-lucky-number">?</div>
+
+        <div>
+            <button class="predict-action-btn" id="openPredictModalBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+        </div>
 
         <div class="countdown-box">
             លទ្ធផលបន្ទាប់នឹងចេញក្នុងរយៈពេល៖ <span class="countdown-time" id="countdown-timer">--:--</span>
@@ -527,11 +623,27 @@
             </div>
         </div>
 
-        <div class="history-box">
-            <div class="history-title">
-                📋 ប្រវត្តិឆ្នាំសំណាងដែលបានចេញ (ចាប់ពីម៉ោង ០៧:០០ ព្រឹក)
+        <div class="history-wrapper">
+            <div class="history-header-area">
+                <div class="report-tabs">
+                    <button class="tab-btn active" data-tab="result-tab">លទ្ធផលម៉ោង</button>
+                    <button class="tab-btn" data-tab="deposit-tab">ប្រវត្តិបញ្ចូលលុយ</button>
+                    <button class="tab-btn" data-tab="bet-tab">ប្រវត្តិទស្សន៍ទាយ</button>
+                </div>
+                <button class="toggle-history-btn" id="toggleHistoryBtn">👁️ លាក់</button>
             </div>
-            <div class="time-list" id="schedule-list"></div>
+            
+            <div class="history-box" id="historyBoxSection">
+                <div class="tab-content" id="result-tab-content">
+                    <div class="time-list" id="schedule-list"></div>
+                </div>
+                <div class="tab-content" id="deposit-tab-content" style="display: none;">
+                    <div class="deposit-list" id="deposit-history-list"></div>
+                </div>
+                <div class="tab-content" id="bet-tab-content" style="display: none;">
+                    <div class="bet-list" id="bet-history-list"></div>
+                </div>
+            </div>
         </div>
 
         <div class="law-section">
@@ -555,7 +667,6 @@
 
     <div class="modal-overlay" id="depositModal">
         <div class="modal-box">
-            
             <div id="step-pin-section">
                 <div class="modal-title">🔐 សូមវាយលេខកូដសម្ងាត់</div>
                 <p class="modal-desc">វាយកូដសម្ងាត់ត្រឹមត្រូវដើម្បីបើកប្រព័ន្ធបញ្ចូលលុយ</p>
@@ -565,7 +676,6 @@
                     <button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button>
                 </div>
             </div>
-
             <div id="step-amount-section" style="display: none;">
                 <div class="modal-title">💵 បញ្ចូលទឹកប្រាក់ដោយដៃ</div>
                 <p class="modal-desc">សូមវាយបញ្ចូលចំនួនទឹកប្រាក់ដែលបងចង់បាន</p>
@@ -577,13 +687,60 @@
                     <button class="modal-btn btn-success" id="submitDepositBtn">យល់ព្រមបញ្ចូល</button>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <div class="modal-overlay" id="predictModal">
+        <div class="modal-box">
+            <div class="modal-title">🎲 រៀបចំការទស្សន៍ទាយ</div>
+            
+            <div class="preview-balance-box">
+                <div class="preview-row">
+                    <span>ទឹកប្រាក់បច្ចុប្បន្ន:</span>
+                    <span class="preview-val" style="color: #4ade80;">$<span id="pre-current-bal">0.00</span></span>
+                </div>
+                <div class="preview-row">
+                    <span>ទឹកប្រាក់ដែលត្រូវកាត់:</span>
+                    <span class="preview-val" style="color: #fc8181;">$<span id="pre-cost-bal">0.00</span></span>
+                </div>
+                <div class="preview-row" style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4px; padding-top: 4px;">
+                    <span>ទឹកប្រាក់នៅសល់សុទ្ធ:</span>
+                    <span class="preview-val" style="color: #63b3ed;">$<span id="pre-remain-bal">0.00</span></span>
+                </div>
+            </div>
+
+            <p class="modal-desc" style="text-align: left; margin-bottom: 6px;">វាយបញ្ចូលទឹកប្រាក់ដោយដៃ៖</p>
+            <div class="amount-input-wrapper">
+                <input type="number" class="predict-amount-input" id="predictAmountField" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal">
+            </div>
+
+            <div class="shortcut-grid">
+                <button class="shortcut-btn" data-amount="1">$1</button>
+                <button class="shortcut-btn" data-amount="5">$5</button>
+                <button class="shortcut-btn" data-amount="10">$10</button>
+                <button class="shortcut-btn" data-amount="20">$20</button>
+                <button class="shortcut-btn" data-amount="50">$50</button>
+            </div>
+
+            <div class="zodiac-select-title">ជ្រើសរើសឆ្នាំដែលបងចង់ទស្សន៍ទាយ (រង្វាន់ x10)៖</div>
+            <div class="zodiac-select-grid" id="zodiacSelectGridArea"></div>
+
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" id="closePredictModalBtn">បោះបង់</button>
+                <button class="modal-btn btn-success" id="confirmPredictBtn">✅ យល់ព្រមទស្សន៍ទាយ</button>
+            </div>
         </div>
     </div>
 
     <script>
         let currentBalance = 0.00;
         const SECRET_PIN = "Qq2026"; 
+        let isPredicting = false; 
+        let selectedZodiacName = ""; // រក្សាទុកឆ្នាំដែលអ្នកលេងបានជ្រើសរើសចាក់
+
+        // មូលដ្ឋានទិន្នន័យប្រវត្តិលោករក្សាទុកក្នុង LocalStorage
+        let depositHistory = JSON.parse(localStorage.getItem('user_deposit_history')) || [];
+        let betHistory = JSON.parse(localStorage.getItem('user_bet_history')) || [];
 
         const zodiacMap = {
             "01": { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១" }, "02": { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២" },
@@ -631,6 +788,8 @@
         }
 
         function updateLuckySystem() {
+            if (isPredicting) return; 
+
             const now = new Date();
             const currentHour = now.getHours();
             const currentMinute = now.getMinutes();
@@ -704,14 +863,83 @@
         }
 
         function initZodiacBoxes() {
-            let htmlBox1 = "", htmlBox2 = "", htmlBox3 = "";
+            let htmlBox1 = "", htmlBox2 = "", htmlBox3 = "", selectGridHtml = "";
             zodiacDataStatic.forEach((zodiac, i) => {
                 let cardHtml = `<div class="zodiac-card"><div class="zodiac-header"><span class="zodiac-card-icon">${zodiac.icon}</span><span>${zodiac.name}</span></div><span class="zodiac-card-order">${zodiac.order}</span></div>`;
                 if (i < 4) htmlBox1 += cardHtml; else if (i < 8) htmlBox2 += cardHtml; else htmlBox3 += cardHtml;
+                
+                // បង្កើតប៊ូតុងសម្រាប់ជ្រើសរើសចាក់ក្នុងផ្ទាំងទស្សន៍ទាយ
+                selectGridHtml += `<button class="zodiac-select-btn" data-name="${zodiac.name}"><span>${zodiac.icon}</span><span style="font-size:0.7rem;">${zodiac.name}</span></button>`;
             });
             if(document.getElementById("zodiac-box-1")) document.getElementById("zodiac-box-1").innerHTML = htmlBox1;
             if(document.getElementById("zodiac-box-2")) document.getElementById("zodiac-box-2").innerHTML = htmlBox2;
             if(document.getElementById("zodiac-box-3")) document.getElementById("zodiac-box-3").innerHTML = htmlBox3;
+            if(document.getElementById("zodiacSelectGridArea")) document.getElementById("zodiacSelectGridArea").innerHTML = selectGridHtml;
+        }
+
+        function calculatePreviewRates() {
+            const inputField = document.getElementById('predictAmountField');
+            const preCurrent = document.getElementById('pre-current-bal');
+            const preCost = document.getElementById('pre-cost-bal');
+            const preRemain = document.getElementById('pre-remain-bal');
+
+            let cost = parseFloat(inputField.value);
+            if (isNaN(cost) || cost < 0) cost = 0.00;
+
+            let remain = currentBalance - cost;
+            if (remain < 0) remain = 0.00;
+
+            if(preCurrent) preCurrent.textContent = currentBalance.toFixed(2);
+            if(preCost) preCost.textContent = cost.toFixed(2);
+            if(preRemain) preRemain.textContent = remain.toFixed(2);
+        }
+
+        // បង្ហាញបញ្ជីប្រវត្តិបញ្ចូលលុយ
+        function renderDepositHistory() {
+            const container = document.getElementById('deposit-history-list');
+            if(!container) return;
+            if(depositHistory.length === 0) {
+                container.innerHTML = `<div class="no-data-text">មិនទាន់មានប្រវត្តិបញ្ចូលលុយនៅឡើយទេ</div>`;
+                return;
+            }
+            let html = "";
+            depositHistory.forEach(item => {
+                html += `
+                    <div class="history-item-row">
+                        <div class="time-info">
+                            <div class="row-main-title">📥 បញ្ចូលលុយជោគជ័យ</div>
+                            <div class="row-sub-title">${item.date}</div>
+                        </div>
+                        <div class="row-status-badge" style="color:#4ade80; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.2);">+$${item.amount.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // បង្ហាញបញ្ជីប្រវត្តិទស្សន៍ទាយចាក់លុយ
+        function renderBetHistory() {
+            const container = document.getElementById('bet-history-list');
+            if(!container) return;
+            if(betHistory.length === 0) {
+                container.innerHTML = `<div class="no-data-text">មិនទាន់មានប្រវត្តិទស្សន៍ទាយនៅឡើយទេ</div>`;
+                return;
+            }
+            let html = "";
+            betHistory.forEach(item => {
+                let badgeStyle = item.status === "ឈ្នះ" ? "color:#4ade80; background:rgba(74,222,128,0.1);" : "color:#fc8181; background:rgba(252,129,129,0.1);";
+                let rewardText = item.status === "ឈ្នះ" ? `+$${item.reward.toFixed(2)}` : `-$${item.bet.toFixed(2)}`;
+                html += `
+                    <div class="history-item-row">
+                        <div class="time-info">
+                            <div class="row-main-title">ចាក់៖ ${item.picked} | ចេញ៖ ${item.result}</div>
+                            <div class="row-sub-title">${item.date}</div>
+                        </div>
+                        <div class="row-status-badge" style="${badgeStyle}">${item.status} (${rewardText})</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
 
         function startApp() {
@@ -725,6 +953,178 @@
             const userBalanceSpan = document.getElementById('user-balance');
             if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
 
+            // បង្ហាញរបាយការណ៍បឋម
+            renderDepositHistory();
+            renderBetHistory();
+
+            // ប្រព័ន្ធប្តូរ Tabs របាយការណ៍
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const targetTab = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.style.display = 'none';
+                    });
+                    document.getElementById(targetTab + '-content').style.display = 'block';
+                });
+            });
+
+            const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+            const historyBoxSection = document.getElementById('historyBoxSection');
+            if(toggleHistoryBtn && historyBoxSection) {
+                toggleHistoryBtn.addEventListener('click', function() {
+                    if (historyBoxSection.style.display === 'none') {
+                        historyBoxSection.style.display = 'block';
+                        this.textContent = '👁️ លាក់';
+                    } else {
+                        historyBoxSection.style.display = 'none';
+                        this.textContent = '👁️ បង្ហាញ';
+                    }
+                });
+            }
+
+            // ការគ្រប់គ្រងផ្ទាំងទស្សន៍ទាយ (Prediction Modal)
+            const openPredictModalBtn = document.getElementById('openPredictModalBtn');
+            const predictModal = document.getElementById('predictModal');
+            const closePredictModalBtn = document.getElementById('closePredictModalBtn');
+            const predictAmountField = document.getElementById('predictAmountField');
+            const confirmPredictBtn = document.getElementById('confirmPredictBtn');
+            const mainLuckyNumber = document.getElementById('main-lucky-number');
+
+            if (openPredictModalBtn && predictModal) {
+                openPredictModalBtn.addEventListener('click', () => {
+                    if(isPredicting) return;
+                    predictAmountField.value = "";
+                    selectedZodiacName = "";
+                    document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
+                    calculatePreviewRates();
+                    predictModal.classList.add('show');
+                    predictAmountField.focus();
+                });
+            }
+
+            if (closePredictModalBtn) {
+                closePredictModalBtn.addEventListener('click', () => {
+                    predictModal.classList.remove('show');
+                });
+            }
+
+            if (predictAmountField) {
+                predictAmountField.addEventListener('input', calculatePreviewRates);
+            }
+
+            const shortcutButtons = document.querySelectorAll('.shortcut-btn');
+            shortcutButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const amountValue = this.getAttribute('data-amount');
+                    if (predictAmountField) {
+                        predictAmountField.value = amountValue;
+                        calculatePreviewRates();
+                    }
+                });
+            });
+
+            // ចាប់យកព្រឹត្តិការណ៍រើសឆ្នាំសំណាងចាក់
+            document.querySelectorAll('.zodiac-select-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedZodiacName = this.getAttribute('data-name');
+                });
+            });
+
+            // ប៊ូតុងយល់ព្រមទស្សន៍ទាយ (ដំណើរការគណនាកាត់ប្រាក់-បូកប្រាក់ និងកត់ត្រា)
+            if (confirmPredictBtn && openPredictModalBtn) {
+                confirmPredictBtn.addEventListener('click', () => {
+                    const betAmount = parseFloat(predictAmountField.value);
+                    if (isNaN(betAmount) || betAmount <= 0) {
+                        alert("❌ សូមបញ្ចូលទឹកប្រាក់សម្រាប់ទស្សន៍ទាយឱ្យបានត្រឹមត្រូវ!");
+                        predictAmountField.focus();
+                        return;
+                    }
+                    if (!selectedZodiacName) {
+                        alert("❌ សូមជ្រើសរើសឆ្នាំដែលបងចង់ទស្សន៍ទាយចាក់ជាមុនសិន!");
+                        return;
+                    }
+                    if (currentBalance < betAmount) {
+                        alert("❌ សមតុល្យទឹកប្រាក់របស់បងមិនគ្រប់គ្រាន់ទេ! សូមបញ្ចូលលុយបន្ថែម។");
+                        return;
+                    }
+
+                    predictModal.classList.remove('show');
+
+                    // ១. គណនាកាត់ប្រាក់
+                    currentBalance -= betAmount;
+                    localStorage.setItem('user_current_balance', currentBalance);
+                    if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
+
+                    isPredicting = true;
+                    openPredictModalBtn.disabled = true;
+                    openPredictModalBtn.textContent = "កំពុងទស្សន៍ទាយ...";
+
+                    let counter = 0;
+                    let speed = 60;
+                    
+                    function shuffleAnimation() {
+                        const randomIndex = Math.floor(Math.random() * zodiacDataStatic.length);
+                        const pickedZodiac = zodiacDataStatic[randomIndex];
+                        mainLuckyNumber.innerHTML = `${pickedZodiac.icon} ${pickedZodiac.name}`;
+                        
+                        counter++;
+                        if (counter < 20) {
+                            setTimeout(shuffleAnimation, speed);
+                        } else {
+                            // ២. ចេញលទ្ធផលចុងក្រោយដោយចៃដន្យ
+                            const finalIndex = Math.floor(Math.random() * zodiacDataStatic.length);
+                            const finalZodiac = zodiacDataStatic[finalIndex];
+                            mainLuckyNumber.innerHTML = `${finalZodiac.icon} ${finalZodiac.name}`;
+                            
+                            // ៣. គណនាប្រព័ន្ធឈ្នះ-ចាញ់ (បូកប្រាក់ត្រឡប់មកវិញ)
+                            let isWin = (selectedZodiacName === finalZodiac.name);
+                            let rewardAmount = 0;
+                            let statusText = "ចាញ់";
+
+                            if (isWin) {
+                                statusText = "ឈ្នះ";
+                                rewardAmount = betAmount * 10; // អត្រារង្វាន់គុណនឹង១០
+                                currentBalance += rewardAmount; // បូកប្រាក់ចូលវិញ
+                                localStorage.setItem('user_current_balance', currentBalance);
+                                if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
+                                alert(`🎉 អបអរសាទរ! បងទស្សន៍ទាយត្រូវចំ [${finalZodiac.name}] ឈ្នះបានប្រាក់រង្វាន់ $${rewardAmount.toFixed(2)}`);
+                            } else {
+                                alert(`😢 សោកស្តាយផង! លទ្ធផលចេញគឺ [${finalZodiac.name}] ប៉ុន្តែបងបានចាក់ [${selectedZodiacName}]`);
+                            }
+
+                            // ៤. កត់ត្រាចូលក្នុងរបាយការណ៍ទស្សន៍ទាយ
+                            const nowTime = new Date();
+                            const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
+                            betHistory.unshift({
+                                date: timeStr,
+                                picked: selectedZodiacName,
+                                result: finalZodiac.name,
+                                status: statusText,
+                                bet: betAmount,
+                                reward: rewardAmount
+                            });
+                            localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
+                            renderBetHistory(); // ធ្វើបច្ចុប្បន្នភាពតារាងភ្លាមៗ
+
+                            setTimeout(() => {
+                                isPredicting = false;
+                                openPredictModalBtn.disabled = false;
+                                openPredictModalBtn.textContent = "🎲 ចុចដើម្បីទស្សន៍ទាយ";
+                                updateLuckySystem();
+                            }, 4000);
+                        }
+                    }
+                    shuffleAnimation();
+                });
+            }
+
+            // ប្រព័ន្ធបញ្ចូលលុយ និងកត់ត្រាចូលប្រវត្តិបញ្ចូលលុយ
             const openDepositBtn = document.getElementById('openDepositBtn');
             const depositModal = document.getElementById('depositModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
@@ -747,11 +1147,7 @@
                 });
             }
 
-            if(closeModalBtn) {
-                closeModalBtn.addEventListener('click', () => {
-                    depositModal.classList.remove('show');
-                });
-            }
+            if(closeModalBtn) closeModalBtn.addEventListener('click', () => { depositModal.classList.remove('show'); });
 
             if(cancelAmountBtn) {
                 cancelAmountBtn.addEventListener('click', () => {
@@ -784,9 +1180,22 @@
                         amountField.focus();
                         return;
                     }
+                    
+                    // បូកប្រាក់បញ្ចូល
                     currentBalance += depositAmount;
                     if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
                     localStorage.setItem('user_current_balance', currentBalance);
+
+                    // កត់ត្រាចូលប្រវត្តិបញ្ចូលលុយ
+                    const nowTime = new Date();
+                    const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1}/${nowTime.getFullYear()} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
+                    depositHistory.unshift({
+                        date: timeStr,
+                        amount: depositAmount
+                    });
+                    localStorage.setItem('user_deposit_history', JSON.stringify(depositHistory));
+                    renderDepositHistory(); // ធ្វើបច្ចុប្បន្នភាពតារាងភ្លាមៗ
+
                     alert(`🎉 បញ្ចូលទឹកប្រាក់ចំនួន $${depositAmount.toFixed(2)} បានជោគជ័យ!`);
                     depositModal.classList.remove('show');
                 });
