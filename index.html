@@ -34,7 +34,30 @@
             <div id="countdown" class="text-xl font-mono font-bold text-yellow-400">59:59</div>
         </div>
 
+        <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-700 mb-6">
+            <h3 id="table-title" class="text-xs font-bold text-gray-400 mb-3 text-center">📅 តារាងឆ្នាំសំណាងទាំង ១២</h3>
+            <div class="grid grid-cols-3 gap-2">
+                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐭 ជូត (១)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐮 ឆ្លូវ (២)</div>
+                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐯 ខាល (៣)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐰 ថោះ (៤)</div>
+                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐉 រោង (៥)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐍 ម្សាញ់ (៦)</div>
+                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐎 មមី (៧)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐐 មមែ (៨)</div>
+                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐒 វក (៩)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐔 រកា (១០)</div>
+                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐶 ច (១១)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐷 កុរ (១២)</div>
+            </div>
+        </div>
+
         <button id="predict-btn" class="w-full bg-pink-500 py-3 rounded-full font-bold mb-6 text-sm">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+        <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-700">
+            <div class="flex space-x-1 mb-3">
+                <button id="tab1" class="bg-blue-600 px-2 py-1 rounded text-[9px]">លទ្ធផលម៉ោង</button>
+                <button id="tab2" class="bg-gray-700 px-2 py-1 rounded text-[9px]">ប្រវត្តិបញ្ចូលលុយ</button>
+                <button id="tab3" class="bg-gray-700 px-2 py-1 rounded text-[9px]">ប្រវត្តិទស្សន៍ទាយ</button>
+            </div>
+            <div id="content-area" class="h-24 overflow-y-auto text-[10px] space-y-1">
+                <div class="bg-gray-800 p-1 flex justify-between"><span>14:00</span><span>🐔 រកា (១០)</span></div>
+            </div>
+            <button onclick="toggleContent()" id="toggle-btn" class="w-full mt-2 bg-gray-700 py-1 rounded text-[10px]">👁️ លាក់ប្រវត្តិ</button>
+        </div>
     </div>
 
     <div id="deposit-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50">
@@ -48,10 +71,10 @@
                 <button onclick="setAmount(50)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">50$</button>
                 <button onclick="setAmount(100)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">100$</button>
             </div>
-            <input type="number" id="manual-amount" placeholder="វាយទឹកប្រាក់..." class="w-full bg-gray-900 p-2 rounded-lg mb-4 text-center border border-gray-700">
+            <input type="number" id="manual-amount" placeholder="វាយទឹកប្រាក់ផ្សេងទៀត ($)" class="w-full bg-gray-900 p-2 rounded-lg mb-4 text-center border border-gray-700">
             <div class="flex space-x-2">
                 <button onclick="closeModal()" class="flex-1 bg-red-700 py-2 rounded-lg font-bold">បោះបង់</button>
-                <button onclick="confirmDeposit()" class="flex-1 bg-green-500 py-2 rounded-lg font-bold text-black">យល់ព្រម</button>
+                <button onclick="confirmDeposit()" class="flex-1 bg-green-500 py-2 rounded-lg font-bold text-gray-900">យល់ព្រម</button>
             </div>
         </div>
     </div>
@@ -60,7 +83,7 @@
         let balance = 0.00;
         let currentLang = 'km';
 
-        // មុខងារពេលវេលា
+        // មុខងារពេលវេលា Global
         async function updateGlobalTime() {
             try {
                 const res = await fetch('https://worldtimeapi.org/api/timezone/Asia/Phnom_Penh');
@@ -92,10 +115,13 @@
         // មុខងារភាសា
         function toggleLanguage() {
             currentLang = currentLang === 'km' ? 'en' : 'km';
-            const t = { km: { title: "ឆ្នាំសំណាងទាំង 12", wallet: "សមតុល្យ" }, en: { title: "12 Lucky Years", wallet: "Balance" } };
-            document.getElementById('main-title').innerText = t[currentLang].title;
             document.getElementById('lang-text').innerText = currentLang === 'km' ? 'ខ្មែរ' : 'English';
             document.getElementById('lang-icon').innerText = currentLang === 'km' ? '🇰🇭' : '🇬🇧';
+        }
+
+        function toggleContent() {
+            const area = document.getElementById('content-area');
+            area.style.display = area.style.display === 'none' ? 'block' : 'none';
         }
     </script>
 </body>
