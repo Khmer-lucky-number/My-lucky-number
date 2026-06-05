@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Year System - Full Version</title>
+    <title>Lucky Year System - Full Features</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans p-4">
@@ -15,7 +15,7 @@
 
         <div class="bg-purple-900/30 p-4 rounded-xl border border-purple-700 mb-6 flex justify-between items-center">
             <div>
-                <p class="text-gray-400 text-xs">សមតុល្យ</p>
+                <p class="text-gray-400 text-xs">សមតុល្យបច្ចុប្បន្ន</p>
                 <h2 id="wallet-balance" class="text-xl font-bold text-green-400">$0.00</h2>
             </div>
             <button onclick="showPasswordModal()" class="bg-green-500 px-3 py-1 rounded-lg text-xs font-bold">💰 បញ្ចូលលុយ</button>
@@ -30,13 +30,6 @@
                 <div class="bg-gray-800 p-1 rounded">🐎មមី</div><div class="bg-gray-800 p-1 rounded">🐐មមែ</div>
                 <div class="bg-gray-800 p-1 rounded">🐒វក</div><div class="bg-gray-800 p-1 rounded">🐔រកា</div>
                 <div class="bg-gray-800 p-1 rounded">🐶ច</div><div class="bg-gray-800 p-1 rounded">🐷កុរ</div>
-            </div>
-        </div>
-
-        <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-700">
-            <h3 class="text-xs font-bold mb-2">📜 ប្រវត្តិ</h3>
-            <div id="history-list" class="text-[10px] space-y-1">
-                <p class="text-gray-500">មិនទាន់មានប្រវត្តិ...</p>
             </div>
         </div>
     </div>
@@ -56,9 +49,9 @@
         <div class="bg-gray-800 p-6 rounded-2xl w-full max-w-sm border border-gray-600">
             <h3 class="mb-4 text-center font-bold">ជ្រើសរើសទឹកប្រាក់ ($)</h3>
             <div class="grid grid-cols-3 gap-2 mb-4">
-                <button onclick="setAmount(10)" class="bg-gray-700 py-2 rounded text-sm">10$</button>
-                <button onclick="setAmount(50)" class="bg-gray-700 py-2 rounded text-sm">50$</button>
-                <button onclick="setAmount(100)" class="bg-gray-700 py-2 rounded text-sm">100$</button>
+                <button onclick="setAmount(10)" class="bg-gray-700 py-2 rounded text-sm hover:bg-green-600">10$</button>
+                <button onclick="setAmount(50)" class="bg-gray-700 py-2 rounded text-sm hover:bg-green-600">50$</button>
+                <button onclick="setAmount(100)" class="bg-gray-700 py-2 rounded text-sm hover:bg-green-600">100$</button>
             </div>
             <input type="number" id="manual-amount" class="w-full bg-gray-900 p-2 rounded mb-4 text-center border border-gray-700" placeholder="វាយទឹកប្រាក់...">
             <div class="flex gap-2">
@@ -73,11 +66,14 @@
         let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
         document.getElementById('wallet-balance').innerText = "$" + balance.toFixed(2);
 
-        // នាឡិកាដើម
+        // នាឡិកា
         setInterval(() => { document.getElementById('server-time').innerText = new Date().toLocaleTimeString(); }, 1000);
 
         function showPasswordModal() { document.getElementById('pass-modal').style.display = 'flex'; }
-        function closeModals() { document.getElementById('pass-modal').style.display = 'none'; document.getElementById('deposit-modal').style.display = 'none'; }
+        function closeModals() { 
+            document.getElementById('pass-modal').style.display = 'none'; 
+            document.getElementById('deposit-modal').style.display = 'none'; 
+        }
         
         function checkPassword() {
             if(document.getElementById('pass-input').value === "Qq1280") {
