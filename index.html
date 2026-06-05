@@ -144,7 +144,9 @@
 
         .modal-overlay.show .modal-box {
             transform: scale(1);
-        }.modal-title {
+        }
+
+        .modal-title {
             font-size: 1.1rem;
             color: #fbd38d;
             margin-bottom: 15px;
@@ -284,7 +286,9 @@
             font-weight: 700;
             cursor: pointer;
             transition: background 0.2s;
-        }.btn-cancel { background: #4a5568; color: #ffffff; }
+        }
+
+        .btn-cancel { background: #4a5568; color: #ffffff; }
         .btn-cancel:hover { background: #3e4654; }
         .btn-confirm { background: #3182ce; color: #ffffff; }
         .btn-confirm:hover { background: #2b6cb0; }
@@ -408,7 +412,8 @@
             border-radius: 4px;
         }
 
-        /* ប្រព័ន្ធថេបរបាយការណ៍រួមគ្នា */.history-wrapper { margin-bottom: 25px; }
+        /* ប្រព័ន្ធថេបរបាយការណ៍រួមគ្នា */
+        .history-wrapper { margin-bottom: 25px; }
         .history-header-area {
             display: flex;
             justify-content: space-between;
@@ -520,7 +525,8 @@
         }
 
         .law-section { margin-top: 5px; text-align: center; margin-bottom: 25px; }
-        .law-btn {background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 100%);
+        .law-btn {
+            background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #ffffff;
             padding: 12px 24px;
@@ -604,7 +610,9 @@
             <button class="admin-btn" id="clearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
             <button class="admin-btn" id="clearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
             <button class="admin-btn" id="clearBalanceBtn">💰 លុបទឹកប្រាក់ក្នុងគណនី</button>
-        </div><div class="law-section">
+        </div>
+
+        <div class="law-section">
             <button class="law-btn" id="toggleLawBtn">ចុចដើម្បីអានអំពីច្បាប់</button>
             <div class="law-box" id="lawContent" style="display: none;">
                 <p class="law-text">
@@ -670,7 +678,9 @@
             <p class="modal-desc" style="text-align: left; margin-bottom: 6px;">វាយបញ្ចូលទឹកប្រាក់ដោយដៃ៖</p>
             <div class="amount-input-wrapper">
                 <input type="number" class="predict-amount-input" id="predictAmountField" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal">
-            </div><div class="shortcut-grid">
+            </div>
+
+            <div class="shortcut-grid">
                 <button class="shortcut-btn" data-amount="1">$1</button>
                 <button class="shortcut-btn" data-amount="5">$5</button>
                 <button class="shortcut-btn" data-amount="10">$10</button>
@@ -729,7 +739,8 @@
         ];
 
         function generate24HourNumbers(targetDate) {
-            const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();let seed = dateSeed;
+            const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
+            let seed = dateSeed;
             function random() { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
             function shufflePool() {
                 let pool = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -792,7 +803,7 @@
             const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
             const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
             
-            const formatDate = (d) => ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()};
+            const formatDate = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
             const todayStr = formatDate(now); const tomorrowStr = formatDate(tomorrow); const yesterdayStr = formatDate(yesterday);
             
             const hourPrint = currentHour < 10 ? '0' + currentHour : currentHour;
@@ -800,14 +811,15 @@
             const secPrint = currentSecond < 10 ? '0' + currentSecond : currentSecond;
             
             if(document.getElementById("live-clock")) {
-                document.getElementById("live-clock").innerHTML = 📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint};
+                document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
             }
             if(document.getElementById("current-hour-text")) {
-                document.getElementById("current-hour-text").innerHTML = 🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖;
+                document.getElementById("current-hour-text").innerHTML = `🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
             }
 
             let diffMinutes = 59 - currentMinute; 
-            let diffSeconds = 59 - currentSecond;let strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
+            let diffSeconds = 59 - currentSecond;
+            let strMins = diffMinutes < 10 ? '0' + diffMinutes : diffMinutes;
             let strSecs = diffSeconds < 10 ? '0' + diffSeconds : diffSeconds;
             if(document.getElementById("countdown-timer")) {
                 document.getElementById("countdown-timer").innerHTML = strMins + ":" + strSecs;
@@ -828,17 +840,17 @@
 
                 if (index < currentLayoutIndex) {
                     if (currentHour < 7 && slot.hour >= 7) { slotDateStr = yesterdayStr; assignedNumber = yesterdayNumbers[slot.hour]; }
-                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? ${zInfo.icon} ${zInfo.order} : "?";
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
                 } else if (index === currentLayoutIndex) {
                     itemClass += " active";
-                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? ${zInfo.icon} ${zInfo.order} : "?";
-                    currentActiveContent = zInfo ? ${zInfo.icon} ${zInfo.name} : "?";
+                    let zInfo = zodiacMap[assignedNumber]; displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
+                    currentActiveContent = zInfo ? `${zInfo.icon} ${zInfo.name}` : "?";
                 } else {
-                    displayResult = <span class="waiting-text">រង់ចាំម៉ោង</span>;
+                    displayResult = `<span class="waiting-text">រង់ចាំម៉ោង</span>`;
                     if (currentHour >= 7 && slot.hour < 7) { slotDateStr = tomorrowStr; }
                 }
 
-                listHtml += 
+                listHtml += `
                     <div class="${itemClass}">
                         <div class="time-info">
                             <div class="time-label">ម៉ោង ${slot.time}</div>
@@ -846,7 +858,7 @@
                         </div>
                         <div class="result-number">${displayResult}</div>
                     </div>
-                ;
+                `;
             });
 
             if(document.getElementById("main-lucky-number")) {
@@ -860,7 +872,7 @@
         function initZodiacBoxes() {
             let singleGridHtml = "", selectGridHtml = "";
             zodiacDataStatic.forEach((zodiac, i) => {
-                singleGridHtml += 
+                singleGridHtml += `
                     <div class="zodiac-card">
                         <div class="zodiac-header">
                             <span class="zodiac-card-icon">${zodiac.icon}</span>
@@ -868,8 +880,8 @@
                         </div>
                         <span class="zodiac-card-order">${zodiac.order}</span>
                     </div>
-                ;
-                selectGridHtml += <button class="zodiac-select-btn" data-name="${zodiac.name}"><span>${zodiac.icon}</span><span style="font-size:0.7rem;">${zodiac.name}</span></button>;
+                `;
+                selectGridHtml += `<button class="zodiac-select-btn" data-name="${zodiac.name}"><span>${zodiac.icon}</span><span style="font-size:0.7rem;">${zodiac.name}</span></button>`;
             });
             
             if(document.getElementById("zodiac-single-grid-area")) document.getElementById("zodiac-single-grid-area").innerHTML = singleGridHtml;
@@ -880,7 +892,9 @@
             const inputField = document.getElementById('predictAmountField');
             const preCurrent = document.getElementById('pre-current-bal');
             const preCost = document.getElementById('pre-cost-bal');
-            const preRemain = document.getElementById('pre-remain-bal');let cost = parseFloat(inputField.value);
+            const preRemain = document.getElementById('pre-remain-bal');
+
+            let cost = parseFloat(inputField.value);
             if (isNaN(cost) || cost < 0) cost = 0.00;
             let remain = currentBalance - cost;
             if (remain < 0) remain = 0.00;
@@ -894,12 +908,12 @@
             const container = document.getElementById('deposit-history-list');
             if(!container) return;
             if(depositHistory.length === 0) {
-                container.innerHTML = <div class="no-data-text">មិនទាន់មានប្រវត្តិបញ្ចូលលុយនៅឡើយទេ</div>;
+                container.innerHTML = `<div class="no-data-text">មិនទាន់មានប្រវត្តិបញ្ចូលលុយនៅឡើយទេ</div>`;
                 return;
             }
             let html = "";
             depositHistory.forEach(item => {
-                html += 
+                html += `
                     <div class="history-item-row">
                         <div class="time-info">
                             <div class="row-main-title">📥 បញ្ចូលលុយជោគជ័យ</div>
@@ -907,7 +921,7 @@
                         </div>
                         <div class="row-status-badge" style="color:#4ade80; background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.2);">+$${item.amount.toFixed(2)}</div>
                     </div>
-                ;
+                `;
             });
             container.innerHTML = html;
         }
@@ -916,23 +930,23 @@
             const container = document.getElementById('bet-history-list');
             if(!container) return;
             if(betHistory.length === 0) {
-                container.innerHTML = <div class="no-data-text">មិនទាន់មានប្រវត្តិទស្សន៍ទាយនៅឡើយទេ</div>;
+                container.innerHTML = `<div class="no-data-text">មិនទាន់មានប្រវត្តិទស្សន៍ទាយនៅឡើយទេ</div>`;
                 return;
             }
             let html = "";
             betHistory.forEach(item => {
                 let badgeStyle = "color:#f6ad55; background:rgba(246,173,85,0.1);";
-                let rewardText = លុយចាក់: $${item.bet.toFixed(2)};
+                let rewardText = `លុយចាក់: $${item.bet.toFixed(2)}`;
                 
                 if (item.status === "ឈ្នះ") {
                     badgeStyle = "color:#4ade80; background:rgba(74,222,128,0.1);";
-                    rewardText = ឈ្នះបាន: +$${item.reward.toFixed(2)};
+                    rewardText = `ឈ្នះបាន: +$${item.reward.toFixed(2)}`;
                 } else if (item.status === "ចាញ់") {
                     badgeStyle = "color:#fc8181; background:rgba(252,129,129,0.1);";
-                    rewardText = បាត់បង់: -$${item.bet.toFixed(2)};
+                    rewardText = `បាត់បង់: -$${item.bet.toFixed(2)}`;
                 }
 
-                html += 
+                html += `
                     <div class="history-item-row">
                         <div class="time-info">
                             <div class="row-main-title">ចាក់៖ ${item.picked} | ចេញ៖ ${item.result}</div>
@@ -940,7 +954,7 @@
                         </div>
                         <div class="row-status-badge" style="${badgeStyle}">${item.status}<br><span style="font-size:0.65rem;">${rewardText}</span></div>
                     </div>
-                ;
+                `;
             });
             container.innerHTML = html;
         }
@@ -963,7 +977,9 @@
             tabButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     tabButtons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');const targetTab = this.getAttribute('data-tab');
+                    this.classList.add('active');
+
+                    const targetTab = this.getAttribute('data-tab');
                     document.querySelectorAll('.tab-content').forEach(content => {
                         content.style.display = 'none';
                     });
@@ -1045,14 +1061,16 @@
                     if (currentBalance < betAmount) {
                         alert("❌ សមតុល្យទឹកប្រាក់របស់បងមិនគ្រប់គ្រាន់ទេ! សូមបញ្ចូលលុយបន្ថែម។");
                         return;
-                    }predictModal.classList.remove('show');
+                    }
+
+                    predictModal.classList.remove('show');
                     currentBalance -= betAmount;
                     localStorage.setItem('user_current_balance', currentBalance);
                     if(userBalanceSpan) userBalanceSpan.textContent = currentBalance.toFixed(2);
 
                     const nowTime = new Date();
                     const currentHour = nowTime.getHours();
-                    const timeStr = ${nowTime.getDate()}/${nowTime.getMonth()+1} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()};
+                    const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
                     
                     betHistory.unshift({
                         date: timeStr,
@@ -1066,7 +1084,7 @@
                     
                     localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
                     renderBetHistory();
-                    alert(🎯 ចាក់ទស្សន៍ទាយលើ [${selectedZodiacName}] ចំនួន $${betAmount.toFixed(2)} បានជោគជ័យ! ប្រព័ន្ធកំពុងរង់ចាំលទ្ធផលផ្លូវការនៅពេលប្តូរម៉ោងថ្មី។);
+                    alert(`🎯 ចាក់ទស្សន៍ទាយលើ [${selectedZodiacName}] ចំនួន $${betAmount.toFixed(2)} បានជោគជ័យ! ប្រព័ន្ធកំពុងរង់ចាំលទ្ធផលផ្លូវការនៅពេលប្តូរម៉ោងថ្មី។`);
                 });
             }
 
@@ -1113,7 +1131,8 @@
                 });
             }
             if(clearBetHistoryBtn) {
-                clearBetHistoryBtn.addEventListener('click', () => {triggerSecurityModal("clear_bet", "🔐 សហការី៖ លុបប្រវត្តិទស្សន៍ទាយ", "សូមវាយលេខកូដសម្ងាត់ដើម្បីលុបប្រវត្តិទស្សន៍ទាយទាំងអស់");
+                clearBetHistoryBtn.addEventListener('click', () => {
+                    triggerSecurityModal("clear_bet", "🔐 សហការី៖ លុបប្រវត្តិទស្សន៍ទាយ", "សូមវាយលេខកូដសម្ងាត់ដើម្បីលុបប្រវត្តិទស្សន៍ទាយទាំងអស់");
                 });
             }
             if(clearBalanceBtn) {
@@ -1181,10 +1200,12 @@
                     localStorage.setItem('user_current_balance', currentBalance);
 
                     const nowTime = new Date();
-                    const timeStr = ${nowTime.getDate()}/${nowTime.getMonth()+1}/${nowTime.getFullYear()} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()};
+                    const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1}/${nowTime.getFullYear()} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
                     depositHistory.unshift({ date: timeStr, amount: depositAmount });
                     localStorage.setItem('user_deposit_history', JSON.stringify(depositHistory));
-                    renderDepositHistory();alert(🎉 បញ្ចូលទឹកប្រាក់ចំនួន $${depositAmount.toFixed(2)} បានជោគជ័យ!);
+                    renderDepositHistory();
+
+                    alert(`🎉 បញ្ចូលទឹកប្រាក់ចំនួន $${depositAmount.toFixed(2)} បានជោគជ័យ!`);
                     depositModal.classList.remove('show');
                 });
             }
