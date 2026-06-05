@@ -3,84 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>លទ្ធផលសំណាង</title>
+    <title>រចនាគេហទំព័រលទ្ធផល</title>
     <style>
-        body {
-            margin: 0;
-            background-color: #1a1a2e;
-            color: white;
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; 
             padding: 20px;
+            font-family: 'Khmer OS Siemreap', sans-serif; 
+            background-color: #0f0f1a; 
+            color: #ffffff; 
         }
-        .main-container {
-            width: 100%;
-            max-width: 500px;
-            background: #252545;
-            padding: 20px;
-            border-radius: 15px;
+        .container { 
+            max-width: 800px; 
+            margin: auto; 
         }
         .header { text-align: center; color: #ffd700; margin-bottom: 20px; }
-        .timer-box { 
-            background: #161625; 
+        
+        /* ការរចនាសម្រាប់តារាង និងប្រអប់ */
+        .card { 
+            background: #1e1e30; 
             padding: 15px; 
-            text-align: center; 
-            border-radius: 10px; 
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+            margin-bottom: 10px; 
+            border-radius: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
             border: 1px solid #303055;
         }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-        .zodiac-item {
-            background: #303055;
-            padding: 15px 5px;
-            text-align: center;
-            border-radius: 8px;
-            font-size: 0.9rem;
+        
+        /* សម្រាប់ទូរស័ព្ទ (Screen < 600px) */
+        @media (max-width: 600px) {
+            .card { flex-direction: column; text-align: center; }
+            .card span { margin: 5px 0; }
         }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <h2 class="header">លទ្ធផលចេញឆ្នោត</h2>
-    <div class="timer-box" id="timer">រង់ចាំលទ្ធផលបន្ទាប់...</div>
+<div class="container">
+    <h2 class="header">ប្រវត្តិលទ្ធផល</h2>
     
-    <div class="grid-container">
-        <div class="zodiac-item">ជូត</div>
-        <div class="zodiac-item">ឆ្លូវ</div>
-        <div class="zodiac-item">ខាល</div>
-        <div class="zodiac-item">ថោះ</div>
-        <div class="zodiac-item">រោង</div>
-        <div class="zodiac-item">ម្សាញ់</div>
-        <div class="zodiac-item">មមី</div>
-        <div class="zodiac-item">មមែ</div>
-        <div class="zodiac-item">វក</div>
-        <div class="zodiac-item">រកា</div>
-        <div class="zodiac-item">ច</div>
-        <div class="zodiac-item">កុរ</div>
+    <div class="date-section">ថ្ងៃទី ៥ ខែ ៦ ឆ្នាំ ២០២៦</div>
+    <div class="card">
+        <span>ម៉ោង 23:00</span>
+        <span style="color: #ffaa00;">កំពុងរង់ចាំលទ្ធផល...</span>
+    </div>
+
+    <div class="date-section">ថ្ងៃទី ៦ ខែ ៦ ឆ្នាំ ២០២៦</div>
+    <div class="card">
+        <span>ម៉ោង 00:00</span>
+        <span style="color: #ffaa00;">កំពុងរង់ចាំលទ្ធផល...</span>
     </div>
 </div>
-
-<script>
-    function updateTimer() {
-        const now = new Date();
-        const nextDraw = new Date();
-        nextDraw.setHours(nextDraw.getHours() + 1, 0, 0, 0); // កំណត់ម៉ោងលទ្ធផលបន្ទាប់
-        const diff = nextDraw - now;
-        
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        
-        document.getElementById('timer').innerText = `លទ្ធផលបន្ទាប់នឹងចេញក្នុង: ${minutes}នាទី ${seconds}វិនាទី`;
-    }
-    setInterval(updateTimer, 1000);
-</script>
 
 </body>
 </html>
