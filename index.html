@@ -34,64 +34,51 @@
             <div id="countdown" class="text-xl font-mono font-bold text-yellow-400">59:59</div>
         </div>
 
-        <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-700 mb-6">
-            <h3 id="table-title" class="text-xs font-bold text-gray-400 mb-3 text-center">📅 តារាងឆ្នាំសំណាងទាំង ១២</h3>
-            <div class="grid grid-cols-3 gap-2">
-                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐭 ជូត (១)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐮 ឆ្លូវ (២)</div>
-                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐯 ខាល (៣)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐰 ថោះ (៤)</div>
-                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐉 រោង (៥)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐍 ម្សាញ់ (៦)</div>
-                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐎 មមី (៧)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐐 មមែ (៨)</div>
-                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐒 វក (៩)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐔 រកា (១០)</div>
-                <div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐶 ច (១១)</div><div class="bg-gray-800 p-1 rounded text-center text-[10px]">🐷 កុរ (១២)</div>
-            </div>
-        </div>
-
         <button id="predict-btn" class="w-full bg-pink-500 py-3 rounded-full font-bold mb-6 text-sm">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
-        
-        <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-700">
-            <div class="flex space-x-1 mb-3">
-                <button id="tab1" class="bg-blue-600 px-2 py-1 rounded text-[9px]">លទ្ធផលម៉ោង</button>
-                <button id="tab2" class="bg-gray-700 px-2 py-1 rounded text-[9px]">ប្រវត្តិបញ្ចូលលុយ</button>
-                <button id="tab3" class="bg-gray-700 px-2 py-1 rounded text-[9px]">ប្រវត្តិទស្សន៍ទាយ</button>
-            </div>
-            <div id="content-area" class="h-24 overflow-y-auto text-[10px] space-y-1">
-                <div class="bg-gray-800 p-1 flex justify-between"><span>14:00</span><span>🐔 រកា (១០)</span></div>
-            </div>
-            <button onclick="toggleContent()" id="toggle-btn" class="w-full mt-2 bg-gray-700 py-1 rounded text-[10px]">👁️ លាក់ប្រវត្តិ</button>
-        </div>
     </div>
 
-    <div id="deposit-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gray-800 p-6 rounded-2xl w-full max-w-sm border border-gray-600">
-            <h3 class="text-lg font-bold mb-4 text-center">💰 ជ្រើសរើសទឹកប្រាក់</h3>
-            <div class="grid grid-cols-2 gap-3 mb-4">
-                <button onclick="addAmount(10)" class="bg-gray-700 py-2 rounded-lg">10$</button><button onclick="addAmount(20)" class="bg-gray-700 py-2 rounded-lg">20$</button>
-                <button onclick="addAmount(30)" class="bg-gray-700 py-2 rounded-lg">30$</button><button onclick="addAmount(40)" class="bg-gray-700 py-2 rounded-lg">40$</button>
-                <button onclick="addAmount(50)" class="bg-gray-700 py-2 rounded-lg">50$</button><button onclick="addAmount(100)" class="bg-gray-700 py-2 rounded-lg">100$</button>
+    <div id="deposit-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-gray-800 p-6 rounded-2xl w-full max-w-sm border border-gray-700 shadow-2xl">
+            <h3 class="text-lg font-bold mb-4 text-center">បញ្ចូលទឹកប្រាក់</h3>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="setAmount(10)" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm">10$</button>
+                <button onclick="setAmount(20)" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm">20$</button>
+                <button onclick="setAmount(30)" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm">30$</button>
+                <button onclick="setAmount(40)" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm">40$</button>
+                <button onclick="setAmount(50)" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm">50$</button>
+                <button onclick="setAmount(100)" class="bg-gray-700 hover:bg-gray-600 p-2 rounded-lg text-sm">100$</button>
             </div>
-            <input type="number" id="manual-amount" placeholder="វាយចំនួនទឹកប្រាក់..." class="w-full bg-gray-900 p-2 rounded-lg mb-4 text-center">
-            <div class="flex space-x-2"><button onclick="closeDeposit()" class="flex-1 bg-red-600 py-2 rounded-lg">បិទ</button><button onclick="confirmDeposit()" class="flex-1 bg-green-600 py-2 rounded-lg">បញ្ជាក់</button></div>
+            <input type="number" id="manual-amount" placeholder="ទឹកប្រាក់ផ្សេងទៀត ($)" class="w-full bg-gray-900 p-3 rounded-lg mb-6 text-center border border-gray-600">
+            <div class="flex space-x-3">
+                <button onclick="closeModal()" class="flex-1 bg-gray-600 py-2 rounded-lg font-bold">បោះបង់</button>
+                <button onclick="confirmDeposit()" class="flex-1 bg-green-500 py-2 rounded-lg font-bold">យល់ព្រម</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // គ្រប់មុខងារ JavaScript ត្រូវបានបង្រួបបង្រួមនៅទីនេះ (រួមទាំង Time, Lang, និង Modal)
-        // ... [Code ទាំងអស់ដែលធានាឱ្យដំណើរការ] ...
-        // (បន្តកូដ JavaScript របស់អ្នកនៅទីនេះ)
-        
+        // មុខងារហៅ Modal ជាមួយពាក្យសម្ងាត់
         document.getElementById('deposit-btn').onclick = function() {
-            const password = prompt("សូមវាយពាក្យសម្ងាត់ដើម្បីបញ្ចូលទឹកប្រាក់:");
+            const password = prompt("សូមវាយពាក្យសម្ងាត់ (Qq1280):");
             if (password === "Qq1280") {
                 document.getElementById('deposit-modal').style.display = 'flex';
-            } else {
+            } else if (password !== null) {
                 alert("ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!");
             }
         };
 
-        function closeDeposit() { document.getElementById('deposit-modal').style.display = 'none'; }
-        function addAmount(val) { document.getElementById('manual-amount').value = val; }
+        function closeModal() { document.getElementById('deposit-modal').style.display = 'none'; }
+        function setAmount(val) { document.getElementById('manual-amount').value = val; }
         
-        // [និង Function ផ្សេងទៀត...]
+        function confirmDeposit() {
+            const amount = document.getElementById('manual-amount').value;
+            if(amount > 0) {
+                alert("បានបញ្ចូលទឹកប្រាក់ចំនួន " + amount + "$ ដោយជោគជ័យ!");
+                closeModal();
+            } else {
+                alert("សូមជ្រើសរើស ឬវាយបញ្ចូលទឹកប្រាក់!");
+            }
+        }
     </script>
 </body>
 </html>
