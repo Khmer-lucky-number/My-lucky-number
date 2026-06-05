@@ -3,56 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Year System - Full Features</title>
+    <title>Lucky Year System - Full Version</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans p-4">
 
-    <div class="max-w-md mx-auto bg-gray-800 p-6 rounded-2xl shadow-xl relative">
-        <button onclick="toggleLanguage()" class="absolute top-4 right-4 bg-white/10 px-3 py-1 rounded-full text-[10px] font-bold">🇰🇭 ខ្មែរ</button>
-
-        <h1 id="main-title" class="text-2xl font-bold text-center mb-2">ឆ្នាំសំណាងទាំង 12 🎁🎉</h1>
-        <p class="text-center text-gray-400 text-sm mb-4">ប្រព័ន្ធទស្សន៍ទាយ និងកត់ត្រាលេខសំណាង</p>
+    <div class="max-w-md mx-auto bg-gray-800 p-6 rounded-2xl shadow-xl">
+        <h1 class="text-2xl font-bold text-center mb-2">ឆ្នាំសំណាងទាំង 12 🎁🎉</h1>
         
-        <div id="server-time" class="bg-blue-900/50 p-2 rounded-lg text-center border border-blue-700 mb-4 text-sm font-mono">📅 កំពុងផ្ទុក...</div>
+        <div id="server-time" class="bg-blue-900/50 p-2 rounded-lg text-center border border-blue-700 mb-4 text-sm font-mono"></div>
 
         <div class="bg-purple-900/30 p-4 rounded-xl border border-purple-700 mb-6 flex justify-between items-center">
-            <div><p class="text-gray-400 text-xs">សមតុល្យ</p><h2 id="wallet-balance" class="text-xl font-bold text-green-400">$0.00</h2></div>
+            <div>
+                <p class="text-gray-400 text-xs">សមតុល្យ</p>
+                <h2 id="wallet-balance" class="text-xl font-bold text-green-400">$0.00</h2>
+            </div>
             <button onclick="showPasswordModal()" class="bg-green-500 px-3 py-1 rounded-lg text-xs font-bold">💰 បញ្ចូលលុយ</button>
         </div>
 
-        <div class="text-center mb-6">
-            <div class="bg-gray-700/50 p-3 rounded-xl border border-gray-600 inline-block">
-                <span class="text-3xl">🐔</span><p class="font-bold">ឆ្នាំរកា (១០)</p>
-            </div>
-            <div class="mt-4 bg-yellow-900/20 p-2 rounded-lg border border-yellow-700/50">
-                <p class="text-[10px] text-yellow-500">⏳ លទ្ធផលបន្ទាប់៖</p>
-                <div id="countdown" class="text-xl font-mono font-bold text-yellow-400">59:59</div>
-            </div>
-        </div>
-
         <div class="bg-gray-900/50 p-4 rounded-xl border border-gray-700 mb-6">
-            <h3 class="text-xs font-bold text-gray-400 mb-3 text-center">📅 តារាងឆ្នាំសំណាងទាំង ១២</h3>
+            <h3 class="text-xs font-bold text-gray-400 mb-3 text-center">📅 តារាងឆ្នាំសំណាង</h3>
             <div class="grid grid-cols-4 gap-2 text-center text-[10px]">
-                <div class="bg-gray-800 p-1 rounded">🐭ជូត</div><div class="bg-gray-800 p-1 rounded">🐮ឆ្លូវ</div><div class="bg-gray-800 p-1 rounded">🐯ខាល</div><div class="bg-gray-800 p-1 rounded">🐰ថោះ</div>
-                <div class="bg-gray-800 p-1 rounded">🐉រោង</div><div class="bg-gray-800 p-1 rounded">🐍ម្សាញ់</div><div class="bg-gray-800 p-1 rounded">🐎មមី</div><div class="bg-gray-800 p-1 rounded">🐐មមែ</div>
-                <div class="bg-gray-800 p-1 rounded">🐒វក</div><div class="bg-gray-800 p-1 rounded">🐔រកា</div><div class="bg-gray-800 p-1 rounded">🐶ច</div><div class="bg-gray-800 p-1 rounded">🐷កុរ</div>
+                <div class="bg-gray-800 p-1 rounded">🐭ជូត</div><div class="bg-gray-800 p-1 rounded">🐮ឆ្លូវ</div>
+                <div class="bg-gray-800 p-1 rounded">🐯ខាល</div><div class="bg-gray-800 p-1 rounded">🐰ថោះ</div>
+                <div class="bg-gray-800 p-1 rounded">🐉រោង</div><div class="bg-gray-800 p-1 rounded">🐍ម្សាញ់</div>
+                <div class="bg-gray-800 p-1 rounded">🐎មមី</div><div class="bg-gray-800 p-1 rounded">🐐មមែ</div>
+                <div class="bg-gray-800 p-1 rounded">🐒វក</div><div class="bg-gray-800 p-1 rounded">🐔រកា</div>
+                <div class="bg-gray-800 p-1 rounded">🐶ច</div><div class="bg-gray-800 p-1 rounded">🐷កុរ</div>
             </div>
         </div>
 
         <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-700">
-            <div id="history-content" class="h-20 overflow-y-auto text-[10px] space-y-1">
-                <div class="flex justify-between border-b border-gray-700 py-1"><span>14:00</span><span>🐔 រកា (១០)</span></div>
+            <h3 class="text-xs font-bold mb-2">📜 ប្រវត្តិ</h3>
+            <div id="history-list" class="text-[10px] space-y-1">
+                <p class="text-gray-500">មិនទាន់មានប្រវត្តិ...</p>
             </div>
-            <button onclick="toggleHistory()" class="w-full mt-2 bg-gray-700 py-1 rounded text-[10px]">👁️ បិទ/បើកប្រវត្តិ</button>
         </div>
     </div>
 
     <div id="pass-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-gray-800 p-6 rounded-2xl w-full max-w-xs text-center border border-gray-600">
+        <div class="bg-gray-800 p-6 rounded-2xl w-full max-w-xs border border-gray-600 text-center">
             <h3 class="mb-4 font-bold">បញ្ចូលពាក្យសម្ងាត់</h3>
-            <input type="password" id="pass-input" class="w-full bg-gray-900 p-2 rounded mb-4 text-center border border-gray-700">
-            <button onclick="checkPassword()" class="w-full bg-blue-600 py-2 rounded font-bold">ចូល</button>
+            <input type="password" id="pass-input" class="w-full bg-gray-900 p-2 rounded mb-4 text-center border border-gray-700" placeholder="••••">
+            <div class="flex gap-2">
+                <button onclick="closeModals()" class="flex-1 bg-red-600 py-2 rounded font-bold">បោះបង់</button>
+                <button onclick="checkPassword()" class="flex-1 bg-blue-600 py-2 rounded font-bold">ចូល</button>
+            </div>
         </div>
     </div>
 
@@ -60,21 +56,29 @@
         <div class="bg-gray-800 p-6 rounded-2xl w-full max-w-sm border border-gray-600">
             <h3 class="mb-4 text-center font-bold">ជ្រើសរើសទឹកប្រាក់ ($)</h3>
             <div class="grid grid-cols-3 gap-2 mb-4">
-                <button onclick="setAmount(10)" class="bg-gray-700 py-2 rounded text-sm">10$</button><button onclick="setAmount(20)" class="bg-gray-700 py-2 rounded text-sm">20$</button>
-                <button onclick="setAmount(30)" class="bg-gray-700 py-2 rounded text-sm">30$</button><button onclick="setAmount(40)" class="bg-gray-700 py-2 rounded text-sm">40$</button>
-                <button onclick="setAmount(50)" class="bg-gray-700 py-2 rounded text-sm">50$</button><button onclick="setAmount(100)" class="bg-gray-700 py-2 rounded text-sm">100$</button>
+                <button onclick="setAmount(10)" class="bg-gray-700 py-2 rounded text-sm">10$</button>
+                <button onclick="setAmount(50)" class="bg-gray-700 py-2 rounded text-sm">50$</button>
+                <button onclick="setAmount(100)" class="bg-gray-700 py-2 rounded text-sm">100$</button>
             </div>
-            <input type="number" id="manual-amount" placeholder="វាយទឹកប្រាក់..." class="w-full bg-gray-900 p-2 rounded mb-4 text-center">
-            <div class="flex space-x-2">
-                <button onclick="closeModals()" class="flex-1 bg-red-600 py-2 rounded">បោះបង់</button>
-                <button onclick="confirmDeposit()" class="flex-1 bg-green-600 py-2 rounded">យល់ព្រម</button>
+            <input type="number" id="manual-amount" class="w-full bg-gray-900 p-2 rounded mb-4 text-center border border-gray-700" placeholder="វាយទឹកប្រាក់...">
+            <div class="flex gap-2">
+                <button onclick="closeModals()" class="flex-1 bg-red-600 py-2 rounded font-bold">បោះបង់</button>
+                <button onclick="confirmDeposit()" class="flex-1 bg-green-600 py-2 rounded font-bold">យល់ព្រម</button>
             </div>
         </div>
     </div>
 
     <script>
-        let balance = 0;
+        // ផ្ទុកសមតុល្យពី LocalStorage
+        let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+        document.getElementById('wallet-balance').innerText = "$" + balance.toFixed(2);
+
+        // នាឡិកាដើម
+        setInterval(() => { document.getElementById('server-time').innerText = new Date().toLocaleTimeString(); }, 1000);
+
         function showPasswordModal() { document.getElementById('pass-modal').style.display = 'flex'; }
+        function closeModals() { document.getElementById('pass-modal').style.display = 'none'; document.getElementById('deposit-modal').style.display = 'none'; }
+        
         function checkPassword() {
             if(document.getElementById('pass-input').value === "Qq1280") {
                 document.getElementById('pass-modal').style.display = 'none';
@@ -82,15 +86,18 @@
                 document.getElementById('pass-input').value = '';
             } else { alert("ពាក្យសម្ងាត់ខុស!"); }
         }
-        function closeModals() { document.getElementById('deposit-modal').style.display = 'none'; document.getElementById('pass-modal').style.display = 'none'; }
+
         function setAmount(v) { document.getElementById('manual-amount').value = v; }
+
         function confirmDeposit() {
             const amt = parseFloat(document.getElementById('manual-amount').value);
-            if(amt > 0) { balance += amt; document.getElementById('wallet-balance').innerText = "$" + balance.toFixed(2); closeModals(); }
+            if(amt > 0) {
+                balance += amt;
+                localStorage.setItem('userBalance', balance);
+                document.getElementById('wallet-balance').innerText = "$" + balance.toFixed(2);
+                closeModals();
+            } else { alert("សូមបញ្ចូលទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ"); }
         }
-        function toggleHistory() { const h = document.getElementById('history-content'); h.style.display = h.style.display === 'none' ? 'block' : 'none'; }
-        // នាឡិកា Global
-        setInterval(() => { document.getElementById('server-time').innerText = new Date().toLocaleString(); }, 1000);
     </script>
 </body>
 </html>
