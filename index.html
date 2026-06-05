@@ -19,7 +19,7 @@
         <div id="server-time" class="bg-blue-900/50 p-2 rounded-lg text-center border border-blue-700 mb-4 text-sm font-mono">📅 កំពុងផ្ទុកពេលវេលា...</div>
 
         <div class="bg-purple-900/30 p-4 rounded-xl border border-purple-700 mb-6 flex justify-between items-center">
-            <div><p id="wallet-text" class="text-gray-400 text-xs">សមតុល្យទឹកប្រាក់បច្ចុប្បន្ន</p><h2 class="text-xl font-bold text-green-400">$0.00</h2></div>
+            <div><p id="wallet-text" class="text-gray-400 text-xs">សមតុល្យទឹកប្រាក់បច្ចុប្បន្ន</p><h2 id="wallet-balance" class="text-xl font-bold text-green-400">$0.00</h2></div>
             <button id="deposit-btn" class="bg-green-500 px-3 py-1 rounded-lg text-xs font-bold">💰 បញ្ចូលលុយ</button>
         </div>
 
@@ -47,7 +47,6 @@
         </div>
 
         <button id="predict-btn" class="w-full bg-pink-500 py-3 rounded-full font-bold mb-6 text-sm">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
-        
         <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-700">
             <div class="flex space-x-1 mb-3">
                 <button id="tab1" class="bg-blue-600 px-2 py-1 rounded text-[9px]">លទ្ធផលម៉ោង</button>
@@ -61,53 +60,52 @@
         </div>
     </div>
 
-    <div id="password-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-[#1a1a2e] p-8 rounded-3xl w-full max-w-sm border border-gray-700 text-center">
-            <div class="text-4xl mb-4">🔐</div>
-            <h2 class="text-xl font-bold mb-2">សូមវាយលេខកូដសម្ងាត់</h2>
-            <input type="password" id="password-input" class="w-full bg-[#0f0f1a] border border-gray-600 p-4 rounded-xl mb-6 text-center text-white" placeholder="បញ្ចូលកូដទីនេះ៖">
-            <div class="flex gap-3">
-                <button onclick="closeModal('password-modal')" class="flex-1 bg-gray-700 py-3 rounded-xl font-bold">បោះបង់</button>
-                <button onclick="checkPassword()" class="flex-1 bg-blue-600 py-3 rounded-xl font-bold">ផ្ទៀងផ្ទាត់</button>
+    <div id="deposit-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-gray-800 p-6 rounded-2xl w-full max-w-sm border border-gray-700">
+            <h3 class="text-lg font-bold mb-4 text-center">ជ្រើសរើសទឹកប្រាក់ ($)</h3>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="setAmount(10)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">10$</button>
+                <button onclick="setAmount(20)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">20$</button>
+                <button onclick="setAmount(30)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">30$</button>
+                <button onclick="setAmount(40)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">40$</button>
+                <button onclick="setAmount(50)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">50$</button>
+                <button onclick="setAmount(100)" class="bg-gray-700 hover:bg-green-600 p-2 rounded-lg text-sm">100$</button>
             </div>
-        </div>
-    </div>
-
-    <div id="amount-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-[#1a1a2e] p-8 rounded-3xl w-full max-w-sm border border-gray-700 text-center">
-            <div class="text-4xl mb-4">💵</div>
-            <h2 class="text-xl font-bold mb-6">បញ្ចូលទឹកប្រាក់</h2>
-            <div class="flex items-center justify-center bg-[#0f0f1a] border border-gray-600 rounded-xl mb-8 p-4">
-                <span class="text-2xl text-green-500 mr-2">$</span>
-                <input type="number" id="manual-amount" class="bg-transparent text-2xl font-bold w-full outline-none text-center" placeholder="0.00">
-            </div>
-            <div class="flex gap-3">
-                <button onclick="closeModal('amount-modal')" class="flex-1 bg-gray-700 py-3 rounded-xl font-bold">ត្រឡប់ក្រោយ</button>
-                <button onclick="confirmDeposit()" class="flex-1 bg-green-500 py-3 rounded-xl font-bold text-black">យល់ព្រមបញ្ចូល</button>
+            <input type="number" id="manual-amount" placeholder="វាយទឹកប្រាក់ផ្សេងទៀត ($)" class="w-full bg-gray-900 p-2 rounded-lg mb-4 text-center border border-gray-700">
+            <div class="flex space-x-2">
+                <button onclick="closeModal()" class="flex-1 bg-red-700 py-2 rounded-lg font-bold">បោះបង់</button>
+                <button onclick="confirmDeposit()" class="flex-1 bg-green-500 py-2 rounded-lg font-bold text-black">យល់ព្រម</button>
             </div>
         </div>
     </div>
 
     <script>
-        // មុខងារសរុប (Language, Time, Modal)
-        document.getElementById('deposit-btn').onclick = () => document.getElementById('password-modal').style.display = 'flex';
-        
-        function checkPassword() {
-            if(document.getElementById('password-input').value === "Qq1280") {
-                document.getElementById('password-modal').style.display = 'none';
-                document.getElementById('amount-modal').style.display = 'flex';
-            } else { alert("កូដសម្ងាត់មិនត្រឹមត្រូវ!"); }
-        }
+        let balance = 0.00;
+        let currentLang = 'km';
 
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        document.getElementById('deposit-btn').onclick = function() {
+            const password = prompt("សូមវាយពាក្យសម្ងាត់ (Qq1280):");
+            if (password === "Qq1280") {
+                document.getElementById('deposit-modal').style.display = 'flex';
+            } else if (password !== null) { alert("ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!"); }
+        };
 
+        function closeModal() { document.getElementById('deposit-modal').style.display = 'none'; }
+        function setAmount(val) { document.getElementById('manual-amount').value = val; }
         function confirmDeposit() {
-            const amt = document.getElementById('manual-amount').value;
-            if(amt > 0) { alert("បញ្ចូលទឹកប្រាក់ $" + amt + " ជោគជ័យ!"); closeModal('amount-modal'); }
+            const amount = parseFloat(document.getElementById('manual-amount').value);
+            if(amount > 0) {
+                balance += amount;
+                document.getElementById('wallet-balance').innerText = `$${balance.toFixed(2)}`;
+                closeModal();
+            } else { alert("សូមជ្រើសរើសទឹកប្រាក់!"); }
         }
 
-        // រក្សាទុកកូដ Language & Time ដូចពីមុន...
-        // [Add previous toggleLanguage, updateGlobalTime, toggleContent functions here]
+        // មុខងារផ្សេងៗដូចជា Time, Language ... (រក្សាដដែល)
+        function toggleContent() {
+            const area = document.getElementById('content-area');
+            area.style.display = area.style.display === 'none' ? 'block' : 'none';
+        }
     </script>
 </body>
 </html>
