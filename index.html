@@ -349,6 +349,34 @@
             font-size: 0.7rem;
         }
 
+        /* Player Bottom Action Buttons */
+        .player-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .player-btn {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            padding: 12px;
+            border-radius: 50px;
+            color: #4ade80;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .player-btn:hover {
+            background: #4ade80;
+            color: #1a1a2e;
+            transform: translateY(-1px);
+        }
+
         /* Admin Panel Button in Main Page */
         .admin-panel-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
@@ -360,6 +388,7 @@
             font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
+            margin-bottom: 15px;
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
@@ -454,7 +483,7 @@
             transform: translateY(-1px);
         }
         .daily-report {
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
             background: rgba(0,0,0,0.2);
             border-radius: 16px;
@@ -464,14 +493,25 @@
         .report-item {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
-            padding: 8px;
-            margin-bottom: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
             font-size: 0.7rem;
+        }
+        .report-header {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #c4b5fd;
+        }
+        .report-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #a0aec0;
         }
         
-        /* Admin Action Buttons Section (Admin Only) */
+        /* Admin Action Buttons Section */
         .admin-buttons-section {
             margin-top: 15px;
             border-top: 1px solid rgba(139,92,246,0.3);
@@ -510,7 +550,7 @@
             transform: translateY(-1px);
         }
         
-        /* Player Action Buttons inside Admin Panel (For Managing Player Data) */
+        /* Player Action Buttons inside Admin Panel */
         .player-buttons-section {
             margin-top: 20px;
             border-top: 1px solid rgba(74,222,128,0.3);
@@ -738,6 +778,16 @@
         .status-win { color: #4ade80; }
         .status-lose { color: #fc8181; }
         .status-pending { color: #f6ad55; }
+        
+        .law-text {
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 0.7rem;
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -799,6 +849,23 @@
         </div>
     </div>
     
+    <!-- Player Bottom Action Buttons -->
+    <div class="player-actions">
+        <button class="player-btn" id="playerDepositBtn">💵 បញ្ចូលទឹកប្រាក់</button>
+        <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
+        <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
+    </div>
+    
+    <!-- Law Text -->
+    <div class="law-text" id="lawText">
+        <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
+        <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
+        <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
+        <p>3. លទ្ធផលនឹងចេញនៅពេលដល់ម៉ោងគោលដៅ (ក្រោយពីចាក់ 1 ម៉ោង)</p>
+        <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ និងមិនអាចតវ៉ាបាន</p>
+        <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
+    </div>
+    
     <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
 </div>
 
@@ -854,7 +921,7 @@
         </div>
     </div>
     
-    <!-- Admin Action Buttons Section (Admin Only) -->
+    <!-- Admin Action Buttons Section -->
     <div class="admin-buttons-section">
         <div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div>
         <div class="admin-buttons">
@@ -863,7 +930,7 @@
         </div>
     </div>
     
-    <!-- Player Action Buttons Section (For Managing Player Data) -->
+    <!-- Player Action Buttons Section -->
     <div class="player-buttons-section">
         <div class="player-section-title">🎮 ប៊ូតុងសម្រាប់អ្នកលេង</div>
         <div class="player-admin-buttons">
@@ -900,7 +967,7 @@
     </div>
 </div>
 
-<!-- Admin PIN Modal for entering Admin Panel -->
+<!-- Admin PIN Modal -->
 <div class="modal" id="adminEntryPinModal">
     <div class="modal-content">
         <div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div>
@@ -1221,26 +1288,43 @@
         document.getElementById('adminBalance').innerText = profit.toFixed(2);
         document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x';
         
+        // Detailed daily report
         const dailyData = {};
         betHistory.forEach(bet => {
             const dateKey = bet.date.split(' ')[0];
             if (!dailyData[dateKey]) {
-                dailyData[dateKey] = { bets: 0, wins: 0, totalBet: 0, totalPayout: 0 };
+                dailyData[dateKey] = { bets: 0, wins: 0, losses: 0, totalBet: 0, totalPayout: 0, details: [] };
             }
             dailyData[dateKey].bets++;
             dailyData[dateKey].totalBet += bet.amount;
             if (bet.status === 'win') {
                 dailyData[dateKey].wins++;
                 dailyData[dateKey].totalPayout += bet.reward;
+                dailyData[dateKey].details.push({ type: 'win', picked: bet.picked, result: bet.result, amount: bet.amount, reward: bet.reward, time: bet.date });
+            } else if (bet.status === 'lose') {
+                dailyData[dateKey].losses++;
+                dailyData[dateKey].details.push({ type: 'lose', picked: bet.picked, result: bet.result, amount: bet.amount, time: bet.date });
+            } else {
+                dailyData[dateKey].details.push({ type: 'pending', picked: bet.picked, amount: bet.amount, time: bet.date });
             }
         });
         
         const reportHtml = Object.entries(dailyData).slice(-10).reverse().map(([date, data]) => {
             const net = data.totalBet - data.totalPayout;
             return `<div class="report-item">
-                        <span>📅 ${date}</span>
-                        <span>🎲 ${data.bets} | 🏆 ${data.wins}</span>
-                        <span style="color:${net>=0?'#4ade80':'#fc8181'}">${net>=0?'+':'-'}$${Math.abs(net).toFixed(2)}</span>
+                        <div class="report-header">
+                            <span>📅 ${date}</span>
+                            <span style="color:${net>=0?'#4ade80':'#fc8181'}">${net>=0?'+':'-'}$${Math.abs(net).toFixed(2)}</span>
+                        </div>
+                        <div class="report-details">
+                            <span>🎲 ភ្នាល់: ${data.bets}</span>
+                            <span>🏆 ឈ្នះ: ${data.wins}</span>
+                            <span>💔 ចាញ់: ${data.losses}</span>
+                        </div>
+                        <div class="report-details" style="margin-top:4px; font-size:0.6rem;">
+                            <span>💰 ភ្នាល់សរុប: $${data.totalBet.toFixed(2)}</span>
+                            <span>💸 សងសរុប: $${data.totalPayout.toFixed(2)}</span>
+                        </div>
                     </div>`;
         }).join('');
         
@@ -1423,16 +1507,24 @@
             let resultHtml = "";
             if (b.result) {
                 const resultName = currentLang==='km' ? b.result : (b.resultEn || b.result);
-                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">📊 ${translations[currentLang].result} ${formatHour(b.targetHour)}: ${b.resultIcon} ${resultName} ${b.resultDate ? `(${translations[currentLang].at} ${b.resultDate})` : ''}</div>`;
+                resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">
+                                📊 ${translations[currentLang].result} ${formatHour(b.targetHour)}: ${b.resultIcon} ${resultName} (${b.resultOrder})
+                                ${b.resultDate ? `<br>📅 ${translations[currentLang].at} ${b.resultDate}` : ''}
+                            </div>`;
             } else {
-                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">⏰ ${translations[currentLang].waiting} ${formatHour(b.targetHour)}...</div>`;
+                resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">⏰ ${translations[currentLang].waiting} ${formatHour(b.targetHour)}...</div>`;
             }
             html += `<div class="history-item" style="flex-direction:column; align-items:flex-start;">
                         <div style="display:flex; justify-content:space-between; width:100%;">
-                            <div><strong>🎯 ${b.picked}</strong><br><span style="font-size:0.6rem">📅 ${b.date}</span></div>
-                            <div class="${statusClass}">${statusText}<br>${rewardHtml}</div>
+                            <div>
+                                <strong>🎯 ${b.picked}</strong>
+                                <div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div>
+                            </div>
+                            <div class="${statusClass}" style="text-align:right;">
+                                ${statusText}<br>${rewardHtml}
+                            </div>
                         </div>
-                        <div style="font-size:0.7rem">🎲 ${translations[currentLang].betPlaced} ${translations[currentLang].forHour} <strong>${formatHour(b.targetHour)}</strong></div>
+                        <div style="font-size:0.7rem; margin-top:4px;">🎲 ${translations[currentLang].betPlaced} ${translations[currentLang].forHour} <strong>${formatHour(b.targetHour)}</strong></div>
                         ${resultHtml}
                     </div>`;
         });
@@ -1501,7 +1593,6 @@
         document.getElementById('selectZodiacTitle').innerText = t.selectZodiac;
         document.getElementById('closePredictModal').innerText = t.cancel;
         document.getElementById('confirmPredictBtn').innerText = t.confirm;
-        document.getElementById('lawBtn').innerText = t.lawBtn;
         document.getElementById('langText').innerText = currentLang === 'km' ? t.langKhmer : t.langEnglish;
         document.getElementById('soundText').innerText = soundEnabled ? t.soundOn : t.soundOff;
         
@@ -1560,6 +1651,32 @@
         
         document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
         document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
+        
+        // Law button toggle
+        let lawVisible = false;
+        document.getElementById('playerLawBtn').addEventListener('click', () => {
+            const lawBox = document.getElementById('lawText');
+            if (lawVisible) {
+                lawBox.style.display = 'none';
+            } else {
+                lawBox.style.display = 'block';
+            }
+            lawVisible = !lawVisible;
+        });
+        
+        // Telegram button
+        document.getElementById('playerTelegramBtn').addEventListener('click', () => {
+            window.open('https://t.me/Application_Receiving_Officer', '_blank');
+        });
+        
+        // Player Deposit Button
+        document.getElementById('playerDepositBtn').addEventListener('click', () => {
+            currentAction = 'deposit';
+            document.getElementById('pinStep').style.display = 'block';
+            document.getElementById('amountStep').style.display = 'none';
+            document.getElementById('pinInput').value = '';
+            document.getElementById('depositModal').classList.add('show');
+        });
         
         // Admin Panel Entry
         const adminEntryModal = document.getElementById('adminEntryPinModal');
@@ -1659,11 +1776,11 @@
             executePrediction();
         });
         
-        // Admin Action Buttons (Admin Only)
+        // Admin Action Buttons
         const depositModal = document.getElementById('depositModal');
         const confirmAdminModal = document.getElementById('confirmAdminModal');
         
-        // Admin deposit (Admin only)
+        // Admin deposit
         document.getElementById('adminDepositMoneyBtn').addEventListener('click', () => {
             currentAction = 'deposit';
             document.getElementById('pinStep').style.display = 'block';
@@ -1672,7 +1789,7 @@
             depositModal.classList.add('show');
         });
         
-        // Admin clear deposit history (Admin only)
+        // Admin clear deposit history
         document.getElementById('adminClearDepositHistoryBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin':'⚠️ Confirm Clear Admin Deposit History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
@@ -1680,8 +1797,7 @@
             confirmAdminModal.classList.add('show');
         });
         
-        // Player Action Buttons (For managing player data)
-        // Player Deposit
+        // Player Admin Actions
         document.getElementById('playerDepositMoneyBtn').addEventListener('click', () => {
             currentAction = 'deposit';
             document.getElementById('pinStep').style.display = 'block';
@@ -1690,7 +1806,6 @@
             depositModal.classList.add('show');
         });
         
-        // Player Clear Balance
         document.getElementById('playerClearBalanceBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបទឹកប្រាក់អ្នកលេង':'⚠️ Confirm Clear Player Balance';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBalance;
@@ -1698,7 +1813,6 @@
             confirmAdminModal.classList.add('show');
         });
         
-        // Player Clear Deposit History
         document.getElementById('playerClearDepositHistoryBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេង':'⚠️ Confirm Clear Player Deposit History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
@@ -1706,7 +1820,6 @@
             confirmAdminModal.classList.add('show');
         });
         
-        // Player Clear Bet History
         document.getElementById('playerClearBetHistoryBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេង':'⚠️ Confirm Clear Player Bet History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBet;
@@ -1753,20 +1866,6 @@
         document.getElementById('yesAdminConfirm').addEventListener('click', () => {
             confirmAdminModal.classList.remove('show');
             executeAdminAction();
-        });
-        
-        // Law button
-        let lawVisible = false;
-        document.getElementById('lawBtn').addEventListener('click', () => {
-            const lawBox = document.getElementById('lawText');
-            if (lawVisible) {
-                lawBox.style.display = 'none';
-                document.getElementById('lawBtn').innerText = translations[currentLang].lawBtn;
-            } else {
-                lawBox.style.display = 'block';
-                document.getElementById('lawBtn').innerText = translations[currentLang].lawHide;
-            }
-            lawVisible = !lawVisible;
         });
         
         window.addEventListener('click', (e) => {
