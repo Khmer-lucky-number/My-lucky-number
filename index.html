@@ -665,7 +665,7 @@
         </div>
 
         <!-- Admin Panel Button -->
-        <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel (ចុចដើម្បីបង្ហាញម៉ឺនុយ)</button>
+        <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel (ចុចដើម្បីបង្ហាញ/លាក់)</button>
 
         <!-- Admin Controls Grid (Hidden by default) -->
         <div class="admin-controls-grid hidden" id="adminControlsGrid">
@@ -1105,11 +1105,20 @@
             const closeAdminPinBtn = document.getElementById('closeAdminPinBtn');
             const adminControlsGrid = document.getElementById('adminControlsGrid');
 
+            // Toggle function for Admin Panel
             if(adminPanelBtn) {
                 adminPanelBtn.addEventListener('click', () => {
-                    adminPinField.value = "";
-                    adminPinModal.classList.add('show');
-                    adminPinField.focus();
+                    // If controls are visible, just hide them
+                    if (!adminControlsGrid.classList.contains('hidden')) {
+                        adminControlsGrid.classList.add('hidden');
+                        adminControlsVisible = false;
+                        adminPanelBtn.innerHTML = '🔧 Admin Panel (ចុចដើម្បីបង្ហាញ)';
+                    } else {
+                        // If hidden, show PIN modal to verify
+                        adminPinField.value = "";
+                        adminPinModal.classList.add('show');
+                        adminPinField.focus();
+                    }
                 });
             }
 
@@ -1125,6 +1134,7 @@
                         adminControlsVisible = true;
                         adminControlsGrid.classList.remove('hidden');
                         adminPinModal.classList.remove('show');
+                        adminPanelBtn.innerHTML = '🔧 Admin Panel (ចុចដើម្បីលាក់)';
                         alert("🔓 បានបង្ហាញប៊ូតុងគ្រប់គ្រង Admin ដោយជោគជ័យ!");
                     } else {
                         alert("❌ ពាក្យសម្ងាត់ Admin មិនត្រឹមត្រូវ!");
