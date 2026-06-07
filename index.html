@@ -585,13 +585,47 @@
             max-height: 140px; overflow-y: auto; 
         }
 
-        .telegram-section { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 10px; }
-        .telegram-btn {
-            display: flex; align-items: center; justify-content: center; width: 60px; height: 60px;
-            background: #0088cc; border-radius: 50%; text-decoration: none;
+        /* Telegram Button Modern Style */
+        .telegram-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
         }
-        .telegram-icon { width: 32px; height: 32px; fill: #ffffff; }
-        .telegram-label { font-size: 0.85rem; color: #a0aec0; }
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, #0088cc 0%, #0055a4 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 28px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
+        }
+        .telegram-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.5);
+        }
+        .telegram-icon {
+            width: 24px;
+            height: 24px;
+            fill: #ffffff;
+        }
+        .telegram-text {
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .telegram-label {
+            font-size: 0.75rem;
+            color: #a0aec0;
+            text-align: center;
+        }
 
         .info-badge {
             background: rgba(74, 222, 128, 0.1);
@@ -602,6 +636,12 @@
             font-size: 0.75rem;
             color: #4ade80;
             text-align: center;
+        }
+
+        .result-date {
+            font-size: 0.65rem;
+            color: #a0aec0;
+            margin-top: 2px;
         }
     </style>
 </head>
@@ -669,11 +709,16 @@
             <p>គោលបំណងរបស់ខ្ញុំគ្រាន់តែសិក្សាអំពីការបង្កើតគេហទំព័រតែប៉ុណ្ណោះសម្រាប់អ្នកដែលចូលមើលគេហទំព័រនេះសូមកុំចែកចាយដំណុលភ្ជាប់របស់ខ្ញុំទៅអ្នកដទៃ។</p>
         </div>
     </div>
+    
+    <!-- Modern Telegram Button -->
     <div class="telegram-section">
         <a href="https://t.me/Application_Receiving_Officer" target="_blank" class="telegram-btn">
-            <svg class="telegram-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.62.15-.15 2.7-2.46 2.75-2.67.01-.03.01-.15-.06-.21-.07-.06-.17-.04-.25-.02-.11.02-1.78 1.14-5.05 3.34-.48.33-.91.49-1.29.48-.42-.01-1.22-.24-1.82-.44-.74-.24-1.33-.37-1.28-.79.03-.22.33-.44.89-.67 3.49-1.52 5.83-2.52 7.02-3 .11-.04.22-.07.33-.07.23 0 .28.23.23.42z"/></svg>
+            <svg class="telegram-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.62.15-.15 2.7-2.46 2.75-2.67.01-.03.01-.15-.06-.21-.07-.06-.17-.04-.25-.02-.11.02-1.78 1.14-5.05 3.34-.48.33-.91.49-1.29.48-.42-.01-1.22-.24-1.82-.44-.74-.24-1.33-.37-1.28-.79.03-.22.33-.44.89-.67 3.49-1.52 5.83-2.52 7.02-3 .11-.04.22-.07.33-.07.23 0 .28.23.23.42z"/>
+            </svg>
+            <span class="telegram-text">ទំនាក់ទំនងអ្នកគ្រប់គ្រង</span>
         </a>
-        <span class="telegram-label">ចុចដើម្បីទាក់ទងខ្ញុំ</span>
+        <span class="telegram-label">ចុចដើម្បីទំនាក់ទំនងតាមរយៈ Telegram</span>
     </div>
 </div>
 
@@ -765,6 +810,10 @@
         return hour + ":00";
     }
 
+    function formatDateTime(date) {
+        return `${date.getDate()}/${date.getMonth()+1} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`;
+    }
+
     function generate24HourNumbers(targetDate) {
         const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
         let seed = dateSeed;
@@ -787,12 +836,17 @@
         }
         if (currentHour !== lastCheckedHour) {
             let statusChanged = false;
+            const settleDate = new Date();
+            settleDate.setHours(lastCheckedHour, 0, 0, 0);
+            const resultDateTime = formatDateTime(settleDate);
+            
             betHistory.forEach(item => {
                 if (item.status === "រង់ចាំលទ្ធផល" && item.targetHour === lastCheckedHour) {
                     let correctNumber = todayNumbers[lastCheckedHour];
                     let activeZodiac = zodiacMap[correctNumber];
                     if (activeZodiac) {
                         item.result = activeZodiac.name;
+                        item.resultDate = resultDateTime;
                         if (item.picked === activeZodiac.name) {
                             item.status = "ឈ្នះ";
                             item.reward = item.bet * 10;
@@ -876,6 +930,14 @@
         });
         document.getElementById("zodiac-single-grid-area").innerHTML = singleGridHtml;
         document.getElementById("zodiacSelectGridArea").innerHTML = selectGridHtml;
+        
+        document.querySelectorAll('.zodiac-select-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedZodiacName = this.getAttribute('data-name');
+            });
+        });
     }
 
     function calculatePreviewRates() {
@@ -908,13 +970,21 @@
             if (item.status === "ឈ្នះ") { badgeStyle = "color:#4ade80;"; rewardText = `ឈ្នះបាន: +$${item.reward.toFixed(2)}`; }
             else if (item.status === "ចាញ់") { badgeStyle = "color:#fc8181;"; rewardText = `បាត់បង់: -$${item.bet.toFixed(2)}`; }
             else { rewardText = `⏳ ចាក់: $${item.bet.toFixed(2)}`; }
+            
+            let resultHtml = '';
+            if (item.result) {
+                resultHtml = `<div style="font-size:0.7rem; margin-top:4px;">📊 លទ្ធផល: ${item.result} ${item.resultDate ? `<span class="result-date">(ចេញនៅថ្ងៃ ${item.resultDate})</span>` : ''}</div>`;
+            } else {
+                resultHtml = `<div style="font-size:0.7rem; margin-top:4px;">⏰ រង់ចាំលទ្ធផលម៉ោង ${targetHourDisplay}...</div>`;
+            }
+            
             html += `<div class="history-item-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
                         <div style="display:flex; justify-content:space-between; width:100%;">
-                            <div><div class="row-main-title">🎯 ${item.picked}</div><div class="row-sub-title">📅 ${item.date}</div></div>
+                            <div><div class="row-main-title">🎯 ${item.picked}</div><div class="row-sub-title">📅 ចាក់នៅ: ${item.date}</div></div>
                             <div class="row-status-badge" style="${badgeStyle}">${item.status}<br><span style="font-size:0.65rem;">${rewardText}</span></div>
                         </div>
                         <div style="font-size:0.7rem;">🎲 ចាក់សម្រាប់ម៉ោង <strong style="color:#fbd38d;">${targetHourDisplay}</strong></div>
-                        ${item.result ? `<div style="font-size:0.7rem;">📊 លទ្ធផល: ${item.result}</div>` : '<div style="font-size:0.7rem;">⏰ រង់ចាំលទ្ធផល...</div>'}
+                        ${resultHtml}
                     </div>`;
         });
         container.innerHTML = html;
@@ -987,13 +1057,6 @@
         document.querySelectorAll('.shortcut-btn').forEach(btn => {
             btn.addEventListener('click', function() { document.getElementById('predictAmountField').value = this.getAttribute('data-amount'); calculatePreviewRates(); });
         });
-        document.querySelectorAll('.zodiac-select-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedZodiacName = this.getAttribute('data-name');
-            });
-        });
         document.getElementById('confirmPredictBtn').addEventListener('click', () => {
             let betAmount = parseFloat(document.getElementById('predictAmountField').value);
             if (isNaN(betAmount) || betAmount <= 0) { alert("❌ បញ្ចូលទឹកប្រាក់ឱ្យត្រឹមត្រូវ!"); return; }
@@ -1006,7 +1069,7 @@
             let now = new Date();
             let targetHour = getTargetHourForBet(now.getHours());
             let timeStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-            betHistory.unshift({ date: timeStr, targetHour: targetHour, picked: selectedZodiacName, result: null, status: "រង់ចាំលទ្ធផល", bet: betAmount, reward: 0 });
+            betHistory.unshift({ date: timeStr, targetHour: targetHour, picked: selectedZodiacName, result: null, resultDate: null, status: "រង់ចាំលទ្ធផល", bet: betAmount, reward: 0 });
             localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
             renderBetHistory();
             alert(`🎯 ចាក់ [${selectedZodiacName}] $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(targetHour)}`);
