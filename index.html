@@ -23,6 +23,7 @@
             padding: 20px;
         }
 
+        /* Main Container */
         .container {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -33,6 +34,46 @@
             padding: 25px 18px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.3);
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Admin Panel Container - Hidden by default */
+        .admin-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 32px;
+            width: 100%;
+            max-width: 460px;
+            padding: 25px 18px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+            text-align: center;
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .admin-container.show {
+            display: block;
+        }
+        .container.hide {
+            display: none;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+        }
+        .back-btn:hover {
+            background: rgba(74,222,128,0.2);
         }
 
         /* Top Controls Row */
@@ -89,7 +130,7 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Balance Card */
+        /* Balance Card with Floating Money */
         .balance-card {
             background: linear-gradient(135deg, #1a2a4a 0%, #0f1a2e 100%);
             border-radius: 28px;
@@ -99,19 +140,34 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        .balance-card::before {
-            content: "";
+        /* Floating Money Animation */
+        .floating-money {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(74,222,128,0.15) 0%, transparent 70%);
-            animation: rotateGlow 8s linear infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
         }
-        @keyframes rotateGlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .money-note {
+            position: absolute;
+            font-size: 1.8rem;
+            opacity: 0.15;
+            animation: floatMoney 8s ease-in-out infinite;
+        }
+        .money-note:nth-child(1) { top: 10%; left: -20px; animation-delay: 0s; }
+        .money-note:nth-child(2) { top: 40%; right: -15px; animation-delay: 1.5s; font-size: 2rem; }
+        .money-note:nth-child(3) { bottom: 10%; left: 10%; animation-delay: 3s; }
+        .money-note:nth-child(4) { top: 60%; left: -25px; animation-delay: 0.8s; font-size: 1.5rem; }
+        .money-note:nth-child(5) { bottom: 20%; right: -20px; animation-delay: 2.2s; font-size: 2.2rem; }
+        .money-note:nth-child(6) { top: 20%; right: 20%; animation-delay: 4s; font-size: 1.6rem; }
+        .money-note:nth-child(7) { bottom: 40%; left: 30%; animation-delay: 5.5s; font-size: 1.4rem; }
+        @keyframes floatMoney {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+            50% { transform: translateY(-15px) rotate(5deg); opacity: 0.2; }
+            100% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
         }
         .balance-inner {
             background: rgba(10,15,30,0.7);
@@ -287,32 +343,46 @@
             font-size: 0.7rem;
         }
 
+        /* Admin Panel Button */
         .admin-panel-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             width: 100%;
             border: none;
-            padding: 10px;
-            border-radius: 40px;
+            padding: 12px;
+            border-radius: 50px;
             color: white;
             font-weight: 700;
             cursor: pointer;
             margin-bottom: 12px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .admin-panel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(139,92,246,0.4);
         }
 
+        /* Admin Panel Buttons */
         .admin-buttons {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-top: 20px;
         }
-        .admin-buttons.hidden { display: none; }
         .admin-btn {
             background: rgba(139,92,246,0.15);
             border: 1px solid rgba(139,92,246,0.3);
-            padding: 8px;
-            border-radius: 40px;
+            padding: 12px;
+            border-radius: 50px;
             color: #c4b5fd;
             cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .admin-btn:hover {
+            background: #8b5cf6;
+            color: white;
         }
 
         .law-btn {
@@ -349,7 +419,7 @@
             font-size: 0.8rem;
         }
 
-        /* Password Input with Eye Icon */
+        /* Password Input */
         .password-wrapper {
             position: relative;
             width: 100%;
@@ -377,10 +447,6 @@
             font-size: 1.2rem;
             padding: 5px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
         }
         .toggle-password:hover {
             background: rgba(255,255,255,0.1);
@@ -488,22 +554,13 @@
             cursor: pointer;
             font-weight: 600;
             font-size: 0.9rem;
-            transition: 0.2s;
         }
-        .btn-cancel { 
-            background: #4a5568; 
-            color: white;
-            margin-right: 5px;
-        }
+        .btn-cancel { background: #4a5568; color: white; }
         .btn-cancel:hover { background: #3e4654; }
-        .btn-confirm { 
-            background: #4ade80; 
-            color: #1a1a2e;
-            margin-left: 5px;
-        }
+        .btn-confirm { background: #4ade80; color: #1a1a2e; }
         .btn-confirm:hover { background: #22c55e; }
 
-        /* Confirm Modal - Separate buttons far apart */
+        /* Confirm Modal */
         .confirm-modal {
             position: fixed;
             top: 0;
@@ -531,44 +588,13 @@
             text-align: center;
             border: 2px solid #ecc94b;
         }
-        .confirm-title { 
-            color: #ecc94b; 
-            font-size: 1.3rem; 
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        .confirm-message { 
-            color: #e2e8f0; 
-            margin-bottom: 30px; 
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-        .confirm-buttons { 
-            display: flex; 
-            gap: 20px;
-            justify-content: space-between;
-        }
-        .confirm-btn { 
-            flex: 1;
-            padding: 12px 20px;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: 0.2s;
-        }
-        .confirm-yes { 
-            background: #4ade80; 
-            color: #1a1a2e;
-            order: 2;
-        }
+        .confirm-title { color: #ecc94b; font-size: 1.3rem; margin-bottom: 15px; font-weight: 700; }
+        .confirm-message { color: #e2e8f0; margin-bottom: 30px; line-height: 1.5; font-size: 0.9rem; }
+        .confirm-buttons { display: flex; gap: 20px; justify-content: space-between; }
+        .confirm-btn { flex: 1; padding: 12px 20px; border-radius: 50px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; }
+        .confirm-yes { background: #4ade80; color: #1a1a2e; order: 2; }
         .confirm-yes:hover { background: #22c55e; }
-        .confirm-no { 
-            background: #4a5568; 
-            color: white;
-            order: 1;
-        }
+        .confirm-no { background: #4a5568; color: white; order: 1; }
         .confirm-no:hover { background: #3e4654; }
 
         .notification-toast {
@@ -592,10 +618,22 @@
         .status-win { color: #4ade80; }
         .status-lose { color: #fc8181; }
         .status-pending { color: #f6ad55; }
+
+        .admin-title {
+            color: #c4b5fd;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        .admin-sub {
+            color: #a0aec0;
+            font-size: 0.7rem;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-<div class="container">
+<!-- Main Container -->
+<div id="mainContainer" class="container">
     <!-- Top Controls Row -->
     <div class="top-controls">
         <button class="top-btn" id="langToggleBtn">
@@ -613,7 +651,17 @@
     
     <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
     
+    <!-- Balance Card with Floating Money -->
     <div class="balance-card">
+        <div class="floating-money">
+            <div class="money-note">💵</div>
+            <div class="money-note">💰</div>
+            <div class="money-note">💶</div>
+            <div class="money-note">💷</div>
+            <div class="money-note">💴</div>
+            <div class="money-note">💸</div>
+            <div class="money-note">🪙</div>
+        </div>
         <div class="balance-inner">
             <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
             <div class="balance-amount">$<span id="userBalance">0.00</span></div>
@@ -650,18 +698,27 @@
     </div>
     
     <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
-    <div class="admin-buttons hidden" id="adminButtons">
-        <button class="admin-btn" id="depositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់</button>
-        <button class="admin-btn" id="clearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
-        <button class="admin-btn" id="clearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
-        <button class="admin-btn" id="clearBalanceBtn">💰 លុបទឹកប្រាក់ក្នុងគណនី</button>
-    </div>
     
     <button class="law-btn" id="lawBtn">ចុចដើម្បីអានច្បាប់</button>
     <div class="law-text" id="lawText">គោលបំណងរបស់ខ្ញុំគ្រាន់តែសិក្សាអំពីការបង្កើតគេហទំព័រតែប៉ុណ្ណោះ។</div>
     
     <div class="telegram">
         <a href="https://t.me/Application_Receiving_Officer" target="_blank">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</a>
+    </div>
+</div>
+
+<!-- Admin Panel Container -->
+<div id="adminContainer" class="admin-container">
+    <button class="back-btn" id="backToMainBtn">← ត្រឡប់ទៅកាន់ទំព័រដើម</button>
+    
+    <div class="admin-title">🔧 Admin Control Panel</div>
+    <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
+    
+    <div class="admin-buttons">
+        <button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់</button>
+        <button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
+        <button class="admin-btn" id="adminClearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
+        <button class="admin-btn" id="adminClearBalanceBtn">💰 លុបទឹកប្រាក់ក្នុងគណនី</button>
     </div>
 </div>
 
@@ -672,9 +729,7 @@
             <div class="modal-title">🔐 បញ្ចូលកូដសម្ងាត់</div>
             <div class="password-wrapper">
                 <input type="password" class="password-input" id="pinInput" placeholder="កូដសម្ងាត់" maxlength="10">
-                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInput', this)">
-                    👁️
-                </button>
+                <button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInput', this)">👁️</button>
             </div>
             <div class="modal-buttons">
                 <button class="modal-btn btn-cancel" id="closeDepositModal">បោះបង់</button>
@@ -688,6 +743,21 @@
                 <button class="modal-btn btn-cancel" id="backToPinBtn">ត្រឡប់</button>
                 <button class="modal-btn btn-confirm" id="submitDepositBtn">បញ្ចូល</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Admin PIN Modal (for entering admin panel) -->
+<div class="modal" id="adminEntryPinModal">
+    <div class="modal-content">
+        <div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div>
+        <div class="password-wrapper">
+            <input type="password" class="password-input" id="adminEntryPinInput" placeholder="ពាក្យសម្ងាត់">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('adminEntryPinInput', this)">👁️</button>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn btn-cancel" id="closeAdminEntryModal">បោះបង់</button>
+            <button class="modal-btn btn-confirm" id="confirmAdminEntryBtn">ផ្ទៀងផ្ទាត់</button>
         </div>
     </div>
 </div>
@@ -718,24 +788,7 @@
     </div>
 </div>
 
-<!-- Admin PIN Modal -->
-<div class="modal" id="adminPinModal">
-    <div class="modal-content">
-        <div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div>
-        <div class="password-wrapper">
-            <input type="password" class="password-input" id="adminPinInput" placeholder="ពាក្យសម្ងាត់">
-            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('adminPinInput', this)">
-                👁️
-            </button>
-        </div>
-        <div class="modal-buttons">
-            <button class="modal-btn btn-cancel" id="closeAdminModal">បោះបង់</button>
-            <button class="modal-btn btn-confirm" id="confirmAdminBtn">ផ្ទៀងផ្ទាត់</button>
-        </div>
-    </div>
-</div>
-
-<!-- Confirm Modals - with buttons far apart -->
+<!-- Confirm Modals -->
 <div class="confirm-modal" id="confirmPredictModal">
     <div class="confirm-box">
         <div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div>
@@ -1258,14 +1311,15 @@
         document.getElementById('selectZodiacTitle').innerText = t.selectZodiac;
         document.getElementById('closePredictModal').innerText = t.cancel;
         document.getElementById('confirmPredictBtn').innerText = t.confirm;
-        document.getElementById('depositMoneyBtn').innerText = t.depositMoney;
-        document.getElementById('clearDepositHistoryBtn').innerText = t.clearDeposit;
-        document.getElementById('clearBetHistoryBtn').innerText = t.clearBet;
-        document.getElementById('clearBalanceBtn').innerText = t.clearBalance;
-        document.getElementById('adminPanelBtn').innerText = t.adminPanel;
         document.getElementById('lawBtn').innerText = t.lawBtn;
         document.getElementById('langText').innerText = currentLang === 'km' ? t.langKhmer : t.langEnglish;
         document.getElementById('soundText').innerText = soundEnabled ? t.soundOn : t.soundOff;
+        
+        // Admin panel buttons
+        document.getElementById('adminDepositMoneyBtn').innerHTML = `💵 ${t.depositMoney}`;
+        document.getElementById('adminClearDepositHistoryBtn').innerHTML = `🗑️ ${t.clearDeposit}`;
+        document.getElementById('adminClearBetHistoryBtn').innerHTML = `🗑️ ${t.clearBet}`;
+        document.getElementById('adminClearBalanceBtn').innerHTML = `💰 ${t.clearBalance}`;
         
         const toggleBtn = document.getElementById('toggleHistoryBtn');
         if (toggleBtn) {
@@ -1300,6 +1354,16 @@
         document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
     }
     
+    function showAdminPanel() {
+        document.getElementById('mainContainer').classList.add('hide');
+        document.getElementById('adminContainer').classList.add('show');
+    }
+    
+    function hideAdminPanel() {
+        document.getElementById('mainContainer').classList.remove('hide');
+        document.getElementById('adminContainer').classList.remove('show');
+    }
+    
     function init() {
         loadData();
         renderZodiacs();
@@ -1313,6 +1377,28 @@
         
         // Sound toggle
         document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
+        
+        // Admin Panel Entry
+        const adminEntryModal = document.getElementById('adminEntryPinModal');
+        document.getElementById('adminPanelBtn').addEventListener('click', () => {
+            document.getElementById('adminEntryPinInput').value = '';
+            adminEntryModal.classList.add('show');
+        });
+        document.getElementById('closeAdminEntryModal').addEventListener('click', () => adminEntryModal.classList.remove('show'));
+        document.getElementById('confirmAdminEntryBtn').addEventListener('click', () => {
+            const pin = document.getElementById('adminEntryPinInput').value;
+            if (pin === ADMIN_PIN) {
+                adminEntryModal.classList.remove('show');
+                showAdminPanel();
+                showToast(currentLang==='km'?'បានចូលទៅកាន់ Admin Panel!':'Entered Admin Panel!', 'pending');
+            } else {
+                showToast(currentLang==='km'?'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!':'Wrong password!', 'lose');
+                document.getElementById('adminEntryPinInput').value = '';
+            }
+        });
+        
+        // Back to main
+        document.getElementById('backToMainBtn').addEventListener('click', hideAdminPanel);
         
         // Tabs
         document.querySelectorAll('.tab').forEach(tab => {
@@ -1380,42 +1466,41 @@
             executePrediction();
         });
         
-        // Admin Panel
-        const adminModal = document.getElementById('adminPinModal');
-        const adminButtons = document.getElementById('adminButtons');
-        let adminVisible = false;
-        document.getElementById('adminPanelBtn').addEventListener('click', () => {
-            if (adminVisible) {
-                adminButtons.classList.add('hidden');
-                adminVisible = false;
-            } else {
-                adminModal.classList.add('show');
-            }
-        });
-        document.getElementById('closeAdminModal').addEventListener('click', () => adminModal.classList.remove('show'));
-        document.getElementById('confirmAdminBtn').addEventListener('click', () => {
-            const pin = document.getElementById('adminPinInput').value;
-            if (pin === ADMIN_PIN) {
-                adminButtons.classList.remove('hidden');
-                adminVisible = true;
-                adminModal.classList.remove('show');
-                showToast(currentLang==='km'?'បានបង្ហាញប៊ូតុង Admin!':'Admin panel shown!', 'pending');
-            } else {
-                showToast(currentLang==='km'?'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!':'Wrong password!', 'lose');
-                document.getElementById('adminPinInput').value = '';
-            }
-        });
-        
-        // Deposit Modal
+        // Admin Panel Actions (inside admin container)
         const depositModal = document.getElementById('depositModal');
         const confirmAdminModal = document.getElementById('confirmAdminModal');
-        document.getElementById('depositMoneyBtn').addEventListener('click', () => {
+        
+        // Reuse deposit modal for admin deposit
+        document.getElementById('adminDepositMoneyBtn').addEventListener('click', () => {
             currentAction = 'deposit';
             document.getElementById('pinStep').style.display = 'block';
             document.getElementById('amountStep').style.display = 'none';
             document.getElementById('pinInput').value = '';
             depositModal.classList.add('show');
         });
+        
+        document.getElementById('adminClearDepositHistoryBtn').addEventListener('click', () => {
+            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយ':'⚠️ Confirm Clear Deposit History';
+            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
+            pendingAdminAction = "clear_deposit";
+            confirmAdminModal.classList.add('show');
+        });
+        
+        document.getElementById('adminClearBetHistoryBtn').addEventListener('click', () => {
+            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយ':'⚠️ Confirm Clear Bet History';
+            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBet;
+            pendingAdminAction = "clear_bet";
+            confirmAdminModal.classList.add('show');
+        });
+        
+        document.getElementById('adminClearBalanceBtn').addEventListener('click', () => {
+            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបទឹកប្រាក់':'⚠️ Confirm Clear Balance';
+            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBalance;
+            pendingAdminAction = "clear_balance";
+            confirmAdminModal.classList.add('show');
+        });
+        
+        // Deposit Modal Handlers
         document.getElementById('closeDepositModal').addEventListener('click', () => depositModal.classList.remove('show'));
         document.getElementById('confirmPinBtn').addEventListener('click', () => {
             const pin = document.getElementById('pinInput').value;
@@ -1449,25 +1534,7 @@
             depositModal.classList.remove('show');
         });
         
-        // Admin action buttons
-        document.getElementById('clearDepositHistoryBtn').addEventListener('click', () => {
-            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយ':'⚠️ Confirm Clear Deposit History';
-            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
-            pendingAdminAction = "clear_deposit";
-            confirmAdminModal.classList.add('show');
-        });
-        document.getElementById('clearBetHistoryBtn').addEventListener('click', () => {
-            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយ':'⚠️ Confirm Clear Bet History';
-            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBet;
-            pendingAdminAction = "clear_bet";
-            confirmAdminModal.classList.add('show');
-        });
-        document.getElementById('clearBalanceBtn').addEventListener('click', () => {
-            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបទឹកប្រាក់':'⚠️ Confirm Clear Balance';
-            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBalance;
-            pendingAdminAction = "clear_balance";
-            confirmAdminModal.classList.add('show');
-        });
+        // Confirm Admin Action
         document.getElementById('cancelAdminConfirm').addEventListener('click', () => confirmAdminModal.classList.remove('show'));
         document.getElementById('yesAdminConfirm').addEventListener('click', () => {
             confirmAdminModal.classList.remove('show');
@@ -1492,7 +1559,7 @@
         window.addEventListener('click', (e) => {
             if (e.target === depositModal) depositModal.classList.remove('show');
             if (e.target === predictModal) predictModal.classList.remove('show');
-            if (e.target === adminModal) adminModal.classList.remove('show');
+            if (e.target === adminEntryModal) adminEntryModal.classList.remove('show');
             if (e.target === confirmPredictModal) confirmPredictModal.classList.remove('show');
             if (e.target === confirmAdminModal) confirmAdminModal.classList.remove('show');
         });
