@@ -159,7 +159,7 @@
             margin-bottom: 15px;
         }
 
-        .pin-input, .amount-input, .predict-amount-input {
+        .pin-input, .amount-input, .predict-amount-input, .admin-pin-input {
             width: 100%;
             background: #0b0816;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -172,7 +172,7 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        .pin-input:focus, .amount-input:focus, .predict-amount-input:focus {
+        .pin-input:focus, .amount-input:focus, .predict-amount-input:focus, .admin-pin-input:focus {
             outline: none;
             border-color: #4ade80;
         }
@@ -494,12 +494,39 @@
         .waiting-text { font-size: 0.85rem; color: #718096; font-style: italic; }
         .no-data-text { font-size: 0.85rem; color: #4a5568; text-align: center; padding: 20px 0; font-style: italic; }
 
+        /* Admin Panel Button */
+        .admin-panel-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .admin-panel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
         .admin-controls-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 10px;
             margin-top: 10px;
             margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .admin-controls-grid.hidden {
+            display: none;
         }
         .admin-btn {
             background: rgba(252, 129, 129, 0.1);
@@ -520,6 +547,41 @@
             background: #fc8181;
             color: #0f0c20;
             border-color: #fc8181;
+        }
+
+        /* Admin PIN Modal */
+        .admin-pin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .admin-pin-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .admin-pin-box {
+            background: #15102a;
+            border: 2px solid #8b5cf6;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+        }
+        .admin-pin-title {
+            color: #8b5cf6;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
         }
 
         .law-section { margin-top: 5px; text-align: center; margin-bottom: 25px; }
@@ -619,10 +681,27 @@
             </div>
         </div>
 
-        <div class="admin-controls-grid">
+        <!-- Admin Panel Button -->
+        <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel (ចុចដើម្បីបង្ហាញម៉ឺនុយ)</button>
+
+        <!-- Admin Controls Grid (Hidden by default) -->
+        <div class="admin-controls-grid hidden" id="adminControlsGrid">
             <button class="admin-btn" id="clearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
             <button class="admin-btn" id="clearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
             <button class="admin-btn" id="clearBalanceBtn">💰 លុបទឹកប្រាក់ក្នុងគណនី</button>
+        </div>
+
+        <!-- Admin PIN Modal for showing controls -->
+        <div class="admin-pin-modal" id="adminPinModal">
+            <div class="admin-pin-box">
+                <div class="admin-pin-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div>
+                <p class="modal-desc">វាយពាក្យសម្ងាត់ដើម្បីបង្ហាញប៊ូតុងគ្រប់គ្រង</p>
+                <input type="text" class="admin-pin-input" id="adminPinField" maxlength="20" placeholder="បញ្ចូលពាក្យសម្ងាត់">
+                <div class="modal-buttons">
+                    <button class="modal-btn btn-cancel" id="closeAdminPinBtn">បោះបង់</button>
+                    <button class="modal-btn btn-confirm" id="confirmAdminPinBtn">ផ្ទៀងផ្ទាត់</button>
+                </div>
+            </div>
         </div>
 
         <div class="law-section">
@@ -714,9 +793,11 @@
     <script>
         let currentBalance = 0.00;
         const SECRET_PIN = "Qq2026"; 
+        const ADMIN_SHOW_PIN = "Qq1280"; // ពាក្យសម្ងាត់សម្រាប់បង្ហាញប៊ូតុង Admin
         let selectedZodiacName = ""; 
         let lastCheckedHour = -1;
         let currentAdminAction = "deposit"; 
+        let adminControlsVisible = false; // ស្ថានភាពបង្ហាញប៊ូតុង Admin
 
         let depositHistory = JSON.parse(localStorage.getItem('user_deposit_history')) || [];
         let betHistory = JSON.parse(localStorage.getItem('user_bet_history')) || [];
@@ -751,17 +832,11 @@
             { time: "06:00", hour: 6 }
         ];
 
-        // អនុគមន៍សម្រាប់គណនាម៉ោងគោលដៅ (ម៉ោងបន្ទាប់)
         function getTargetHourForBet(currentHour) {
-            // ប្រសិនបើម៉ោងបច្ចុប្បន្នជា 23 ម៉ោងគោលដៅគឺ 0 (ថ្ងៃបន្ទាប់)
-            if (currentHour === 23) {
-                return 0;
-            }
-            // បើមិនដូច្នោះទេ យកម៉ោងបន្ទាប់
+            if (currentHour === 23) return 0;
             return currentHour + 1;
         }
 
-        // អនុគមន៍សម្រាប់ទទួលបានឈ្មោះម៉ោងជាទម្រង់ងាយយល់
         function getHourDisplayName(hour) {
             if (hour === 0) return "12:00 AM (អាធ្រាត្រ)";
             if (hour < 12) return `${hour}:00 AM`;
@@ -845,7 +920,6 @@
                 document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
             }
             
-            // បង្ហាញម៉ោងគោលដៅសម្រាប់ការចាក់
             const targetHourForBet = getTargetHourForBet(currentHour);
             const targetHourDisplay = getHourDisplayName(targetHourForBet);
             if(document.getElementById("current-hour-text")) {
@@ -1038,7 +1112,54 @@
                 });
             }
 
-            // Prediction Modal
+            // ========== ADMIN PANEL FUNCTIONS ==========
+            const adminPanelBtn = document.getElementById('adminPanelBtn');
+            const adminPinModal = document.getElementById('adminPinModal');
+            const adminPinField = document.getElementById('adminPinField');
+            const confirmAdminPinBtn = document.getElementById('confirmAdminPinBtn');
+            const closeAdminPinBtn = document.getElementById('closeAdminPinBtn');
+            const adminControlsGrid = document.getElementById('adminControlsGrid');
+
+            // បង្ហាញ Modal សម្រាប់វាយពាក្យសម្ងាត់ Admin
+            if(adminPanelBtn) {
+                adminPanelBtn.addEventListener('click', () => {
+                    adminPinField.value = "";
+                    adminPinModal.classList.add('show');
+                    adminPinField.focus();
+                });
+            }
+
+            // បិទ Modal Admin PIN
+            if(closeAdminPinBtn) {
+                closeAdminPinBtn.addEventListener('click', () => {
+                    adminPinModal.classList.remove('show');
+                });
+            }
+
+            // ផ្ទៀងផ្ទាត់ពាក្យសម្ងាត់ Admin ដើម្បីបង្ហាញប៊ូតុង
+            if(confirmAdminPinBtn) {
+                confirmAdminPinBtn.addEventListener('click', () => {
+                    if(adminPinField.value === ADMIN_SHOW_PIN) {
+                        adminControlsVisible = true;
+                        adminControlsGrid.classList.remove('hidden');
+                        adminPinModal.classList.remove('show');
+                        alert("🔓 បានបង្ហាញប៊ូតុងគ្រប់គ្រង Admin ដោយជោគជ័យ!");
+                    } else {
+                        alert("❌ ពាក្យសម្ងាត់ Admin មិនត្រឹមត្រូវ!");
+                        adminPinField.value = "";
+                        adminPinField.focus();
+                    }
+                });
+            }
+
+            // ចុចខាងក្រៅ Modal ដើម្បីបិទ
+            adminPinModal.addEventListener('click', (e) => {
+                if(e.target === adminPinModal) {
+                    adminPinModal.classList.remove('show');
+                }
+            });
+
+            // ========== PREDICTION MODAL ==========
             const openPredictModalBtn = document.getElementById('openPredictModalBtn');
             const predictModal = document.getElementById('predictModal');
             const closePredictModalBtn = document.getElementById('closePredictModalBtn');
@@ -1107,13 +1228,12 @@
 
                     const nowTime = new Date();
                     const currentHour = nowTime.getHours();
-                    // កំណត់ម៉ោងគោលដៅជាម៉ោងបន្ទាប់
                     const targetHour = getTargetHourForBet(currentHour);
                     const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
                     
                     betHistory.unshift({
                         date: timeStr,
-                        targetHour: targetHour, // ប្រើម៉ោងគោលដៅថ្មី
+                        targetHour: targetHour,
                         picked: selectedZodiacName,
                         result: "រង់ចាំម៉ោងបង្គ្រប់",
                         status: "រង់ចាំលទ្ធផល",
@@ -1129,7 +1249,7 @@
                 });
             }
 
-            // Deposit System and Admin Controls
+            // ========== DEPOSIT SYSTEM AND ADMIN CONTROLS ==========
             const openDepositBtn = document.getElementById('openDepositBtn');
             const depositModal = document.getElementById('depositModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
