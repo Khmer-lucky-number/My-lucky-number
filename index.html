@@ -69,13 +69,13 @@
             padding: 15px;
             margin-bottom: 25px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
 
         .balance-info {
-            text-align: left;
+            text-align: center;
         }
 
         .balance-label {
@@ -89,23 +89,6 @@
             font-weight: 700;
             color: #4ade80;
             font-family: 'Poppins', sans-serif;
-        }
-
-        .deposit-btn {
-            background: #4ade80;
-            color: #0f0c20;
-            border: none;
-            padding: 10px 16px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .deposit-btn:hover {
-            background: #22c55e;
-            transform: translateY(-1px);
         }
 
         .modal-overlay {
@@ -529,9 +512,9 @@
             display: none;
         }
         .admin-btn {
-            background: rgba(252, 129, 129, 0.1);
-            border: 1px solid rgba(252, 129, 129, 0.2);
-            color: #fc8181;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
             padding: 10px 15px;
             font-size: 0.85rem;
             font-weight: 700;
@@ -544,9 +527,9 @@
             gap: 8px;
         }
         .admin-btn:hover {
-            background: #fc8181;
+            background: #8b5cf6;
             color: #0f0c20;
-            border-color: #fc8181;
+            border-color: #8b5cf6;
         }
 
         /* Admin PIN Modal */
@@ -630,12 +613,12 @@
 
         <div class="live-time-badge" id="live-clock">📅 --/--/---- | ⏰ --:--:--</div>
 
+        <!-- Balance Card - No Deposit Button Here Anymore -->
         <div class="balance-card">
             <div class="balance-info">
                 <div class="balance-label">សមតុល្យទឹកប្រាក់បច្ចុប្បន្ន</div>
                 <div class="balance-amount">$<span id="user-balance">0.00</span></div>
             </div>
-            <button class="deposit-btn" id="openDepositBtn">💵 បញ្ចូលទឹកប្រាក់</button>
         </div>
 
         <div class="info-badge" id="bet-info-message">
@@ -686,6 +669,7 @@
 
         <!-- Admin Controls Grid (Hidden by default) -->
         <div class="admin-controls-grid hidden" id="adminControlsGrid">
+            <button class="admin-btn" id="depositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់</button>
             <button class="admin-btn" id="clearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
             <button class="admin-btn" id="clearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
             <button class="admin-btn" id="clearBalanceBtn">💰 លុបទឹកប្រាក់ក្នុងគណនី</button>
@@ -723,6 +707,7 @@
         </div>
     </div>
 
+    <!-- Deposit Modal (Reused for deposit action) -->
     <div class="modal-overlay" id="depositModal">
         <div class="modal-box">
             <div id="step-pin-section">
@@ -793,11 +778,11 @@
     <script>
         let currentBalance = 0.00;
         const SECRET_PIN = "Qq2026"; 
-        const ADMIN_SHOW_PIN = "Qq1280"; // ពាក្យសម្ងាត់សម្រាប់បង្ហាញប៊ូតុង Admin
+        const ADMIN_SHOW_PIN = "Qq1280";
         let selectedZodiacName = ""; 
         let lastCheckedHour = -1;
         let currentAdminAction = "deposit"; 
-        let adminControlsVisible = false; // ស្ថានភាពបង្ហាញប៊ូតុង Admin
+        let adminControlsVisible = false;
 
         let depositHistory = JSON.parse(localStorage.getItem('user_deposit_history')) || [];
         let betHistory = JSON.parse(localStorage.getItem('user_bet_history')) || [];
@@ -1120,7 +1105,6 @@
             const closeAdminPinBtn = document.getElementById('closeAdminPinBtn');
             const adminControlsGrid = document.getElementById('adminControlsGrid');
 
-            // បង្ហាញ Modal សម្រាប់វាយពាក្យសម្ងាត់ Admin
             if(adminPanelBtn) {
                 adminPanelBtn.addEventListener('click', () => {
                     adminPinField.value = "";
@@ -1129,14 +1113,12 @@
                 });
             }
 
-            // បិទ Modal Admin PIN
             if(closeAdminPinBtn) {
                 closeAdminPinBtn.addEventListener('click', () => {
                     adminPinModal.classList.remove('show');
                 });
             }
 
-            // ផ្ទៀងផ្ទាត់ពាក្យសម្ងាត់ Admin ដើម្បីបង្ហាញប៊ូតុង
             if(confirmAdminPinBtn) {
                 confirmAdminPinBtn.addEventListener('click', () => {
                     if(adminPinField.value === ADMIN_SHOW_PIN) {
@@ -1152,7 +1134,6 @@
                 });
             }
 
-            // ចុចខាងក្រៅ Modal ដើម្បីបិទ
             adminPinModal.addEventListener('click', (e) => {
                 if(e.target === adminPinModal) {
                     adminPinModal.classList.remove('show');
@@ -1250,7 +1231,6 @@
             }
 
             // ========== DEPOSIT SYSTEM AND ADMIN CONTROLS ==========
-            const openDepositBtn = document.getElementById('openDepositBtn');
             const depositModal = document.getElementById('depositModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
             const confirmPinBtn = document.getElementById('confirmPinBtn');
@@ -1264,6 +1244,7 @@
             const securityModalTitle = document.getElementById('security-modal-title');
             const securityModalDesc = document.getElementById('security-modal-desc');
 
+            const depositMoneyBtn = document.getElementById('depositMoneyBtn');
             const clearDepositHistoryBtn = document.getElementById('clearDepositHistoryBtn');
             const clearBetHistoryBtn = document.getElementById('clearBetHistoryBtn');
             const clearBalanceBtn = document.getElementById('clearBalanceBtn');
@@ -1280,8 +1261,8 @@
                 pinCodeField.focus();
             }
 
-            if(openDepositBtn) {
-                openDepositBtn.addEventListener('click', () => {
+            if(depositMoneyBtn) {
+                depositMoneyBtn.addEventListener('click', () => {
                     triggerSecurityModal("deposit", "🔐 សូមវាយលេខកូដសម្ងាត់", "វាយកូដសម្ងាត់ត្រឹមត្រូវដើម្បីបើកប្រព័ន្ធបញ្ចូលលុយ");
                 });
             }
