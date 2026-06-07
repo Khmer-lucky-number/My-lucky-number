@@ -308,27 +308,6 @@
             border: 3px solid #ffffff;
         }
 
-        .predict-action-btn {
-            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
-            color: #ffffff;
-            border: none;
-            padding: 12px 35px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .predict-action-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(244, 63, 94, 0.6);
-        }
-
         .countdown-box {
             font-size: 0.9rem;
             color: #e2e8f0;
@@ -364,6 +343,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
+            margin-bottom: 20px;
         }
 
         .zodiac-card {
@@ -393,6 +373,29 @@
             background: rgba(255, 255, 255, 0.04);
             padding: 1px 6px;
             border-radius: 4px;
+        }
+
+        /* Prediction Button inside Zodiac Box */
+        .predict-action-btn {
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .predict-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 63, 94, 0.6);
         }
 
         .history-wrapper { margin-bottom: 25px; }
@@ -628,17 +631,15 @@
         <div class="section-indicator" id="current-hour-text">🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោងនេះគឺ៖</div>
         <div class="lucky-circle" id="main-lucky-number">?</div>
 
-        <div>
-            <button class="predict-action-btn" id="openPredictModalBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
-        </div>
-
         <div class="countdown-box">
             លទ្ធផលបន្ទាប់នឹងចេញក្នុងរយៈពេល៖ <span class="countdown-time" id="countdown-timer">--:--</span>
         </div>
 
+        <!-- Zodiac Box with Prediction Button at the bottom -->
         <div class="zodiac-single-box">
             <div class="zodiac-single-title">🗓️ តារាងឆ្នាំសំណាងទាំង ១២ យោងតាមហោរាសាស្ត្រ</div>
             <div class="zodiac-grid-12" id="zodiac-single-grid-area"></div>
+            <button class="predict-action-btn" id="openPredictModalBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
         </div>
 
         <div class="history-wrapper">
@@ -1105,16 +1106,13 @@
             const closeAdminPinBtn = document.getElementById('closeAdminPinBtn');
             const adminControlsGrid = document.getElementById('adminControlsGrid');
 
-            // Toggle function for Admin Panel
             if(adminPanelBtn) {
                 adminPanelBtn.addEventListener('click', () => {
-                    // If controls are visible, just hide them
                     if (!adminControlsGrid.classList.contains('hidden')) {
                         adminControlsGrid.classList.add('hidden');
                         adminControlsVisible = false;
                         adminPanelBtn.innerHTML = '🔧 Admin Panel (ចុចដើម្បីបង្ហាញ)';
                     } else {
-                        // If hidden, show PIN modal to verify
                         adminPinField.value = "";
                         adminPinModal.classList.add('show');
                         adminPinField.focus();
