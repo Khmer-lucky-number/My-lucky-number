@@ -63,81 +63,59 @@
             box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
         }
 
-        /* Balance Card with Money Pattern Background */
+        /* Balance Card - Clean and elegant without dark shadow */
         .balance-card {
-            background: linear-gradient(135deg, #1e1b4b 0%, #311042 100%);
-            border: 1px solid rgba(246, 173, 85, 0.2);
-            border-radius: 16px;
-            padding: 15px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a1a4a 100%);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 18px;
             margin-bottom: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             position: relative;
             overflow: hidden;
         }
         
-        /* Money Pattern Background */
+        /* Soft money pattern - very subtle */
         .balance-card::before {
-            content: "💰 💵 💶 💷 💴 💸";
+            content: "💰 💵 💎";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            font-size: 2.5rem;
-            opacity: 0.08;
-            white-space: nowrap;
-            overflow: hidden;
-            pointer-events: none;
-            animation: moneySlide 20s linear infinite;
-        }
-        
-        @keyframes moneySlide {
-            0% {
-                transform: translateX(0) translateY(0);
-            }
-            100% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-        }
-        
-        /* Additional money symbols */
-        .balance-card::after {
-            content: "💎 🪙 💰 💵";
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            font-size: 1.8rem;
+            top: -10px;
+            right: -20px;
+            font-size: 3rem;
             opacity: 0.06;
             pointer-events: none;
-            animation: moneyFloat 8s ease-in-out infinite;
+            white-space: nowrap;
         }
         
-        @keyframes moneyFloat {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-8px) rotate(5deg);
-            }
+        .balance-card::after {
+            content: "💵 💰 🪙";
+            position: absolute;
+            bottom: -10px;
+            left: -20px;
+            font-size: 2.5rem;
+            opacity: 0.06;
+            pointer-events: none;
+            white-space: nowrap;
         }
 
         .balance-info {
             text-align: center;
             position: relative;
             z-index: 1;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 20px;
-            border-radius: 50px;
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.2);
+            padding: 8px 25px;
+            border-radius: 60px;
+            backdrop-filter: blur(2px);
         }
 
         .balance-label {
             font-size: 0.8rem;
-            color: #a0aec0;
+            color: #cbd5e1;
             margin-bottom: 4px;
+            letter-spacing: 1px;
         }
 
         .balance-amount {
@@ -145,7 +123,7 @@
             font-weight: 700;
             color: #4ade80;
             font-family: 'Poppins', sans-serif;
-            text-shadow: 0 0 10px rgba(74,222,128,0.3);
+            text-shadow: 0 0 8px rgba(74,222,128,0.3);
         }
 
         .modal-overlay {
@@ -873,7 +851,6 @@
 
     // Audio context for sound notifications
     let audioContext = null;
-    let lastNotifiedHour = -1;
 
     function playNotificationSound(isWin) {
         try {
@@ -890,14 +867,11 @@
             oscillator.type = 'sine';
             
             if (isWin === true) {
-                // Winning sound - happy ascending melody
                 oscillator.frequency.value = 880;
                 gainNode.gain.value = 0.3;
                 oscillator.start();
                 gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.8);
                 setTimeout(() => oscillator.stop(), 800);
-                
-                // Second note
                 setTimeout(() => {
                     const osc2 = audioContext.createOscillator();
                     const gain2 = audioContext.createGain();
@@ -911,14 +885,12 @@
                     setTimeout(() => osc2.stop(), 600);
                 }, 300);
             } else if (isWin === false) {
-                // Losing sound - descending sad tone
                 oscillator.frequency.value = 440;
                 gainNode.gain.value = 0.25;
                 oscillator.start();
                 gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.6);
                 setTimeout(() => oscillator.stop(), 600);
             } else {
-                // Generic notification
                 oscillator.frequency.value = 660;
                 gainNode.gain.value = 0.2;
                 oscillator.start();
@@ -931,7 +903,6 @@
     }
 
     function showNotificationToast(message, type) {
-        // Remove existing toast
         const existingToast = document.querySelector('.notification-toast');
         if (existingToast) existingToast.remove();
         
@@ -1019,20 +990,31 @@
         return [...shufflePool(), ...shufflePool()];
     }
 
-    function checkAndSettleHourlyBets(currentHour, todayNumbers, todayStr) {
+    function checkAndSettleHourlyBets(currentHour, todayNumbers, todayDate) {
         if (lastCheckedHour === -1) {
             lastCheckedHour = currentHour;
             return;
         }
+        
+        // Handle hour change detection correctly for 0 vs 24
+        let hourJustPassed = lastCheckedHour;
+        let shouldCheck = false;
+        
         if (currentHour !== lastCheckedHour) {
+            shouldCheck = true;
+        }
+        
+        if (shouldCheck) {
             let statusChanged = false;
-            const settleDate = new Date();
-            settleDate.setHours(lastCheckedHour, 0, 0, 0);
-            const resultDateTime = formatDateTime(settleDate);
+            
+            // Create date for the result (the hour that just passed)
+            const resultDate = new Date(todayDate);
+            resultDate.setHours(hourJustPassed, 0, 0, 0);
+            const resultDateTime = formatDateTime(resultDate);
             
             betHistory.forEach(item => {
-                if (item.status === "រង់ចាំលទ្ធផល" && item.targetHour === lastCheckedHour) {
-                    let correctNumber = todayNumbers[lastCheckedHour];
+                if (item.status === "រង់ចាំលទ្ធផល" && item.targetHour === hourJustPassed) {
+                    let correctNumber = todayNumbers[hourJustPassed];
                     let activeZodiac = zodiacMap[correctNumber];
                     if (activeZodiac) {
                         item.result = activeZodiac.name;
@@ -1044,13 +1026,11 @@
                             item.status = "ឈ្នះ";
                             item.reward = item.bet * 10;
                             currentBalance += item.reward;
-                            // Play win sound and show notification
                             playNotificationSound(true);
                             showNotificationToast(`🎉 ឈ្នះ! ${item.picked} = ${activeZodiac.name} (+$${item.reward.toFixed(2)})`, 'win');
                         } else {
                             item.status = "ចាញ់";
                             item.reward = 0;
-                            // Play lose sound and show notification
                             playNotificationSound(false);
                             showNotificationToast(`😢 ចាញ់! ${item.picked} ≠ ${activeZodiac.name} (-$${item.bet.toFixed(2)})`, 'lose');
                         }
@@ -1058,6 +1038,7 @@
                     }
                 }
             });
+            
             if (statusChanged) {
                 localStorage.setItem('user_current_balance', currentBalance);
                 localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
@@ -1089,7 +1070,8 @@
         const yesterdayNumbers = generate24HourNumbers(yesterday);
         const tomorrowNumbers = generate24HourNumbers(tomorrow);
         
-        checkAndSettleHourlyBets(currentHour, todayNumbers, todayStr);
+        // Pass the current date for result timestamp
+        checkAndSettleHourlyBets(currentHour, todayNumbers, now);
 
         let currentActiveContent = "?";
         let listHtml = "";
