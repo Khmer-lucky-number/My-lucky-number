@@ -209,7 +209,12 @@
     const hoursLayout = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,0,1,2,3,4,5,6];
     
     function getNextHour(hour) { return hour === 23 ? 0 : hour + 1; }
-    function formatHour(hour) { return hour === 0 ? "00:00" : (hour < 10 ? "0"+hour+":00" : hour+":00"); }
+    
+    // បង្ហាញម៉ោងជា 24 ម៉ោង (00:00, 01:00, ..., 23:00)
+    function formatHour(hour) { 
+        return hour === 0 ? "00:00" : (hour < 10 ? "0"+hour+":00" : hour+":00"); 
+    }
+    
     function formatDateOnly(date) { return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`; }
     function formatDateTime(date) { return `${date.getDate()}/${date.getMonth()+1} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`; }
 
@@ -224,7 +229,6 @@
         return [...shuffle(), ...shuffle()];
     }
 
-    // បង្កើតលេខសម្រាប់ថ្ងៃនីមួយៗ
     const numbersCache = {};
     function getNumbersForDate(date) {
         const key = formatDateOnly(date);
@@ -232,14 +236,12 @@
         return numbersCache[key];
     }
 
-    // ពិនិត្យ និងប្រកាសលទ្ធផលនៅពេលដល់ម៉ោងគោលដៅ
     function checkAndSettleBets(currentHour, currentDate) {
         let changed = false;
         const currentNumbers = getNumbersForDate(currentDate);
         
         betHistory.forEach(bet => {
             if (bet.status === "pending" && bet.targetHour === currentHour) {
-                // កំណត់កាលបរិច្ឆេទនៃលទ្ធផល
                 const resultDate = new Date(currentDate);
                 resultDate.setHours(currentHour, 0, 0, 0);
                 
@@ -284,10 +286,8 @@
         let remainM = 59 - cm, remainS = 59 - cs;
         document.getElementById('countdown-timer').innerHTML = `${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
         
-        // ពិនិត្យលទ្ធផលសម្រាប់ម៉ោងបច្ចុប្បន្ន
         checkAndSettleBets(ch, today);
         
-        // បង្ហាញតារាងម៉ោង
         let todayNums = getNumbersForDate(today);
         let yesterdayNums = getNumbersForDate(yesterday);
         let tomorrowNums = getNumbersForDate(tomorrow);
@@ -305,7 +305,6 @@
             let num = todayNums[hr];
             
             if (i < currentIdx) {
-                // ម៉ោងកន្លងទៅហើយ
                 if (ch < 7 && hr >= 7) {
                     dateStr = formatDateOnly(yesterday);
                     num = yesterdayNums[hr];
