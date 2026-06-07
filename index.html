@@ -412,7 +412,6 @@
             border-radius: 4px;
         }
 
-        /* ប្រព័ន្ធថេបរបាយការណ៍រួមគ្នា */
         .history-wrapper { margin-bottom: 25px; }
         .history-header-area {
             display: flex;
@@ -495,7 +494,6 @@
         .waiting-text { font-size: 0.85rem; color: #718096; font-style: italic; }
         .no-data-text { font-size: 0.85rem; color: #4a5568; text-align: center; padding: 20px 0; font-style: italic; }
 
-        /* ប៊ូតុងគ្រប់គ្រងប្រព័ន្ធ Admin ចំនួន ៣ */
         .admin-controls-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -549,6 +547,17 @@
         }
         .telegram-icon { width: 32px; height: 32px; fill: #ffffff; }
         .telegram-label { font-size: 0.85rem; color: #a0aec0; }
+
+        .info-badge {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 10px;
+            padding: 8px 12px;
+            margin-bottom: 15px;
+            font-size: 0.75rem;
+            color: #4ade80;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -565,6 +574,10 @@
                 <div class="balance-amount">$<span id="user-balance">0.00</span></div>
             </div>
             <button class="deposit-btn" id="openDepositBtn">💵 បញ្ចូលទឹកប្រាក់</button>
+        </div>
+
+        <div class="info-badge" id="bet-info-message">
+            ⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!
         </div>
 
         <div class="section-indicator" id="current-hour-text">🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោងនេះគឺ៖</div>
@@ -738,6 +751,24 @@
             { time: "06:00", hour: 6 }
         ];
 
+        // អនុគមន៍សម្រាប់គណនាម៉ោងគោលដៅ (ម៉ោងបន្ទាប់)
+        function getTargetHourForBet(currentHour) {
+            // ប្រសិនបើម៉ោងបច្ចុប្បន្នជា 23 ម៉ោងគោលដៅគឺ 0 (ថ្ងៃបន្ទាប់)
+            if (currentHour === 23) {
+                return 0;
+            }
+            // បើមិនដូច្នោះទេ យកម៉ោងបន្ទាប់
+            return currentHour + 1;
+        }
+
+        // អនុគមន៍សម្រាប់ទទួលបានឈ្មោះម៉ោងជាទម្រង់ងាយយល់
+        function getHourDisplayName(hour) {
+            if (hour === 0) return "12:00 AM (អាធ្រាត្រ)";
+            if (hour < 12) return `${hour}:00 AM`;
+            if (hour === 12) return "12:00 PM (ថ្ងៃត្រង់)";
+            return `${hour - 12}:00 PM`;
+        }
+
         function generate24HourNumbers(targetDate) {
             const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
             let seed = dateSeed;
@@ -813,8 +844,12 @@
             if(document.getElementById("live-clock")) {
                 document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${hourPrint}:${minPrint}:${secPrint}`;
             }
+            
+            // បង្ហាញម៉ោងគោលដៅសម្រាប់ការចាក់
+            const targetHourForBet = getTargetHourForBet(currentHour);
+            const targetHourDisplay = getHourDisplayName(targetHourForBet);
             if(document.getElementById("current-hour-text")) {
-                document.getElementById("current-hour-text").innerHTML = `🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោង ${hourPrint}:00 គឺ៖`;
+                document.getElementById("current-hour-text").innerHTML = `🔮 បើចាក់ឥឡូវនេះ នឹងត្រូវចាក់សម្រាប់ម៉ោង ${targetHourDisplay}`;
             }
 
             let diffMinutes = 59 - currentMinute; 
@@ -946,11 +981,13 @@
                     rewardText = `បាត់បង់: -$${item.bet.toFixed(2)}`;
                 }
 
+                let targetHourDisplay = getHourDisplayName(item.targetHour);
+                
                 html += `
                     <div class="history-item-row">
                         <div class="time-info">
-                            <div class="row-main-title">ចាក់៖ ${item.picked} | ចេញ៖ ${item.result}</div>
-                            <div class="row-sub-title">ម៉ោងចាក់៖ ${item.date} (ចាក់សម្រាប់ម៉ោង ${item.targetHour}:00)</div>
+                            <div class="row-main-title">🎯 ចាក់៖ ${item.picked} | លទ្ធផល៖ ${item.result || "កំពុងរង់ចាំ"}</div>
+                            <div class="row-sub-title">📅 ${item.date} | ⏰ ចាក់សម្រាប់ម៉ោង ${targetHourDisplay}</div>
                         </div>
                         <div class="row-status-badge" style="${badgeStyle}">${item.status}<br><span style="font-size:0.65rem;">${rewardText}</span></div>
                     </div>
@@ -1001,7 +1038,7 @@
                 });
             }
 
-            // ផ្ទាំងទស្សន៍ទាយ (Prediction Modal)
+            // Prediction Modal
             const openPredictModalBtn = document.getElementById('openPredictModalBtn');
             const predictModal = document.getElementById('predictModal');
             const closePredictModalBtn = document.getElementById('closePredictModalBtn');
@@ -1070,11 +1107,13 @@
 
                     const nowTime = new Date();
                     const currentHour = nowTime.getHours();
+                    // កំណត់ម៉ោងគោលដៅជាម៉ោងបន្ទាប់
+                    const targetHour = getTargetHourForBet(currentHour);
                     const timeStr = `${nowTime.getDate()}/${nowTime.getMonth()+1} ${nowTime.getHours()}:${nowTime.getMinutes()<10?'0'+nowTime.getMinutes():nowTime.getMinutes()}`;
                     
                     betHistory.unshift({
                         date: timeStr,
-                        targetHour: currentHour, 
+                        targetHour: targetHour, // ប្រើម៉ោងគោលដៅថ្មី
                         picked: selectedZodiacName,
                         result: "រង់ចាំម៉ោងបង្គ្រប់",
                         status: "រង់ចាំលទ្ធផល",
@@ -1084,11 +1123,13 @@
                     
                     localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
                     renderBetHistory();
-                    alert(`🎯 ចាក់ទស្សន៍ទាយលើ [${selectedZodiacName}] ចំនួន $${betAmount.toFixed(2)} បានជោគជ័យ! ប្រព័ន្ធកំពុងរង់ចាំលទ្ធផលផ្លូវការនៅពេលប្តូរម៉ោងថ្មី។`);
+                    
+                    const targetHourDisplay = getHourDisplayName(targetHour);
+                    alert(`🎯 ចាក់ទស្សន៍ទាយលើ [${selectedZodiacName}] ចំនួន $${betAmount.toFixed(2)}\n📌 ចាក់សម្រាប់ម៉ោង: ${targetHourDisplay}\n✅ បានជោគជ័យ!`);
                 });
             }
 
-            // ប្រព័ន្ធបញ្ចូលទឹកប្រាក់ និង លុបទិន្នន័យ Admin
+            // Deposit System and Admin Controls
             const openDepositBtn = document.getElementById('openDepositBtn');
             const depositModal = document.getElementById('depositModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
