@@ -63,7 +63,7 @@
             box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
         }
 
-        /* Balance Card - Clean and elegant without dark shadow */
+        /* Balance Card with animated money pattern */
         .balance-card {
             background: linear-gradient(135deg, #1e3a5f 0%, #2a1a4a 100%);
             border: 1px solid rgba(255, 215, 0, 0.3);
@@ -78,27 +78,30 @@
             overflow: hidden;
         }
         
-        /* Soft money pattern - very subtle */
+        /* Animated money pattern - sliding left to right */
         .balance-card::before {
-            content: "💰 💵 💎";
+            content: "💰 💵 💶 💷 💴 💸 🪙 💎";
             position: absolute;
-            top: -10px;
-            right: -20px;
-            font-size: 3rem;
-            opacity: 0.06;
-            pointer-events: none;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            font-size: 2rem;
+            opacity: 0.12;
             white-space: nowrap;
+            pointer-events: none;
+            animation: moneySlide 15s linear infinite;
+            display: flex;
+            align-items: center;
         }
         
-        .balance-card::after {
-            content: "💵 💰 🪙";
-            position: absolute;
-            bottom: -10px;
-            left: -20px;
-            font-size: 2.5rem;
-            opacity: 0.06;
-            pointer-events: none;
-            white-space: nowrap;
+        @keyframes moneySlide {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(50%);
+            }
         }
 
         .balance-info {
@@ -312,6 +315,8 @@
         .btn-confirm:hover { background: #2b6cb0; }
         .btn-success { background: #4ade80; color: #0f0c20; }
         .btn-success:hover { background: #22c55e; }
+        .btn-warning { background: #ecc94b; color: #1a1a2e; }
+        .btn-warning:hover { background: #d69e2e; }
 
         .section-indicator {
             color: #4ade80; 
@@ -602,6 +607,73 @@
             margin-bottom: 15px;
         }
 
+        /* Confirm Modal */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2500;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .confirm-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .confirm-box {
+            background: #15102a;
+            border: 2px solid #ecc94b;
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 340px;
+            text-align: center;
+        }
+        .confirm-title {
+            color: #ecc94b;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+        .confirm-message {
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        .confirm-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .confirm-yes {
+            background: #4ade80;
+            color: #1a1a2e;
+        }
+        .confirm-yes:hover {
+            background: #22c55e;
+        }
+        .confirm-no {
+            background: #4a5568;
+            color: white;
+        }
+        .confirm-no:hover {
+            background: #3e4654;
+        }
+
         .law-section { margin-top: 5px; text-align: center; margin-bottom: 25px; }
         .law-btn {
             background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 100%);
@@ -801,6 +873,7 @@
     </div>
 </div>
 
+<!-- Deposit Modal -->
 <div class="modal-overlay" id="depositModal">
     <div class="modal-box">
         <div id="step-pin-section">
@@ -818,6 +891,7 @@
     </div>
 </div>
 
+<!-- Predict Modal -->
 <div class="modal-overlay" id="predictModal">
     <div class="modal-box">
         <div class="modal-title">🎲 រៀបចំការទស្សន៍ទាយ</div>
@@ -839,6 +913,30 @@
     </div>
 </div>
 
+<!-- Confirm Modal for Prediction -->
+<div class="confirm-modal" id="confirmPredictModal">
+    <div class="confirm-box">
+        <div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div>
+        <div class="confirm-message" id="confirmPredictMessage">តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?</div>
+        <div class="confirm-buttons">
+            <button class="confirm-btn confirm-no" id="cancelPredictConfirmBtn">បោះបង់</button>
+            <button class="confirm-btn confirm-yes" id="yesPredictConfirmBtn">យល់ព្រម</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Modal for Admin Actions -->
+<div class="confirm-modal" id="confirmAdminModal">
+    <div class="confirm-box">
+        <div class="confirm-title" id="confirmAdminTitle">⚠️ បញ្ជាក់សកម្មភាព</div>
+        <div class="confirm-message" id="confirmAdminMessage">តើអ្នកពិតជាចង់ធ្វើសកម្មភាពនេះមែនទេ?</div>
+        <div class="confirm-buttons">
+            <button class="confirm-btn confirm-no" id="cancelAdminConfirmBtn">បោះបង់</button>
+            <button class="confirm-btn confirm-yes" id="yesAdminConfirmBtn">យល់ព្រម</button>
+        </div>
+    </div>
+</div>
+
 <script>
     let currentBalance = 0.00;
     const SECRET_PIN = "Qq2026";
@@ -846,6 +944,10 @@
     let selectedZodiacName = "";
     let lastCheckedHour = -1;
     let currentAdminAction = "deposit";
+    let pendingDepositAmount = 0;
+    let pendingBetAmount = 0;
+    let pendingSelectedZodiac = "";
+    let pendingAdminAction = "";
     let depositHistory = JSON.parse(localStorage.getItem('user_deposit_history')) || [];
     let betHistory = JSON.parse(localStorage.getItem('user_bet_history')) || [];
 
@@ -857,15 +959,11 @@
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
-            
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
-            
             oscillator.connect(gainNode);
             gainNode.connect(audioContext.destination);
-            
             oscillator.type = 'sine';
-            
             if (isWin === true) {
                 oscillator.frequency.value = 880;
                 gainNode.gain.value = 0.3;
@@ -905,18 +1003,11 @@
     function showNotificationToast(message, type) {
         const existingToast = document.querySelector('.notification-toast');
         if (existingToast) existingToast.remove();
-        
         const toast = document.createElement('div');
         toast.className = `notification-toast ${type}`;
-        toast.innerHTML = `
-            <span style="font-size:1.5rem;">${type === 'win' ? '🏆' : (type === 'lose' ? '😢' : '🔔')}</span>
-            <span style="font-weight:bold;">${message}</span>
-        `;
+        toast.innerHTML = `<span style="font-size:1.5rem;">${type === 'win' ? '🏆' : (type === 'lose' ? '😢' : '🔔')}</span><span style="font-weight:bold;">${message}</span>`;
         document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            if (toast) toast.remove();
-        }, 4000);
+        setTimeout(() => { if (toast) toast.remove(); }, 4000);
     }
 
     const zodiacMap = {
@@ -995,26 +1086,15 @@
             lastCheckedHour = currentHour;
             return;
         }
-        
-        // Handle hour change detection correctly for 0 vs 24
-        let hourJustPassed = lastCheckedHour;
-        let shouldCheck = false;
-        
         if (currentHour !== lastCheckedHour) {
-            shouldCheck = true;
-        }
-        
-        if (shouldCheck) {
             let statusChanged = false;
-            
-            // Create date for the result (the hour that just passed)
             const resultDate = new Date(todayDate);
-            resultDate.setHours(hourJustPassed, 0, 0, 0);
+            resultDate.setHours(lastCheckedHour, 0, 0, 0);
             const resultDateTime = formatDateTime(resultDate);
             
             betHistory.forEach(item => {
-                if (item.status === "រង់ចាំលទ្ធផល" && item.targetHour === hourJustPassed) {
-                    let correctNumber = todayNumbers[hourJustPassed];
+                if (item.status === "រង់ចាំលទ្ធផល" && item.targetHour === lastCheckedHour) {
+                    let correctNumber = todayNumbers[lastCheckedHour];
                     let activeZodiac = zodiacMap[correctNumber];
                     if (activeZodiac) {
                         item.result = activeZodiac.name;
@@ -1038,7 +1118,6 @@
                     }
                 }
             });
-            
             if (statusChanged) {
                 localStorage.setItem('user_current_balance', currentBalance);
                 localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
@@ -1070,7 +1149,6 @@
         const yesterdayNumbers = generate24HourNumbers(yesterday);
         const tomorrowNumbers = generate24HourNumbers(tomorrow);
         
-        // Pass the current date for result timestamp
         checkAndSettleHourlyBets(currentHour, todayNumbers, now);
 
         let currentActiveContent = "?";
@@ -1171,6 +1249,45 @@
         container.innerHTML = html;
     }
 
+    // Function to execute prediction after confirmation
+    function executePrediction() {
+        let betAmount = pendingBetAmount;
+        let zodiac = pendingSelectedZodiac;
+        
+        currentBalance -= betAmount;
+        localStorage.setItem('user_current_balance', currentBalance);
+        document.getElementById('user-balance').textContent = currentBalance.toFixed(2);
+        
+        let now = new Date();
+        let targetHour = getTargetHourForBet(now.getHours());
+        let timeStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+        betHistory.unshift({ date: timeStr, targetHour: targetHour, picked: zodiac, result: null, resultIcon: null, resultOrder: null, resultNumber: null, resultDate: null, status: "រង់ចាំលទ្ធផល", bet: betAmount, reward: 0 });
+        localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
+        renderBetHistory();
+        playNotificationSound(null);
+        showNotificationToast(`📝 បានចាក់ ${zodiac} $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(targetHour)}`, 'pending');
+    }
+
+    // Function to execute admin action after confirmation
+    function executeAdminAction() {
+        if (pendingAdminAction === "clear_deposit") {
+            depositHistory = [];
+            localStorage.removeItem('user_deposit_history');
+            renderDepositHistory();
+            showNotificationToast(`🗑️ បានលុបប្រវត្តិបញ្ចូលលុយទាំងអស់!`, 'pending');
+        } else if (pendingAdminAction === "clear_bet") {
+            betHistory = [];
+            localStorage.removeItem('user_bet_history');
+            renderBetHistory();
+            showNotificationToast(`🗑️ បានលុបប្រវត្តិទស្សន៍ទាយទាំងអស់!`, 'pending');
+        } else if (pendingAdminAction === "clear_balance") {
+            currentBalance = 0;
+            localStorage.setItem('user_current_balance', currentBalance);
+            document.getElementById('user-balance').textContent = "0.00";
+            showNotificationToast(`💰 បានលុបទឹកប្រាក់ក្នុងគណនីមកត្រឹម $0.00!`, 'pending');
+        }
+    }
+
     function startApp() {
         initZodiacBoxes();
         updateLuckySystem();
@@ -1220,12 +1337,17 @@
                 adminControlsGrid.classList.remove('hidden');
                 adminPinModal.classList.remove('show');
                 adminPanelBtn.innerHTML = '🔧 Admin Panel (ចុចដើម្បីលាក់)';
-                alert("🔓 បានបង្ហាញប៊ូតុង Admin!");
-            } else { alert("❌ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!"); adminPinField.value = ""; }
+                showNotificationToast(`🔓 បានបង្ហាញប៊ូតុង Admin!`, 'pending');
+            } else { 
+                showNotificationToast(`❌ ពាក្យសម្ងាត់ Admin មិនត្រឹមត្រូវ!`, 'lose');
+                adminPinField.value = ""; 
+            }
         });
 
         // Predict Modal
         const predictModal = document.getElementById('predictModal');
+        const confirmPredictModal = document.getElementById('confirmPredictModal');
+        
         document.getElementById('openPredictModalBtn').addEventListener('click', () => {
             document.getElementById('predictAmountField').value = "";
             selectedZodiacName = "";
@@ -1233,35 +1355,51 @@
             calculatePreviewRates();
             predictModal.classList.add('show');
         });
+        
         document.getElementById('closePredictModalBtn').addEventListener('click', () => predictModal.classList.remove('show'));
         document.getElementById('predictAmountField').addEventListener('input', calculatePreviewRates);
         document.querySelectorAll('.shortcut-btn').forEach(btn => {
             btn.addEventListener('click', function() { document.getElementById('predictAmountField').value = this.getAttribute('data-amount'); calculatePreviewRates(); });
         });
+        
         document.getElementById('confirmPredictBtn').addEventListener('click', () => {
             let betAmount = parseFloat(document.getElementById('predictAmountField').value);
-            if (isNaN(betAmount) || betAmount <= 0) { alert("❌ បញ្ចូលទឹកប្រាក់ឱ្យត្រឹមត្រូវ!"); return; }
-            if (!selectedZodiacName) { alert("❌ ជ្រើសរើសឆ្នាំ!"); return; }
-            if (currentBalance < betAmount) { alert("❌ សមតុល្យមិនគ្រប់!"); return; }
+            if (isNaN(betAmount) || betAmount <= 0) { 
+                showNotificationToast(`❌ បញ្ចូលទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!`, 'lose');
+                return; 
+            }
+            if (!selectedZodiacName) { 
+                showNotificationToast(`❌ សូមជ្រើសរើសឆ្នាំ!`, 'lose');
+                return; 
+            }
+            if (currentBalance < betAmount) { 
+                showNotificationToast(`❌ សមតុល្យមិនគ្រប់! សូមបញ្ចូលលុយបន្ថែម។`, 'lose');
+                return; 
+            }
+            
+            pendingBetAmount = betAmount;
+            pendingSelectedZodiac = selectedZodiacName;
             predictModal.classList.remove('show');
-            currentBalance -= betAmount;
-            localStorage.setItem('user_current_balance', currentBalance);
-            document.getElementById('user-balance').textContent = currentBalance.toFixed(2);
-            let now = new Date();
-            let targetHour = getTargetHourForBet(now.getHours());
-            let timeStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-            betHistory.unshift({ date: timeStr, targetHour: targetHour, picked: selectedZodiacName, result: null, resultIcon: null, resultOrder: null, resultNumber: null, resultDate: null, status: "រង់ចាំលទ្ធផល", bet: betAmount, reward: 0 });
-            localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
-            renderBetHistory();
-            playNotificationSound(null);
-            showNotificationToast(`📝 បានចាក់ ${selectedZodiacName} $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(targetHour)}`, 'pending');
-            alert(`🎯 ចាក់ [${selectedZodiacName}] $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(targetHour)}`);
+            
+            document.getElementById('confirmPredictMessage').innerHTML = `តើអ្នកពិតជាចង់ទស្សន៍ទាយ ${selectedZodiacName} ចំនួន $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(getTargetHourForBet(new Date().getHours()))} មែនទេ?`;
+            confirmPredictModal.classList.add('show');
+        });
+        
+        document.getElementById('cancelPredictConfirmBtn').addEventListener('click', () => {
+            confirmPredictModal.classList.remove('show');
+        });
+        
+        document.getElementById('yesPredictConfirmBtn').addEventListener('click', () => {
+            confirmPredictModal.classList.remove('show');
+            executePrediction();
         });
 
         // Deposit Modal
         const depositModal = document.getElementById('depositModal');
         const pinCodeField = document.getElementById('pinCodeField');
         const amountField = document.getElementById('amountField');
+        const confirmAdminModal = document.getElementById('confirmAdminModal');
+        
         function triggerSecurityModal(action, title, desc) {
             currentAdminAction = action;
             document.getElementById('security-modal-title').textContent = title;
@@ -1273,6 +1411,7 @@
             depositModal.classList.add('show');
             pinCodeField.focus();
         }
+        
         document.getElementById('depositMoneyBtn').addEventListener('click', () => triggerSecurityModal("deposit", "🔐 បញ្ចូលលុយ", "វាយកូដសម្ងាត់"));
         document.getElementById('clearDepositHistoryBtn').addEventListener('click', () => triggerSecurityModal("clear_deposit", "🔐 លុបប្រវត្តិបញ្ចូលលុយ", "វាយកូដសម្ងាត់"));
         document.getElementById('clearBetHistoryBtn').addEventListener('click', () => triggerSecurityModal("clear_bet", "🔐 លុបប្រវត្តិទស្សន៍ទាយ", "វាយកូដសម្ងាត់"));
@@ -1284,6 +1423,7 @@
             pinCodeField.value = "";
             pinCodeField.focus();
         });
+        
         document.getElementById('confirmPinBtn').addEventListener('click', () => {
             if (pinCodeField.value === SECRET_PIN) {
                 if (currentAdminAction === "deposit") {
@@ -1292,31 +1432,50 @@
                     amountField.focus();
                 } else if (currentAdminAction === "clear_deposit") {
                     depositModal.classList.remove('show');
-                    depositHistory = [];
-                    localStorage.removeItem('user_deposit_history');
-                    renderDepositHistory();
-                    alert("លុបប្រវត្តិបញ្ចូលលុយហើយ!");
+                    let actionName = "លុបប្រវត្តិបញ្ចូលលុយ";
+                    document.getElementById('confirmAdminTitle').innerHTML = `⚠️ បញ្ជាក់${actionName}`;
+                    document.getElementById('confirmAdminMessage').innerHTML = `តើអ្នកពិតជាចង់លុបប្រវត្តិបញ្ចូលលុយទាំងអស់មែនទេ?`;
+                    pendingAdminAction = "clear_deposit";
+                    confirmAdminModal.classList.add('show');
                 } else if (currentAdminAction === "clear_bet") {
                     depositModal.classList.remove('show');
-                    betHistory = [];
-                    localStorage.removeItem('user_bet_history');
-                    renderBetHistory();
-                    alert("លុបប្រវត្តិទស្សន៍ទាយហើយ!");
+                    document.getElementById('confirmAdminTitle').innerHTML = `⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយ`;
+                    document.getElementById('confirmAdminMessage').innerHTML = `តើអ្នកពិតជាចង់លុបប្រវត្តិទស្សន៍ទាយទាំងអស់មែនទេ?`;
+                    pendingAdminAction = "clear_bet";
+                    confirmAdminModal.classList.add('show');
                 } else if (currentAdminAction === "clear_balance") {
                     depositModal.classList.remove('show');
-                    currentBalance = 0;
-                    localStorage.setItem('user_current_balance', currentBalance);
-                    document.getElementById('user-balance').textContent = "0.00";
-                    alert("លុបទឹកប្រាក់ក្នុងគណនីហើយ!");
+                    document.getElementById('confirmAdminTitle').innerHTML = `⚠️ បញ្ជាក់លុបទឹកប្រាក់`;
+                    document.getElementById('confirmAdminMessage').innerHTML = `តើអ្នកពិតជាចង់លុបទឹកប្រាក់ក្នុងគណនីមកត្រឹម $0.00 មែនទេ?`;
+                    pendingAdminAction = "clear_balance";
+                    confirmAdminModal.classList.add('show');
                 }
-            } else { alert("❌ កូដសម្ងាត់មិនត្រឹមត្រូវ!"); pinCodeField.value = ""; }
+            } else { 
+                showNotificationToast(`❌ កូដសម្ងាត់មិនត្រឹមត្រូវ!`, 'lose');
+                pinCodeField.value = ""; 
+            }
         });
+        
+        document.getElementById('cancelAdminConfirmBtn').addEventListener('click', () => {
+            confirmAdminModal.classList.remove('show');
+        });
+        
+        document.getElementById('yesAdminConfirmBtn').addEventListener('click', () => {
+            confirmAdminModal.classList.remove('show');
+            executeAdminAction();
+        });
+        
         document.getElementById('submitDepositBtn').addEventListener('click', () => {
             let depositAmount = parseFloat(amountField.value);
-            if (isNaN(depositAmount) || depositAmount <= 0) { alert("បញ្ចូលចំនួនលុយឱ្យបានត្រឹមត្រូវ!"); return; }
+            if (isNaN(depositAmount) || depositAmount <= 0) { 
+                showNotificationToast(`❌ បញ្ចូលចំនួនលុយឱ្យបានត្រឹមត្រូវ!`, 'lose');
+                return; 
+            }
+            
             currentBalance += depositAmount;
             localStorage.setItem('user_current_balance', currentBalance);
             document.getElementById('user-balance').textContent = currentBalance.toFixed(2);
+            
             let now = new Date();
             let timeStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}`;
             depositHistory.unshift({ date: timeStr, amount: depositAmount });
@@ -1324,7 +1483,6 @@
             renderDepositHistory();
             playNotificationSound(null);
             showNotificationToast(`💰 បញ្ចូលលុយ $${depositAmount.toFixed(2)} ជោគជ័យ!`, 'pending');
-            alert(`បញ្ចូលលុយ $${depositAmount.toFixed(2)} ជោគជ័យ!`);
             depositModal.classList.remove('show');
         });
 
