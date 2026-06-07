@@ -44,9 +44,10 @@
 
         .sub-title {
             color: #a0aec0;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             margin-bottom: 25px;
             font-weight: 400;
+            line-height: 1.4;
         }
 
         .live-time-badge {
@@ -643,12 +644,18 @@
             color: #a0aec0;
             margin-top: 2px;
         }
+        
+        .result-with-number {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1 class="main-title">ឆ្នាំសំណាងទាំង 12 🎁🎉</h1>
-    <p class="sub-title">ប្រព័ន្ធទស្សន៍ទាយ និងកត់ត្រាលេខសំណាងដោយស្វ័យប្រវត្តិ 24 ម៉ោង</p>
+    <p class="sub-title">ប្រព័ន្ធទស្សន៍ទាយ និងកំណត់ត្រាលទ្ធផលឆ្នាំសំណាងទាំង 12/24 ម៉ោង</p>
     <div class="live-time-badge" id="live-clock">📅 --/--/---- | ⏰ --:--:--</div>
     <div class="balance-card">
         <div class="balance-info">
@@ -771,21 +778,33 @@
     let betHistory = JSON.parse(localStorage.getItem('user_bet_history')) || [];
 
     const zodiacMap = {
-        "01": { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១" }, "02": { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២" },
-        "03": { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣" }, "04": { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤" },
-        "05": { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥" }, "06": { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦" },
-        "07": { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧" }, "08": { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨" },
-        "09": { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩" }, "10": { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០" },
-        "11": { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១" }, "12": { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២" }
+        "01": { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១", num: "01" },
+        "02": { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២", num: "02" },
+        "03": { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣", num: "03" },
+        "04": { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤", num: "04" },
+        "05": { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥", num: "05" },
+        "06": { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦", num: "06" },
+        "07": { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧", num: "07" },
+        "08": { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨", num: "08" },
+        "09": { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩", num: "09" },
+        "10": { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០", num: "10" },
+        "11": { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១", num: "11" },
+        "12": { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២", num: "12" }
     };
 
     const zodiacDataStatic = [
-        { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១" }, { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២" },
-        { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣" }, { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤" },
-        { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥" }, { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦" },
-        { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧" }, { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨" },
-        { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩" }, { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០" },
-        { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១" }, { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២" }
+        { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១", num: "01" },
+        { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២", num: "02" },
+        { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣", num: "03" },
+        { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤", num: "04" },
+        { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥", num: "05" },
+        { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦", num: "06" },
+        { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧", num: "07" },
+        { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨", num: "08" },
+        { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩", num: "09" },
+        { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០", num: "10" },
+        { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១", num: "11" },
+        { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២", num: "12" }
     ];
 
     const hoursLayout = [
@@ -846,6 +865,9 @@
                     let activeZodiac = zodiacMap[correctNumber];
                     if (activeZodiac) {
                         item.result = activeZodiac.name;
+                        item.resultIcon = activeZodiac.icon;
+                        item.resultOrder = activeZodiac.order;
+                        item.resultNumber = activeZodiac.num;
                         item.resultDate = resultDateTime;
                         if (item.picked === activeZodiac.name) {
                             item.status = "ឈ្នះ";
@@ -910,7 +932,7 @@
                 itemClass += " active";
                 let zInfo = zodiacMap[assignedNumber];
                 displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
-                currentActiveContent = zInfo ? `${zInfo.icon} ${zInfo.name}` : "?";
+                currentActiveContent = zInfo ? `${zInfo.icon} ${zInfo.name} (${zInfo.order})` : "?";
             } else {
                 displayResult = `<span class="waiting-text">រង់ចាំម៉ោង</span>`;
                 if (currentHour >= 7 && slot.hour < 7) { slotDateStr = formatDate(tomorrow); }
@@ -973,7 +995,7 @@
             
             let resultHtml = '';
             if (item.result) {
-                resultHtml = `<div style="font-size:0.7rem; margin-top:4px;">📊 លទ្ធផល: ${item.result} ${item.resultDate ? `<span class="result-date">(ចេញនៅថ្ងៃ ${item.resultDate})</span>` : ''}</div>`;
+                resultHtml = `<div style="font-size:0.7rem; margin-top:4px;">📊 លទ្ធផល: <span class="result-with-number">${item.resultIcon} ${item.result} (${item.resultOrder})</span> ${item.resultDate ? `<span class="result-date">ចេញនៅថ្ងៃ ${item.resultDate}</span>` : ''}</div>`;
             } else {
                 resultHtml = `<div style="font-size:0.7rem; margin-top:4px;">⏰ រង់ចាំលទ្ធផលម៉ោង ${targetHourDisplay}...</div>`;
             }
@@ -1069,7 +1091,7 @@
             let now = new Date();
             let targetHour = getTargetHourForBet(now.getHours());
             let timeStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-            betHistory.unshift({ date: timeStr, targetHour: targetHour, picked: selectedZodiacName, result: null, resultDate: null, status: "រង់ចាំលទ្ធផល", bet: betAmount, reward: 0 });
+            betHistory.unshift({ date: timeStr, targetHour: targetHour, picked: selectedZodiacName, result: null, resultIcon: null, resultOrder: null, resultNumber: null, resultDate: null, status: "រង់ចាំលទ្ធផល", bet: betAmount, reward: 0 });
             localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
             renderBetHistory();
             alert(`🎯 ចាក់ [${selectedZodiacName}] $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(targetHour)}`);
