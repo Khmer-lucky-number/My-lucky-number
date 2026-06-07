@@ -23,7 +23,7 @@
             padding: 20px;
         }
 
-        /* Main Container */
+        /* Main Container (Player Page) */
         .container {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -37,7 +37,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Admin Panel Container */
+        /* Admin Container - Hidden by default */
         .admin-container {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -71,12 +71,14 @@
             align-items: center;
             gap: 8px;
             font-size: 0.8rem;
+            transition: all 0.2s;
         }
         .back-btn:hover {
             background: rgba(74,222,128,0.2);
+            transform: translateY(-1px);
         }
 
-        /* Top Controls Row */
+        /* Top Controls */
         .top-controls {
             display: flex;
             justify-content: flex-end;
@@ -105,7 +107,7 @@
         }
 
         .main-title {
-            color: #fbd38d; 
+            color: #fbd38d;
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 5px;
@@ -202,7 +204,7 @@
         }
 
         .section-indicator {
-            color: #4ade80; 
+            color: #4ade80;
             font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 12px;
@@ -275,6 +277,11 @@
             font-weight: 700;
             cursor: pointer;
             font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .predict-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(236,72,153,0.4);
         }
 
         .history-wrapper { margin-bottom: 20px; }
@@ -342,6 +349,7 @@
             font-size: 0.7rem;
         }
 
+        /* Admin Panel Button in Main Page */
         .admin-panel-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             width: 100%;
@@ -353,84 +361,11 @@
             cursor: pointer;
             margin-bottom: 12px;
             font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
-
-        /* Admin Panel Styles */
-        .admin-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            padding: 12px;
-            text-align: center;
-        }
-        .stat-label {
-            font-size: 0.7rem;
-            color: #a0aec0;
-            margin-bottom: 5px;
-        }
-        .stat-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #c4b5fd;
-        }
-        .admin-balance {
-            background: linear-gradient(135deg, #1e3a5f, #2a1a5a);
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .admin-balance-label {
-            font-size: 0.7rem;
-            color: #a0aec0;
-        }
-        .admin-balance-amount {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #4ade80;
-        }
-        .commission-box {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 15px;
-        }
-        .commission-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.8rem;
-        }
-        .commission-input {
-            background: #0f0f2a;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            padding: 8px;
-            width: 80px;
-            color: white;
-            text-align: center;
-        }
-        .daily-report {
-            max-height: 200px;
-            overflow-y: auto;
-            background: rgba(0,0,0,0.2);
-            border-radius: 16px;
-            padding: 10px;
-            margin-top: 10px;
-        }
-        .report-item {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 8px;
-            margin-bottom: 6px;
-            font-size: 0.7rem;
-            display: flex;
-            justify-content: space-between;
+        .admin-panel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(139,92,246,0.4);
         }
 
         .law-btn {
@@ -442,6 +377,10 @@
             color: white;
             cursor: pointer;
             margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .law-btn:hover {
+            transform: translateY(-1px);
         }
         .law-text {
             background: rgba(0,0,0,0.5);
@@ -465,36 +404,135 @@
             color: white;
             text-decoration: none;
             font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+        .telegram a:hover {
+            transform: translateY(-2px);
         }
 
-        /* Password Input */
-        .password-wrapper {
-            position: relative;
-            width: 100%;
+        /* Admin Panel Styles */
+        .admin-title {
+            color: #c4b5fd;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        .admin-sub {
+            color: #a0aec0;
+            font-size: 0.7rem;
+            margin-bottom: 20px;
+        }
+        .admin-balance {
+            background: linear-gradient(135deg, #1e3a5f, #2a1a5a);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .admin-balance-label {
+            font-size: 0.7rem;
+            color: #a0aec0;
+        }
+        .admin-balance-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+        .admin-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 0.7rem;
+            color: #a0aec0;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #c4b5fd;
+        }
+        .commission-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 12px;
             margin-bottom: 15px;
         }
-        .password-input {
-            width: 100%;
-            padding: 12px;
-            padding-right: 45px;
+        .commission-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+        }
+        .commission-input {
             background: #0f0f2a;
             border: 1px solid #2a2a4a;
-            border-radius: 16px;
+            border-radius: 12px;
+            padding: 8px;
+            width: 80px;
             color: white;
             text-align: center;
-            font-size: 1.1rem;
         }
-        .toggle-password {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
+        .save-btn {
+            background: #4ade80;
+            color: #1a1a2e;
             border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
             cursor: pointer;
-            font-size: 1.2rem;
-            padding: 5px;
-            border-radius: 50%;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+        .save-btn:hover {
+            background: #22c55e;
+            transform: translateY(-1px);
+        }
+        .daily-report {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .report-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 6px;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .admin-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .admin-btn {
+            background: rgba(139,92,246,0.15);
+            border: 1px solid rgba(139,92,246,0.3);
+            padding: 12px;
+            border-radius: 50px;
+            color: #c4b5fd;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .admin-btn:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: translateY(-1px);
         }
 
         /* Modals */
@@ -540,6 +578,34 @@
             color: white;
             text-align: center;
             margin-bottom: 15px;
+        }
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            padding-right: 45px;
+            background: #0f0f2a;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
         }
         .zodiac-select-grid {
             display: grid;
@@ -603,7 +669,6 @@
         .btn-cancel { background: #4a5568; color: white; }
         .btn-confirm { background: #4ade80; color: #1a1a2e; }
 
-        /* Confirm Modal */
         .confirm-modal {
             position: fixed;
             top: 0;
@@ -659,33 +724,11 @@
         .status-win { color: #4ade80; }
         .status-lose { color: #fc8181; }
         .status-pending { color: #f6ad55; }
-
-        .admin-title {
-            color: #c4b5fd;
-            font-size: 1.3rem;
-            margin-bottom: 5px;
-        }
-        .admin-sub {
-            color: #a0aec0;
-            font-size: 0.7rem;
-            margin-bottom: 20px;
-        }
-        .save-btn {
-            background: #4ade80;
-            color: #1a1a2e;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            margin-top: 8px;
-        }
     </style>
 </head>
 <body>
-<!-- Main Container -->
+<!-- Main Container (Player Page) -->
 <div id="mainContainer" class="container">
-    <!-- Top Controls Row - Sound and Language together -->
     <div class="top-controls">
         <button class="top-btn" id="soundToggleBtn">
             <span id="soundIcon">🔊</span>
@@ -759,13 +802,11 @@
     <div class="admin-title">🔧 Admin Control Panel</div>
     <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
     
-    <!-- Admin Balance -->
     <div class="admin-balance">
         <div class="admin-balance-label">សមតុល្យ Admin</div>
         <div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div>
     </div>
     
-    <!-- Statistics -->
     <div class="admin-stats">
         <div class="stat-card">
             <div class="stat-label">សរុបភ្នាល់</div>
@@ -785,7 +826,6 @@
         </div>
     </div>
     
-    <!-- Commission Settings -->
     <div class="commission-box">
         <div class="commission-row">
             <span>មេគុណរង្វាន់បច្ចុប្បន្ន</span>
@@ -798,7 +838,6 @@
         <button class="save-btn" id="saveMultiplierBtn">រក្សាទុក</button>
     </div>
     
-    <!-- Daily Report -->
     <div class="commission-box">
         <div class="commission-row">
             <span>📊 របាយការណ៍ប្រចាំថ្ងៃ</span>
@@ -808,12 +847,12 @@
         </div>
     </div>
     
-    <!-- Admin Action Buttons -->
+    <!-- Admin Action Buttons (Only in Admin Panel) -->
     <div class="admin-buttons">
-        <button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់ Admin</button>
+        <button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់</button>
         <button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
         <button class="admin-btn" id="adminClearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
-        <button class="admin-btn" id="adminClearBalanceBtn">💰 លុបទឹកប្រាក់អ្នកលេង</button>
+        <button class="admin-btn" id="adminClearBalanceBtn">💰 លុបទឹកប្រាក់ក្នុងគណនី</button>
     </div>
 </div>
 
@@ -842,7 +881,7 @@
     </div>
 </div>
 
-<!-- Admin PIN Modal -->
+<!-- Admin PIN Modal for entering Admin Panel -->
 <div class="modal" id="adminEntryPinModal">
     <div class="modal-content">
         <div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div>
@@ -913,7 +952,6 @@
     
     // ==================== GLOBALS ====================
     let currentBalance = 0;
-    let adminBalance = 0;
     let depositHistory = [];
     let betHistory = [];
     let selectedZodiac = "";
@@ -926,13 +964,10 @@
     let audioContext = null;
     let currentLang = "km";
     let rewardMultiplier = 10;
-    let dailyStats = {};
     
-    // Load multiplier
     const savedMultiplier = localStorage.getItem('rewardMultiplier');
     if (savedMultiplier) rewardMultiplier = parseInt(savedMultiplier);
     
-    // Toggle password visibility
     window.togglePasswordVisibility = function(inputId, btn) {
         const input = document.getElementById(inputId);
         if (input.type === "password") {
@@ -944,7 +979,7 @@
         }
     };
     
-    // Language translations (simplified)
+    // Language translations
     const translations = {
         km: {
             mainTitle: "ឆ្នាំសំណាងទាំង 12 🎁🎉",
@@ -1133,7 +1168,6 @@
         setTimeout(() => toast.remove(), 3000);
     }
     
-    // Generate random numbers for a date
     const numCache = {};
     function generateNumbers(date) {
         const key = formatDate(date);
@@ -1153,13 +1187,10 @@
         return numCache[key];
     }
     
-    // Update admin statistics
     function updateAdminStats() {
         const totalBets = betHistory.length;
         const totalWins = betHistory.filter(b => b.status === 'win').length;
         const winRate = totalBets > 0 ? ((totalWins / totalBets) * 100).toFixed(1) : 0;
-        
-        // Calculate profit: total deposits - total payouts
         const totalDeposits = depositHistory.reduce((sum, d) => sum + d.amount, 0);
         const totalPayouts = betHistory.filter(b => b.status === 'win').reduce((sum, b) => sum + (b.reward || 0), 0);
         const profit = totalDeposits - totalPayouts;
@@ -1171,7 +1202,6 @@
         document.getElementById('adminBalance').innerText = profit.toFixed(2);
         document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x';
         
-        // Update daily report
         const dailyData = {};
         betHistory.forEach(bet => {
             const dateKey = bet.date.split(' ')[0];
@@ -1198,7 +1228,6 @@
         document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:10px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
-    // Check and settle bets
     function settleBets(currentHour, currentDate) {
         if (lastProcessedHour === -1) {
             lastProcessedHour = currentHour;
@@ -1238,7 +1267,7 @@
             if (changed) {
                 localStorage.setItem('balance', currentBalance);
                 localStorage.setItem('betHistory', JSON.stringify(betHistory));
-                updateBalanceDisplay();
+                document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
                 renderBetHistory();
                 updateAdminStats();
             }
@@ -1246,11 +1275,6 @@
         }
     }
     
-    function updateBalanceDisplay() {
-        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
-    }
-    
-    // Update display
     function updateDisplay() {
         const now = new Date();
         const ch = now.getHours(), cm = now.getMinutes(), cs = now.getSeconds();
@@ -1399,7 +1423,7 @@
     function executePrediction() {
         currentBalance -= pendingBetAmount;
         localStorage.setItem('balance', currentBalance);
-        updateBalanceDisplay();
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
         
         const now = new Date();
         const targetHour = getNextHour(now.getHours());
@@ -1436,7 +1460,7 @@
         } else if (pendingAdminAction === "clear_balance") {
             currentBalance = 0;
             localStorage.setItem('balance', currentBalance);
-            updateBalanceDisplay();
+            document.getElementById('userBalance').innerText = '0.00';
             showToast(translations[currentLang].confirmClearBalance, 'pending');
         }
     }
@@ -1492,7 +1516,7 @@
         if (savedDeposit) depositHistory = JSON.parse(savedDeposit);
         const savedBet = localStorage.getItem('betHistory');
         if (savedBet) betHistory = JSON.parse(savedBet);
-        updateBalanceDisplay();
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
         updateAdminStats();
     }
     
@@ -1616,7 +1640,7 @@
             executePrediction();
         });
         
-        // Admin Panel Actions
+        // Admin Panel Actions (Only in Admin Panel)
         const depositModal = document.getElementById('depositModal');
         const confirmAdminModal = document.getElementById('confirmAdminModal');
         
@@ -1674,7 +1698,7 @@
             if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលចំនួនលុយ!':'Enter amount!', 'lose'); return; }
             currentBalance += amt;
             localStorage.setItem('balance', currentBalance);
-            updateBalanceDisplay();
+            document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
             depositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
             localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
             renderDepositHistory();
