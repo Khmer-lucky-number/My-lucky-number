@@ -2,7 +2,7 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>1000 lucky number prediction tables</title>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -20,21 +20,22 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
         }
 
-        /* Main Container (Player Page) */
+        /* Main Container (Player Page) - Responsive */
         .container {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
+            border-radius: 28px;
             width: 100%;
-            max-width: 460px;
-            padding: 25px 18px;
+            max-width: 500px;
+            padding: 20px 16px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.3);
             text-align: center;
             transition: all 0.3s ease;
+            margin: 0 auto;
         }
 
         /* Admin Container - Hidden by default */
@@ -42,14 +43,15 @@
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 32px;
+            border-radius: 28px;
             width: 100%;
-            max-width: 460px;
-            padding: 25px 18px;
+            max-width: 500px;
+            padding: 20px 16px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.3);
             text-align: center;
             transition: all 0.3s ease;
             display: none;
+            margin: 0 auto;
         }
         .admin-container.show {
             display: block;
@@ -78,26 +80,27 @@
             transform: translateY(-1px);
         }
 
-        /* Top Controls */
+        /* Top Controls - Responsive */
         .top-controls {
             display: flex;
             justify-content: flex-end;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 15px;
+            flex-wrap: wrap;
         }
         .top-btn {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 40px;
-            padding: 8px 16px;
-            font-size: 0.75rem;
+            padding: 6px 12px;
+            font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             color: #e2e8f0;
         }
         .top-btn:hover {
@@ -108,15 +111,16 @@
 
         .main-title {
             color: #fbd38d;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 5px;
         }
 
         .sub-title {
             color: #a0aec0;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             margin-bottom: 20px;
+            line-height: 1.4;
         }
 
         .live-time-badge {
@@ -126,17 +130,17 @@
             background: rgba(43, 108, 176, 0.3);
             backdrop-filter: blur(5px);
             border-radius: 40px;
-            padding: 6px 16px;
-            font-size: 0.8rem;
+            padding: 5px 12px;
+            font-size: 0.75rem;
             margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Balance Card */
+        /* Balance Card - Responsive */
         .balance-card {
             background: linear-gradient(135deg, #1e3a5f 0%, #2a1a5a 100%);
-            border-radius: 28px;
-            padding: 5px;
+            border-radius: 24px;
+            padding: 4px;
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
@@ -154,39 +158,40 @@
         }
         .money-note {
             position: absolute;
-            font-size: 2.2rem;
-            opacity: 0.5;
+            font-size: 1.8rem;
+            opacity: 0.4;
             animation: floatMoney 8s ease-in-out infinite;
             text-shadow: 0 0 3px rgba(0,0,0,0.5);
         }
-        .money-note:nth-child(1) { top: 10%; left: -20px; animation-delay: 0s; opacity: 0.6; }
-        .money-note:nth-child(2) { top: 35%; right: -15px; animation-delay: 1.5s; font-size: 2.5rem; opacity: 0.7; }
-        .money-note:nth-child(3) { bottom: 15%; left: 5%; animation-delay: 3s; font-size: 2rem; opacity: 0.55; }
-        .money-note:nth-child(4) { top: 60%; left: -25px; animation-delay: 0.8s; font-size: 1.8rem; opacity: 0.6; }
-        .money-note:nth-child(5) { bottom: 25%; right: -20px; animation-delay: 2.2s; font-size: 2.8rem; opacity: 0.5; }
-        .money-note:nth-child(6) { top: 15%; right: 20%; animation-delay: 4s; font-size: 2.2rem; opacity: 0.65; }
-        .money-note:nth-child(7) { bottom: 40%; left: 25%; animation-delay: 5.5s; font-size: 1.9rem; opacity: 0.55; }
+        .money-note:nth-child(1) { top: 10%; left: -20px; animation-delay: 0s; }
+        .money-note:nth-child(2) { top: 35%; right: -15px; animation-delay: 1.5s; font-size: 2rem; }
+        .money-note:nth-child(3) { bottom: 15%; left: 5%; animation-delay: 3s; font-size: 1.6rem; }
+        .money-note:nth-child(4) { top: 60%; left: -25px; animation-delay: 0.8s; font-size: 1.5rem; }
+        .money-note:nth-child(5) { bottom: 25%; right: -20px; animation-delay: 2.2s; font-size: 2.2rem; }
+        .money-note:nth-child(6) { top: 15%; right: 20%; animation-delay: 4s; font-size: 1.8rem; }
+        .money-note:nth-child(7) { bottom: 40%; left: 25%; animation-delay: 5.5s; font-size: 1.5rem; }
         @keyframes floatMoney {
             0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-25px) rotate(10deg); }
+            50% { transform: translateY(-20px) rotate(8deg); }
             100% { transform: translateY(0px) rotate(0deg); }
         }
         .balance-inner {
-            background: rgba(10, 20, 35, 0.5);
-            border-radius: 24px;
-            padding: 18px;
+            background: rgba(10, 20, 35, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 15px;
             position: relative;
             z-index: 1;
-            border: 1px solid rgba(74,222,128,0.5);
+            border: 1px solid rgba(74,222,128,0.4);
         }
         .balance-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #a0aec0;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
         .balance-amount {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #4ade80;
             text-shadow: 0 0 15px rgba(74,222,128,0.4);
@@ -197,45 +202,46 @@
             background: rgba(74, 222, 128, 0.1);
             border: 1px solid rgba(74, 222, 128, 0.3);
             border-radius: 12px;
-            padding: 8px 12px;
+            padding: 8px 10px;
             margin-bottom: 15px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #4ade80;
+            line-height: 1.4;
         }
 
         .section-indicator {
             color: #4ade80;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 12px;
         }
 
         .lucky-circle {
             background: linear-gradient(135deg, #f5a623, #f7b733);
-            border-radius: 60px;
-            padding: 12px 20px;
+            border-radius: 50px;
+            padding: 10px 16px;
             margin: 0 auto 15px auto;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.2rem;
+            gap: 8px;
+            font-size: 1rem;
             font-weight: 700;
             color: #fff;
             box-shadow: 0 0 25px rgba(247,183,51,0.4);
         }
 
         .countdown-box {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             background: rgba(0,0,0,0.3);
             display: inline-block;
-            padding: 5px 15px;
+            padding: 4px 12px;
             border-radius: 40px;
             margin-bottom: 20px;
         }
         .countdown-time {
             color: #fc8181;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .zodiac-single-box {
@@ -245,7 +251,7 @@
             margin-bottom: 20px;
         }
         .zodiac-title {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #fbd38d;
             text-align: left;
             margin-bottom: 10px;
@@ -263,8 +269,8 @@
             text-align: center;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .zodiac-icon { font-size: 1.2rem; }
-        .zodiac-name { font-size: 0.65rem; color: #ddd; }
+        .zodiac-icon { font-size: 1.1rem; }
+        .zodiac-name { font-size: 0.6rem; color: #ddd; }
         .zodiac-order { font-size: 0.55rem; color: #888; }
 
         .predict-btn {
@@ -276,7 +282,7 @@
             color: white;
             font-weight: 700;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
         }
         .predict-btn:hover {
@@ -290,18 +296,21 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .tabs {
             display: flex;
-            gap: 5px;
+            gap: 4px;
             background: rgba(0,0,0,0.3);
-            padding: 4px;
+            padding: 3px;
             border-radius: 40px;
+            flex-wrap: wrap;
         }
         .tab {
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 30px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             cursor: pointer;
             background: transparent;
             border: none;
@@ -314,11 +323,11 @@
         .toggle-history {
             background: rgba(255,255,255,0.1);
             border: none;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 30px;
             color: white;
             cursor: pointer;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
         }
         .history-box {
             background: rgba(0,0,0,0.2);
@@ -330,46 +339,48 @@
         .time-item, .history-item {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
-            padding: 10px;
+            padding: 8px 10px;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .time-item.active {
             background: rgba(74,222,128,0.1);
             border-left: 3px solid #4ade80;
         }
-        .time-label { font-weight: 600; font-size: 0.8rem; }
-        .time-date { font-size: 0.6rem; color: #aaa; }
+        .time-label { font-weight: 600; font-size: 0.75rem; }
+        .time-date { font-size: 0.55rem; color: #aaa; }
         .result-badge {
             background: rgba(255,255,255,0.05);
-            padding: 4px 10px;
+            padding: 4px 8px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
         }
 
-        /* Player Bottom Action Buttons - No deposit button */
+        /* Player Bottom Action Buttons */
         .player-actions {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             margin-bottom: 15px;
         }
         .player-btn {
             background: rgba(74, 222, 128, 0.1);
             border: 1px solid rgba(74, 222, 128, 0.3);
-            padding: 12px;
+            padding: 10px;
             border-radius: 50px;
             color: #4ade80;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         .player-btn:hover {
             background: #4ade80;
@@ -377,7 +388,7 @@
             transform: translateY(-1px);
         }
 
-        /* Admin Panel Button in Main Page */
+        /* Admin Panel Button - Moved above law button */
         .admin-panel-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             width: 100%;
@@ -387,9 +398,8 @@
             color: white;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 10px;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
         }
         .admin-panel-btn:hover {
@@ -397,73 +407,75 @@
             box-shadow: 0 5px 20px rgba(139,92,246,0.4);
         }
 
-        /* Admin Panel Styles */
+        /* Admin Panel Styles - Responsive */
         .admin-title {
             color: #c4b5fd;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 5px;
         }
         .admin-sub {
             color: #a0aec0;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             margin-bottom: 20px;
         }
         .admin-balance {
             background: linear-gradient(135deg, #1e3a5f, #2a1a5a);
             border-radius: 20px;
-            padding: 15px;
+            padding: 12px;
             margin-bottom: 20px;
             text-align: center;
         }
         .admin-balance-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #a0aec0;
         }
         .admin-balance-amount {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: #4ade80;
         }
         .admin-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
         }
         .stat-card {
             background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            padding: 12px;
+            border-radius: 16px;
+            padding: 10px;
             text-align: center;
         }
         .stat-label {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             color: #a0aec0;
             margin-bottom: 5px;
         }
         .stat-value {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #c4b5fd;
         }
         .commission-box {
             background: rgba(0,0,0,0.3);
             border-radius: 16px;
-            padding: 12px;
+            padding: 10px;
             margin-bottom: 15px;
         }
         .commission-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         .commission-input {
             background: #0f0f2a;
             border: 1px solid #2a2a4a;
             border-radius: 12px;
-            padding: 8px;
-            width: 80px;
+            padding: 6px;
+            width: 70px;
             color: white;
             text-align: center;
         }
@@ -471,10 +483,10 @@
             background: #4ade80;
             color: #1a1a2e;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 40px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             margin-top: 8px;
             transition: all 0.2s;
         }
@@ -487,62 +499,66 @@
             overflow-y: auto;
             background: rgba(0,0,0,0.2);
             border-radius: 16px;
-            padding: 10px;
+            padding: 8px;
             margin-top: 10px;
         }
         .report-item {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
-            font-size: 0.7rem;
+            padding: 8px;
+            margin-bottom: 6px;
+            font-size: 0.65rem;
         }
         .report-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             font-weight: bold;
             color: #c4b5fd;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         .report-details {
             display: flex;
             justify-content: space-between;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #a0aec0;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         
         /* Admin Action Buttons Section */
         .admin-buttons-section {
             margin-top: 15px;
             border-top: 1px solid rgba(139,92,246,0.3);
-            padding-top: 15px;
+            padding-top: 12px;
         }
         .section-title {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #c4b5fd;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             text-align: center;
             font-weight: 600;
         }
         .admin-buttons {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         .admin-btn {
             background: rgba(139,92,246,0.15);
             border: 1px solid rgba(139,92,246,0.3);
-            padding: 12px;
+            padding: 10px;
             border-radius: 50px;
             color: #c4b5fd;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         .admin-btn:hover {
             background: #8b5cf6;
@@ -552,36 +568,36 @@
         
         /* Player Action Buttons inside Admin Panel */
         .player-buttons-section {
-            margin-top: 20px;
+            margin-top: 15px;
             border-top: 1px solid rgba(74,222,128,0.3);
-            padding-top: 15px;
+            padding-top: 12px;
         }
         .player-section-title {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #4ade80;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             text-align: center;
             font-weight: 600;
         }
         .player-admin-buttons {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         .player-admin-btn {
             background: rgba(74, 222, 128, 0.1);
             border: 1px solid rgba(74, 222, 128, 0.3);
-            padding: 12px;
+            padding: 10px;
             border-radius: 50px;
             color: #4ade80;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         .player-admin-btn:hover {
             background: #4ade80;
@@ -589,7 +605,7 @@
             transform: translateY(-1px);
         }
 
-        /* Modals */
+        /* Modals - Responsive */
         .modal {
             position: fixed;
             top: 0;
@@ -604,6 +620,7 @@
             opacity: 0;
             visibility: hidden;
             transition: 0.2s;
+            padding: 16px;
         }
         .modal.show {
             opacity: 1;
@@ -612,26 +629,27 @@
         .modal-content {
             background: #1a1a3a;
             border-radius: 28px;
-            padding: 25px;
+            padding: 20px;
             width: 90%;
             max-width: 360px;
             border: 1px solid rgba(255,255,255,0.1);
         }
         .modal-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #fbd38d;
             text-align: center;
             margin-bottom: 15px;
         }
         .modal-input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: #0f0f2a;
             border: 1px solid #2a2a4a;
             border-radius: 16px;
             color: white;
             text-align: center;
             margin-bottom: 15px;
+            font-size: 0.9rem;
         }
         .password-wrapper {
             position: relative;
@@ -640,40 +658,41 @@
         }
         .password-input {
             width: 100%;
-            padding: 12px;
-            padding-right: 45px;
+            padding: 10px;
+            padding-right: 40px;
             background: #0f0f2a;
             border: 1px solid #2a2a4a;
             border-radius: 16px;
             color: white;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
         .toggle-password {
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             padding: 5px;
             border-radius: 50%;
         }
         .zodiac-select-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin: 15px 0;
+            gap: 6px;
+            margin: 12px 0;
         }
         .zodiac-option {
             background: #0f0f2a;
             border: 1px solid #2a2a4a;
             border-radius: 12px;
-            padding: 8px;
+            padding: 6px;
             text-align: center;
             cursor: pointer;
+            font-size: 0.7rem;
         }
         .zodiac-option.selected {
             background: linear-gradient(135deg, #ec4899, #f43f5e);
@@ -688,37 +707,38 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 5px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
         .shortcut-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 15px;
         }
         .shortcut {
             background: #2a2a4a;
             border: none;
-            padding: 10px;
+            padding: 8px;
             border-radius: 40px;
             color: white;
             cursor: pointer;
             font-weight: 600;
+            font-size: 0.75rem;
         }
         .modal-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 15px;
             justify-content: space-between;
         }
         .modal-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             border-radius: 40px;
             border: none;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .btn-cancel { background: #4a5568; color: white; }
         .btn-confirm { background: #4ade80; color: #1a1a2e; }
@@ -736,6 +756,7 @@
             z-index: 1100;
             opacity: 0;
             visibility: hidden;
+            padding: 16px;
         }
         .confirm-modal.show {
             opacity: 1;
@@ -744,16 +765,16 @@
         .confirm-box {
             background: #1a1a3a;
             border-radius: 28px;
-            padding: 30px 25px;
+            padding: 25px;
             width: 90%;
             max-width: 340px;
             text-align: center;
             border: 2px solid #ecc94b;
         }
-        .confirm-title { color: #ecc94b; font-size: 1.3rem; margin-bottom: 15px; font-weight: 700; }
-        .confirm-message { color: #e2e8f0; margin-bottom: 30px; line-height: 1.5; font-size: 0.9rem; }
-        .confirm-buttons { display: flex; gap: 20px; justify-content: space-between; }
-        .confirm-btn { flex: 1; padding: 12px 20px; border-radius: 50px; border: none; cursor: pointer; font-weight: 700; font-size: 1rem; }
+        .confirm-title { color: #ecc94b; font-size: 1.1rem; margin-bottom: 12px; font-weight: 700; }
+        .confirm-message { color: #e2e8f0; margin-bottom: 25px; line-height: 1.4; font-size: 0.85rem; }
+        .confirm-buttons { display: flex; gap: 15px; justify-content: space-between; }
+        .confirm-btn { flex: 1; padding: 10px; border-radius: 50px; border: none; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
         .confirm-yes { background: #4ade80; color: #1a1a2e; order: 2; }
         .confirm-no { background: #4a5568; color: white; order: 1; }
 
@@ -765,16 +786,18 @@
             background: #1a3a2a;
             border: 1px solid #4ade80;
             border-radius: 50px;
-            padding: 10px 20px;
+            padding: 8px 16px;
             z-index: 1200;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             animation: fadeInUp 0.3s ease;
+            white-space: nowrap;
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateX(-50%) translateY(20px); }
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-        .waiting-text { color: #f6ad55; font-size: 0.7rem; }
+        
+        .waiting-text { color: #f6ad55; font-size: 0.65rem; }
         .status-win { color: #4ade80; }
         .status-lose { color: #fc8181; }
         .status-pending { color: #f6ad55; }
@@ -783,10 +806,63 @@
             background: rgba(0,0,0,0.5);
             border-radius: 12px;
             padding: 10px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             display: none;
             margin-top: 10px;
             text-align: left;
+        }
+        
+        /* Responsive adjustments for very small screens */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            .container, .admin-container {
+                padding: 16px 12px;
+            }
+            .main-title {
+                font-size: 1.2rem;
+            }
+            .balance-amount {
+                font-size: 1.6rem;
+            }
+            .lucky-circle {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
+            .zodiac-name {
+                font-size: 0.55rem;
+            }
+            .tab {
+                padding: 3px 8px;
+                font-size: 0.6rem;
+            }
+            .admin-stats {
+                gap: 8px;
+            }
+            .stat-value {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Tablet adjustments */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .container, .admin-container {
+                max-width: 600px;
+            }
+            .main-title {
+                font-size: 1.6rem;
+            }
+            .balance-amount {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Desktop adjustments */
+        @media (min-width: 1025px) {
+            .container, .admin-container {
+                max-width: 500px;
+            }
         }
     </style>
 </head>
@@ -849,7 +925,10 @@
         </div>
     </div>
     
-    <!-- Player Bottom Action Buttons - No deposit button -->
+    <!-- Admin Panel Button - Moved above law button -->
+    <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
+    
+    <!-- Player Bottom Action Buttons -->
     <div class="player-actions">
         <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
         <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
@@ -864,8 +943,6 @@
         <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ និងមិនអាចតវ៉ាបាន</p>
         <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
     </div>
-    
-    <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
 </div>
 
 <!-- Admin Panel Container -->
@@ -1064,7 +1141,7 @@
         }
     };
     
-    // Language translations
+    // Language translations (simplified for brevity, full version kept)
     const translations = {
         km: {
             mainTitle: "ឆ្នាំសំណាងទាំង 12 🎁🎉",
@@ -1291,7 +1368,7 @@
         betHistory.forEach(bet => {
             const dateKey = bet.date.split(' ')[0];
             if (!dailyData[dateKey]) {
-                dailyData[dateKey] = { bets: 0, wins: 0, losses: 0, totalBet: 0, totalPayout: 0, details: [] };
+                dailyData[dateKey] = { bets: 0, wins: 0, losses: 0, totalBet: 0, totalPayout: 0 };
             }
             dailyData[dateKey].bets++;
             dailyData[dateKey].totalBet += bet.amount;
@@ -1315,7 +1392,7 @@
                             <span>🏆 ឈ្នះ: ${data.wins}</span>
                             <span>💔 ចាញ់: ${data.losses}</span>
                         </div>
-                        <div class="report-details" style="margin-top:4px; font-size:0.6rem;">
+                        <div class="report-details" style="margin-top:4px;">
                             <span>💰 ភ្នាល់សរុប: $${data.totalBet.toFixed(2)}</span>
                             <span>💸 សងសរុប: $${data.totalPayout.toFixed(2)}</span>
                         </div>
@@ -1325,19 +1402,17 @@
         document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:10px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
-    // Check and settle bets - FIXED: Result appears immediately at target hour
+    // Check and settle bets - Result appears immediately at target hour
     function settleBets(currentHour, currentDate) {
         if (lastProcessedHour === -1) {
             lastProcessedHour = currentHour;
             return;
         }
-        // When hour changes, check the hour that just passed
         if (currentHour !== lastProcessedHour) {
             const numbers = generateNumbers(currentDate);
             let changed = false;
             
             betHistory.forEach((bet, index) => {
-                // Check for bets that were waiting for the hour that just passed
                 if (bet.status === "pending" && bet.targetHour === lastProcessedHour) {
                     const correctNum = numbers[lastProcessedHour];
                     const correctZodiac = zodiacMap[correctNum];
