@@ -76,11 +76,11 @@
             background: rgba(74,222,128,0.2);
         }
 
-        /* Top Controls Row */
+        /* Top Controls Row - Sound left, Language right */
         .top-controls {
             display: flex;
-            justify-content: flex-end;
-            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
         }
         .top-btn {
@@ -130,9 +130,9 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Balance Card with Floating Money - Improved visibility */
+        /* Balance Card - Clear background, fully visible */
         .balance-card {
-            background: linear-gradient(135deg, #1a2a4a 0%, #0f1a2e 100%);
+            background: linear-gradient(135deg, #1e3a5f 0%, #2a1a5a 100%);
             border-radius: 28px;
             padding: 5px;
             margin-bottom: 20px;
@@ -140,7 +140,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        /* Floating Money Animation - More visible */
+        /* Floating Money Animation - Very visible */
         .floating-money {
             position: absolute;
             top: 0;
@@ -153,31 +153,31 @@
         }
         .money-note {
             position: absolute;
-            font-size: 2rem;
-            opacity: 0.35;
+            font-size: 2.2rem;
+            opacity: 0.5;
             animation: floatMoney 8s ease-in-out infinite;
-            text-shadow: 0 0 5px rgba(0,0,0,0.3);
+            text-shadow: 0 0 3px rgba(0,0,0,0.5);
         }
-        .money-note:nth-child(1) { top: 10%; left: -20px; animation-delay: 0s; }
-        .money-note:nth-child(2) { top: 35%; right: -15px; animation-delay: 1.5s; font-size: 2.2rem; opacity: 0.4; }
-        .money-note:nth-child(3) { bottom: 15%; left: 5%; animation-delay: 3s; font-size: 1.8rem; }
-        .money-note:nth-child(4) { top: 60%; left: -25px; animation-delay: 0.8s; font-size: 1.6rem; }
-        .money-note:nth-child(5) { bottom: 25%; right: -20px; animation-delay: 2.2s; font-size: 2.5rem; opacity: 0.3; }
-        .money-note:nth-child(6) { top: 15%; right: 20%; animation-delay: 4s; font-size: 1.9rem; opacity: 0.35; }
-        .money-note:nth-child(7) { bottom: 40%; left: 25%; animation-delay: 5.5s; font-size: 1.7rem; }
+        .money-note:nth-child(1) { top: 10%; left: -20px; animation-delay: 0s; opacity: 0.6; }
+        .money-note:nth-child(2) { top: 35%; right: -15px; animation-delay: 1.5s; font-size: 2.5rem; opacity: 0.7; }
+        .money-note:nth-child(3) { bottom: 15%; left: 5%; animation-delay: 3s; font-size: 2rem; opacity: 0.55; }
+        .money-note:nth-child(4) { top: 60%; left: -25px; animation-delay: 0.8s; font-size: 1.8rem; opacity: 0.6; }
+        .money-note:nth-child(5) { bottom: 25%; right: -20px; animation-delay: 2.2s; font-size: 2.8rem; opacity: 0.5; }
+        .money-note:nth-child(6) { top: 15%; right: 20%; animation-delay: 4s; font-size: 2.2rem; opacity: 0.65; }
+        .money-note:nth-child(7) { bottom: 40%; left: 25%; animation-delay: 5.5s; font-size: 1.9rem; opacity: 0.55; }
         @keyframes floatMoney {
             0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(8deg); }
+            50% { transform: translateY(-25px) rotate(10deg); }
             100% { transform: translateY(0px) rotate(0deg); }
         }
         .balance-inner {
-            background: rgba(10, 20, 35, 0.65);
-            backdrop-filter: blur(8px);
+            background: rgba(10, 20, 35, 0.5);
             border-radius: 24px;
             padding: 18px;
             position: relative;
             z-index: 1;
-            border: 1px solid rgba(74,222,128,0.4);
+            border: 1px solid rgba(74,222,128,0.5);
+            backdrop-filter: none;
         }
         .balance-label {
             font-size: 0.7rem;
@@ -635,15 +635,15 @@
 <body>
 <!-- Main Container -->
 <div id="mainContainer" class="container">
-    <!-- Top Controls Row -->
+    <!-- Top Controls Row - Sound left, Language right -->
     <div class="top-controls">
-        <button class="top-btn" id="langToggleBtn">
-            <span>🌐</span>
-            <span id="langText">ភាសាខ្មែរ</span>
-        </button>
         <button class="top-btn" id="soundToggleBtn">
             <span id="soundIcon">🔊</span>
             <span id="soundText">បិទសំឡេង</span>
+        </button>
+        <button class="top-btn" id="langToggleBtn">
+            <span>🌐</span>
+            <span id="langText">ភាសាខ្មែរ</span>
         </button>
     </div>
 
@@ -1059,17 +1059,25 @@
         return numCache[key];
     }
     
-    // Check and settle bets - result shows at target hour immediately
+    // Update balance display
+    function updateBalanceDisplay() {
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+    }
+    
+    // Check and settle bets - result shows at target hour immediately (NOT next hour)
     function settleBets(currentHour, currentDate) {
         if (lastProcessedHour === -1) {
             lastProcessedHour = currentHour;
             return;
         }
+        // When hour changes, check the hour that just passed
         if (currentHour !== lastProcessedHour) {
             const numbers = generateNumbers(currentDate);
             let changed = false;
+            let results = [];
             
-            betHistory.forEach(bet => {
+            betHistory.forEach((bet, index) => {
+                // Check for bets that were waiting for the hour that just passed
                 if (bet.status === "pending" && bet.targetHour === lastProcessedHour) {
                     const correctNum = numbers[lastProcessedHour];
                     const correctZodiac = zodiacMap[correctNum];
@@ -1078,27 +1086,37 @@
                         bet.resultEn = correctZodiac.nameEn;
                         bet.resultIcon = correctZodiac.icon;
                         bet.resultOrder = correctZodiac.order;
-                        bet.resultDate = formatDateTime(new Date(currentDate.setHours(lastProcessedHour,0,0,0)));
+                        bet.resultDate = formatDateTime(new Date(currentDate.setHours(lastProcessedHour, 0, 0, 0)));
                         if (bet.picked === correctZodiac.name || bet.picked === correctZodiac.nameEn) {
                             bet.status = "win";
                             bet.reward = bet.amount * 10;
                             currentBalance += bet.reward;
                             playSound(true);
-                            showToast(`${currentLang==='km'?'🎉 ឈ្នះ!':'🎉 Win!'} ${bet.picked} = ${correctZodiac.name} (+$${bet.reward})`, 'win');
+                            results.push({ type: 'win', picked: bet.picked, result: correctZodiac.name, amount: bet.amount, reward: bet.reward });
                         } else {
                             bet.status = "lose";
                             bet.reward = 0;
                             playSound(false);
-                            showToast(`${currentLang==='km'?'😢 ចាញ់!':'😢 Lose!'} ${bet.picked} ≠ ${correctZodiac.name} (-$${bet.amount})`, 'lose');
+                            results.push({ type: 'lose', picked: bet.picked, result: correctZodiac.name, amount: bet.amount });
                         }
                         changed = true;
                     }
                 }
             });
+            
+            // Show result notifications
+            results.forEach(r => {
+                if (r.type === 'win') {
+                    showToast(`${currentLang==='km'?'🎉 ឈ្នះ!':'🎉 Win!'} ${r.picked} = ${r.result} (+$${r.reward.toFixed(2)})`, 'win');
+                } else {
+                    showToast(`${currentLang==='km'?'😢 ចាញ់!':'😢 Lose!'} ${r.picked} ≠ ${r.result} (-$${r.amount.toFixed(2)})`, 'lose');
+                }
+            });
+            
             if (changed) {
                 localStorage.setItem('balance', currentBalance);
                 localStorage.setItem('betHistory', JSON.stringify(betHistory));
-                document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+                updateBalanceDisplay();
                 renderBetHistory();
             }
             lastProcessedHour = currentHour;
@@ -1256,7 +1274,7 @@
     function executePrediction() {
         currentBalance -= pendingBetAmount;
         localStorage.setItem('balance', currentBalance);
-        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+        updateBalanceDisplay();
         
         const now = new Date();
         const targetHour = getNextHour(now.getHours());
@@ -1290,7 +1308,7 @@
         } else if (pendingAdminAction === "clear_balance") {
             currentBalance = 0;
             localStorage.setItem('balance', currentBalance);
-            document.getElementById('userBalance').innerText = '0.00';
+            updateBalanceDisplay();
             showToast(translations[currentLang].confirmClearBalance, 'pending');
         }
     }
@@ -1352,7 +1370,7 @@
         if (savedDeposit) depositHistory = JSON.parse(savedDeposit);
         const savedBet = localStorage.getItem('betHistory');
         if (savedBet) betHistory = JSON.parse(savedBet);
-        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+        updateBalanceDisplay();
     }
     
     function showAdminPanel() {
@@ -1526,7 +1544,7 @@
             if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលចំនួនលុយ!':'Enter amount!', 'lose'); return; }
             currentBalance += amt;
             localStorage.setItem('balance', currentBalance);
-            document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+            updateBalanceDisplay();
             depositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
             localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
             renderDepositHistory();
