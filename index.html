@@ -349,7 +349,7 @@
             font-size: 0.7rem;
         }
 
-        /* Player Bottom Action Buttons */
+        /* Player Bottom Action Buttons - No deposit button */
         .player-actions {
             display: flex;
             flex-direction: column;
@@ -820,7 +820,7 @@
         </div>
     </div>
     
-    <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!</div>
+    <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
     
     <div class="section-indicator" id="currentHourText">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
     <div class="lucky-circle" id="luckyNumber">?</div>
@@ -849,9 +849,8 @@
         </div>
     </div>
     
-    <!-- Player Bottom Action Buttons -->
+    <!-- Player Bottom Action Buttons - No deposit button -->
     <div class="player-actions">
-        <button class="player-btn" id="playerDepositBtn">💵 បញ្ចូលទឹកប្រាក់</button>
         <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
         <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
     </div>
@@ -861,7 +860,7 @@
         <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
         <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
         <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
-        <p>3. លទ្ធផលនឹងចេញនៅពេលដល់ម៉ោងគោលដៅ (ក្រោយពីចាក់ 1 ម៉ោង)</p>
+        <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ (ឧទាហរណ៍: ចាក់នៅម៉ោង 4:53 → លទ្ធផលចេញនៅម៉ោង 5:00)</p>
         <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ និងមិនអាចតវ៉ាបាន</p>
         <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
     </div>
@@ -1071,7 +1070,7 @@
             mainTitle: "ឆ្នាំសំណាងទាំង 12 🎁🎉",
             subTitle: "ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង",
             balanceLabel: "សមតុល្យបច្ចុប្បន្ន",
-            infoBadge: "⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!",
+            infoBadge: "⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ",
             currentHourLabel: "🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង",
             countdownLabel: "លទ្ធផលបន្ទាប់ចេញក្នុង៖",
             zodiacTitle: "🗓️ តារាងឆ្នាំសំណាងទាំង ១២",
@@ -1120,7 +1119,7 @@
             mainTitle: "12 Lucky Zodiacs 🎁🎉",
             subTitle: "24-Hour Fortune Telling System",
             balanceLabel: "Current Balance",
-            infoBadge: "⏰ Betting at any hour will be for the next hour!",
+            infoBadge: "⏰ Betting at any hour will be for the next hour! Result will appear immediately when target hour arrives",
             currentHourLabel: "🔮 If you bet now, it will be for hour",
             countdownLabel: "Next result in:",
             zodiacTitle: "🗓️ 12 Zodiac Signs Chart",
@@ -1288,7 +1287,6 @@
         document.getElementById('adminBalance').innerText = profit.toFixed(2);
         document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x';
         
-        // Detailed daily report
         const dailyData = {};
         betHistory.forEach(bet => {
             const dateKey = bet.date.split(' ')[0];
@@ -1300,12 +1298,8 @@
             if (bet.status === 'win') {
                 dailyData[dateKey].wins++;
                 dailyData[dateKey].totalPayout += bet.reward;
-                dailyData[dateKey].details.push({ type: 'win', picked: bet.picked, result: bet.result, amount: bet.amount, reward: bet.reward, time: bet.date });
             } else if (bet.status === 'lose') {
                 dailyData[dateKey].losses++;
-                dailyData[dateKey].details.push({ type: 'lose', picked: bet.picked, result: bet.result, amount: bet.amount, time: bet.date });
-            } else {
-                dailyData[dateKey].details.push({ type: 'pending', picked: bet.picked, amount: bet.amount, time: bet.date });
             }
         });
         
@@ -1331,16 +1325,19 @@
         document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:10px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
+    // Check and settle bets - FIXED: Result appears immediately at target hour
     function settleBets(currentHour, currentDate) {
         if (lastProcessedHour === -1) {
             lastProcessedHour = currentHour;
             return;
         }
+        // When hour changes, check the hour that just passed
         if (currentHour !== lastProcessedHour) {
             const numbers = generateNumbers(currentDate);
             let changed = false;
             
             betHistory.forEach((bet, index) => {
+                // Check for bets that were waiting for the hour that just passed
                 if (bet.status === "pending" && bet.targetHour === lastProcessedHour) {
                     const correctNum = numbers[lastProcessedHour];
                     const correctZodiac = zodiacMap[correctNum];
@@ -1667,15 +1664,6 @@
         // Telegram button
         document.getElementById('playerTelegramBtn').addEventListener('click', () => {
             window.open('https://t.me/Application_Receiving_Officer', '_blank');
-        });
-        
-        // Player Deposit Button
-        document.getElementById('playerDepositBtn').addEventListener('click', () => {
-            currentAction = 'deposit';
-            document.getElementById('pinStep').style.display = 'block';
-            document.getElementById('amountStep').style.display = 'none';
-            document.getElementById('pinInput').value = '';
-            document.getElementById('depositModal').classList.add('show');
         });
         
         // Admin Panel Entry
