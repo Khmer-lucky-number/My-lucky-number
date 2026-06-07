@@ -14,7 +14,7 @@
         }
 
         body {
-            background: linear-gradient(180deg, #0f0c20 0%, #15102a 100%);
+            background: linear-gradient(180deg, #0a0a2a 0%, #12123a 100%);
             color: #ffffff;
             display: flex;
             justify-content: center;
@@ -24,1475 +24,1381 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
             width: 100%;
-            max-width: 440px;
-            padding: 35px 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            max-width: 460px;
+            padding: 25px 18px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
             text-align: center;
+        }
+
+        /* Language Switch */
+        .lang-switch {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .lang-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: 0.2s;
+        }
+        .lang-btn.active {
+            background: #4ade80;
+            color: #1a1a2e;
         }
 
         .main-title {
             color: #fbd38d; 
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            line-height: 1.4;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .sub-title {
             color: #a0aec0;
-            font-size: 0.8rem;
-            margin-bottom: 25px;
-            font-weight: 400;
-            line-height: 1.4;
+            font-size: 0.7rem;
+            margin-bottom: 20px;
         }
 
         .live-time-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: #2b6cb0; 
-            border-radius: 30px;
-            padding: 6px 18px;
-            font-size: 0.9rem;
-            font-weight: 400;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(43, 108, 176, 0.3);
+            background: rgba(43, 108, 176, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* Balance Card with animated money pattern */
+        /* Modern Digital Balance Card */
         .balance-card {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2a1a4a 100%);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #1a2a4a 0%, #0f1a2e 100%);
+            border-radius: 28px;
+            padding: 5px;
+            margin-bottom: 20px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-        
-        /* Animated money pattern - sliding left to right */
         .balance-card::before {
-            content: "💰 💵 💶 💷 💴 💸 🪙 💎";
+            content: "";
             position: absolute;
-            top: 0;
-            left: -100%;
+            top: -50%;
+            left: -50%;
             width: 200%;
-            height: 100%;
-            font-size: 2rem;
-            opacity: 0.12;
-            white-space: nowrap;
-            pointer-events: none;
-            animation: moneySlide 15s linear infinite;
-            display: flex;
-            align-items: center;
+            height: 200%;
+            background: radial-gradient(circle, rgba(74,222,128,0.15) 0%, transparent 70%);
+            animation: rotateGlow 8s linear infinite;
         }
-        
-        @keyframes moneySlide {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(50%);
-            }
+        @keyframes rotateGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        .balance-info {
-            text-align: center;
+        .balance-inner {
+            background: rgba(10,15,30,0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 18px;
             position: relative;
             z-index: 1;
-            background: rgba(0,0,0,0.2);
-            padding: 8px 25px;
-            border-radius: 60px;
-            backdrop-filter: blur(2px);
+            border: 1px solid rgba(74,222,128,0.3);
         }
-
         .balance-label {
-            font-size: 0.8rem;
-            color: #cbd5e1;
-            margin-bottom: 4px;
-            letter-spacing: 1px;
+            font-size: 0.7rem;
+            color: #a0aec0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-
         .balance-amount {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 700;
             color: #4ade80;
-            font-family: 'Poppins', sans-serif;
-            text-shadow: 0 0 8px rgba(74,222,128,0.3);
+            text-shadow: 0 0 15px rgba(74,222,128,0.4);
+            font-family: 'Poppins', monospace;
+        }
+        .balance-currency {
+            font-size: 1rem;
+            margin-left: 4px;
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-box {
-            background: #15102a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 25px;
-            width: 90%;
-            max-width: 360px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.show .modal-box {
-            transform: scale(1);
-        }
-
-        .modal-title {
-            font-size: 1.1rem;
-            color: #fbd38d;
+        .info-badge {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 12px;
+            padding: 8px 12px;
             margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .modal-desc {
-            font-size: 0.8rem;
-            color: #a0aec0;
-            margin-bottom: 15px;
-        }
-
-        .pin-input, .amount-input, .predict-amount-input, .admin-pin-input {
-            width: 100%;
-            background: #0b0816;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 12px;
-            color: #ffffff;
-            font-size: 1.3rem;
-            text-align: center;
-            margin-bottom: 15px;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .pin-input:focus, .amount-input:focus, .predict-amount-input:focus, .admin-pin-input:focus {
-            outline: none;
-            border-color: #4ade80;
-        }
-
-        .amount-input-wrapper {
-            position: relative;
-        }
-        .amount-input-wrapper::before {
-            content: "$";
-            position: absolute;
-            left: 20px;
-            top: 10px;
-            font-size: 1.3rem;
+            font-size: 0.7rem;
             color: #4ade80;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
         }
-        .amount-input, .predict-amount-input {
-            padding-left: 40px;
-            color: #4ade80;
-            font-weight: 700;
-        }
-
-        .shortcut-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin-bottom: 15px;
-        }
-        .shortcut-btn {
-            background: #2d3748;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 0;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.2s ease;
-        }
-        .shortcut-btn:hover {
-            background: #f6ad55;
-            color: #0f0c20;
-            border-color: #f6ad55;
-        }
-
-        .zodiac-select-title {
-            font-size: 0.8rem;
-            color: #a0aec0;
-            text-align: left;
-            margin-bottom: 6px;
-        }
-        .zodiac-select-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 6px;
-            margin-bottom: 15px;
-        }
-        .zodiac-select-btn {
-            background: #0b0816;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 6px 0;
-            font-size: 0.8rem;
-            cursor: pointer;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            transition: all 0.2s;
-        }
-        .zodiac-select-btn.selected {
-            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
-            border-color: #f43f5e;
-            box-shadow: 0 0 10px rgba(244, 63, 94, 0.5);
-        }
-
-        .preview-balance-box {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 20px;
-            font-size: 0.8rem;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .preview-row {
-            display: flex;
-            justify-content: space-between;
-        }
-        .preview-val {
-            font-family: 'Poppins', sans-serif;
-            font-weight: bold;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-cancel { background: #4a5568; color: #ffffff; }
-        .btn-cancel:hover { background: #3e4654; }
-        .btn-confirm { background: #3182ce; color: #ffffff; }
-        .btn-confirm:hover { background: #2b6cb0; }
-        .btn-success { background: #4ade80; color: #0f0c20; }
-        .btn-success:hover { background: #22c55e; }
-        .btn-warning { background: #ecc94b; color: #1a1a2e; }
-        .btn-warning:hover { background: #d69e2e; }
 
         .section-indicator {
             color: #4ade80; 
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
         }
 
         .lucky-circle {
-            min-width: 150px;
-            max-width: fit-content;
-            height: 80px;
-            background: radial-gradient(circle, #f6ad55 0%, #dd6b20 100%);
-            border-radius: 50px;
+            background: linear-gradient(135deg, #f5a623, #f7b733);
+            border-radius: 60px;
+            padding: 12px 20px;
             margin: 0 auto 15px auto;
-            display: flex;
-            justify-content: center;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 0 25px;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #ffffff;
-            box-shadow: 0 0 35px rgba(221, 107, 32, 0.4);
-            border: 3px solid #ffffff;
+            color: #fff;
+            box-shadow: 0 0 25px rgba(247,183,51,0.4);
         }
 
         .countdown-box {
-            font-size: 0.9rem;
-            color: #e2e8f0;
-            margin-bottom: 30px;
-            background: rgba(255, 255, 255, 0.03);
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.3);
             display: inline-block;
-            padding: 6px 14px;
-            border-radius: 10px;
+            padding: 5px 15px;
+            border-radius: 40px;
+            margin-bottom: 20px;
         }
-
         .countdown-time {
-            color: #fc8181; 
+            color: #fc8181;
             font-weight: 700;
-            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
         }
 
         .zodiac-single-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 15px 12px;
-            margin-bottom: 25px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 20px;
         }
-        .zodiac-single-title {
-            font-size: 0.85rem;
+        .zodiac-title {
+            font-size: 0.8rem;
             color: #fbd38d;
             text-align: left;
-            margin-bottom: 12px;
-            padding-left: 4px;
-            font-weight: bold;
+            margin-bottom: 10px;
         }
-        .zodiac-grid-12 {
+        .zodiac-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-
         .zodiac-card {
-            background: #0b0816;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 10px 4px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 8px 4px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .zodiac-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #ffffff;
-        }
-        .zodiac-card-icon { font-size: 1.3rem; }
-        .zodiac-card-order {
-            font-size: 0.7rem;
-            color: #a0aec0;
-            background: rgba(255, 255, 255, 0.04);
-            padding: 1px 6px;
-            border-radius: 4px;
-        }
+        .zodiac-icon { font-size: 1.2rem; }
+        .zodiac-name { font-size: 0.65rem; color: #ddd; }
+        .zodiac-order { font-size: 0.55rem; color: #888; }
 
-        .predict-action-btn {
-            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
-            color: #ffffff;
-            border: none;
-            padding: 12px 20px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
+        .predict-btn {
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
             width: 100%;
-            box-shadow: 0 6px 20px rgba(244, 63, 94, 0.4);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .predict-action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(244, 63, 94, 0.6);
+            border: none;
+            padding: 12px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
 
-        .history-wrapper { margin-bottom: 25px; }
-        .history-header-area {
+        .history-wrapper { margin-bottom: 20px; }
+        .history-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
-        .report-tabs {
+        .tabs {
             display: flex;
-            background: rgba(255, 255, 255, 0.05);
+            gap: 5px;
+            background: rgba(0,0,0,0.3);
             padding: 4px;
-            border-radius: 10px;
-            width: 100%;
-            gap: 2px;
+            border-radius: 40px;
         }
-        .tab-btn {
-            flex: 1;
+        .tab {
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            cursor: pointer;
             background: transparent;
             border: none;
-            color: #a0aec0;
-            padding: 8px 0;
-            font-size: 0.78rem;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.2s;
+            color: #aaa;
         }
-        .tab-btn.active { background: #2b6cb0; color: #ffffff; }
-        .toggle-history-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #cbd5e1;
-            padding: 6px 12px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-            margin-left: 10px;
+        .tab.active {
+            background: #2b6cb0;
+            color: white;
         }
-
+        .toggle-history {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 5px 12px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
         .history-box {
-            background: #0b0816;
+            background: rgba(0,0,0,0.2);
             border-radius: 16px;
-            padding: 15px 10px;
-            max-height: 320px;
+            padding: 10px;
+            max-height: 280px;
             overflow-y: auto;
-            text-align: left;
         }
-
-        .time-list, .deposit-list, .bet-list { display: flex; flex-direction: column; gap: 10px; }
-        .time-item, .history-item-row {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .time-item, .history-item {
+            background: rgba(255,255,255,0.03);
             border-radius: 12px;
-            padding: 12px 15px;
+            padding: 10px;
+            margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .time-item.active {
-            background: rgba(74, 222, 128, 0.05);
-            border-color: #4ade80;
-            border-left: 4px solid #4ade80;
+            background: rgba(74,222,128,0.1);
+            border-left: 3px solid #4ade80;
+        }
+        .time-label { font-weight: 600; font-size: 0.8rem; }
+        .time-date { font-size: 0.6rem; color: #aaa; }
+        .result-badge {
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
         }
 
-        .time-info .time-label, .row-main-title { font-size: 0.9rem; font-weight: 700; color: #ffffff; }
-        .time-info .date-label, .row-sub-title { font-size: 0.75rem; color: #718096; margin-top: 4px; }
-        .result-number, .row-status-badge {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #f6ad55;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 6px 14px;
-            border-radius: 20px;
-            text-align: center;
+        /* Control Buttons */
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .time-item.active .result-number { color: #ffffff; background: #2f855a; }
-        
-        .waiting-text { font-size: 0.85rem; color: #718096; font-style: italic; }
-        .no-data-text { font-size: 0.85rem; color: #4a5568; text-align: center; padding: 20px 0; font-style: italic; }
+        .ctrl-btn {
+            flex: 1;
+            background: rgba(139,92,246,0.2);
+            border: 1px solid rgba(139,92,246,0.4);
+            padding: 8px;
+            border-radius: 40px;
+            color: #c4b5fd;
+            cursor: pointer;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .ctrl-btn:hover {
+            background: #8b5cf6;
+            color: white;
+        }
 
         .admin-panel-btn {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-            color: #ffffff;
-            border: none;
-            padding: 12px 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            border-radius: 12px;
-            cursor: pointer;
-            margin-bottom: 15px;
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             width: 100%;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .admin-panel-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 12px;
         }
 
-        .admin-controls-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-top: 10px;
+        .admin-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             margin-bottom: 15px;
-            transition: all 0.3s ease;
         }
-        .admin-controls-grid.hidden {
+        .admin-buttons.hidden { display: none; }
+        .admin-btn {
+            background: rgba(139,92,246,0.15);
+            border: 1px solid rgba(139,92,246,0.3);
+            padding: 8px;
+            border-radius: 40px;
+            color: #c4b5fd;
+            cursor: pointer;
+        }
+
+        .law-btn {
+            background: linear-gradient(135deg, #3182ce, #2b6cb0);
+            width: 100%;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .law-text {
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 0.7rem;
             display: none;
         }
-        .admin-btn {
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            color: #a78bfa;
-            padding: 10px 15px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+
+        .telegram {
+            text-align: center;
+            margin-top: 10px;
         }
-        .admin-btn:hover {
-            background: #8b5cf6;
-            color: #0f0c20;
-            border-color: #8b5cf6;
+        .telegram a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #0088cc, #0055a4);
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
         }
 
-        .admin-pin-modal {
+        /* Modals */
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0,0,0,0.95);
             display: flex;
-            justify-content: center;
             align-items: center;
-            z-index: 2000;
+            justify-content: center;
+            z-index: 1000;
             opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
+            visibility: hidden;
+            transition: 0.2s;
         }
-        .admin-pin-modal.show {
+        .modal.show {
             opacity: 1;
-            pointer-events: auto;
+            visibility: visible;
         }
-        .admin-pin-box {
-            background: #15102a;
-            border: 2px solid #8b5cf6;
-            border-radius: 20px;
-            padding: 30px;
+        .modal-content {
+            background: #1a1a3a;
+            border-radius: 28px;
+            padding: 25px;
             width: 90%;
             max-width: 360px;
-            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .admin-pin-title {
-            color: #8b5cf6;
-            font-size: 1.2rem;
+        .modal-title {
+            font-size: 1.1rem;
+            color: #fbd38d;
+            text-align: center;
             margin-bottom: 15px;
         }
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            background: #0f0f2a;
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .zodiac-select-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 15px 0;
+        }
+        .zodiac-option {
+            background: #0f0f2a;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .zodiac-option.selected {
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+        }
+        .preview-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+        .shortcut-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .shortcut {
+            background: #2a2a4a;
+            border: none;
+            padding: 10px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-cancel { background: #4a5568; color: white; }
+        .btn-confirm { background: #4ade80; color: #1a1a2e; }
 
-        /* Confirm Modal */
         .confirm-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0,0,0,0.95);
             display: flex;
-            justify-content: center;
             align-items: center;
-            z-index: 2500;
+            justify-content: center;
+            z-index: 1100;
             opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
+            visibility: hidden;
         }
         .confirm-modal.show {
             opacity: 1;
-            pointer-events: auto;
+            visibility: visible;
         }
         .confirm-box {
-            background: #15102a;
-            border: 2px solid #ecc94b;
-            border-radius: 20px;
-            padding: 30px;
+            background: #1a1a3a;
+            border-radius: 28px;
+            padding: 25px;
             width: 90%;
-            max-width: 340px;
+            max-width: 320px;
             text-align: center;
+            border: 2px solid #ecc94b;
         }
-        .confirm-title {
-            color: #ecc94b;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
-        .confirm-message {
-            color: #cbd5e1;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-        .confirm-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        .confirm-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .confirm-yes {
-            background: #4ade80;
-            color: #1a1a2e;
-        }
-        .confirm-yes:hover {
-            background: #22c55e;
-        }
-        .confirm-no {
-            background: #4a5568;
-            color: white;
-        }
-        .confirm-no:hover {
-            background: #3e4654;
-        }
+        .confirm-title { color: #ecc94b; font-size: 1.2rem; margin-bottom: 10px; }
+        .confirm-message { color: #ddd; margin-bottom: 20px; }
+        .confirm-buttons { display: flex; gap: 10px; }
+        .confirm-yes { background: #4ade80; color: #1a1a2e; }
+        .confirm-no { background: #4a5568; color: white; }
 
-        .law-section { margin-top: 5px; text-align: center; margin-bottom: 25px; }
-        .law-btn {
-            background: linear-gradient(90deg, #3182ce 0%, #2b6cb0 100%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            padding: 12px 24px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            border-radius: 14px;
-            cursor: pointer;
-            width: 100%;
-        }
-        .law-box {
-            background: rgba(11, 8, 22, 0.8); border: 1px solid rgba(246, 173, 85, 0.3);
-            border-radius: 16px; padding: 18px 15px; margin-top: 15px; text-align: left;
-            max-height: 140px; overflow-y: auto; 
-        }
-
-        /* Telegram Button Modern Style */
-        .telegram-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .telegram-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: linear-gradient(135deg, #0088cc 0%, #0055a4 100%);
-            border: none;
-            border-radius: 50px;
-            padding: 14px 28px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
-        }
-        .telegram-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.5);
-        }
-        .telegram-icon {
-            width: 24px;
-            height: 24px;
-            fill: #ffffff;
-        }
-        .telegram-text {
-            color: #ffffff;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .telegram-label {
-            font-size: 0.75rem;
-            color: #a0aec0;
-            text-align: center;
-        }
-
-        .info-badge {
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            border-radius: 10px;
-            padding: 8px 12px;
-            margin-bottom: 15px;
-            font-size: 0.75rem;
-            color: #4ade80;
-            text-align: center;
-        }
-
-        .result-date {
-            font-size: 0.65rem;
-            color: #a0aec0;
-            margin-top: 2px;
-        }
-        
-        .result-with-number {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        /* Animation for notification */
-        @keyframes notificationPop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
         .notification-toast {
             position: fixed;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #1e3a5f, #0f2a4a);
-            border: 2px solid #4ade80;
+            background: #1a3a2a;
+            border: 1px solid #4ade80;
             border-radius: 50px;
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 3000;
-            animation: notificationPop 0.3s ease-out;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            padding: 10px 20px;
+            z-index: 1200;
+            font-size: 0.8rem;
+            animation: fadeInUp 0.3s ease;
         }
-        
-        .notification-toast.win {
-            border-color: #4ade80;
-            background: linear-gradient(135deg, #1e4a3a, #0f2a20);
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
-        
-        .notification-toast.lose {
-            border-color: #fc8181;
-            background: linear-gradient(135deg, #4a2a2a, #2a1515);
-        }
-        
-        .notification-toast.pending {
-            border-color: #f6ad55;
-            background: linear-gradient(135deg, #3a3a1e, #2a2a0f);
-        }
+        .waiting-text { color: #f6ad55; font-size: 0.7rem; }
+        .status-win { color: #4ade80; }
+        .status-lose { color: #fc8181; }
+        .status-pending { color: #f6ad55; }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1 class="main-title">ឆ្នាំសំណាងទាំង 12 🎁🎉</h1>
-    <p class="sub-title">ប្រព័ន្ធទស្សន៍ទាយ និងកំណត់ត្រាលទ្ធផលឆ្នាំសំណាងទាំង 12/24 ម៉ោង</p>
-    <div class="live-time-badge" id="live-clock">📅 --/--/---- | ⏰ --:--:--</div>
+    <!-- Language Switch -->
+    <div class="lang-switch">
+        <button class="lang-btn active" data-lang="km">🇰🇭 ភាសាខ្មែរ</button>
+        <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+    </div>
+
+    <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
+    <div class="sub-title" id="subTitle">ប្រព័ន្ធទស្សន៍ទាយ និងកំណត់ត្រាលទ្ធផលឆ្នាំសំណាងទាំង 12/24 ម៉ោង</div>
+    
+    <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
+    
+    <!-- Modern Digital Balance Card -->
     <div class="balance-card">
-        <div class="balance-info">
-            <div class="balance-label">សមតុល្យទឹកប្រាក់បច្ចុប្បន្ន</div>
-            <div class="balance-amount">$<span id="user-balance">0.00</span></div>
+        <div class="balance-inner">
+            <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
+            <div class="balance-amount">$<span id="userBalance">0.00</span></div>
         </div>
     </div>
-    <div class="info-badge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!</div>
-    <div class="section-indicator" id="current-hour-text">🔮 ឆ្នាំសំណាងសម្រាប់ម៉ោងនេះគឺ៖</div>
-    <div class="lucky-circle" id="main-lucky-number">?</div>
-    <div class="countdown-box">លទ្ធផលបន្ទាប់នឹងចេញក្នុងរយៈពេល៖ <span class="countdown-time" id="countdown-timer">--:--</span></div>
+    
+    <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!</div>
+    
+    <div class="section-indicator" id="currentHourText">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
+    <div class="lucky-circle" id="luckyNumber">?</div>
+    
+    <div class="countdown-box" id="countdownText">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimer">--:--</span></div>
+    
     <div class="zodiac-single-box">
-        <div class="zodiac-single-title">🗓️ តារាងឆ្នាំសំណាងទាំង ១២ យោងតាមហោរាសាស្ត្រ</div>
-        <div class="zodiac-grid-12" id="zodiac-single-grid-area"></div>
-        <button class="predict-action-btn" id="openPredictModalBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+        <div class="zodiac-title" id="zodiacTitle">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
+        <div class="zodiac-grid" id="zodiacGrid"></div>
+        <button class="predict-btn" id="openPredictBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
     </div>
+    
     <div class="history-wrapper">
-        <div class="history-header-area">
-            <div class="report-tabs">
-                <button class="tab-btn active" data-tab="result-tab">លទ្ធផលម៉ោង</button>
-                <button class="tab-btn" data-tab="deposit-tab">ប្រវត្តិបញ្ចូលលុយ</button>
-                <button class="tab-btn" data-tab="bet-tab">ប្រវត្តិទស្សន៍ទាយ</button>
+        <div class="history-header">
+            <div class="tabs">
+                <button class="tab active" data-tab="result" id="tabResult">លទ្ធផលម៉ោង</button>
+                <button class="tab" data-tab="deposit" id="tabDeposit">ប្រវត្តិបញ្ចូលលុយ</button>
+                <button class="tab" data-tab="bet" id="tabBet">ប្រវត្តិទស្សន៍ទាយ</button>
             </div>
-            <button class="toggle-history-btn" id="toggleHistoryBtn">👁️ លាក់</button>
+            <button class="toggle-history" id="toggleHistoryBtn">👁️ លាក់</button>
         </div>
-        <div class="history-box" id="historyBoxSection">
-            <div class="tab-content" id="result-tab-content">
-                <div class="time-list" id="schedule-list"></div>
-            </div>
-            <div class="tab-content" id="deposit-tab-content" style="display: none;">
-                <div class="deposit-list" id="deposit-history-list"></div>
-            </div>
-            <div class="tab-content" id="bet-tab-content" style="display: none;">
-                <div class="bet-list" id="bet-history-list"></div>
-            </div>
+        <div class="history-box" id="historyBox">
+            <div id="resultTab"><div id="scheduleList"></div></div>
+            <div id="depositTab" style="display:none;"><div id="depositList"></div></div>
+            <div id="betTab" style="display:none;"><div id="betList"></div></div>
         </div>
     </div>
-    <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel (ចុចដើម្បីបង្ហាញ)</button>
-    <div class="admin-controls-grid hidden" id="adminControlsGrid">
+    
+    <!-- Control Buttons: Sound Toggle + Admin Panel -->
+    <div class="control-buttons">
+        <button class="ctrl-btn" id="soundToggleBtn">🔊 បិទសំឡេង</button>
+    </div>
+    
+    <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
+    <div class="admin-buttons hidden" id="adminButtons">
         <button class="admin-btn" id="depositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់</button>
         <button class="admin-btn" id="clearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
         <button class="admin-btn" id="clearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
         <button class="admin-btn" id="clearBalanceBtn">💰 លុបទឹកប្រាក់ក្នុងគណនី</button>
     </div>
-    <div class="admin-pin-modal" id="adminPinModal">
-        <div class="admin-pin-box">
-            <div class="admin-pin-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div>
-            <input type="text" class="admin-pin-input" id="adminPinField" maxlength="20" placeholder="បញ្ចូលពាក្យសម្ងាត់">
-            <div class="modal-buttons">
-                <button class="modal-btn btn-cancel" id="closeAdminPinBtn">បោះបង់</button>
-                <button class="modal-btn btn-confirm" id="confirmAdminPinBtn">ផ្ទៀងផ្ទាត់</button>
-            </div>
-        </div>
-    </div>
-    <div class="law-section">
-        <button class="law-btn" id="toggleLawBtn">ចុចដើម្បីអានអំពីច្បាប់</button>
-        <div class="law-box" id="lawContent" style="display: none;">
-            <p>គោលបំណងរបស់ខ្ញុំគ្រាន់តែសិក្សាអំពីការបង្កើតគេហទំព័រតែប៉ុណ្ណោះសម្រាប់អ្នកដែលចូលមើលគេហទំព័រនេះសូមកុំចែកចាយដំណុលភ្ជាប់របស់ខ្ញុំទៅអ្នកដទៃ។</p>
-        </div>
-    </div>
     
-    <!-- Modern Telegram Button -->
-    <div class="telegram-section">
-        <a href="https://t.me/Application_Receiving_Officer" target="_blank" class="telegram-btn">
-            <svg class="telegram-icon" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-1-.65-.35-1 .22-1.62.15-.15 2.7-2.46 2.75-2.67.01-.03.01-.15-.06-.21-.07-.06-.17-.04-.25-.02-.11.02-1.78 1.14-5.05 3.34-.48.33-.91.49-1.29.48-.42-.01-1.22-.24-1.82-.44-.74-.24-1.33-.37-1.28-.79.03-.22.33-.44.89-.67 3.49-1.52 5.83-2.52 7.02-3 .11-.04.22-.07.33-.07.23 0 .28.23.23.42z"/>
-            </svg>
-            <span class="telegram-text">ទំនាក់ទំនងអ្នកគ្រប់គ្រង</span>
-        </a>
-        <span class="telegram-label">ចុចដើម្បីទំនាក់ទំនងតាមរយៈ Telegram</span>
+    <button class="law-btn" id="lawBtn">ចុចដើម្បីអានច្បាប់</button>
+    <div class="law-text" id="lawText">គោលបំណងរបស់ខ្ញុំគ្រាន់តែសិក្សាអំពីការបង្កើតគេហទំព័រតែប៉ុណ្ណោះ។</div>
+    
+    <div class="telegram">
+        <a href="https://t.me/Application_Receiving_Officer" target="_blank">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</a>
     </div>
 </div>
 
 <!-- Deposit Modal -->
-<div class="modal-overlay" id="depositModal">
-    <div class="modal-box">
-        <div id="step-pin-section">
-            <div class="modal-title" id="security-modal-title">🔐 សូមវាយលេខកូដសម្ងាត់</div>
-            <p class="modal-desc" id="security-modal-desc">វាយកូដសម្ងាត់ត្រឹមត្រូវដើម្បីបន្តប្រតិបត្តិការ</p>
-            <input type="text" class="pin-input" id="pinCodeField" maxlength="10" placeholder="បញ្ចូលកូដទីនេះ">
-            <div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeModalBtn">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button></div>
+<div class="modal" id="depositModal">
+    <div class="modal-content">
+        <div id="pinStep">
+            <div class="modal-title">🔐 បញ្ចូលកូដសម្ងាត់</div>
+            <input type="password" class="modal-input" id="pinInput" placeholder="កូដសម្ងាត់" maxlength="10">
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" id="closeDepositModal">បោះបង់</button>
+                <button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button>
+            </div>
         </div>
-        <div id="step-amount-section" style="display: none;">
-            <div class="modal-title">💵 បញ្ចូលទឹកប្រាក់ដោយដៃ</div>
-            <p class="modal-desc">សូមវាយបញ្ចូលចំនួនទឹកប្រាក់ដែលបងចង់បាន</p>
-            <div class="amount-input-wrapper"><input type="number" class="amount-input" id="amountField" min="0.01" step="0.01" placeholder="0.00"></div>
-            <div class="modal-buttons"><button class="modal-btn btn-cancel" id="cancelAmountBtn">ត្រឡប់ក្រោយ</button><button class="modal-btn btn-success" id="submitDepositBtn">យល់ព្រមបញ្ចូល</button></div>
+        <div id="amountStep" style="display:none;">
+            <div class="modal-title">💵 បញ្ចូលទឹកប្រាក់</div>
+            <input type="number" class="modal-input" id="amountInput" placeholder="ចំនួនទឹកប្រាក់" min="0.01" step="0.01">
+            <div class="modal-buttons">
+                <button class="modal-btn btn-cancel" id="backToPinBtn">ត្រឡប់</button>
+                <button class="modal-btn btn-confirm" id="submitDepositBtn">បញ្ចូល</button>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Predict Modal -->
-<div class="modal-overlay" id="predictModal">
-    <div class="modal-box">
-        <div class="modal-title">🎲 រៀបចំការទស្សន៍ទាយ</div>
-        <div class="preview-balance-box">
-            <div class="preview-row"><span>ទឹកប្រាក់បច្ចុប្បន្ន:</span><span class="preview-val" style="color:#4ade80;">$<span id="pre-current-bal">0.00</span></span></div>
-            <div class="preview-row"><span>ទឹកប្រាក់ដែលត្រូវកាត់:</span><span class="preview-val" style="color:#fc8181;">$<span id="pre-cost-bal">0.00</span></span></div>
-            <div class="preview-row"><span>ទឹកប្រាក់នៅសល់សុទ្ធ:</span><span class="preview-val" style="color:#63b3ed;">$<span id="pre-remain-bal">0.00</span></span></div>
+<div class="modal" id="predictModal">
+    <div class="modal-content">
+        <div class="modal-title">🎲 ទស្សន៍ទាយ</div>
+        <div class="preview-box">
+            <div class="preview-row"><span id="preCurrentLabel">ទឹកប្រាក់បច្ចុប្បន្ន:</span><span>$<span id="preCurrent">0.00</span></span></div>
+            <div class="preview-row"><span id="preCostLabel">ត្រូវកាត់:</span><span>$<span id="preCost">0.00</span></span></div>
+            <div class="preview-row"><span id="preRemainLabel">នៅសល់:</span><span>$<span id="preRemain">0.00</span></span></div>
         </div>
-        <p class="modal-desc" style="text-align:left;">វាយបញ្ចូលទឹកប្រាក់ដោយដៃ៖</p>
-        <div class="amount-input-wrapper"><input type="number" class="predict-amount-input" id="predictAmountField" min="0.01" step="0.01" placeholder="0.00"></div>
+        <input type="number" class="modal-input" id="betAmount" placeholder="បញ្ចូលទឹកប្រាក់" min="0.01" step="0.01" value="0">
         <div class="shortcut-grid">
-            <button class="shortcut-btn" data-amount="1">$1</button><button class="shortcut-btn" data-amount="5">$5</button>
-            <button class="shortcut-btn" data-amount="10">$10</button><button class="shortcut-btn" data-amount="20">$20</button>
-            <button class="shortcut-btn" data-amount="50">$50</button>
+            <button class="shortcut" data-amount="1">$1</button>
+            <button class="shortcut" data-amount="5">$5</button>
+            <button class="shortcut" data-amount="10">$10</button>
+            <button class="shortcut" data-amount="20">$20</button>
+            <button class="shortcut" data-amount="50">$50</button>
         </div>
-        <div class="zodiac-select-title">ជ្រើសរើសឆ្នាំដែលបងចង់ទស្សន៍ទាយ (រង្វាន់ x10)៖</div>
-        <div class="zodiac-select-grid" id="zodiacSelectGridArea"></div>
-        <div class="modal-buttons"><button class="modal-btn btn-cancel" id="closePredictModalBtn">បោះបង់</button><button class="modal-btn btn-success" id="confirmPredictBtn">✅ យល់ព្រមទស្សន៍ទាយ</button></div>
+        <div class="zodiac-select-title" id="selectZodiacTitle">ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)៖</div>
+        <div class="zodiac-select-grid" id="zodiacSelectGrid"></div>
+        <div class="modal-buttons">
+            <button class="modal-btn btn-cancel" id="closePredictModal">បោះបង់</button>
+            <button class="modal-btn btn-confirm" id="confirmPredictBtn">ទស្សន៍ទាយ</button>
+        </div>
     </div>
 </div>
 
-<!-- Confirm Modal for Prediction -->
+<!-- Admin PIN Modal -->
+<div class="modal" id="adminPinModal">
+    <div class="modal-content">
+        <div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div>
+        <input type="password" class="modal-input" id="adminPinInput" placeholder="ពាក្យសម្ងាត់">
+        <div class="modal-buttons">
+            <button class="modal-btn btn-cancel" id="closeAdminModal">បោះបង់</button>
+            <button class="modal-btn btn-confirm" id="confirmAdminBtn">ផ្ទៀងផ្ទាត់</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Modals -->
 <div class="confirm-modal" id="confirmPredictModal">
     <div class="confirm-box">
         <div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div>
-        <div class="confirm-message" id="confirmPredictMessage">តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?</div>
+        <div class="confirm-message" id="confirmPredictMsg">តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?</div>
         <div class="confirm-buttons">
-            <button class="confirm-btn confirm-no" id="cancelPredictConfirmBtn">បោះបង់</button>
-            <button class="confirm-btn confirm-yes" id="yesPredictConfirmBtn">យល់ព្រម</button>
+            <button class="confirm-btn confirm-no" id="cancelPredictConfirm">បោះបង់</button>
+            <button class="confirm-btn confirm-yes" id="yesPredictConfirm">យល់ព្រម</button>
         </div>
     </div>
 </div>
 
-<!-- Confirm Modal for Admin Actions -->
 <div class="confirm-modal" id="confirmAdminModal">
     <div class="confirm-box">
         <div class="confirm-title" id="confirmAdminTitle">⚠️ បញ្ជាក់សកម្មភាព</div>
-        <div class="confirm-message" id="confirmAdminMessage">តើអ្នកពិតជាចង់ធ្វើសកម្មភាពនេះមែនទេ?</div>
+        <div class="confirm-message" id="confirmAdminMsg">តើអ្នកពិតជាចង់ធ្វើសកម្មភាពនេះមែនទេ?</div>
         <div class="confirm-buttons">
-            <button class="confirm-btn confirm-no" id="cancelAdminConfirmBtn">បោះបង់</button>
-            <button class="confirm-btn confirm-yes" id="yesAdminConfirmBtn">យល់ព្រម</button>
+            <button class="confirm-btn confirm-no" id="cancelAdminConfirm">បោះបង់</button>
+            <button class="confirm-btn confirm-yes" id="yesAdminConfirm">យល់ព្រម</button>
         </div>
     </div>
 </div>
 
 <script>
-    let currentBalance = 0.00;
+    // ==================== CONFIG ====================
     const SECRET_PIN = "Qq2026";
-    const ADMIN_SHOW_PIN = "Qq1280";
-    let selectedZodiacName = "";
-    let lastCheckedHour = -1;
-    let currentAdminAction = "deposit";
-    let pendingDepositAmount = 0;
+    const ADMIN_PIN = "Qq1280";
+    
+    // ==================== GLOBALS ====================
+    let currentBalance = 0;
+    let depositHistory = [];
+    let betHistory = [];
+    let selectedZodiac = "";
+    let currentAction = "";
     let pendingBetAmount = 0;
-    let pendingSelectedZodiac = "";
+    let pendingZodiac = "";
     let pendingAdminAction = "";
-    let depositHistory = JSON.parse(localStorage.getItem('user_deposit_history')) || [];
-    let betHistory = JSON.parse(localStorage.getItem('user_bet_history')) || [];
-
-    // Audio context for sound notifications
+    let lastProcessedHour = -1;
+    let soundEnabled = true;
     let audioContext = null;
-
-    function playNotificationSound(isWin) {
+    let currentLang = "km";
+    
+    // Language translations
+    const translations = {
+        km: {
+            mainTitle: "ឆ្នាំសំណាងទាំង 12 🎁🎉",
+            subTitle: "ប្រព័ន្ធទស្សន៍ទាយ និងកំណត់ត្រាលទ្ធផលឆ្នាំសំណាងទាំង 12/24 ម៉ោង",
+            balanceLabel: "សមតុល្យបច្ចុប្បន្ន",
+            infoBadge: "⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!",
+            currentHourLabel: "🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖",
+            countdownLabel: "លទ្ធផលបន្ទាប់ចេញក្នុង៖",
+            zodiacTitle: "🗓️ តារាងឆ្នាំសំណាងទាំង ១២",
+            predictBtn: "🎲 ចុចដើម្បីទស្សន៍ទាយ",
+            tabResult: "លទ្ធផលម៉ោង",
+            tabDeposit: "ប្រវត្តិបញ្ចូលលុយ",
+            tabBet: "ប្រវត្តិទស្សន៍ទាយ",
+            toggleHide: "👁️ លាក់",
+            toggleShow: "👁️ បង្ហាញ",
+            soundOn: "🔊 បិទសំឡេង",
+            soundOff: "🔇 បើកសំឡេង",
+            adminPanel: "🔧 Admin Panel",
+            depositMoney: "💵 បញ្ចូលទឹកប្រាក់",
+            clearDeposit: "🗑️ លុបប្រវត្តិបញ្ចូលលុយ",
+            clearBet: "🗑️ លុបប្រវត្តិទស្សន៍ទាយ",
+            clearBalance: "💰 លុបទឹកប្រាក់ក្នុងគណនី",
+            lawBtn: "ចុចដើម្បីអានច្បាប់",
+            lawHide: "ចុចដើម្បីលាក់ច្បាប់",
+            telegram: "📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង",
+            pinTitle: "🔐 បញ្ចូលកូដសម្ងាត់",
+            depositTitle: "💵 បញ្ចូលទឹកប្រាក់",
+            predictTitle: "🎲 ទស្សន៍ទាយ",
+            preCurrent: "ទឹកប្រាក់បច្ចុប្បន្ន:",
+            preCost: "ត្រូវកាត់:",
+            preRemain: "នៅសល់:",
+            selectZodiac: "ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)៖",
+            cancel: "បោះបង់",
+            confirm: "ទស្សន៍ទាយ",
+            confirmPredictMsg: "តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?",
+            confirmClearDeposit: "តើអ្នកពិតជាចង់លុបប្រវត្តិបញ្ចូលលុយទាំងអស់មែនទេ?",
+            confirmClearBet: "តើអ្នកពិតជាចង់លុបប្រវត្តិទស្សន៍ទាយទាំងអស់មែនទេ?",
+            confirmClearBalance: "តើអ្នកពិតជាចង់លុបទឹកប្រាក់ក្នុងគណនីមកត្រឹម $0.00 មែនទេ?",
+            yes: "យល់ព្រម",
+            no: "បោះបង់",
+            waiting: "រង់ចាំ",
+            win: "ឈ្នះ",
+            lose: "ចាញ់",
+            pending: "កំពុងរង់ចាំ",
+            depositSuccess: "បញ្ចូលលុយជោគជ័យ",
+            betPlaced: "បានចាក់",
+            forHour: "សម្រាប់ម៉ោង",
+            resultAt: "លទ្ធផល",
+            atTime: "ចេញនៅ"
+        },
+        en: {
+            mainTitle: "12 Lucky Zodiacs 🎁🎉",
+            subTitle: "Fortune Telling System & Record Results 12/24 Hours",
+            balanceLabel: "Current Balance",
+            infoBadge: "⏰ Betting at any hour will be for the next hour!",
+            currentHourLabel: "🔮 Current Lucky Zodiac:",
+            countdownLabel: "Next result in:",
+            zodiacTitle: "🗓️ 12 Zodiac Signs Chart",
+            predictBtn: "🎲 Click to Predict",
+            tabResult: "Hourly Results",
+            tabDeposit: "Deposit History",
+            tabBet: "Bet History",
+            toggleHide: "👁️ Hide",
+            toggleShow: "👁️ Show",
+            soundOn: "🔊 Mute",
+            soundOff: "🔇 Unmute",
+            adminPanel: "🔧 Admin Panel",
+            depositMoney: "💵 Deposit Money",
+            clearDeposit: "🗑️ Clear Deposit History",
+            clearBet: "🗑️ Clear Bet History",
+            clearBalance: "💰 Clear Balance",
+            lawBtn: "Click to read rules",
+            lawHide: "Click to hide rules",
+            telegram: "📱 Contact Admin",
+            pinTitle: "🔐 Enter PIN Code",
+            depositTitle: "💵 Deposit Money",
+            predictTitle: "🎲 Make a Prediction",
+            preCurrent: "Current Balance:",
+            preCost: "Amount to deduct:",
+            preRemain: "Remaining:",
+            selectZodiac: "Select Zodiac (Reward x10):",
+            cancel: "Cancel",
+            confirm: "Predict",
+            confirmPredictMsg: "Are you sure you want to make this prediction?",
+            confirmClearDeposit: "Are you sure you want to clear all deposit history?",
+            confirmClearBet: "Are you sure you want to clear all bet history?",
+            confirmClearBalance: "Are you sure you want to reset balance to $0.00?",
+            yes: "Yes",
+            no: "No",
+            waiting: "Waiting",
+            win: "Win",
+            lose: "Lose",
+            pending: "Pending",
+            depositSuccess: "Deposit successful",
+            betPlaced: "Placed bet on",
+            forHour: "for hour",
+            resultAt: "Result",
+            atTime: "at"
+        }
+    };
+    
+    // Zodiac data
+    const zodiacs = [
+        { name: "ឆ្នាំជូត", nameEn: "Rat", icon: "🐭", order: "ទី១", orderEn: "1st", num: "01" },
+        { name: "ឆ្នាំឆ្លូវ", nameEn: "Ox", icon: "🐮", order: "ទី២", orderEn: "2nd", num: "02" },
+        { name: "ឆ្នាំខាល", nameEn: "Tiger", icon: "🐯", order: "ទី៣", orderEn: "3rd", num: "03" },
+        { name: "ឆ្នាំថោះ", nameEn: "Rabbit", icon: "🐰", order: "ទី៤", orderEn: "4th", num: "04" },
+        { name: "ឆ្នាំរោង", nameEn: "Dragon", icon: "🐉", order: "ទី៥", orderEn: "5th", num: "05" },
+        { name: "ឆ្នាំម្សាញ់", nameEn: "Snake", icon: "🐍", order: "ទី៦", orderEn: "6th", num: "06" },
+        { name: "ឆ្នាំមមី", nameEn: "Horse", icon: "🐴", order: "ទី៧", orderEn: "7th", num: "07" },
+        { name: "ឆ្នាំមមែ", nameEn: "Goat", icon: "🐐", order: "ទី៨", orderEn: "8th", num: "08" },
+        { name: "ឆ្នាំវក", nameEn: "Monkey", icon: "🐵", order: "ទី៩", orderEn: "9th", num: "09" },
+        { name: "ឆ្នាំរកា", nameEn: "Rooster", icon: "🐔", order: "ទី១០", orderEn: "10th", num: "10" },
+        { name: "ឆ្នាំច", nameEn: "Dog", icon: "🐶", order: "ទី១១", orderEn: "11th", num: "11" },
+        { name: "ឆ្នាំកុរ", nameEn: "Pig", icon: "🐷", order: "ទី១២", orderEn: "12th", num: "12" }
+    ];
+    
+    const zodiacMap = {};
+    zodiacs.forEach(z => { zodiacMap[z.num] = z; });
+    
+    const hoursList = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,0,1,2,3,4,5,6];
+    
+    function formatHour(hour) {
+        return hour === 0 ? "00:00" : (hour < 10 ? "0"+hour+":00" : hour+":00");
+    }
+    
+    function formatDate(date) {
+        return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
+    }
+    
+    function formatDateTime(date) {
+        return `${date.getDate()}/${date.getMonth()+1} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`;
+    }
+    
+    function getNextHour(hour) {
+        return hour === 23 ? 0 : hour + 1;
+    }
+    
+    function getZodiacDisplay(z, lang) {
+        if (lang === 'en') {
+            return `${z.icon} ${z.nameEn} (${z.orderEn})`;
+        }
+        return `${z.icon} ${z.name} (${z.order})`;
+    }
+    
+    // Sound functions
+    function playSound(isWin) {
+        if (!soundEnabled) return;
         try {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            oscillator.type = 'sine';
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.type = 'sine';
             if (isWin === true) {
-                oscillator.frequency.value = 880;
-                gainNode.gain.value = 0.3;
-                oscillator.start();
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.8);
-                setTimeout(() => oscillator.stop(), 800);
-                setTimeout(() => {
-                    const osc2 = audioContext.createOscillator();
-                    const gain2 = audioContext.createGain();
-                    osc2.connect(gain2);
-                    gain2.connect(audioContext.destination);
-                    osc2.type = 'sine';
-                    osc2.frequency.value = 1046.5;
-                    gain2.gain.value = 0.25;
-                    osc2.start();
-                    gain2.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.6);
-                    setTimeout(() => osc2.stop(), 600);
-                }, 300);
+                osc.frequency.value = 880;
+                gain.gain.value = 0.2;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.6);
+                setTimeout(() => osc.stop(), 600);
             } else if (isWin === false) {
-                oscillator.frequency.value = 440;
-                gainNode.gain.value = 0.25;
-                oscillator.start();
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.6);
-                setTimeout(() => oscillator.stop(), 600);
+                osc.frequency.value = 440;
+                gain.gain.value = 0.2;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.5);
+                setTimeout(() => osc.stop(), 500);
             } else {
-                oscillator.frequency.value = 660;
-                gainNode.gain.value = 0.2;
-                oscillator.start();
-                gainNode.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.4);
-                setTimeout(() => oscillator.stop(), 400);
+                osc.frequency.value = 660;
+                gain.gain.value = 0.15;
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3);
+                setTimeout(() => osc.stop(), 300);
             }
-        } catch(e) {
-            console.log("Audio not supported:", e);
-        }
+        } catch(e) {}
     }
-
-    function showNotificationToast(message, type) {
-        const existingToast = document.querySelector('.notification-toast');
-        if (existingToast) existingToast.remove();
+    
+    function showToast(msg, type) {
+        const existing = document.querySelector('.notification-toast');
+        if (existing) existing.remove();
         const toast = document.createElement('div');
-        toast.className = `notification-toast ${type}`;
-        toast.innerHTML = `<span style="font-size:1.5rem;">${type === 'win' ? '🏆' : (type === 'lose' ? '😢' : '🔔')}</span><span style="font-weight:bold;">${message}</span>`;
+        toast.className = 'notification-toast';
+        toast.innerHTML = msg;
         document.body.appendChild(toast);
-        setTimeout(() => { if (toast) toast.remove(); }, 4000);
+        setTimeout(() => toast.remove(), 3000);
     }
-
-    const zodiacMap = {
-        "01": { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១", num: "01" },
-        "02": { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២", num: "02" },
-        "03": { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣", num: "03" },
-        "04": { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤", num: "04" },
-        "05": { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥", num: "05" },
-        "06": { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦", num: "06" },
-        "07": { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧", num: "07" },
-        "08": { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨", num: "08" },
-        "09": { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩", num: "09" },
-        "10": { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០", num: "10" },
-        "11": { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១", num: "11" },
-        "12": { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២", num: "12" }
-    };
-
-    const zodiacDataStatic = [
-        { name: "ឆ្នាំជូត", icon: "🐭", order: "ឆ្នាំទី១", num: "01" },
-        { name: "ឆ្នាំឆ្លូវ", icon: "🐮", order: "ឆ្នាំទី២", num: "02" },
-        { name: "ឆ្នាំខាល", icon: "🐯", order: "ឆ្នាំទី៣", num: "03" },
-        { name: "ឆ្នាំថោះ", icon: "🐰", order: "ឆ្នាំទី៤", num: "04" },
-        { name: "ឆ្នាំរោង", icon: "🐉", order: "ឆ្នាំទី៥", num: "05" },
-        { name: "ឆ្នាំម្សាញ់", icon: "🐍", order: "ឆ្នាំទី៦", num: "06" },
-        { name: "ឆ្នាំមមី", icon: "🐴", order: "ឆ្នាំទី៧", num: "07" },
-        { name: "ឆ្នាំមមែ", icon: "🐐", order: "ឆ្នាំទី៨", num: "08" },
-        { name: "ឆ្នាំវក", icon: "🐵", order: "ឆ្នាំទី៩", num: "09" },
-        { name: "ឆ្នាំរកា", icon: "🐔", order: "ឆ្នាំទី១០", num: "10" },
-        { name: "ឆ្នាំច", icon: "🐶", order: "ឆ្នាំទី១១", num: "11" },
-        { name: "ឆ្នាំកុរ", icon: "🐷", order: "ឆ្នាំទី១២", num: "12" }
-    ];
-
-    const hoursLayout = [
-        { time: "07:00", hour: 7 }, { time: "08:00", hour: 8 }, { time: "09:00", hour: 9 },
-        { time: "10:00", hour: 10 }, { time: "11:00", hour: 11 }, { time: "12:00", hour: 12 },
-        { time: "13:00", hour: 13 }, { time: "14:00", hour: 14 }, { time: "15:00", hour: 15 },
-        { time: "16:00", hour: 16 }, { time: "17:00", hour: 17 }, { time: "18:00", hour: 18 },
-        { time: "19:00", hour: 19 }, { time: "20:00", hour: 20 }, { time: "21:00", hour: 21 },
-        { time: "22:00", hour: 22 }, { time: "23:00", hour: 23 },
-        { time: "00:00", hour: 0 }, { time: "01:00", hour: 1 }, { time: "02:00", hour: 2 },
-        { time: "03:00", hour: 3 }, { time: "04:00", hour: 4 }, { time: "05:00", hour: 5 }, { time: "06:00", hour: 6 }
-    ];
-
-    function getTargetHourForBet(currentHour) {
-        if (currentHour === 23) return 0;
-        return currentHour + 1;
-    }
-
-    function getHourDisplayName(hour) {
-        if (hour === 0) return "00:00";
-        if (hour < 10) return "0" + hour + ":00";
-        return hour + ":00";
-    }
-
-    function formatDateTime(date) {
-        return `${date.getDate()}/${date.getMonth()+1} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`;
-    }
-
-    function generate24HourNumbers(targetDate) {
-        const dateSeed = targetDate.getFullYear() * 10000 + (targetDate.getMonth() + 1) * 100 + targetDate.getDate();
-        let seed = dateSeed;
-        function random() { let x = Math.sin(seed++) * 10000; return x - Math.floor(x); }
-        function shufflePool() {
-            let pool = Array.from({ length: 12 }, (_, i) => i + 1);
-            for (let i = pool.length - 1; i > 0; i--) {
-                const j = Math.floor(random() * (i + 1));
+    
+    // Generate numbers for a date
+    const numCache = {};
+    function generateNumbers(date) {
+        const key = formatDate(date);
+        if (numCache[key]) return numCache[key];
+        const seed = date.getFullYear() * 10000 + (date.getMonth()+1)*100 + date.getDate();
+        let s = seed;
+        const rand = () => { let x = Math.sin(s++) * 10000; return x - Math.floor(x); };
+        const shuffle = () => {
+            let pool = [1,2,3,4,5,6,7,8,9,10,11,12];
+            for(let i=pool.length-1; i>0; i--) {
+                let j = Math.floor(rand()*(i+1));
                 [pool[i], pool[j]] = [pool[j], pool[i]];
             }
-            return pool.map(num => num < 10 ? '0' + num : '' + num);
-        }
-        return [...shufflePool(), ...shufflePool()];
+            return pool.map(n => n<10?'0'+n:''+n);
+        };
+        numCache[key] = [...shuffle(), ...shuffle()];
+        return numCache[key];
     }
-
-    function checkAndSettleHourlyBets(currentHour, todayNumbers, todayDate) {
-        if (lastCheckedHour === -1) {
-            lastCheckedHour = currentHour;
+    
+    // Check and settle bets - FIXED: result shows at target hour immediately
+    function settleBets(currentHour, currentDate) {
+        if (lastProcessedHour === -1) {
+            lastProcessedHour = currentHour;
             return;
         }
-        if (currentHour !== lastCheckedHour) {
-            let statusChanged = false;
-            const resultDate = new Date(todayDate);
-            resultDate.setHours(lastCheckedHour, 0, 0, 0);
-            const resultDateTime = formatDateTime(resultDate);
+        if (currentHour !== lastProcessedHour) {
+            const numbers = generateNumbers(currentDate);
+            let changed = false;
             
-            betHistory.forEach(item => {
-                if (item.status === "រង់ចាំលទ្ធផល" && item.targetHour === lastCheckedHour) {
-                    let correctNumber = todayNumbers[lastCheckedHour];
-                    let activeZodiac = zodiacMap[correctNumber];
-                    if (activeZodiac) {
-                        item.result = activeZodiac.name;
-                        item.resultIcon = activeZodiac.icon;
-                        item.resultOrder = activeZodiac.order;
-                        item.resultNumber = activeZodiac.num;
-                        item.resultDate = resultDateTime;
-                        if (item.picked === activeZodiac.name) {
-                            item.status = "ឈ្នះ";
-                            item.reward = item.bet * 10;
-                            currentBalance += item.reward;
-                            playNotificationSound(true);
-                            showNotificationToast(`🎉 ឈ្នះ! ${item.picked} = ${activeZodiac.name} (+$${item.reward.toFixed(2)})`, 'win');
+            betHistory.forEach(bet => {
+                if (bet.status === "pending" && bet.targetHour === lastProcessedHour) {
+                    const correctNum = numbers[lastProcessedHour];
+                    const correctZodiac = zodiacMap[correctNum];
+                    if (correctZodiac) {
+                        bet.result = correctZodiac.name;
+                        bet.resultEn = correctZodiac.nameEn;
+                        bet.resultIcon = correctZodiac.icon;
+                        bet.resultOrder = correctZodiac.order;
+                        bet.resultDate = formatDateTime(new Date(currentDate.setHours(lastProcessedHour,0,0,0)));
+                        if (bet.picked === correctZodiac.name || bet.picked === correctZodiac.nameEn) {
+                            bet.status = "win";
+                            bet.reward = bet.amount * 10;
+                            currentBalance += bet.reward;
+                            playSound(true);
+                            showToast(`🎉 ${currentLang==='km'?'ឈ្នះ!':'Win!'} ${bet.picked} = ${correctZodiac.name} (+$${bet.reward})`, 'win');
                         } else {
-                            item.status = "ចាញ់";
-                            item.reward = 0;
-                            playNotificationSound(false);
-                            showNotificationToast(`😢 ចាញ់! ${item.picked} ≠ ${activeZodiac.name} (-$${item.bet.toFixed(2)})`, 'lose');
+                            bet.status = "lose";
+                            bet.reward = 0;
+                            playSound(false);
+                            showToast(`😢 ${currentLang==='km'?'ចាញ់!':'Lose!'} ${bet.picked} ≠ ${correctZodiac.name} (-$${bet.amount})`, 'lose');
                         }
-                        statusChanged = true;
+                        changed = true;
                     }
                 }
             });
-            if (statusChanged) {
-                localStorage.setItem('user_current_balance', currentBalance);
-                localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
-                document.getElementById('user-balance').textContent = currentBalance.toFixed(2);
+            if (changed) {
+                localStorage.setItem('balance', currentBalance);
+                localStorage.setItem('betHistory', JSON.stringify(betHistory));
+                document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
                 renderBetHistory();
             }
-            lastCheckedHour = currentHour;
+            lastProcessedHour = currentHour;
         }
     }
-
-    function updateLuckySystem() {
+    
+    // Update display
+    function updateDisplay() {
         const now = new Date();
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-        const currentSecond = now.getSeconds();
-        const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
-        const yesterday = new Date(now); yesterday.setDate(now.getDate() - 1);
-        const formatDate = (d) => `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
-        const todayStr = formatDate(now);
-        document.getElementById("live-clock").innerHTML = `📅 ${todayStr} | ⏰ ${currentHour.toString().padStart(2,'0')}:${currentMinute.toString().padStart(2,'0')}:${currentSecond.toString().padStart(2,'0')}`;
+        const ch = now.getHours(), cm = now.getMinutes(), cs = now.getSeconds();
+        const today = new Date(now);
+        const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
+        const yesterday = new Date(now); yesterday.setDate(yesterday.getDate()-1);
         
-        const targetHourForBet = getTargetHourForBet(currentHour);
-        document.getElementById("current-hour-text").innerHTML = `🔮 បើចាក់ឥឡូវនេះ នឹងត្រូវចាក់សម្រាប់ម៉ោង ${getHourDisplayName(targetHourForBet)}`;
-
-        let diffMinutes = 59 - currentMinute, diffSeconds = 59 - currentSecond;
-        document.getElementById("countdown-timer").innerHTML = `${diffMinutes.toString().padStart(2,'0')}:${diffSeconds.toString().padStart(2,'0')}`;
+        document.getElementById('liveClock').innerHTML = `📅 ${formatDate(today)} | ⏰ ${ch.toString().padStart(2,'0')}:${cm.toString().padStart(2,'0')}:${cs.toString().padStart(2,'0')}`;
         
-        const todayNumbers = generate24HourNumbers(now);
-        const yesterdayNumbers = generate24HourNumbers(yesterday);
-        const tomorrowNumbers = generate24HourNumbers(tomorrow);
+        const nextHour = getNextHour(ch);
+        document.getElementById('currentHourText').innerHTML = `${currentLang==='km'?'🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង':'🔮 If you bet now, it will be for hour'} ${formatHour(nextHour)}`;
         
-        checkAndSettleHourlyBets(currentHour, todayNumbers, now);
-
-        let currentActiveContent = "?";
-        let listHtml = "";
-        let currentLayoutIndex = hoursLayout.findIndex(h => h.hour === currentHour);
+        const remainM = 59-cm, remainS = 59-cs;
+        document.getElementById('countdownTimer').innerHTML = `${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
         
-        hoursLayout.forEach((slot, index) => {
-            let itemClass = "time-item";
-            let displayResult = "?";
-            let slotDateStr = todayStr;
-            let assignedNumber = todayNumbers[slot.hour];
-            
-            if (index < currentLayoutIndex) {
-                if (currentHour < 7 && slot.hour >= 7) { slotDateStr = formatDate(yesterday); assignedNumber = yesterdayNumbers[slot.hour]; }
-                let zInfo = zodiacMap[assignedNumber];
-                displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
-            } else if (index === currentLayoutIndex) {
-                itemClass += " active";
-                let zInfo = zodiacMap[assignedNumber];
-                displayResult = zInfo ? `${zInfo.icon} ${zInfo.order}` : "?";
-                currentActiveContent = zInfo ? `${zInfo.icon} ${zInfo.name} (${zInfo.order})` : "?";
+        // Settle bets for current hour
+        settleBets(ch, today);
+        
+        // Update schedule
+        const todayNums = generateNumbers(today);
+        const yesterdayNums = generateNumbers(yesterday);
+        const tomorrowNums = generateNumbers(tomorrow);
+        const currentIdx = hoursList.indexOf(ch);
+        const currentZodiac = zodiacMap[todayNums[ch]];
+        document.getElementById('luckyNumber').innerHTML = currentZodiac ? getZodiacDisplay(currentZodiac, currentLang) : "?";
+        
+        let html = "";
+        for(let i=0; i<hoursList.length; i++) {
+            const hr = hoursList[i];
+            let dateStr = formatDate(today);
+            let num = todayNums[hr];
+            let isActive = (i === currentIdx);
+            let display = "";
+            if (i < currentIdx) {
+                if (ch < 7 && hr >= 7) { dateStr = formatDate(yesterday); num = yesterdayNums[hr]; }
+                const z = zodiacMap[num];
+                display = z ? getZodiacDisplay(z, currentLang) : "?";
+            } else if (i === currentIdx) {
+                const z = zodiacMap[num];
+                display = z ? getZodiacDisplay(z, currentLang) : "?";
             } else {
-                displayResult = `<span class="waiting-text">រង់ចាំម៉ោង</span>`;
-                if (currentHour >= 7 && slot.hour < 7) { slotDateStr = formatDate(tomorrow); }
+                display = `<span class="waiting-text">${currentLang==='km'?'រង់ចាំ':'Waiting'}</span>`;
+                if (ch >= 7 && hr < 7) dateStr = formatDate(tomorrow);
             }
-            listHtml += `<div class="${itemClass}"><div class="time-info"><div class="time-label">ម៉ោង ${slot.time}</div><div class="date-label">កាលបរិច្ឆេទ៖ ${slotDateStr}</div></div><div class="result-number">${displayResult}</div></div>`;
-        });
-        
-        document.getElementById("main-lucky-number").innerHTML = currentActiveContent;
-        document.getElementById("schedule-list").innerHTML = listHtml;
+            html += `<div class="time-item ${isActive ? 'active' : ''}">
+                        <div><div class="time-label">${currentLang==='km'?'ម៉ោង':'Hour'} ${formatHour(hr)}</div><div class="time-date">${dateStr}</div></div>
+                        <div class="result-badge">${display}</div>
+                    </div>`;
+        }
+        document.getElementById('scheduleList').innerHTML = html;
     }
-
-    function initZodiacBoxes() {
-        let singleGridHtml = "", selectGridHtml = "";
-        zodiacDataStatic.forEach(zodiac => {
-            singleGridHtml += `<div class="zodiac-card"><div class="zodiac-header"><span class="zodiac-card-icon">${zodiac.icon}</span><span>${zodiac.name}</span></div><span class="zodiac-card-order">${zodiac.order}</span></div>`;
-            selectGridHtml += `<button class="zodiac-select-btn" data-name="${zodiac.name}"><span>${zodiac.icon}</span><span style="font-size:0.7rem;">${zodiac.name}</span></button>`;
+    
+    function renderZodiacs() {
+        let grid = "";
+        zodiacs.forEach(z => {
+            grid += `<div class="zodiac-card">
+                        <div class="zodiac-icon">${z.icon}</div>
+                        <div class="zodiac-name">${currentLang==='km'?z.name:z.nameEn}</div>
+                        <div class="zodiac-order">${currentLang==='km'?z.order:z.orderEn}</div>
+                    </div>`;
         });
-        document.getElementById("zodiac-single-grid-area").innerHTML = singleGridHtml;
-        document.getElementById("zodiacSelectGridArea").innerHTML = selectGridHtml;
+        document.getElementById('zodiacGrid').innerHTML = grid;
         
-        document.querySelectorAll('.zodiac-select-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
+        let selectGrid = "";
+        zodiacs.forEach(z => {
+            selectGrid += `<div class="zodiac-option" data-name="${currentLang==='km'?z.name:z.nameEn}" data-name-km="${z.name}" data-name-en="${z.nameEn}">
+                                <div>${z.icon}</div>
+                                <div style="font-size:0.6rem">${currentLang==='km'?z.name:z.nameEn}</div>
+                            </div>`;
+        });
+        document.getElementById('zodiacSelectGrid').innerHTML = selectGrid;
+        
+        document.querySelectorAll('.zodiac-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.zodiac-option').forEach(o => o.classList.remove('selected'));
                 this.classList.add('selected');
-                selectedZodiacName = this.getAttribute('data-name');
+                selectedZodiac = this.getAttribute('data-name');
             });
         });
     }
-
-    function calculatePreviewRates() {
-        let cost = parseFloat(document.getElementById('predictAmountField').value);
-        if (isNaN(cost) || cost < 0) cost = 0;
-        let remain = currentBalance - cost;
-        if (remain < 0) remain = 0;
-        document.getElementById('pre-current-bal').textContent = currentBalance.toFixed(2);
-        document.getElementById('pre-cost-bal').textContent = cost.toFixed(2);
-        document.getElementById('pre-remain-bal').textContent = remain.toFixed(2);
+    
+    function updatePreview() {
+        const amt = parseFloat(document.getElementById('betAmount').value) || 0;
+        const remain = currentBalance - amt;
+        document.getElementById('preCurrent').innerText = currentBalance.toFixed(2);
+        document.getElementById('preCost').innerText = amt.toFixed(2);
+        document.getElementById('preRemain').innerText = remain >= 0 ? remain.toFixed(2) : '0.00';
     }
-
+    
     function renderDepositHistory() {
-        const container = document.getElementById('deposit-history-list');
-        if (!container) return;
-        if (depositHistory.length === 0) { container.innerHTML = '<div class="no-data-text">មិនទាន់មានប្រវត្តិបញ្ចូលលុយនៅឡើយទេ</div>'; return; }
+        const container = document.getElementById('depositList');
+        if (!depositHistory.length) {
+            container.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិបញ្ចូលលុយ':'No deposit history'}</div>`;
+            return;
+        }
         let html = "";
-        depositHistory.forEach(item => { html += `<div class="history-item-row"><div class="time-info"><div class="row-main-title">📥 បញ្ចូលលុយជោគជ័យ</div><div class="row-sub-title">${item.date}</div></div><div class="row-status-badge" style="color:#4ade80;">+$${item.amount.toFixed(2)}</div></div>`; });
+        depositHistory.forEach(d => {
+            html += `<div class="history-item">
+                        <div><strong>📥 ${currentLang==='km'?'បញ្ចូលលុយ':'Deposit'}</strong><br><span style="font-size:0.6rem">${d.date}</span></div>
+                        <div style="color:#4ade80">+$${d.amount.toFixed(2)}</div>
+                    </div>`;
+        });
         container.innerHTML = html;
     }
-
+    
     function renderBetHistory() {
-        const container = document.getElementById('bet-history-list');
-        if (!container) return;
-        if (betHistory.length === 0) { container.innerHTML = '<div class="no-data-text">មិនទាន់មានប្រវត្តិទស្សន៍ទាយនៅឡើយទេ</div>'; return; }
+        const container = document.getElementById('betList');
+        if (!betHistory.length) {
+            container.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិទស្សន៍ទាយ':'No bet history'}</div>`;
+            return;
+        }
         let html = "";
-        betHistory.forEach(item => {
-            let badgeStyle = "color:#f6ad55;", rewardText = `លុយចាក់: $${item.bet.toFixed(2)}`;
-            let targetHourDisplay = getHourDisplayName(item.targetHour);
-            if (item.status === "ឈ្នះ") { badgeStyle = "color:#4ade80;"; rewardText = `ឈ្នះបាន: +$${item.reward.toFixed(2)}`; }
-            else if (item.status === "ចាញ់") { badgeStyle = "color:#fc8181;"; rewardText = `បាត់បង់: -$${item.bet.toFixed(2)}`; }
-            else { rewardText = `⏳ ចាក់: $${item.bet.toFixed(2)}`; }
-            
-            let resultHtml = '';
-            if (item.result) {
-                resultHtml = `<div style="font-size:0.7rem; margin-top:4px;">📊 លទ្ធផល: <span class="result-with-number">${item.resultIcon} ${item.result} (${item.resultOrder})</span> ${item.resultDate ? `<span class="result-date">ចេញនៅថ្ងៃ ${item.resultDate}</span>` : ''}</div>`;
+        betHistory.forEach(b => {
+            let statusClass = "", statusText = "", rewardHtml = "";
+            if (b.status === 'win') {
+                statusClass = 'status-win';
+                statusText = currentLang==='km'?'ឈ្នះ':'Win';
+                rewardHtml = `<span style="color:#4ade80">🏆 +$${b.reward.toFixed(2)}</span>`;
+            } else if (b.status === 'lose') {
+                statusClass = 'status-lose';
+                statusText = currentLang==='km'?'ចាញ់':'Lose';
+                rewardHtml = `<span style="color:#fc8181">💔 -$${b.amount.toFixed(2)}</span>`;
             } else {
-                resultHtml = `<div style="font-size:0.7rem; margin-top:4px;">⏰ រង់ចាំលទ្ធផលម៉ោង ${targetHourDisplay}...</div>`;
+                statusClass = 'status-pending';
+                statusText = currentLang==='km'?'កំពុងរង់ចាំ':'Pending';
+                rewardHtml = `<span>⏳ $${b.amount.toFixed(2)}</span>`;
             }
-            
-            html += `<div class="history-item-row" style="flex-direction:column; align-items:flex-start; gap:6px;">
+            let resultHtml = "";
+            if (b.result) {
+                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">📊 ${currentLang==='km'?'លទ្ធផល':'Result'} ${formatHour(b.targetHour)}: ${b.resultIcon} ${b.result} ${b.resultDate ? `(${currentLang==='km'?'ចេញនៅ':'at'} ${b.resultDate})` : ''}</div>`;
+            } else {
+                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">⏰ ${currentLang==='km'?'រង់ចាំលទ្ធផលម៉ោង':'Waiting for result at'} ${formatHour(b.targetHour)}...</div>`;
+            }
+            html += `<div class="history-item" style="flex-direction:column; align-items:flex-start;">
                         <div style="display:flex; justify-content:space-between; width:100%;">
-                            <div><div class="row-main-title">🎯 ${item.picked}</div><div class="row-sub-title">📅 ចាក់នៅ: ${item.date}</div></div>
-                            <div class="row-status-badge" style="${badgeStyle}">${item.status}<br><span style="font-size:0.65rem;">${rewardText}</span></div>
+                            <div><strong>🎯 ${b.picked}</strong><br><span style="font-size:0.6rem">📅 ${b.date}</span></div>
+                            <div class="${statusClass}">${statusText}<br>${rewardHtml}</div>
                         </div>
-                        <div style="font-size:0.7rem;">🎲 ចាក់សម្រាប់ម៉ោង <strong style="color:#fbd38d;">${targetHourDisplay}</strong></div>
+                        <div style="font-size:0.7rem">🎲 ${currentLang==='km'?'ចាក់សម្រាប់ម៉ោង':'Bet for hour'} <strong>${formatHour(b.targetHour)}</strong></div>
                         ${resultHtml}
                     </div>`;
         });
         container.innerHTML = html;
     }
-
-    // Function to execute prediction after confirmation
+    
     function executePrediction() {
-        let betAmount = pendingBetAmount;
-        let zodiac = pendingSelectedZodiac;
+        currentBalance -= pendingBetAmount;
+        localStorage.setItem('balance', currentBalance);
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
         
-        currentBalance -= betAmount;
-        localStorage.setItem('user_current_balance', currentBalance);
-        document.getElementById('user-balance').textContent = currentBalance.toFixed(2);
-        
-        let now = new Date();
-        let targetHour = getTargetHourForBet(now.getHours());
-        let timeStr = `${now.getDate()}/${now.getMonth()+1} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-        betHistory.unshift({ date: timeStr, targetHour: targetHour, picked: zodiac, result: null, resultIcon: null, resultOrder: null, resultNumber: null, resultDate: null, status: "រង់ចាំលទ្ធផល", bet: betAmount, reward: 0 });
-        localStorage.setItem('user_bet_history', JSON.stringify(betHistory));
+        const now = new Date();
+        const targetHour = getNextHour(now.getHours());
+        betHistory.unshift({
+            id: Date.now(),
+            date: formatDateTime(now),
+            targetHour: targetHour,
+            picked: pendingZodiac,
+            result: null,
+            status: "pending",
+            amount: pendingBetAmount,
+            reward: 0
+        });
+        localStorage.setItem('betHistory', JSON.stringify(betHistory));
         renderBetHistory();
-        playNotificationSound(null);
-        showNotificationToast(`📝 បានចាក់ ${zodiac} $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(targetHour)}`, 'pending');
+        playSound(null);
+        showToast(`${currentLang==='km'?'បានចាក់':'Placed bet on'} ${pendingZodiac} $${pendingBetAmount.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(targetHour)}`, 'pending');
     }
-
-    // Function to execute admin action after confirmation
+    
     function executeAdminAction() {
         if (pendingAdminAction === "clear_deposit") {
             depositHistory = [];
-            localStorage.removeItem('user_deposit_history');
+            localStorage.removeItem('depositHistory');
             renderDepositHistory();
-            showNotificationToast(`🗑️ បានលុបប្រវត្តិបញ្ចូលលុយទាំងអស់!`, 'pending');
+            showToast(currentLang==='km'?'បានលុបប្រវត្តិបញ្ចូលលុយ!':'Deposit history cleared!', 'pending');
         } else if (pendingAdminAction === "clear_bet") {
             betHistory = [];
-            localStorage.removeItem('user_bet_history');
+            localStorage.removeItem('betHistory');
             renderBetHistory();
-            showNotificationToast(`🗑️ បានលុបប្រវត្តិទស្សន៍ទាយទាំងអស់!`, 'pending');
+            showToast(currentLang==='km'?'បានលុបប្រវត្តិទស្សន៍ទាយ!':'Bet history cleared!', 'pending');
         } else if (pendingAdminAction === "clear_balance") {
             currentBalance = 0;
-            localStorage.setItem('user_current_balance', currentBalance);
-            document.getElementById('user-balance').textContent = "0.00";
-            showNotificationToast(`💰 បានលុបទឹកប្រាក់ក្នុងគណនីមកត្រឹម $0.00!`, 'pending');
+            localStorage.setItem('balance', currentBalance);
+            document.getElementById('userBalance').innerText = '0.00';
+            showToast(currentLang==='km'?'បានលុបទឹកប្រាក់ក្នុងគណនី!':'Balance reset!', 'pending');
         }
     }
-
-    function startApp() {
-        initZodiacBoxes();
-        updateLuckySystem();
-        setInterval(updateLuckySystem, 1000);
+    
+    function applyLanguage() {
+        const t = translations[currentLang];
+        document.getElementById('mainTitle').innerText = t.mainTitle;
+        document.getElementById('subTitle').innerText = t.subTitle;
+        document.getElementById('balanceLabel').innerText = t.balanceLabel;
+        document.getElementById('infoBadge').innerText = t.infoBadge;
+        document.getElementById('zodiacTitle').innerText = t.zodiacTitle;
+        document.getElementById('openPredictBtn').innerText = t.predictBtn;
+        document.getElementById('tabResult').innerText = t.tabResult;
+        document.getElementById('tabDeposit').innerText = t.tabDeposit;
+        document.getElementById('tabBet').innerText = t.tabBet;
+        document.getElementById('preCurrentLabel').innerText = t.preCurrent;
+        document.getElementById('preCostLabel').innerText = t.preCost;
+        document.getElementById('preRemainLabel').innerText = t.preRemain;
+        document.getElementById('selectZodiacTitle').innerText = t.selectZodiac;
+        document.getElementById('closePredictModal').innerText = t.cancel;
+        document.getElementById('confirmPredictBtn').innerText = t.confirm;
+        document.getElementById('depositMoneyBtn').innerText = t.depositMoney;
+        document.getElementById('clearDepositHistoryBtn').innerText = t.clearDeposit;
+        document.getElementById('clearBetHistoryBtn').innerText = t.clearBet;
+        document.getElementById('clearBalanceBtn').innerText = t.clearBalance;
+        document.getElementById('adminPanelBtn').innerText = t.adminPanel;
+        document.getElementById('soundToggleBtn').innerHTML = soundEnabled ? t.soundOn : t.soundOff;
         
-        let savedBalance = localStorage.getItem('user_current_balance');
-        currentBalance = savedBalance ? parseFloat(savedBalance) : 0;
-        document.getElementById('user-balance').textContent = currentBalance.toFixed(2);
+        renderZodiacs();
         renderDepositHistory();
         renderBetHistory();
-
-        document.querySelectorAll('.tab-btn').forEach(btn => {
+        updateDisplay();
+    }
+    
+    function loadData() {
+        const saved = localStorage.getItem('balance');
+        if (saved) currentBalance = parseFloat(saved);
+        const savedDeposit = localStorage.getItem('depositHistory');
+        if (savedDeposit) depositHistory = JSON.parse(savedDeposit);
+        const savedBet = localStorage.getItem('betHistory');
+        if (savedBet) betHistory = JSON.parse(savedBet);
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+    }
+    
+    function init() {
+        loadData();
+        renderZodiacs();
+        updateDisplay();
+        setInterval(updateDisplay, 1000);
+        renderDepositHistory();
+        renderBetHistory();
+        
+        // Language switch
+        document.querySelectorAll('.lang-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-                document.getElementById(this.getAttribute('data-tab') + '-content').style.display = 'block';
+                currentLang = this.getAttribute('data-lang');
+                applyLanguage();
             });
         });
-
+        
+        // Sound toggle
+        document.getElementById('soundToggleBtn').addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            this.innerHTML = soundEnabled ? (currentLang==='km'?'🔊 បិទសំឡេង':'🔊 Mute') : (currentLang==='km'?'🔇 បើកសំឡេង':'🔇 Unmute');
+            showToast(soundEnabled ? (currentLang==='km'?'បើកសំឡេង':'Sound on') : (currentLang==='km'?'បិទសំឡេង':'Sound off'), 'pending');
+        });
+        
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const tabName = this.getAttribute('data-tab');
+                document.getElementById('resultTab').style.display = tabName === 'result' ? 'block' : 'none';
+                document.getElementById('depositTab').style.display = tabName === 'deposit' ? 'block' : 'none';
+                document.getElementById('betTab').style.display = tabName === 'bet' ? 'block' : 'none';
+            });
+        });
+        
+        // Toggle history
+        let historyVisible = true;
         document.getElementById('toggleHistoryBtn').addEventListener('click', function() {
-            let box = document.getElementById('historyBoxSection');
-            if (box.style.display === 'none') { box.style.display = 'block'; this.textContent = '👁️ លាក់'; }
-            else { box.style.display = 'none'; this.textContent = '👁️ បង្ហាញ'; }
-        });
-
-        // Admin Panel
-        const adminPanelBtn = document.getElementById('adminPanelBtn');
-        const adminPinModal = document.getElementById('adminPinModal');
-        const adminPinField = document.getElementById('adminPinField');
-        const adminControlsGrid = document.getElementById('adminControlsGrid');
-        
-        adminPanelBtn.addEventListener('click', () => {
-            if (!adminControlsGrid.classList.contains('hidden')) {
-                adminControlsGrid.classList.add('hidden');
-                adminPanelBtn.innerHTML = '🔧 Admin Panel (ចុចដើម្បីបង្ហាញ)';
+            const box = document.getElementById('historyBox');
+            if (historyVisible) {
+                box.style.display = 'none';
+                this.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show';
             } else {
-                adminPinField.value = "";
-                adminPinModal.classList.add('show');
-                adminPinField.focus();
+                box.style.display = 'block';
+                this.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide';
             }
+            historyVisible = !historyVisible;
         });
         
-        document.getElementById('closeAdminPinBtn').addEventListener('click', () => adminPinModal.classList.remove('show'));
-        document.getElementById('confirmAdminPinBtn').addEventListener('click', () => {
-            if (adminPinField.value === ADMIN_SHOW_PIN) {
-                adminControlsGrid.classList.remove('hidden');
-                adminPinModal.classList.remove('show');
-                adminPanelBtn.innerHTML = '🔧 Admin Panel (ចុចដើម្បីលាក់)';
-                showNotificationToast(`🔓 បានបង្ហាញប៊ូតុង Admin!`, 'pending');
-            } else { 
-                showNotificationToast(`❌ ពាក្យសម្ងាត់ Admin មិនត្រឹមត្រូវ!`, 'lose');
-                adminPinField.value = ""; 
-            }
-        });
-
         // Predict Modal
         const predictModal = document.getElementById('predictModal');
         const confirmPredictModal = document.getElementById('confirmPredictModal');
-        
-        document.getElementById('openPredictModalBtn').addEventListener('click', () => {
-            document.getElementById('predictAmountField').value = "";
-            selectedZodiacName = "";
-            document.querySelectorAll('.zodiac-select-btn').forEach(b => b.classList.remove('selected'));
-            calculatePreviewRates();
+        document.getElementById('openPredictBtn').addEventListener('click', () => {
+            document.getElementById('betAmount').value = '';
+            selectedZodiac = '';
+            document.querySelectorAll('.zodiac-option').forEach(o => o.classList.remove('selected'));
+            updatePreview();
             predictModal.classList.add('show');
         });
+        document.getElementById('closePredictModal').addEventListener('click', () => predictModal.classList.remove('show'));
+        document.getElementById('betAmount').addEventListener('input', updatePreview);
         
-        document.getElementById('closePredictModalBtn').addEventListener('click', () => predictModal.classList.remove('show'));
-        document.getElementById('predictAmountField').addEventListener('input', calculatePreviewRates);
-        document.querySelectorAll('.shortcut-btn').forEach(btn => {
-            btn.addEventListener('click', function() { document.getElementById('predictAmountField').value = this.getAttribute('data-amount'); calculatePreviewRates(); });
+        // Shortcut buttons - ADD TO CUMULATIVE
+        document.querySelectorAll('.shortcut').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const amount = parseFloat(this.getAttribute('data-amount'));
+                const current = parseFloat(document.getElementById('betAmount').value) || 0;
+                document.getElementById('betAmount').value = current + amount;
+                updatePreview();
+            });
         });
         
         document.getElementById('confirmPredictBtn').addEventListener('click', () => {
-            let betAmount = parseFloat(document.getElementById('predictAmountField').value);
-            if (isNaN(betAmount) || betAmount <= 0) { 
-                showNotificationToast(`❌ បញ្ចូលទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!`, 'lose');
-                return; 
-            }
-            if (!selectedZodiacName) { 
-                showNotificationToast(`❌ សូមជ្រើសរើសឆ្នាំ!`, 'lose');
-                return; 
-            }
-            if (currentBalance < betAmount) { 
-                showNotificationToast(`❌ សមតុល្យមិនគ្រប់! សូមបញ្ចូលលុយបន្ថែម។`, 'lose');
-                return; 
-            }
-            
-            pendingBetAmount = betAmount;
-            pendingSelectedZodiac = selectedZodiacName;
+            const amt = parseFloat(document.getElementById('betAmount').value);
+            if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលទឹកប្រាក់!':'Enter amount!', 'lose'); return; }
+            if (!selectedZodiac) { showToast(currentLang==='km'?'ជ្រើសរើសឆ្នាំ!':'Select zodiac!', 'lose'); return; }
+            if (currentBalance < amt) { showToast(currentLang==='km'?'សមតុល្យមិនគ្រប់!':'Insufficient balance!', 'lose'); return; }
+            pendingBetAmount = amt;
+            pendingZodiac = selectedZodiac;
             predictModal.classList.remove('show');
-            
-            document.getElementById('confirmPredictMessage').innerHTML = `តើអ្នកពិតជាចង់ទស្សន៍ទាយ ${selectedZodiacName} ចំនួន $${betAmount.toFixed(2)} សម្រាប់ម៉ោង ${getHourDisplayName(getTargetHourForBet(new Date().getHours()))} មែនទេ?`;
+            document.getElementById('confirmPredictMsg').innerHTML = `${currentLang==='km'?'តើអ្នកពិតជាចង់ទស្សន៍ទាយ':'Are you sure you want to bet'} ${selectedZodiac} $${amt.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(getNextHour(new Date().getHours()))} ${currentLang==='km'?'មែនទេ?':'?'}`;
             confirmPredictModal.classList.add('show');
         });
-        
-        document.getElementById('cancelPredictConfirmBtn').addEventListener('click', () => {
-            confirmPredictModal.classList.remove('show');
-        });
-        
-        document.getElementById('yesPredictConfirmBtn').addEventListener('click', () => {
+        document.getElementById('cancelPredictConfirm').addEventListener('click', () => confirmPredictModal.classList.remove('show'));
+        document.getElementById('yesPredictConfirm').addEventListener('click', () => {
             confirmPredictModal.classList.remove('show');
             executePrediction();
         });
-
-        // Deposit Modal
-        const depositModal = document.getElementById('depositModal');
-        const pinCodeField = document.getElementById('pinCodeField');
-        const amountField = document.getElementById('amountField');
-        const confirmAdminModal = document.getElementById('confirmAdminModal');
         
-        function triggerSecurityModal(action, title, desc) {
-            currentAdminAction = action;
-            document.getElementById('security-modal-title').textContent = title;
-            document.getElementById('security-modal-desc').textContent = desc;
-            pinCodeField.value = "";
-            amountField.value = "";
-            document.getElementById('step-pin-section').style.display = 'block';
-            document.getElementById('step-amount-section').style.display = 'none';
-            depositModal.classList.add('show');
-            pinCodeField.focus();
-        }
-        
-        document.getElementById('depositMoneyBtn').addEventListener('click', () => triggerSecurityModal("deposit", "🔐 បញ្ចូលលុយ", "វាយកូដសម្ងាត់"));
-        document.getElementById('clearDepositHistoryBtn').addEventListener('click', () => triggerSecurityModal("clear_deposit", "🔐 លុបប្រវត្តិបញ្ចូលលុយ", "វាយកូដសម្ងាត់"));
-        document.getElementById('clearBetHistoryBtn').addEventListener('click', () => triggerSecurityModal("clear_bet", "🔐 លុបប្រវត្តិទស្សន៍ទាយ", "វាយកូដសម្ងាត់"));
-        document.getElementById('clearBalanceBtn').addEventListener('click', () => triggerSecurityModal("clear_balance", "🔐 លុបទឹកប្រាក់", "វាយកូដសម្ងាត់"));
-        document.getElementById('closeModalBtn').addEventListener('click', () => depositModal.classList.remove('show'));
-        document.getElementById('cancelAmountBtn').addEventListener('click', () => {
-            document.getElementById('step-amount-section').style.display = 'none';
-            document.getElementById('step-pin-section').style.display = 'block';
-            pinCodeField.value = "";
-            pinCodeField.focus();
+        // Admin Panel
+        const adminModal = document.getElementById('adminPinModal');
+        const adminButtons = document.getElementById('adminButtons');
+        let adminVisible = false;
+        document.getElementById('adminPanelBtn').addEventListener('click', () => {
+            if (adminVisible) {
+                adminButtons.classList.add('hidden');
+                adminVisible = false;
+            } else {
+                adminModal.classList.add('show');
+            }
         });
-        
-        document.getElementById('confirmPinBtn').addEventListener('click', () => {
-            if (pinCodeField.value === SECRET_PIN) {
-                if (currentAdminAction === "deposit") {
-                    document.getElementById('step-pin-section').style.display = 'none';
-                    document.getElementById('step-amount-section').style.display = 'block';
-                    amountField.focus();
-                } else if (currentAdminAction === "clear_deposit") {
-                    depositModal.classList.remove('show');
-                    let actionName = "លុបប្រវត្តិបញ្ចូលលុយ";
-                    document.getElementById('confirmAdminTitle').innerHTML = `⚠️ បញ្ជាក់${actionName}`;
-                    document.getElementById('confirmAdminMessage').innerHTML = `តើអ្នកពិតជាចង់លុបប្រវត្តិបញ្ចូលលុយទាំងអស់មែនទេ?`;
-                    pendingAdminAction = "clear_deposit";
-                    confirmAdminModal.classList.add('show');
-                } else if (currentAdminAction === "clear_bet") {
-                    depositModal.classList.remove('show');
-                    document.getElementById('confirmAdminTitle').innerHTML = `⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយ`;
-                    document.getElementById('confirmAdminMessage').innerHTML = `តើអ្នកពិតជាចង់លុបប្រវត្តិទស្សន៍ទាយទាំងអស់មែនទេ?`;
-                    pendingAdminAction = "clear_bet";
-                    confirmAdminModal.classList.add('show');
-                } else if (currentAdminAction === "clear_balance") {
-                    depositModal.classList.remove('show');
-                    document.getElementById('confirmAdminTitle').innerHTML = `⚠️ បញ្ជាក់លុបទឹកប្រាក់`;
-                    document.getElementById('confirmAdminMessage').innerHTML = `តើអ្នកពិតជាចង់លុបទឹកប្រាក់ក្នុងគណនីមកត្រឹម $0.00 មែនទេ?`;
-                    pendingAdminAction = "clear_balance";
-                    confirmAdminModal.classList.add('show');
-                }
-            } else { 
-                showNotificationToast(`❌ កូដសម្ងាត់មិនត្រឹមត្រូវ!`, 'lose');
-                pinCodeField.value = ""; 
+        document.getElementById('closeAdminModal').addEventListener('click', () => adminModal.classList.remove('show'));
+        document.getElementById('confirmAdminBtn').addEventListener('click', () => {
+            const pin = document.getElementById('adminPinInput').value;
+            if (pin === ADMIN_PIN) {
+                adminButtons.classList.remove('hidden');
+                adminVisible = true;
+                adminModal.classList.remove('show');
+                showToast(currentLang==='km'?'បានបង្ហាញប៊ូតុង Admin!':'Admin panel shown!', 'pending');
+            } else {
+                showToast(currentLang==='km'?'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!':'Wrong password!', 'lose');
+                document.getElementById('adminPinInput').value = '';
             }
         });
         
-        document.getElementById('cancelAdminConfirmBtn').addEventListener('click', () => {
-            confirmAdminModal.classList.remove('show');
+        // Deposit Modal
+        const depositModal = document.getElementById('depositModal');
+        const confirmAdminModal = document.getElementById('confirmAdminModal');
+        document.getElementById('depositMoneyBtn').addEventListener('click', () => {
+            currentAction = 'deposit';
+            document.getElementById('pinStep').style.display = 'block';
+            document.getElementById('amountStep').style.display = 'none';
+            document.getElementById('pinInput').value = '';
+            depositModal.classList.add('show');
+        });
+        document.getElementById('closeDepositModal').addEventListener('click', () => depositModal.classList.remove('show'));
+        document.getElementById('confirmPinBtn').addEventListener('click', () => {
+            const pin = document.getElementById('pinInput').value;
+            if (pin === SECRET_PIN) {
+                if (currentAction === 'deposit') {
+                    document.getElementById('pinStep').style.display = 'none';
+                    document.getElementById('amountStep').style.display = 'block';
+                    document.getElementById('amountInput').value = '';
+                }
+            } else {
+                showToast(currentLang==='km'?'កូដសម្ងាត់មិនត្រឹមត្រូវ!':'Wrong PIN!', 'lose');
+                document.getElementById('pinInput').value = '';
+            }
+        });
+        document.getElementById('backToPinBtn').addEventListener('click', () => {
+            document.getElementById('pinStep').style.display = 'block';
+            document.getElementById('amountStep').style.display = 'none';
+            document.getElementById('pinInput').value = '';
+        });
+        document.getElementById('submitDepositBtn').addEventListener('click', () => {
+            const amt = parseFloat(document.getElementById('amountInput').value);
+            if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលចំនួនលុយ!':'Enter amount!', 'lose'); return; }
+            currentBalance += amt;
+            localStorage.setItem('balance', currentBalance);
+            document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+            depositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
+            localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
+            renderDepositHistory();
+            playSound(null);
+            showToast(`${currentLang==='km'?'បញ្ចូលលុយ':'Deposited'} $${amt.toFixed(2)} ${currentLang==='km'?'ជោគជ័យ!':'successfully!'}`, 'pending');
+            depositModal.classList.remove('show');
         });
         
-        document.getElementById('yesAdminConfirmBtn').addEventListener('click', () => {
+        // Admin action buttons
+        document.getElementById('clearDepositHistoryBtn').addEventListener('click', () => {
+            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយ':'⚠️ Confirm Clear Deposit History';
+            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
+            pendingAdminAction = "clear_deposit";
+            confirmAdminModal.classList.add('show');
+        });
+        document.getElementById('clearBetHistoryBtn').addEventListener('click', () => {
+            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយ':'⚠️ Confirm Clear Bet History';
+            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBet;
+            pendingAdminAction = "clear_bet";
+            confirmAdminModal.classList.add('show');
+        });
+        document.getElementById('clearBalanceBtn').addEventListener('click', () => {
+            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបទឹកប្រាក់':'⚠️ Confirm Clear Balance';
+            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBalance;
+            pendingAdminAction = "clear_balance";
+            confirmAdminModal.classList.add('show');
+        });
+        document.getElementById('cancelAdminConfirm').addEventListener('click', () => confirmAdminModal.classList.remove('show'));
+        document.getElementById('yesAdminConfirm').addEventListener('click', () => {
             confirmAdminModal.classList.remove('show');
             executeAdminAction();
         });
         
-        document.getElementById('submitDepositBtn').addEventListener('click', () => {
-            let depositAmount = parseFloat(amountField.value);
-            if (isNaN(depositAmount) || depositAmount <= 0) { 
-                showNotificationToast(`❌ បញ្ចូលចំនួនលុយឱ្យបានត្រឹមត្រូវ!`, 'lose');
-                return; 
+        // Law button
+        let lawVisible = false;
+        document.getElementById('lawBtn').addEventListener('click', () => {
+            const lawBox = document.getElementById('lawText');
+            if (lawVisible) {
+                lawBox.style.display = 'none';
+                document.getElementById('lawBtn').innerText = translations[currentLang].lawBtn;
+            } else {
+                lawBox.style.display = 'block';
+                document.getElementById('lawBtn').innerText = translations[currentLang].lawHide;
             }
-            
-            currentBalance += depositAmount;
-            localStorage.setItem('user_current_balance', currentBalance);
-            document.getElementById('user-balance').textContent = currentBalance.toFixed(2);
-            
-            let now = new Date();
-            let timeStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}`;
-            depositHistory.unshift({ date: timeStr, amount: depositAmount });
-            localStorage.setItem('user_deposit_history', JSON.stringify(depositHistory));
-            renderDepositHistory();
-            playNotificationSound(null);
-            showNotificationToast(`💰 បញ្ចូលលុយ $${depositAmount.toFixed(2)} ជោគជ័យ!`, 'pending');
-            depositModal.classList.remove('show');
+            lawVisible = !lawVisible;
         });
-
-        document.getElementById('toggleLawBtn').addEventListener('click', function() {
-            let lawBox = document.getElementById('lawContent');
-            if (lawBox.style.display === 'none') { lawBox.style.display = 'block'; this.textContent = 'ចុចដើម្បីលាក់ច្បាប់'; }
-            else { lawBox.style.display = 'none'; this.textContent = 'ចុចដើម្បីអានច្បាប់'; }
+        
+        // Close modals on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target === depositModal) depositModal.classList.remove('show');
+            if (e.target === predictModal) predictModal.classList.remove('show');
+            if (e.target === adminModal) adminModal.classList.remove('show');
+            if (e.target === confirmPredictModal) confirmPredictModal.classList.remove('show');
+            if (e.target === confirmAdminModal) confirmAdminModal.classList.remove('show');
         });
     }
-    document.addEventListener("DOMContentLoaded", startApp);
+    
+    init();
 </script>
 </body>
 </html>
