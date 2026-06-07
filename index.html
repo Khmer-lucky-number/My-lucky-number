@@ -35,26 +35,38 @@
             text-align: center;
         }
 
-        /* Language Switch */
-        .lang-switch {
+        /* Top Controls Row - Language + Sound Toggle */
+        .top-controls {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 15px;
         }
-        .lang-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 5px 12px;
-            border-radius: 20px;
-            color: #aaa;
+        .top-btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.7rem;
-            transition: 0.2s;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #e2e8f0;
         }
-        .lang-btn.active {
-            background: #4ade80;
-            color: #1a1a2e;
+        .top-btn:hover {
+            background: rgba(74, 222, 128, 0.2);
+            border-color: #4ade80;
+            transform: translateY(-2px);
+        }
+        .lang-icon {
+            font-size: 1rem;
+        }
+        .sound-icon {
+            font-size: 1rem;
         }
 
         .main-title {
@@ -128,10 +140,6 @@
             color: #4ade80;
             text-shadow: 0 0 15px rgba(74,222,128,0.4);
             font-family: 'Poppins', monospace;
-        }
-        .balance-currency {
-            font-size: 1rem;
-            margin-left: 4px;
         }
 
         .info-badge {
@@ -285,31 +293,6 @@
             font-size: 0.7rem;
         }
 
-        /* Control Buttons */
-        .control-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .ctrl-btn {
-            flex: 1;
-            background: rgba(139,92,246,0.2);
-            border: 1px solid rgba(139,92,246,0.4);
-            padding: 8px;
-            border-radius: 40px;
-            color: #c4b5fd;
-            cursor: pointer;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-        .ctrl-btn:hover {
-            background: #8b5cf6;
-            color: white;
-        }
-
         .admin-panel-btn {
             background: linear-gradient(135deg, #8b5cf6, #6d28d9);
             width: 100%;
@@ -372,7 +355,7 @@
             font-size: 0.8rem;
         }
 
-        /* Modals */
+        /* Modals - Same as before */
         .modal {
             position: fixed;
             top: 0;
@@ -534,10 +517,16 @@
 </head>
 <body>
 <div class="container">
-    <!-- Language Switch -->
-    <div class="lang-switch">
-        <button class="lang-btn active" data-lang="km">🇰🇭 ភាសាខ្មែរ</button>
-        <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+    <!-- Top Controls Row: Language Toggle + Sound Toggle -->
+    <div class="top-controls">
+        <button class="top-btn" id="langToggleBtn">
+            <span class="lang-icon">🌐</span>
+            <span id="langText">ភាសាខ្មែរ</span>
+        </button>
+        <button class="top-btn" id="soundToggleBtn">
+            <span class="sound-icon">🔊</span>
+            <span id="soundText">បិទសំឡេង</span>
+        </button>
     </div>
 
     <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
@@ -545,7 +534,6 @@
     
     <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
     
-    <!-- Modern Digital Balance Card -->
     <div class="balance-card">
         <div class="balance-inner">
             <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
@@ -580,11 +568,6 @@
             <div id="depositTab" style="display:none;"><div id="depositList"></div></div>
             <div id="betTab" style="display:none;"><div id="betList"></div></div>
         </div>
-    </div>
-    
-    <!-- Control Buttons: Sound Toggle + Admin Panel -->
-    <div class="control-buttons">
-        <button class="ctrl-btn" id="soundToggleBtn">🔊 បិទសំឡេង</button>
     </div>
     
     <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
@@ -703,7 +686,7 @@
     let lastProcessedHour = -1;
     let soundEnabled = true;
     let audioContext = null;
-    let currentLang = "km";
+    let currentLang = "km"; // km or en
     
     // Language translations
     const translations = {
@@ -712,7 +695,7 @@
             subTitle: "ប្រព័ន្ធទស្សន៍ទាយ និងកំណត់ត្រាលទ្ធផលឆ្នាំសំណាងទាំង 12/24 ម៉ោង",
             balanceLabel: "សមតុល្យបច្ចុប្បន្ន",
             infoBadge: "⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!",
-            currentHourLabel: "🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖",
+            currentHourLabel: "🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង",
             countdownLabel: "លទ្ធផលបន្ទាប់ចេញក្នុង៖",
             zodiacTitle: "🗓️ តារាងឆ្នាំសំណាងទាំង ១២",
             predictBtn: "🎲 ចុចដើម្បីទស្សន៍ទាយ",
@@ -721,8 +704,10 @@
             tabBet: "ប្រវត្តិទស្សន៍ទាយ",
             toggleHide: "👁️ លាក់",
             toggleShow: "👁️ បង្ហាញ",
-            soundOn: "🔊 បិទសំឡេង",
-            soundOff: "🔇 បើកសំឡេង",
+            soundOn: "បិទសំឡេង",
+            soundOff: "បើកសំឡេង",
+            langKhmer: "ភាសាខ្មែរ",
+            langEnglish: "English",
             adminPanel: "🔧 Admin Panel",
             depositMoney: "💵 បញ្ចូលទឹកប្រាក់",
             clearDeposit: "🗑️ លុបប្រវត្តិបញ្ចូលលុយ",
@@ -750,18 +735,19 @@
             win: "ឈ្នះ",
             lose: "ចាញ់",
             pending: "កំពុងរង់ចាំ",
-            depositSuccess: "បញ្ចូលលុយជោគជ័យ",
+            hour: "ម៉ោង",
+            result: "លទ្ធផល",
+            at: "ចេញនៅ",
             betPlaced: "បានចាក់",
             forHour: "សម្រាប់ម៉ោង",
-            resultAt: "លទ្ធផល",
-            atTime: "ចេញនៅ"
+            depositSuccess: "បញ្ចូលលុយជោគជ័យ"
         },
         en: {
             mainTitle: "12 Lucky Zodiacs 🎁🎉",
             subTitle: "Fortune Telling System & Record Results 12/24 Hours",
             balanceLabel: "Current Balance",
             infoBadge: "⏰ Betting at any hour will be for the next hour!",
-            currentHourLabel: "🔮 Current Lucky Zodiac:",
+            currentHourLabel: "🔮 If you bet now, it will be for hour",
             countdownLabel: "Next result in:",
             zodiacTitle: "🗓️ 12 Zodiac Signs Chart",
             predictBtn: "🎲 Click to Predict",
@@ -770,8 +756,10 @@
             tabBet: "Bet History",
             toggleHide: "👁️ Hide",
             toggleShow: "👁️ Show",
-            soundOn: "🔊 Mute",
-            soundOff: "🔇 Unmute",
+            soundOn: "Mute",
+            soundOff: "Unmute",
+            langKhmer: "ភាសាខ្មែរ",
+            langEnglish: "English",
             adminPanel: "🔧 Admin Panel",
             depositMoney: "💵 Deposit Money",
             clearDeposit: "🗑️ Clear Deposit History",
@@ -799,11 +787,12 @@
             win: "Win",
             lose: "Lose",
             pending: "Pending",
-            depositSuccess: "Deposit successful",
+            hour: "Hour",
+            result: "Result",
+            at: "at",
             betPlaced: "Placed bet on",
             forHour: "for hour",
-            resultAt: "Result",
-            atTime: "at"
+            depositSuccess: "Deposit successful"
         }
     };
     
@@ -844,8 +833,8 @@
         return hour === 23 ? 0 : hour + 1;
     }
     
-    function getZodiacDisplay(z, lang) {
-        if (lang === 'en') {
+    function getZodiacDisplay(z) {
+        if (currentLang === 'en') {
             return `${z.icon} ${z.nameEn} (${z.orderEn})`;
         }
         return `${z.icon} ${z.name} (${z.order})`;
@@ -915,7 +904,7 @@
         return numCache[key];
     }
     
-    // Check and settle bets - FIXED: result shows at target hour immediately
+    // Check and settle bets - result shows at target hour immediately
     function settleBets(currentHour, currentDate) {
         if (lastProcessedHour === -1) {
             lastProcessedHour = currentHour;
@@ -940,12 +929,12 @@
                             bet.reward = bet.amount * 10;
                             currentBalance += bet.reward;
                             playSound(true);
-                            showToast(`🎉 ${currentLang==='km'?'ឈ្នះ!':'Win!'} ${bet.picked} = ${correctZodiac.name} (+$${bet.reward})`, 'win');
+                            showToast(`${currentLang==='km'?'🎉 ឈ្នះ!':'🎉 Win!'} ${bet.picked} = ${correctZodiac.name} (+$${bet.reward})`, 'win');
                         } else {
                             bet.status = "lose";
                             bet.reward = 0;
                             playSound(false);
-                            showToast(`😢 ${currentLang==='km'?'ចាញ់!':'Lose!'} ${bet.picked} ≠ ${correctZodiac.name} (-$${bet.amount})`, 'lose');
+                            showToast(`${currentLang==='km'?'😢 ចាញ់!':'😢 Lose!'} ${bet.picked} ≠ ${correctZodiac.name} (-$${bet.amount})`, 'lose');
                         }
                         changed = true;
                     }
@@ -972,10 +961,11 @@
         document.getElementById('liveClock').innerHTML = `📅 ${formatDate(today)} | ⏰ ${ch.toString().padStart(2,'0')}:${cm.toString().padStart(2,'0')}:${cs.toString().padStart(2,'0')}`;
         
         const nextHour = getNextHour(ch);
-        document.getElementById('currentHourText').innerHTML = `${currentLang==='km'?'🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង':'🔮 If you bet now, it will be for hour'} ${formatHour(nextHour)}`;
+        document.getElementById('currentHourText').innerHTML = `${translations[currentLang].currentHourLabel} ${formatHour(nextHour)}`;
         
         const remainM = 59-cm, remainS = 59-cs;
         document.getElementById('countdownTimer').innerHTML = `${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
+        document.getElementById('countdownText').innerHTML = `${translations[currentLang].countdownLabel} <span class="countdown-time" id="countdownTimer">${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}</span>`;
         
         // Settle bets for current hour
         settleBets(ch, today);
@@ -986,7 +976,7 @@
         const tomorrowNums = generateNumbers(tomorrow);
         const currentIdx = hoursList.indexOf(ch);
         const currentZodiac = zodiacMap[todayNums[ch]];
-        document.getElementById('luckyNumber').innerHTML = currentZodiac ? getZodiacDisplay(currentZodiac, currentLang) : "?";
+        document.getElementById('luckyNumber').innerHTML = currentZodiac ? getZodiacDisplay(currentZodiac) : "?";
         
         let html = "";
         for(let i=0; i<hoursList.length; i++) {
@@ -998,16 +988,16 @@
             if (i < currentIdx) {
                 if (ch < 7 && hr >= 7) { dateStr = formatDate(yesterday); num = yesterdayNums[hr]; }
                 const z = zodiacMap[num];
-                display = z ? getZodiacDisplay(z, currentLang) : "?";
+                display = z ? getZodiacDisplay(z) : "?";
             } else if (i === currentIdx) {
                 const z = zodiacMap[num];
-                display = z ? getZodiacDisplay(z, currentLang) : "?";
+                display = z ? getZodiacDisplay(z) : "?";
             } else {
-                display = `<span class="waiting-text">${currentLang==='km'?'រង់ចាំ':'Waiting'}</span>`;
+                display = `<span class="waiting-text">${translations[currentLang].waiting}</span>`;
                 if (ch >= 7 && hr < 7) dateStr = formatDate(tomorrow);
             }
             html += `<div class="time-item ${isActive ? 'active' : ''}">
-                        <div><div class="time-label">${currentLang==='km'?'ម៉ោង':'Hour'} ${formatHour(hr)}</div><div class="time-date">${dateStr}</div></div>
+                        <div><div class="time-label">${translations[currentLang].hour} ${formatHour(hr)}</div><div class="time-date">${dateStr}</div></div>
                         <div class="result-badge">${display}</div>
                     </div>`;
         }
@@ -1060,7 +1050,7 @@
         let html = "";
         depositHistory.forEach(d => {
             html += `<div class="history-item">
-                        <div><strong>📥 ${currentLang==='km'?'បញ្ចូលលុយ':'Deposit'}</strong><br><span style="font-size:0.6rem">${d.date}</span></div>
+                        <div><strong>📥 ${translations[currentLang].depositSuccess}</strong><br><span style="font-size:0.6rem">${d.date}</span></div>
                         <div style="color:#4ade80">+$${d.amount.toFixed(2)}</div>
                     </div>`;
         });
@@ -1078,29 +1068,30 @@
             let statusClass = "", statusText = "", rewardHtml = "";
             if (b.status === 'win') {
                 statusClass = 'status-win';
-                statusText = currentLang==='km'?'ឈ្នះ':'Win';
+                statusText = translations[currentLang].win;
                 rewardHtml = `<span style="color:#4ade80">🏆 +$${b.reward.toFixed(2)}</span>`;
             } else if (b.status === 'lose') {
                 statusClass = 'status-lose';
-                statusText = currentLang==='km'?'ចាញ់':'Lose';
+                statusText = translations[currentLang].lose;
                 rewardHtml = `<span style="color:#fc8181">💔 -$${b.amount.toFixed(2)}</span>`;
             } else {
                 statusClass = 'status-pending';
-                statusText = currentLang==='km'?'កំពុងរង់ចាំ':'Pending';
+                statusText = translations[currentLang].pending;
                 rewardHtml = `<span>⏳ $${b.amount.toFixed(2)}</span>`;
             }
             let resultHtml = "";
             if (b.result) {
-                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">📊 ${currentLang==='km'?'លទ្ធផល':'Result'} ${formatHour(b.targetHour)}: ${b.resultIcon} ${b.result} ${b.resultDate ? `(${currentLang==='km'?'ចេញនៅ':'at'} ${b.resultDate})` : ''}</div>`;
+                const resultName = currentLang==='km' ? b.result : (b.resultEn || b.result);
+                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">📊 ${translations[currentLang].result} ${formatHour(b.targetHour)}: ${b.resultIcon} ${resultName} ${b.resultDate ? `(${translations[currentLang].at} ${b.resultDate})` : ''}</div>`;
             } else {
-                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">⏰ ${currentLang==='km'?'រង់ចាំលទ្ធផលម៉ោង':'Waiting for result at'} ${formatHour(b.targetHour)}...</div>`;
+                resultHtml = `<div style="font-size:0.65rem; margin-top:4px;">⏰ ${translations[currentLang].waiting} ${formatHour(b.targetHour)}...</div>`;
             }
             html += `<div class="history-item" style="flex-direction:column; align-items:flex-start;">
                         <div style="display:flex; justify-content:space-between; width:100%;">
                             <div><strong>🎯 ${b.picked}</strong><br><span style="font-size:0.6rem">📅 ${b.date}</span></div>
                             <div class="${statusClass}">${statusText}<br>${rewardHtml}</div>
                         </div>
-                        <div style="font-size:0.7rem">🎲 ${currentLang==='km'?'ចាក់សម្រាប់ម៉ោង':'Bet for hour'} <strong>${formatHour(b.targetHour)}</strong></div>
+                        <div style="font-size:0.7rem">🎲 ${translations[currentLang].betPlaced} ${translations[currentLang].forHour} <strong>${formatHour(b.targetHour)}</strong></div>
                         ${resultHtml}
                     </div>`;
         });
@@ -1127,7 +1118,7 @@
         localStorage.setItem('betHistory', JSON.stringify(betHistory));
         renderBetHistory();
         playSound(null);
-        showToast(`${currentLang==='km'?'បានចាក់':'Placed bet on'} ${pendingZodiac} $${pendingBetAmount.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(targetHour)}`, 'pending');
+        showToast(`${translations[currentLang].betPlaced} ${pendingZodiac} $${pendingBetAmount.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(targetHour)}`, 'pending');
     }
     
     function executeAdminAction() {
@@ -1135,17 +1126,17 @@
             depositHistory = [];
             localStorage.removeItem('depositHistory');
             renderDepositHistory();
-            showToast(currentLang==='km'?'បានលុបប្រវត្តិបញ្ចូលលុយ!':'Deposit history cleared!', 'pending');
+            showToast(translations[currentLang].confirmClearDeposit, 'pending');
         } else if (pendingAdminAction === "clear_bet") {
             betHistory = [];
             localStorage.removeItem('betHistory');
             renderBetHistory();
-            showToast(currentLang==='km'?'បានលុបប្រវត្តិទស្សន៍ទាយ!':'Bet history cleared!', 'pending');
+            showToast(translations[currentLang].confirmClearBet, 'pending');
         } else if (pendingAdminAction === "clear_balance") {
             currentBalance = 0;
             localStorage.setItem('balance', currentBalance);
             document.getElementById('userBalance').innerText = '0.00';
-            showToast(currentLang==='km'?'បានលុបទឹកប្រាក់ក្នុងគណនី!':'Balance reset!', 'pending');
+            showToast(translations[currentLang].confirmClearBalance, 'pending');
         }
     }
     
@@ -1171,12 +1162,33 @@
         document.getElementById('clearBetHistoryBtn').innerText = t.clearBet;
         document.getElementById('clearBalanceBtn').innerText = t.clearBalance;
         document.getElementById('adminPanelBtn').innerText = t.adminPanel;
-        document.getElementById('soundToggleBtn').innerHTML = soundEnabled ? t.soundOn : t.soundOff;
+        document.getElementById('lawBtn').innerText = t.lawBtn;
+        document.getElementById('langText').innerText = currentLang === 'km' ? t.langKhmer : t.langEnglish;
+        document.getElementById('soundText').innerText = soundEnabled ? t.soundOn : t.soundOff;
+        
+        // Update toggle history button text
+        const toggleBtn = document.getElementById('toggleHistoryBtn');
+        if (toggleBtn) {
+            toggleBtn.innerText = toggleBtn.innerText.includes('លាក់') || toggleBtn.innerText.includes('Hide') ? 
+                (currentLang === 'km' ? '👁️ លាក់' : '👁️ Hide') : 
+                (currentLang === 'km' ? '👁️ បង្ហាញ' : '👁️ Show');
+        }
         
         renderZodiacs();
         renderDepositHistory();
         renderBetHistory();
         updateDisplay();
+    }
+    
+    function toggleLanguage() {
+        currentLang = currentLang === 'km' ? 'en' : 'km';
+        applyLanguage();
+    }
+    
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        document.getElementById('soundText').innerText = soundEnabled ? translations[currentLang].soundOn : translations[currentLang].soundOff;
+        showToast(soundEnabled ? (currentLang==='km'?'បើកសំឡេង':'Sound on') : (currentLang==='km'?'បិទសំឡេង':'Sound off'), 'pending');
     }
     
     function loadData() {
@@ -1197,22 +1209,11 @@
         renderDepositHistory();
         renderBetHistory();
         
-        // Language switch
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentLang = this.getAttribute('data-lang');
-                applyLanguage();
-            });
-        });
+        // Language toggle button
+        document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
         
-        // Sound toggle
-        document.getElementById('soundToggleBtn').addEventListener('click', function() {
-            soundEnabled = !soundEnabled;
-            this.innerHTML = soundEnabled ? (currentLang==='km'?'🔊 បិទសំឡេង':'🔊 Mute') : (currentLang==='km'?'🔇 បើកសំឡេង':'🔇 Unmute');
-            showToast(soundEnabled ? (currentLang==='km'?'បើកសំឡេង':'Sound on') : (currentLang==='km'?'បិទសំឡេង':'Sound off'), 'pending');
-        });
+        // Sound toggle button
+        document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
         
         // Tabs
         document.querySelectorAll('.tab').forEach(tab => {
@@ -1271,7 +1272,7 @@
             pendingBetAmount = amt;
             pendingZodiac = selectedZodiac;
             predictModal.classList.remove('show');
-            document.getElementById('confirmPredictMsg').innerHTML = `${currentLang==='km'?'តើអ្នកពិតជាចង់ទស្សន៍ទាយ':'Are you sure you want to bet'} ${selectedZodiac} $${amt.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(getNextHour(new Date().getHours()))} ${currentLang==='km'?'មែនទេ?':'?'}`;
+            document.getElementById('confirmPredictMsg').innerHTML = `${translations[currentLang].confirmPredictMsg} ${selectedZodiac} $${amt.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(getNextHour(new Date().getHours()))}?`;
             confirmPredictModal.classList.add('show');
         });
         document.getElementById('cancelPredictConfirm').addEventListener('click', () => confirmPredictModal.classList.remove('show'));
@@ -1345,7 +1346,7 @@
             localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
             renderDepositHistory();
             playSound(null);
-            showToast(`${currentLang==='km'?'បញ្ចូលលុយ':'Deposited'} $${amt.toFixed(2)} ${currentLang==='km'?'ជោគជ័យ!':'successfully!'}`, 'pending');
+            showToast(`${translations[currentLang].depositSuccess} $${amt.toFixed(2)}!`, 'pending');
             depositModal.classList.remove('show');
         });
         
@@ -1396,6 +1397,8 @@
             if (e.target === confirmPredictModal) confirmPredictModal.classList.remove('show');
             if (e.target === confirmAdminModal) confirmAdminModal.classList.remove('show');
         });
+        
+        applyLanguage();
     }
     
     init();
