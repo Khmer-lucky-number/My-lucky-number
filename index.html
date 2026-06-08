@@ -45,13 +45,13 @@
                 align-items: flex-start;
             }
             .container {
-                max-width: 1400px;
+                max-width: 1600px;
                 padding: 40px 45px;
             }
             /* Desktop Grid - 2 columns layout */
             .desktop-grid {
                 display: grid;
-                grid-template-columns: 1fr 1.2fr;
+                grid-template-columns: 1.2fr 1.8fr;
                 gap: 45px;
                 align-items: start;
             }
@@ -83,10 +83,13 @@
             .desktop-left .sub-title {
                 font-size: 1rem !important;
             }
-            /* Enlarge Live Time Badge */
+            /* Enlarge Live Time Badge - Wider but not too long */
             .desktop-left .live-time-badge {
-                font-size: 1.1rem !important;
+                font-size: 1rem !important;
                 padding: 10px 22px !important;
+                display: inline-flex;
+                width: auto;
+                white-space: nowrap;
             }
             /* Enlarge Balance Label and Amount */
             .desktop-left .balance-label {
@@ -163,12 +166,12 @@
             .desktop-right .zodiac-order {
                 font-size: 0.75rem;
             }
-            /* Desktop Bet Input Section */
+            /* Desktop Bet Section - Right side of zodiac table */
             .desktop-bet-section {
                 background: rgba(255,255,255,0.03);
                 border-radius: 24px;
                 padding: 25px;
-                margin-top: 5px;
+                margin-top: 0;
             }
             .desktop-bet-title {
                 font-size: 1.1rem;
@@ -1180,7 +1183,7 @@
                 <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
             </div>
             <div class="balance-inner">
-                <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
+                <div class="balance-label" id="balanceLabel">សមតុល្យទឹកប្រាក់របស់អ្នក</div>
                 <div class="balance-amount">$<span id="userBalance">0.00</span></div>
             </div>
         </div>
@@ -1251,7 +1254,7 @@
                     <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
                 </div>
                 <div class="balance-inner">
-                    <div class="balance-label" id="balanceLabelDesktop">សមតុល្យបច្ចុប្បន្ន</div>
+                    <div class="balance-label" id="balanceLabelDesktop">សមតុល្យទឹកប្រាក់របស់អ្នក</div>
                     <div class="balance-amount">$<span id="userBalanceDesktop">0.00</span></div>
                 </div>
             </div>
@@ -1272,15 +1275,16 @@
                 <div class="zodiac-grid" id="zodiacGridDesktop"></div>
             </div>
             
-            <!-- Selected Zodiac Display -->
-            <div class="desktop-selected-zodiac" id="desktopSelectedZodiac">
-                <span>⭐ ឆ្នាំដែលបានជ្រើសរើស៖</span>
-                <span id="selectedZodiacName">មិនទាន់ជ្រើសរើស</span>
-            </div>
-            
-            <!-- Desktop Bet Input Section -->
+            <!-- Desktop Bet Section - Right side of zodiac table -->
             <div class="desktop-bet-section">
                 <div class="desktop-bet-title">💰 បញ្ចូលទឹកប្រាក់ដើម្បីទស្សន៍ទាយ</div>
+                
+                <!-- Selected Zodiac Display -->
+                <div class="desktop-selected-zodiac" id="desktopSelectedZodiac">
+                    <span>⭐ ឆ្នាំដែលបានជ្រើសរើស៖</span>
+                    <span id="selectedZodiacName">មិនទាន់ជ្រើសរើស</span>
+                </div>
+                
                 <div class="desktop-bet-input">
                     <input type="number" class="bet-input-field" id="desktopBetAmount" placeholder="បញ្ចូលចំនួនទឹកប្រាក់" min="0.01" step="0.01" value="0">
                 </div>
@@ -1490,7 +1494,7 @@
         km: {
             mainTitle: "ឆ្នាំសំណាងទាំង 12 🎁🎉",
             subTitle: "ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង",
-            balanceLabel: "សមតុល្យបច្ចុប្បន្ន",
+            balanceLabel: "សមតុល្យទឹកប្រាក់របស់អ្នក",
             infoBadge: "⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ",
             currentHourLabel: "🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង",
             countdownLabel: "លទ្ធផលបន្ទាប់ចេញក្នុង៖",
@@ -1539,7 +1543,7 @@
         en: {
             mainTitle: "12 Lucky Zodiacs 🎁🎉",
             subTitle: "24-Hour Fortune Telling System",
-            balanceLabel: "Current Balance",
+            balanceLabel: "Your Balance",
             infoBadge: "⏰ Betting at any hour will be for the next hour! Result will appear immediately when target hour arrives",
             currentHourLabel: "🔮 If you bet now, it will be for hour",
             countdownLabel: "Next result in:",
@@ -1589,18 +1593,18 @@
     
     // Zodiac data
     const zodiacs = [
-        { name: "ឆ្នាំជូត", nameEn: "Rat", icon: "🐭", order: "ឆ្នាំទី១", orderEn: "1st", num: "01" },
-        { name: "ឆ្នាំឆ្លូវ", nameEn: "Ox", icon: "🐮", order: "ឆ្នាំទី២", orderEn: "2nd", num: "02" },
-        { name: "ឆ្នាំខាល", nameEn: "Tiger", icon: "🐯", order: "ឆ្នាំទី៣", orderEn: "3rd", num: "03" },
-        { name: "ឆ្នាំថោះ", nameEn: "Rabbit", icon: "🐰", order: "ឆ្នាំទី៤", orderEn: "4th", num: "04" },
-        { name: "ឆ្នាំរោង", nameEn: "Dragon", icon: "🐉", order: "ឆ្នាំទី៥", orderEn: "5th", num: "05" },
-        { name: "ឆ្នាំម្សាញ់", nameEn: "Snake", icon: "🐍", order: "ឆ្នាំទី៦", orderEn: "6th", num: "06" },
-        { name: "ឆ្នាំមមី", nameEn: "Horse", icon: "🐴", order: "ឆ្នាំទី៧", orderEn: "7th", num: "07" },
-        { name: "ឆ្នាំមមែ", nameEn: "Goat", icon: "🐐", order: "ឆ្នាំទី៨", orderEn: "8th", num: "08" },
-        { name: "ឆ្នាំវក", nameEn: "Monkey", icon: "🐵", order: "ឆ្នាំទី៩", orderEn: "9th", num: "09" },
-        { name: "ឆ្នាំរកា", nameEn: "Rooster", icon: "🐔", order: "ឆ្នាំទី១០", orderEn: "10th", num: "10" },
-        { name: "ឆ្នាំច", nameEn: "Dog", icon: "🐶", order: "ឆ្នាំទី១១", orderEn: "11th", num: "11" },
-        { name: "ឆ្នាំកុរ", nameEn: "Pig", icon: "🐷", order: "ឆ្នាំទី១២", orderEn: "12th", num: "12" }
+        { name: "ឆ្នាំជូត", nameEn: "Rat", icon: "🐭", order: "ទី១", orderEn: "1st", num: "01" },
+        { name: "ឆ្នាំឆ្លូវ", nameEn: "Ox", icon: "🐮", order: "ទី២", orderEn: "2nd", num: "02" },
+        { name: "ឆ្នាំខាល", nameEn: "Tiger", icon: "🐯", order: "ទី៣", orderEn: "3rd", num: "03" },
+        { name: "ឆ្នាំថោះ", nameEn: "Rabbit", icon: "🐰", order: "ទី៤", orderEn: "4th", num: "04" },
+        { name: "ឆ្នាំរោង", nameEn: "Dragon", icon: "🐉", order: "ទី៥", orderEn: "5th", num: "05" },
+        { name: "ឆ្នាំម្សាញ់", nameEn: "Snake", icon: "🐍", order: "ទី៦", orderEn: "6th", num: "06" },
+        { name: "ឆ្នាំមមី", nameEn: "Horse", icon: "🐴", order: "ទី៧", orderEn: "7th", num: "07" },
+        { name: "ឆ្នាំមមែ", nameEn: "Goat", icon: "🐐", order: "ទី៨", orderEn: "8th", num: "08" },
+        { name: "ឆ្នាំវក", nameEn: "Monkey", icon: "🐵", order: "ទី៩", orderEn: "9th", num: "09" },
+        { name: "ឆ្នាំរកា", nameEn: "Rooster", icon: "🐔", order: "ទី១០", orderEn: "10th", num: "10" },
+        { name: "ឆ្នាំច", nameEn: "Dog", icon: "🐶", order: "ទី១១", orderEn: "11th", num: "11" },
+        { name: "ឆ្នាំកុរ", nameEn: "Pig", icon: "🐷", order: "ទី១២", orderEn: "12th", num: "12" }
     ];
     
     const zodiacMap = {};
@@ -1736,16 +1740,19 @@
         document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:10px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
+    // FIXED: settle bets - result appears immediately at target hour
     function settleBets(currentHour, currentDate) {
         if (lastProcessedHour === -1) {
             lastProcessedHour = currentHour;
             return;
         }
+        // When hour changes, check the hour that just passed
         if (currentHour !== lastProcessedHour) {
             const numbers = generateNumbers(currentDate);
             let changed = false;
             
             betHistory.forEach((bet) => {
+                // Check for bets that were waiting for the hour that just passed
                 if (bet.status === "pending" && bet.targetHour === lastProcessedHour) {
                     const correctNum = numbers[lastProcessedHour];
                     const correctZodiac = zodiacMap[correctNum];
@@ -1911,14 +1918,10 @@
         // Add click event to each zodiac card on desktop
         document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(card => {
             card.addEventListener('click', function() {
-                // Remove selected class from all cards
                 document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c => c.classList.remove('selected'));
-                // Add selected class to clicked card
                 this.classList.add('selected');
-                // Get zodiac name
                 const zodiacName = this.getAttribute('data-name');
                 selectedZodiac = zodiacName;
-                // Update display
                 const selectedSpan = document.getElementById('selectedZodiacName');
                 if (selectedSpan) {
                     const icon = this.getAttribute('data-icon');
