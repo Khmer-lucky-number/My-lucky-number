@@ -161,7 +161,7 @@
             border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 28px;
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             padding: 20px 16px;
             text-align: center;
             display: none;
@@ -415,18 +415,32 @@
         }
         .admin-balance-label { font-size: 0.65rem; color: #a0aec0; }
         .admin-balance-amount { font-size: 1.6rem; font-weight: 700; color: #4ade80; }
-        .admin-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 10px; text-align: center; }
-        .stat-label { font-size: 0.6rem; color: #a0aec0; margin-bottom: 5px; }
-        .stat-value { font-size: 1.1rem; font-weight: 700; color: #c4b5fd; }
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 8px 6px;
+            text-align: center;
+        }
+        .stat-label { font-size: 0.55rem; color: #a0aec0; margin-bottom: 3px; }
+        .stat-value { font-size: 0.9rem; font-weight: 700; color: #c4b5fd; }
         .commission-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 10px; margin-bottom: 15px; }
         .commission-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.75rem; flex-wrap: wrap; gap: 8px; }
         .commission-input { background: #0f0f2a; border: 1px solid #2a2a4a; border-radius: 12px; padding: 6px; width: 70px; color: white; text-align: center; }
         .save-btn { background: #4ade80; color: #1a1a2e; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 0.7rem; }
-        .daily-report { max-height: 200px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 16px; padding: 8px; margin-top: 10px; }
-        .report-item { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 8px; margin-bottom: 6px; font-size: 0.65rem; }
-        .report-header { display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; color: #c4b5fd; flex-wrap: wrap; gap: 5px; }
-        .report-details { display: flex; justify-content: space-between; font-size: 0.6rem; color: #a0aec0; flex-wrap: wrap; gap: 8px; }
+        .daily-report {
+            max-height: 350px;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 8px;
+            margin-top: 10px;
+        }
         .admin-buttons-section { margin-top: 15px; border-top: 1px solid rgba(139,92,246,0.3); padding-top: 12px; }
         .section-title { font-size: 0.75rem; color: #c4b5fd; margin-bottom: 10px; text-align: center; font-weight: 600; }
         .admin-buttons { display: flex; flex-direction: column; gap: 10px; }
@@ -785,18 +799,31 @@
     <div class="admin-title">🔧 Admin Control Panel</div>
     <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
     <div class="admin-balance"><div class="admin-balance-label">សមតុល្យ Admin</div><div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div></div>
+    
+    <!-- Enhanced Stats Grid -->
     <div class="admin-stats">
-        <div class="stat-card"><div class="stat-label">សរុបភ្នាល់</div><div class="stat-value" id="totalBets">0</div></div>
-        <div class="stat-card"><div class="stat-label">សរុបឈ្នះ</div><div class="stat-value" id="totalWins">0</div></div>
-        <div class="stat-card"><div class="stat-label">ភាគរយឈ្នះ</div><div class="stat-value" id="winRate">0%</div></div>
-        <div class="stat-card"><div class="stat-label">ប្រាក់ចំណេញ</div><div class="stat-value" id="profit">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">🎲 សរុបភ្នាល់</div><div class="stat-value" id="totalBets">0</div></div>
+        <div class="stat-card"><div class="stat-label">✅ ឈ្នះ</div><div class="stat-value" id="totalWins">0</div></div>
+        <div class="stat-card"><div class="stat-label">❌ ចាញ់</div><div class="stat-value" id="totalLosses">0</div></div>
+        <div class="stat-card"><div class="stat-label">⏳ រង់ចាំ</div><div class="stat-value" id="totalPending">0</div></div>
+        <div class="stat-card"><div class="stat-label">📊 %ឈ្នះ</div><div class="stat-value" id="winRate">0%</div></div>
+        <div class="stat-card"><div class="stat-label">💰 ប្រាក់ភ្នាល់</div><div class="stat-value" id="totalBetAmount">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">🏆 រង្វាន់</div><div class="stat-value" id="totalPayouts">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">📈 ចំណេញ/ខាត</div><div class="stat-value" id="profit">$0.00</div></div>
     </div>
+    
     <div class="commission-box">
         <div class="commission-row"><span>មេគុណរង្វាន់បច្ចុប្បន្ន</span><span id="currentMultiplier">10x</span></div>
         <div class="commission-row"><span>កំណត់មេគុណថ្មី</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div>
         <button class="save-btn" id="saveMultiplierBtn">រក្សាទុក</button>
     </div>
-    <div class="commission-box"><div class="commission-row"><span>📊 របាយការណ៍ប្រចាំថ្ងៃ</span></div><div class="daily-report" id="dailyReport"><div style="text-align:center;padding:10px;color:#aaa">កំពុងផ្ទុក...</div></div></div>
+    
+    <!-- Enhanced Daily Report -->
+    <div class="commission-box">
+        <div class="commission-row"><span>📊 របាយការណ៍ប្រចាំថ្ងៃ (Daily Report)</span></div>
+        <div class="daily-report" id="dailyReport"><div style="text-align:center;padding:20px;color:#aaa">កំពុងផ្ទុក...</div></div>
+    </div>
+    
     <div class="admin-buttons-section"><div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div><div class="admin-buttons"><button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់សម្រាប់ Admin</button><button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលទឹកប្រាក់របស់ Admin</button></div></div>
     <div class="player-buttons-section"><div class="player-section-title">🎮 ប៊ូតុងសម្រាប់អ្នកលេង</div><div class="player-admin-buttons"><button class="player-admin-btn" id="playerDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់</button><button class="player-admin-btn" id="playerClearBalanceBtn">💰 លុបទឹកប្រាក់</button><button class="player-admin-btn" id="playerClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលទឹកប្រាក់</button><button class="player-admin-btn" id="playerClearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button></div></div>
 </div>
@@ -905,48 +932,119 @@
         return numCache[key];
     }
     
+    // ========== UPGRADED DAILY REPORT FUNCTION ==========
     function updateAdminStats() {
         const totalBets = betHistory.length;
         const totalWins = betHistory.filter(b => b.status === 'win').length;
+        const totalLosses = betHistory.filter(b => b.status === 'lose').length;
+        const totalPending = betHistory.filter(b => b.status === 'pending').length;
         const winRate = totalBets > 0 ? ((totalWins / totalBets) * 100).toFixed(1) : 0;
+        
         const totalDeposits = depositHistory.reduce((sum, d) => sum + d.amount, 0);
         const totalPayouts = betHistory.filter(b => b.status === 'win').reduce((sum, b) => sum + (b.reward || 0), 0);
+        const totalBetAmount = betHistory.reduce((sum, b) => sum + b.amount, 0);
         const profit = totalDeposits - totalPayouts;
         
         document.getElementById('totalBets').innerText = totalBets;
         document.getElementById('totalWins').innerText = totalWins;
-        document.getElementById('winRate').innerText = winRate + '%';
-        document.getElementById('profit').innerText = '$' + profit.toFixed(2);
+        document.getElementById('totalLosses').innerText = totalLosses;
+        document.getElementById('totalPending').innerText = totalPending;
+        document.getElementById('winRate').innerHTML = winRate + '%';
+        document.getElementById('totalBetAmount').innerHTML = '$' + totalBetAmount.toFixed(2);
+        document.getElementById('totalPayouts').innerHTML = '$' + totalPayouts.toFixed(2);
+        document.getElementById('profit').innerHTML = profit >= 0 ? '+$' + profit.toFixed(2) : '-$' + Math.abs(profit).toFixed(2);
+        document.getElementById('profit').style.color = profit >= 0 ? '#4ade80' : '#fc8181';
         document.getElementById('adminBalance').innerText = profit.toFixed(2);
         document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x';
         
         const dailyData = {};
+        
         betHistory.forEach(bet => {
             const dateKey = bet.date.split(' ')[0];
-            if (!dailyData[dateKey]) dailyData[dateKey] = { bets: 0, wins: 0, losses: 0, totalBet: 0, totalPayout: 0 };
+            if (!dailyData[dateKey]) {
+                dailyData[dateKey] = { bets: 0, wins: 0, losses: 0, pending: 0, totalBetAmount: 0, totalPayout: 0, totalReward: 0 };
+            }
             dailyData[dateKey].bets++;
-            dailyData[dateKey].totalBet += bet.amount;
-            if (bet.status === 'win') { dailyData[dateKey].wins++; dailyData[dateKey].totalPayout += bet.reward; }
-            else if (bet.status === 'lose') { dailyData[dateKey].losses++; }
+            dailyData[dateKey].totalBetAmount += bet.amount;
+            if (bet.status === 'win') {
+                dailyData[dateKey].wins++;
+                dailyData[dateKey].totalPayout += bet.reward;
+                dailyData[dateKey].totalReward += bet.reward - bet.amount;
+            } else if (bet.status === 'lose') {
+                dailyData[dateKey].losses++;
+                dailyData[dateKey].totalReward -= bet.amount;
+            } else if (bet.status === 'pending') {
+                dailyData[dateKey].pending++;
+            }
         });
         
-        const reportHtml = Object.entries(dailyData).slice(-10).reverse().map(([date, data]) => {
-            const net = data.totalBet - data.totalPayout;
-            return `<div class="report-item"><div class="report-header"><span>📅 ${date}</span><span style="color:${net>=0?'#4ade80':'#fc8181'}">${net>=0?'+':'-'}$${Math.abs(net).toFixed(2)}</span></div><div class="report-details"><span>🎲 ${data.bets}</span><span>🏆 ${data.wins}</span><span>💔 ${data.losses}</span></div><div class="report-details"><span>💰 $${data.totalBet.toFixed(2)}</span><span>💸 $${data.totalPayout.toFixed(2)}</span></div></div>`;
-        }).join('');
-        document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:10px;color:#aaa">គ្មានទិន្នន័យ</div>';
+        depositHistory.forEach(deposit => {
+            const dateKey = deposit.date.split(' ')[0];
+            if (dailyData[dateKey]) {
+                dailyData[dateKey].deposit = (dailyData[dateKey].deposit || 0) + deposit.amount;
+            } else {
+                dailyData[dateKey] = { bets: 0, wins: 0, losses: 0, pending: 0, totalBetAmount: 0, totalPayout: 0, totalReward: 0, deposit: deposit.amount };
+            }
+        });
+        
+        let summary = { totalBets: 0, totalWins: 0, totalLosses: 0, totalBetAmount: 0, totalPayout: 0, totalReward: 0, totalDeposit: 0 };
+        
+        const sortedDates = Object.keys(dailyData).sort().reverse();
+        let reportHtml = `<div style="background:rgba(0,0,0,0.3); border-radius:12px; padding:10px; margin-bottom:10px;">
+                            <div style="display:grid; grid-template-columns:1fr 0.7fr 0.9fr 1fr 1fr 1.2fr; gap:6px; padding:8px; background:rgba(74,222,128,0.15); border-radius:10px; font-weight:bold; font-size:0.65rem; text-align:center;">
+                                <span>📅 ថ្ងៃ</span><span>🎲 ភ្នាល់</span><span>✅/❌</span><span>💰 ប្រាក់ភ្នាល់</span><span>🏆 រង្វាន់</span><span>📊 ចំណេញ/ខាត</span>
+                            </div>`;
+        
+        sortedDates.forEach(date => {
+            const data = dailyData[date];
+            const netProfit = data.totalReward || 0;
+            const winLossText = `${data.wins || 0}/${data.losses || 0}`;
+            const winLossColor = (data.wins || 0) > (data.losses || 0) ? '#4ade80' : ((data.losses || 0) > (data.wins || 0) ? '#fc8181' : '#f6ad55');
+            
+            summary.totalBets += data.bets;
+            summary.totalWins += data.wins;
+            summary.totalLosses += data.losses;
+            summary.totalBetAmount += data.totalBetAmount;
+            summary.totalPayout += data.totalPayout;
+            summary.totalReward += netProfit;
+            summary.totalDeposit += data.deposit || 0;
+            
+            reportHtml += `<div style="display:grid; grid-template-columns:1fr 0.7fr 0.9fr 1fr 1fr 1.2fr; gap:6px; padding:8px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.6rem; text-align:center;">
+                                <span style="font-weight:600;">${date}</span>
+                                <span>${data.bets}</span>
+                                <span style="color:${winLossColor};">${winLossText}</span>
+                                <span>$${data.totalBetAmount.toFixed(2)}</span>
+                                <span>$${data.totalPayout.toFixed(2)}</span>
+                                <span style="color:${netProfit >= 0 ? '#4ade80' : '#fc8181'};">${netProfit >= 0 ? '+' : ''}$${netProfit.toFixed(2)}</span>
+                            </div>`;
+        });
+        
+        const overallProfit = summary.totalReward;
+        reportHtml += `<div style="display:grid; grid-template-columns:1fr 0.7fr 0.9fr 1fr 1fr 1.2fr; gap:6px; padding:10px 8px; margin-top:8px; background:rgba(139,92,246,0.2); border-radius:10px; font-weight:bold; font-size:0.7rem; text-align:center;">
+                            <span>📊 សរុប</span>
+                            <span>${summary.totalBets}</span>
+                            <span style="color:#c4b5fd;">${summary.totalWins}/${summary.totalLosses}</span>
+                            <span>$${summary.totalBetAmount.toFixed(2)}</span>
+                            <span>$${summary.totalPayout.toFixed(2)}</span>
+                            <span style="color:${overallProfit >= 0 ? '#4ade80' : '#fc8181'};">${overallProfit >= 0 ? '+' : ''}$${overallProfit.toFixed(2)}</span>
+                        </div></div>`;
+        
+        if (summary.totalDeposit > 0) {
+            reportHtml += `<div style="background:rgba(74,222,128,0.1); border-radius:12px; padding:8px 12px; margin-top:8px; font-size:0.65rem; text-align:center;">
+                                💵 ប្រាក់បញ្ចូលសរុប: <span style="color:#4ade80; font-weight:bold;">$${summary.totalDeposit.toFixed(2)}</span>
+                            </div>`;
+        }
+        
+        document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:20px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
-    // ========== FIXED: Result announces after target hour (e.g., at 20:00:01) ==========
+    // ========== FIXED: Result announces at 20:00:01 ==========
     function settleBets(currentHour, currentDate, currentSeconds) {
-        // Check if we need to process bets for the target hour that just passed
-        // Example: Bet targetHour = 20, currentHour = 20, currentSeconds = 1 (after hour 20 has started)
         if (currentSeconds === 1) {
             const numbers = generateNumbers(currentDate);
             let changed = false;
             
             betHistory.forEach((bet) => {
-                // Process bets whose target hour equals current hour (just started)
                 if (bet.status === "pending" && bet.targetHour === currentHour) {
                     const correctNum = numbers[bet.targetHour];
                     const correctZodiac = zodiacMap[correctNum];
@@ -985,7 +1083,6 @@
             }
         }
     }
-    // ========== END OF MODIFIED FUNCTION ==========
     
     function updateAllBalanceDisplays() {
         const elements = ['userBalance', 'userBalanceDesktop'];
