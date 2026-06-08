@@ -18,119 +18,52 @@
             color: #ffffff;
             min-height: 100vh;
             padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Main Wrapper */
-        .main-wrapper {
-            max-width: 1400px;
+        /* Main Container - Single column for ALL devices */
+        .main-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            width: 100%;
+            max-width: 800px;
             margin: 0 auto;
+            padding: 24px 20px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
         }
 
-        /* Desktop Layout (≥1024px) - 1 Column (Horizontal/Vertical stack) */
+        /* Mobile */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            .main-container {
+                padding: 18px 14px;
+                max-width: 100%;
+            }
+        }
+
+        /* Tablet */
+        @media (min-width: 641px) and (max-width: 1023px) {
+            .main-container {
+                max-width: 700px;
+                padding: 22px 18px;
+            }
+        }
+
+        /* Desktop */
         @media (min-width: 1024px) {
             body {
-                padding: 20px;
-                display: flex;
-                align-items: flex-start;
-                justify-content: center;
+                padding: 30px;
             }
-            .desktop-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                width: 100%;
-                max-width: 800px;
-                margin: 0 auto;
-            }
-            .mobile-only {
-                display: none !important;
-            }
-            .col-card {
-                background: rgba(255, 255, 255, 0.03);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 28px;
-                padding: 24px 20px;
-                box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-                width: 100%;
-            }
-            /* Make sections within each card */
-            .col-card .top-controls {
-                justify-content: flex-start;
-            }
-            .col-card .balance-card,
-            .col-card .info-badge,
-            .col-card .section-indicator,
-            .col-card .lucky-circle,
-            .col-card .countdown-box,
-            .col-card .zodiac-single-box,
-            .col-card .history-wrapper,
-            .col-card .admin-panel-btn,
-            .col-card .player-actions {
-                width: 100%;
-            }
-            /* History box height adjustment */
-            .col-card .history-box {
-                max-height: 350px;
-                overflow-y: auto;
-            }
-            /* Zodiac grid adjustment */
-            .col-card .zodiac-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 12px;
-            }
-            .col-card .zodiac-card {
-                padding: 10px 6px;
-            }
-            .col-card .zodiac-icon {
-                font-size: 1.3rem;
-            }
-            .col-card .zodiac-name {
-                font-size: 0.7rem;
-            }
-            /* Top controls layout */
-            .col-card .top-controls {
-                display: flex;
-                justify-content: flex-start;
-                gap: 15px;
-            }
-            /* Player actions - horizontal on desktop */
-            .col-card .player-actions {
-                display: flex;
-                flex-direction: row;
-                gap: 12px;
-            }
-            .col-card .player-btn {
-                flex: 1;
-            }
-            /* Admin panel button */
-            .col-card .admin-panel-btn {
-                margin-bottom: 15px;
-            }
-        }
-
-        /* Mobile/Tablet Layout (≤1023px) */
-        @media (max-width: 1023px) {
-            .desktop-grid {
-                display: none !important;
-            }
-            .mobile-only {
-                display: block;
-            }
-            .mobile-container {
-                background: rgba(255, 255, 255, 0.03);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 28px;
-                width: 100%;
-                max-width: 500px;
-                margin: 0 auto;
-                padding: 20px 16px;
-                box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-                text-align: center;
-            }
-            .mobile-container .zodiac-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .main-container {
+                max-width: 900px;
+                padding: 30px 28px;
             }
         }
 
@@ -142,7 +75,7 @@
             border-radius: 28px;
             width: 100%;
             max-width: 500px;
-            padding: 20px 16px;
+            padding: 25px 20px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.3);
             text-align: center;
             margin: 0 auto;
@@ -151,7 +84,7 @@
         .admin-container.show {
             display: block;
         }
-        .main-wrapper.hide {
+        .main-container.hide {
             display: none;
         }
 
@@ -179,8 +112,8 @@
         .top-controls {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
         .top-btn {
@@ -300,7 +233,7 @@
             border: 1px solid rgba(74, 222, 128, 0.3);
             border-radius: 12px;
             padding: 10px 12px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             font-size: 0.7rem;
             color: #4ade80;
             line-height: 1.4;
@@ -355,7 +288,7 @@
         }
         .zodiac-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-bottom: 15px;
         }
@@ -369,6 +302,13 @@
         .zodiac-icon { font-size: 1.2rem; }
         .zodiac-name { font-size: 0.65rem; color: #ddd; }
         .zodiac-order { font-size: 0.55rem; color: #888; }
+
+        /* Mobile zodiac grid adjustment */
+        @media (max-width: 640px) {
+            .zodiac-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
 
         .predict-btn {
             background: linear-gradient(135deg, #ec4899, #f43f5e);
@@ -478,6 +418,15 @@
             gap: 10px;
             margin-bottom: 15px;
         }
+        /* Desktop: make buttons horizontal */
+        @media (min-width: 768px) {
+            .player-actions {
+                flex-direction: row;
+            }
+            .player-btn {
+                flex: 1;
+            }
+        }
         .player-btn {
             background: rgba(74, 222, 128, 0.1);
             border: 1px solid rgba(74, 222, 128, 0.3);
@@ -518,6 +467,16 @@
             box-shadow: 0 5px 20px rgba(139,92,246,0.4);
         }
 
+        .law-text {
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 0.65rem;
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+        }
+
         /* Admin Panel Styles */
         .admin-title {
             color: #c4b5fd;
@@ -532,16 +491,16 @@
         .admin-balance {
             background: linear-gradient(135deg, #1e3a5f, #2a1a5a);
             border-radius: 20px;
-            padding: 12px;
+            padding: 15px;
             margin-bottom: 20px;
             text-align: center;
         }
         .admin-balance-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #a0aec0;
         }
         .admin-balance-amount {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #4ade80;
         }
@@ -570,7 +529,7 @@
         .commission-box {
             background: rgba(0,0,0,0.3);
             border-radius: 16px;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 15px;
         }
         .commission-row {
@@ -610,7 +569,7 @@
             overflow-y: auto;
             background: rgba(0,0,0,0.2);
             border-radius: 16px;
-            padding: 8px;
+            padding: 10px;
             margin-top: 10px;
         }
         .report-item {
@@ -910,166 +869,75 @@
         .status-win { color: #4ade80; }
         .status-lose { color: #fc8181; }
         .status-pending { color: #f6ad55; }
-        
-        .law-text {
-            background: rgba(0,0,0,0.5);
-            border-radius: 12px;
-            padding: 10px;
-            font-size: 0.65rem;
-            display: none;
-            margin-top: 10px;
-            text-align: left;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 480px) {
-            body { padding: 8px; }
-            .mobile-container, .admin-container { padding: 14px 10px; border-radius: 20px; }
-            .main-title { font-size: 1.2rem; }
-            .balance-amount { font-size: 1.6rem; }
-            .history-box { max-height: 250px; }
-            .zodiac-grid { gap: 6px; }
-            .zodiac-icon { font-size: 1rem; }
-            .zodiac-name { font-size: 0.55rem; }
-            .tab { padding: 4px 8px; font-size: 0.6rem; }
-        }
-
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .mobile-container { max-width: 600px; }
-            .main-title { font-size: 1.4rem; }
-            .balance-amount { font-size: 2rem; }
-        }
     </style>
 </head>
 <body>
-<div class="main-wrapper" id="mainWrapper">
-    <!-- Desktop Layout (1 Column - Vertical/Horizontal stack) -->
-    <div class="desktop-grid">
-        <!-- Card 1: Top Section (Time, Balance, Info, Countdown) -->
-        <div class="col-card">
-            <div class="top-controls">
-                <button class="top-btn" id="soundToggleBtn">🔊 <span id="soundText">បិទសំឡេង</span></button>
-                <button class="top-btn" id="langToggleBtn">🌐 <span id="langText">ភាសាខ្មែរ</span></button>
-            </div>
-            <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
-            <div class="sub-title" id="subTitle">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
-            <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
-            <div class="balance-card">
-                <div class="floating-money">
-                    <div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div>
-                    <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
-                </div>
-                <div class="balance-inner">
-                    <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
-                    <div class="balance-amount">$<span id="userBalance">0.00</span></div>
-                </div>
-            </div>
-            <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
-            <div class="section-indicator" id="currentHourText">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
-            <div class="lucky-circle" id="luckyNumber">?</div>
-            <div class="countdown-box" id="countdownText">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimer">--:--</span></div>
-        </div>
-        
-        <!-- Card 2: Zodiac Section + Predict Button -->
-        <div class="col-card">
-            <div class="zodiac-single-box">
-                <div class="zodiac-title" id="zodiacTitle">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
-                <div class="zodiac-grid" id="zodiacGrid"></div>
-                <button class="predict-btn" id="openPredictBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
-            </div>
-        </div>
-        
-        <!-- Card 3: History Section + Admin Panel + Law + Telegram -->
-        <div class="col-card">
-            <div class="history-wrapper">
-                <div class="history-header">
-                    <div class="tabs">
-                        <button class="tab active" data-tab="result">លទ្ធផលម៉ោង</button>
-                        <button class="tab" data-tab="deposit">ប្រវត្តិបញ្ចូលលុយ</button>
-                        <button class="tab" data-tab="bet">ប្រវត្តិទស្សន៍ទាយ</button>
-                    </div>
-                    <button class="toggle-history" id="toggleHistoryBtn">👁️ លាក់</button>
-                </div>
-                <div class="history-box" id="historyBox">
-                    <div id="resultTab"><div id="scheduleList"></div></div>
-                    <div id="depositTab" style="display:none;"><div id="depositList"></div></div>
-                    <div id="betTab" style="display:none;"><div id="betList"></div></div>
-                </div>
-            </div>
-            <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
-            <div class="player-actions">
-                <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
-                <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
-            </div>
-            <div class="law-text" id="lawText">
-                <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
-                <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
-                <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
-                <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p>
-                <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p>
-                <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
-            </div>
-        </div>
+<!-- Main Container - Single column for ALL devices -->
+<div id="mainContainer" class="main-container">
+    <div class="top-controls">
+        <button class="top-btn" id="soundToggleBtn">🔊 <span id="soundText">បិទសំឡេង</span></button>
+        <button class="top-btn" id="langToggleBtn">🌐 <span id="langText">ភាសាខ្មែរ</span></button>
     </div>
 
-    <!-- Mobile/Tablet Layout (single column) -->
-    <div class="mobile-only">
-        <div class="mobile-container">
-            <div class="top-controls">
-                <button class="top-btn" id="soundToggleBtnM">🔊 <span id="soundTextM">បិទសំឡេង</span></button>
-                <button class="top-btn" id="langToggleBtnM">🌐 <span id="langTextM">ភាសាខ្មែរ</span></button>
-            </div>
-            <div class="main-title" id="mainTitleM">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
-            <div class="sub-title" id="subTitleM">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
-            <div class="live-time-badge" id="liveClockM">📅 --/--/---- | ⏰ --:--:--</div>
-            <div class="balance-card">
-                <div class="floating-money">
-                    <div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div>
-                    <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
-                </div>
-                <div class="balance-inner">
-                    <div class="balance-label" id="balanceLabelM">សមតុល្យបច្ចុប្បន្ន</div>
-                    <div class="balance-amount">$<span id="userBalanceM">0.00</span></div>
-                </div>
-            </div>
-            <div class="info-badge" id="infoBadgeM">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
-            <div class="section-indicator" id="currentHourTextM">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
-            <div class="lucky-circle" id="luckyNumberM">?</div>
-            <div class="countdown-box" id="countdownTextM">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimerM">--:--</span></div>
-            <div class="zodiac-single-box">
-                <div class="zodiac-title" id="zodiacTitleM">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
-                <div class="zodiac-grid" id="zodiacGridM"></div>
-                <button class="predict-btn" id="openPredictBtnM">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
-            </div>
-            <div class="history-wrapper">
-                <div class="history-header">
-                    <div class="tabs">
-                        <button class="tab active" data-tab="result">លទ្ធផលម៉ោង</button>
-                        <button class="tab" data-tab="deposit">ប្រវត្តិបញ្ចូលលុយ</button>
-                        <button class="tab" data-tab="bet">ប្រវត្តិទស្សន៍ទាយ</button>
-                    </div>
-                    <button class="toggle-history" id="toggleHistoryBtnM">👁️ លាក់</button>
-                </div>
-                <div class="history-box" id="historyBoxM">
-                    <div id="resultTabM"><div id="scheduleListM"></div></div>
-                    <div id="depositTabM" style="display:none;"><div id="depositListM"></div></div>
-                    <div id="betTabM" style="display:none;"><div id="betListM"></div></div>
-                </div>
-            </div>
-            <button class="admin-panel-btn" id="adminPanelBtnM">🔧 Admin Panel</button>
-            <div class="player-actions">
-                <button class="player-btn" id="playerLawBtnM">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
-                <button class="player-btn" id="playerTelegramBtnM">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
-            </div>
-            <div class="law-text" id="lawTextM">
-                <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
-                <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
-                <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
-                <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p>
-                <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p>
-                <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
-            </div>
+    <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
+    <div class="sub-title" id="subTitle">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
+    
+    <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
+    
+    <div class="balance-card">
+        <div class="floating-money">
+            <div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div>
+            <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
         </div>
+        <div class="balance-inner">
+            <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
+            <div class="balance-amount">$<span id="userBalance">0.00</span></div>
+        </div>
+    </div>
+    
+    <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
+    
+    <div class="section-indicator" id="currentHourText">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
+    <div class="lucky-circle" id="luckyNumber">?</div>
+    
+    <div class="countdown-box" id="countdownText">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimer">--:--</span></div>
+    
+    <div class="zodiac-single-box">
+        <div class="zodiac-title" id="zodiacTitle">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
+        <div class="zodiac-grid" id="zodiacGrid"></div>
+        <button class="predict-btn" id="openPredictBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+    </div>
+    
+    <div class="history-wrapper">
+        <div class="history-header">
+            <div class="tabs">
+                <button class="tab active" data-tab="result">លទ្ធផលម៉ោង</button>
+                <button class="tab" data-tab="deposit">ប្រវត្តិបញ្ចូលលុយ</button>
+                <button class="tab" data-tab="bet">ប្រវត្តិទស្សន៍ទាយ</button>
+            </div>
+            <button class="toggle-history" id="toggleHistoryBtn">👁️ លាក់</button>
+        </div>
+        <div class="history-box" id="historyBox">
+            <div id="resultTab"><div id="scheduleList"></div></div>
+            <div id="depositTab" style="display:none;"><div id="depositList"></div></div>
+            <div id="betTab" style="display:none;"><div id="betList"></div></div>
+        </div>
+    </div>
+    
+    <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
+    
+    <div class="player-actions">
+        <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
+        <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
+    </div>
+    
+    <div class="law-text" id="lawText">
+        <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
+        <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
+        <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
+        <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p>
+        <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p>
+        <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
     </div>
 </div>
 
@@ -1115,7 +983,7 @@
     </div>
 </div>
 
-<!-- Modals (shared) -->
+<!-- Modals -->
 <div class="modal" id="depositModal">
     <div class="modal-content">
         <div id="pinStep">
@@ -1505,7 +1373,7 @@
             if (changed) {
                 localStorage.setItem('balance', currentBalance);
                 localStorage.setItem('betHistory', JSON.stringify(betHistory));
-                updateAllBalanceDisplays();
+                document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
                 renderBetHistory();
                 updateAdminStats();
             }
@@ -1513,96 +1381,40 @@
         }
     }
     
-    function updateAllBalanceDisplays() {
-        const elements = ['userBalance', 'userBalanceM'];
-        elements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerText = currentBalance.toFixed(2);
-        });
-    }
-    
-    function updateAllLiveClocks() {
+    function updateDisplay() {
         const now = new Date();
         const ch = now.getHours(), cm = now.getMinutes(), cs = now.getSeconds();
         const today = new Date(now);
-        const dateStr = `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
-        const timeStr = `${ch.toString().padStart(2,'0')}:${cm.toString().padStart(2,'0')}:${cs.toString().padStart(2,'0')}`;
-        const clockHtml = `📅 ${dateStr} | ⏰ ${timeStr}`;
-        
-        const elements = ['liveClock', 'liveClockM'];
-        elements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = clockHtml;
-        });
-    }
-    
-    function updateCurrentHourText() {
-        const now = new Date();
-        const nextHour = getNextHour(now.getHours());
-        const text = `${translations[currentLang].currentHourLabel} ${formatHour(nextHour)}`;
-        const elements = ['currentHourText', 'currentHourTextM'];
-        elements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = text;
-        });
-    }
-    
-    function updateCountdown() {
-        const now = new Date();
-        const cm = now.getMinutes(), cs = now.getSeconds();
-        const remainM = 59-cm, remainS = 59-cs;
-        const countdown = `${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
-        
-        const timerElements = ['countdownTimer', 'countdownTimerM'];
-        timerElements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = countdown;
-        });
-        
-        const textElements = ['countdownText', 'countdownTextM'];
-        textElements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = `${translations[currentLang].countdownLabel} <span class="countdown-time">${countdown}</span>`;
-        });
-    }
-    
-    function updateLuckyNumber() {
-        const now = new Date();
-        const ch = now.getHours();
-        const today = new Date(now);
-        const todayNums = generateNumbers(today);
-        const currentZodiac = zodiacMap[todayNums[ch]];
-        const display = currentZodiac ? getZodiacDisplay(currentZodiac) : "?";
-        
-        const elements = ['luckyNumber', 'luckyNumberM'];
-        elements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = display;
-        });
-    }
-    
-    function updateScheduleList() {
-        const now = new Date();
-        const ch = now.getHours();
-        const today = new Date(now);
         const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
         const yesterday = new Date(now); yesterday.setDate(yesterday.getDate()-1);
-        const formatDateShort = (d) => `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+        
+        document.getElementById('liveClock').innerHTML = `📅 ${formatDate(today)} | ⏰ ${ch.toString().padStart(2,'0')}:${cm.toString().padStart(2,'0')}:${cs.toString().padStart(2,'0')}`;
+        
+        const nextHour = getNextHour(ch);
+        document.getElementById('currentHourText').innerHTML = `${translations[currentLang].currentHourLabel} ${formatHour(nextHour)}`;
+        
+        const remainM = 59-cm, remainS = 59-cs;
+        document.getElementById('countdownTimer').innerHTML = `${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
+        document.getElementById('countdownText').innerHTML = `${translations[currentLang].countdownLabel} <span class="countdown-time">${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}</span>`;
+        
+        settleBets(ch, today);
         
         const todayNums = generateNumbers(today);
         const yesterdayNums = generateNumbers(yesterday);
         const tomorrowNums = generateNumbers(tomorrow);
         const currentIdx = hoursList.indexOf(ch);
+        const currentZodiac = zodiacMap[todayNums[ch]];
+        document.getElementById('luckyNumber').innerHTML = currentZodiac ? getZodiacDisplay(currentZodiac) : "?";
         
         let html = "";
         for(let i=0; i<hoursList.length; i++) {
             const hr = hoursList[i];
-            let dateStr = formatDateShort(today);
+            let dateStr = formatDate(today);
             let num = todayNums[hr];
             let isActive = (i === currentIdx);
             let display = "";
             if (i < currentIdx) {
-                if (ch < 7 && hr >= 7) { dateStr = formatDateShort(yesterday); num = yesterdayNums[hr]; }
+                if (ch < 7 && hr >= 7) { dateStr = formatDate(yesterday); num = yesterdayNums[hr]; }
                 const z = zodiacMap[num];
                 display = z ? getZodiacDisplay(z) : "?";
             } else if (i === currentIdx) {
@@ -1610,19 +1422,14 @@
                 display = z ? getZodiacDisplay(z) : "?";
             } else {
                 display = `<span class="waiting-text">${translations[currentLang].waiting}</span>`;
-                if (ch >= 7 && hr < 7) dateStr = formatDateShort(tomorrow);
+                if (ch >= 7 && hr < 7) dateStr = formatDate(tomorrow);
             }
             html += `<div class="time-item ${isActive ? 'active' : ''}">
                         <div><div class="time-label">${translations[currentLang].hour} ${formatHour(hr)}</div><div class="time-date">${dateStr}</div></div>
                         <div class="result-badge">${display}</div>
                     </div>`;
         }
-        
-        const elements = ['scheduleList', 'scheduleListM'];
-        elements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = html;
-        });
+        document.getElementById('scheduleList').innerHTML = html;
     }
     
     function renderZodiacs() {
@@ -1634,12 +1441,7 @@
                         <div class="zodiac-order">${currentLang==='km'?z.order:z.orderEn}</div>
                     </div>`;
         });
-        
-        const elements = ['zodiacGrid', 'zodiacGridM'];
-        elements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = grid;
-        });
+        document.getElementById('zodiacGrid').innerHTML = grid;
         
         let selectGrid = "";
         zodiacs.forEach(z => {
@@ -1659,13 +1461,18 @@
         });
     }
     
+    function updatePreview() {
+        const amt = parseFloat(document.getElementById('betAmount').value) || 0;
+        const remain = currentBalance - amt;
+        document.getElementById('preCurrent').innerText = currentBalance.toFixed(2);
+        document.getElementById('preCost').innerText = amt.toFixed(2);
+        document.getElementById('preRemain').innerText = remain >= 0 ? remain.toFixed(2) : '0.00';
+    }
+    
     function renderDepositHistory() {
-        const containers = ['depositList', 'depositListM'];
+        const container = document.getElementById('depositList');
         if (!depositHistory.length) {
-            containers.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិបញ្ចូលលុយ':'No deposit history'}</div>`;
-            });
+            container.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិបញ្ចូលលុយ':'No deposit history'}</div>`;
             return;
         }
         let html = "";
@@ -1675,19 +1482,13 @@
                         <div style="color:#4ade80">+$${d.amount.toFixed(2)}</div>
                     </div>`;
         });
-        containers.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = html;
-        });
+        container.innerHTML = html;
     }
     
     function renderBetHistory() {
-        const containers = ['betList', 'betListM'];
+        const container = document.getElementById('betList');
         if (!betHistory.length) {
-            containers.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិទស្សន៍ទាយ':'No bet history'}</div>`;
-            });
+            container.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិទស្សន៍ទាយ':'No bet history'}</div>`;
             return;
         }
         let html = "";
@@ -1725,24 +1526,13 @@
                         ${resultHtml}
                     </div>`;
         });
-        containers.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = html;
-        });
-    }
-    
-    function updatePreview() {
-        const amt = parseFloat(document.getElementById('betAmount').value) || 0;
-        const remain = currentBalance - amt;
-        document.getElementById('preCurrent').innerText = currentBalance.toFixed(2);
-        document.getElementById('preCost').innerText = amt.toFixed(2);
-        document.getElementById('preRemain').innerText = remain >= 0 ? remain.toFixed(2) : '0.00';
+        container.innerHTML = html;
     }
     
     function executePrediction() {
         currentBalance -= pendingBetAmount;
         localStorage.setItem('balance', currentBalance);
-        updateAllBalanceDisplays();
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
         
         const now = new Date();
         const targetHour = getNextHour(now.getHours());
@@ -1779,97 +1569,26 @@
         } else if (pendingAdminAction === "clear_balance") {
             currentBalance = 0;
             localStorage.setItem('balance', currentBalance);
-            updateAllBalanceDisplays();
+            document.getElementById('userBalance').innerText = '0.00';
             showToast(translations[currentLang].confirmClearBalance, 'pending');
         }
     }
     
-    function updateDisplay() {
-        const now = new Date();
-        settleBets(now.getHours(), now);
-        updateAllLiveClocks();
-        updateCurrentHourText();
-        updateCountdown();
-        updateLuckyNumber();
-        updateScheduleList();
-    }
-    
-    function loadData() {
-        const saved = localStorage.getItem('balance');
-        if (saved) currentBalance = parseFloat(saved);
-        const savedDeposit = localStorage.getItem('depositHistory');
-        if (savedDeposit) depositHistory = JSON.parse(savedDeposit);
-        const savedBet = localStorage.getItem('betHistory');
-        if (savedBet) betHistory = JSON.parse(savedBet);
-        updateAllBalanceDisplays();
-        updateAdminStats();
-    }
-    
-    function showAdminPanel() {
-        document.getElementById('mainWrapper').classList.add('hide');
-        document.getElementById('adminContainer').classList.add('show');
-    }
-    
-    function hideAdminPanel() {
-        document.getElementById('mainWrapper').classList.remove('hide');
-        document.getElementById('adminContainer').classList.remove('show');
-    }
-    
     function applyLanguage() {
         const t = translations[currentLang];
+        document.getElementById('mainTitle').innerText = t.mainTitle;
+        document.getElementById('subTitle').innerText = t.subTitle;
+        document.getElementById('balanceLabel').innerText = t.balanceLabel;
+        document.getElementById('infoBadge').innerText = t.infoBadge;
+        document.getElementById('zodiacTitle').innerText = t.zodiacTitle;
+        document.getElementById('openPredictBtn').innerText = t.predictBtn;
         
-        const desktopTexts = ['mainTitle', 'subTitle', 'balanceLabel', 'infoBadge', 'zodiacTitle', 'openPredictBtn'];
-        const mobileTexts = ['mainTitleM', 'subTitleM', 'balanceLabelM', 'infoBadgeM', 'zodiacTitleM', 'openPredictBtnM'];
-        
-        desktopTexts.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                if (id === 'mainTitle') el.innerText = t.mainTitle;
-                else if (id === 'subTitle') el.innerText = t.subTitle;
-                else if (id === 'balanceLabel') el.innerText = t.balanceLabel;
-                else if (id === 'infoBadge') el.innerText = t.infoBadge;
-                else if (id === 'zodiacTitle') el.innerText = t.zodiacTitle;
-                else if (id === 'openPredictBtn') el.innerText = t.predictBtn;
-            }
-        });
-        
-        mobileTexts.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                if (id === 'mainTitleM') el.innerText = t.mainTitle;
-                else if (id === 'subTitleM') el.innerText = t.subTitle;
-                else if (id === 'balanceLabelM') el.innerText = t.balanceLabel;
-                else if (id === 'infoBadgeM') el.innerText = t.infoBadge;
-                else if (id === 'zodiacTitleM') el.innerText = t.zodiacTitle;
-                else if (id === 'openPredictBtnM') el.innerText = t.predictBtn;
-            }
-        });
-        
-        // Update tab texts
-        const tabTexts = document.querySelectorAll('.tab');
-        tabTexts.forEach(tab => {
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
             const tabType = tab.getAttribute('data-tab');
             if (tabType === 'result') tab.innerText = t.tabResult;
             else if (tabType === 'deposit') tab.innerText = t.tabDeposit;
             else if (tabType === 'bet') tab.innerText = t.tabBet;
-        });
-        
-        const toggleBtns = document.querySelectorAll('.toggle-history');
-        toggleBtns.forEach(btn => {
-            const isHidden = document.getElementById('historyBox')?.style.display === 'none';
-            btn.innerText = isHidden ? (currentLang === 'km' ? '👁️ បង្ហាញ' : '👁️ Show') : (currentLang === 'km' ? '👁️ លាក់' : '👁️ Hide');
-        });
-        
-        const soundTexts = ['soundText', 'soundTextM'];
-        soundTexts.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerText = soundEnabled ? t.soundOn : t.soundOff;
-        });
-        
-        const langTexts = ['langText', 'langTextM'];
-        langTexts.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerText = currentLang === 'km' ? t.langKhmer : t.langEnglish;
         });
         
         document.getElementById('preCurrentLabel').innerText = t.preCurrent;
@@ -1878,6 +1597,14 @@
         document.getElementById('selectZodiacTitle').innerText = t.selectZodiac;
         document.getElementById('closePredictModal').innerText = t.cancel;
         document.getElementById('confirmPredictBtn').innerText = t.confirm;
+        document.getElementById('soundText').innerText = soundEnabled ? t.soundOn : t.soundOff;
+        document.getElementById('langText').innerText = currentLang === 'km' ? t.langKhmer : t.langEnglish;
+        
+        const toggleBtn = document.getElementById('toggleHistoryBtn');
+        if (toggleBtn) {
+            const isHidden = document.getElementById('historyBox').style.display === 'none';
+            toggleBtn.innerText = isHidden ? (currentLang === 'km' ? '👁️ បង្ហាញ' : '👁️ Show') : (currentLang === 'km' ? '👁️ លាក់' : '👁️ Hide');
+        }
         
         renderZodiacs();
         renderDepositHistory();
@@ -1892,13 +1619,29 @@
     
     function toggleSound() {
         soundEnabled = !soundEnabled;
-        const text = soundEnabled ? translations[currentLang].soundOn : translations[currentLang].soundOff;
-        const soundTexts = ['soundText', 'soundTextM'];
-        soundTexts.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerText = text;
-        });
+        document.getElementById('soundText').innerText = soundEnabled ? translations[currentLang].soundOn : translations[currentLang].soundOff;
         showToast(soundEnabled ? (currentLang==='km'?'បើកសំឡេង':'Sound on') : (currentLang==='km'?'បិទសំឡេង':'Sound off'), 'pending');
+    }
+    
+    function loadData() {
+        const saved = localStorage.getItem('balance');
+        if (saved) currentBalance = parseFloat(saved);
+        const savedDeposit = localStorage.getItem('depositHistory');
+        if (savedDeposit) depositHistory = JSON.parse(savedDeposit);
+        const savedBet = localStorage.getItem('betHistory');
+        if (savedBet) betHistory = JSON.parse(savedBet);
+        document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
+        updateAdminStats();
+    }
+    
+    function showAdminPanel() {
+        document.getElementById('mainContainer').style.display = 'none';
+        document.getElementById('adminContainer').classList.add('show');
+    }
+    
+    function hideAdminPanel() {
+        document.getElementById('mainContainer').style.display = 'block';
+        document.getElementById('adminContainer').classList.remove('show');
     }
     
     function init() {
@@ -1909,42 +1652,32 @@
         renderDepositHistory();
         renderBetHistory();
         
-        // Event listeners
         document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
-        document.getElementById('langToggleBtnM').addEventListener('click', toggleLanguage);
         document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
-        document.getElementById('soundToggleBtnM').addEventListener('click', toggleSound);
         
         // Law button toggle
         let lawVisible = false;
-        const toggleLaw = () => {
-            const lawBoxDesktop = document.getElementById('lawText');
-            const lawBoxMobile = document.getElementById('lawTextM');
+        document.getElementById('playerLawBtn').addEventListener('click', () => {
+            const lawBox = document.getElementById('lawText');
             if (lawVisible) {
-                if (lawBoxDesktop) lawBoxDesktop.style.display = 'none';
-                if (lawBoxMobile) lawBoxMobile.style.display = 'none';
+                lawBox.style.display = 'none';
             } else {
-                if (lawBoxDesktop) lawBoxDesktop.style.display = 'block';
-                if (lawBoxMobile) lawBoxMobile.style.display = 'block';
+                lawBox.style.display = 'block';
             }
             lawVisible = !lawVisible;
-        };
-        document.getElementById('playerLawBtn').addEventListener('click', toggleLaw);
-        document.getElementById('playerLawBtnM').addEventListener('click', toggleLaw);
+        });
         
-        // Telegram buttons
-        document.getElementById('playerTelegramBtn').addEventListener('click', () => window.open('https://t.me/Application_Receiving_Officer', '_blank'));
-        document.getElementById('playerTelegramBtnM').addEventListener('click', () => window.open('https://t.me/Application_Receiving_Officer', '_blank'));
+        // Telegram button
+        document.getElementById('playerTelegramBtn').addEventListener('click', () => {
+            window.open('https://t.me/Application_Receiving_Officer', '_blank');
+        });
         
         // Admin Panel Entry
         const adminEntryModal = document.getElementById('adminEntryPinModal');
-        const showAdminPinModal = () => {
+        document.getElementById('adminPanelBtn').addEventListener('click', () => {
             document.getElementById('adminEntryPinInput').value = '';
             adminEntryModal.classList.add('show');
-        };
-        document.getElementById('adminPanelBtn').addEventListener('click', showAdminPinModal);
-        document.getElementById('adminPanelBtnM').addEventListener('click', showAdminPinModal);
-        
+        });
         document.getElementById('closeAdminEntryModal').addEventListener('click', () => adminEntryModal.classList.remove('show'));
         document.getElementById('confirmAdminEntryBtn').addEventListener('click', () => {
             const pin = document.getElementById('adminEntryPinInput').value;
@@ -1973,60 +1706,42 @@
             }
         });
         
-        // Tabs for desktop and mobile
-        const setupTabs = (resultId, depositId, betId) => {
-            const tabs = document.querySelectorAll(`.tab`);
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabName = this.getAttribute('data-tab');
-                    document.getElementById(resultId).style.display = tabName === 'result' ? 'block' : 'none';
-                    document.getElementById(depositId).style.display = tabName === 'deposit' ? 'block' : 'none';
-                    document.getElementById(betId).style.display = tabName === 'bet' ? 'block' : 'none';
-                    document.querySelectorAll(`.tab`).forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                });
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                document.getElementById('resultTab').style.display = tabName === 'result' ? 'block' : 'none';
+                document.getElementById('depositTab').style.display = tabName === 'deposit' ? 'block' : 'none';
+                document.getElementById('betTab').style.display = tabName === 'bet' ? 'block' : 'none';
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
             });
-        };
-        
-        setupTabs('resultTab', 'depositTab', 'betTab');
-        setupTabs('resultTabM', 'depositTabM', 'betTabM');
+        });
         
         // Toggle history
         let historyVisible = true;
-        const toggleHistory = () => {
-            const boxDesktop = document.getElementById('historyBox');
-            const boxMobile = document.getElementById('historyBoxM');
-            const btnDesktop = document.getElementById('toggleHistoryBtn');
-            const btnMobile = document.getElementById('toggleHistoryBtnM');
+        document.getElementById('toggleHistoryBtn').addEventListener('click', function() {
+            const box = document.getElementById('historyBox');
             if (historyVisible) {
-                if (boxDesktop) boxDesktop.style.display = 'none';
-                if (boxMobile) boxMobile.style.display = 'none';
-                if (btnDesktop) btnDesktop.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show';
-                if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show';
+                box.style.display = 'none';
+                this.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show';
             } else {
-                if (boxDesktop) boxDesktop.style.display = 'block';
-                if (boxMobile) boxMobile.style.display = 'block';
-                if (btnDesktop) btnDesktop.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide';
-                if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide';
+                box.style.display = 'block';
+                this.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide';
             }
             historyVisible = !historyVisible;
-        };
-        document.getElementById('toggleHistoryBtn').addEventListener('click', toggleHistory);
-        document.getElementById('toggleHistoryBtnM').addEventListener('click', toggleHistory);
+        });
         
         // Predict Modal
         const predictModal = document.getElementById('predictModal');
         const confirmPredictModal = document.getElementById('confirmPredictModal');
-        const openPredict = () => {
+        document.getElementById('openPredictBtn').addEventListener('click', () => {
             document.getElementById('betAmount').value = '';
             selectedZodiac = '';
             document.querySelectorAll('.zodiac-option').forEach(o => o.classList.remove('selected'));
             updatePreview();
             predictModal.classList.add('show');
-        };
-        document.getElementById('openPredictBtn').addEventListener('click', openPredict);
-        document.getElementById('openPredictBtnM').addEventListener('click', openPredict);
-        
+        });
         document.getElementById('closePredictModal').addEventListener('click', () => predictModal.classList.remove('show'));
         document.getElementById('betAmount').addEventListener('input', updatePreview);
         
@@ -2129,7 +1844,7 @@
             if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលចំនួនលុយ!':'Enter amount!', 'lose'); return; }
             currentBalance += amt;
             localStorage.setItem('balance', currentBalance);
-            updateAllBalanceDisplays();
+            document.getElementById('userBalance').innerText = currentBalance.toFixed(2);
             depositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
             localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
             renderDepositHistory();
