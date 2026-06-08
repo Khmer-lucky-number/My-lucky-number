@@ -6,7 +6,7 @@
     <title>ឆ្នាំសំណាងទាំង 12 - ប្រព័ន្ធទស្សន៍ទាយ</title>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* [ALL PREVIOUS CSS REMAINS THE SAME - KEEP YOUR ORIGINAL STYLES] */
+        /* ========== ALL PREVIOUS CSS REMAINS THE SAME ========== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -397,7 +397,6 @@
         .commission-input { background: #0f0f2a; border: 1px solid #2a2a4a; border-radius: 12px; padding: 6px; width: 70px; color: white; text-align: center; }
         .save-btn { background: #4ade80; color: #1a1a2e; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 0.7rem; }
         
-        /* ENHANCED DAILY REPORT STYLES */
         .report-container {
             background: rgba(0,0,0,0.3);
             border-radius: 16px;
@@ -423,9 +422,6 @@
             font-weight: 700;
             color: #4ade80;
         }
-        .report-summary-amount.negative {
-            color: #fc8181;
-        }
         .report-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -448,8 +444,6 @@
             font-weight: 700;
             color: #c4b5fd;
         }
-        .report-card-value.win { color: #4ade80; }
-        .report-card-value.loss { color: #fc8181; }
         .daily-report-list {
             max-height: 250px;
             overflow-y: auto;
@@ -504,11 +498,6 @@
             border-color: rgba(56, 161, 105, 0.5);
             color: #68d391;
         }
-        .profit-btn {
-            background: linear-gradient(135deg, #f6ad55, #ed8936) !important;
-            color: #1a1a2e !important;
-        }
-        .profit-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(246,173,85,0.4); }
         .player-buttons-section { margin-top: 15px; border-top: 1px solid rgba(74,222,128,0.3); padding-top: 12px; }
         .player-section-title { font-size: 0.75rem; color: #4ade80; margin-bottom: 10px; text-align: center; font-weight: 600; }
         .player-admin-buttons { display: flex; flex-direction: column; gap: 10px; }
@@ -612,15 +601,8 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        .history-modal-date {
-            font-size: 0.7rem;
-            color: #a0aec0;
-        }
-        .history-modal-amount {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #4ade80;
-        }
+        .history-modal-date { font-size: 0.7rem; color: #a0aec0; }
+        .history-modal-amount { font-size: 0.9rem; font-weight: bold; color: #4ade80; }
         .zodiac-select-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
         .zodiac-option {
             background: #0f0f2a;
@@ -731,6 +713,27 @@
             font-size: 1rem;
             cursor: pointer;
         }
+        
+        /* Player Selector Styles */
+        .player-selector {
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .player-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #1a1a2e;
+        }
+        .admin-badge {
+            background: linear-gradient(135deg, #f6ad55, #ed8936);
+        }
     </style>
 </head>
 <body>
@@ -740,6 +743,7 @@
             <button class="top-btn" id="soundToggleBtn">🔊 <span id="soundText">បិទសំឡេង</span></button>
             <button class="top-btn" id="langToggleBtn">🌐 <span id="langText">ភាសាខ្មែរ</span></button>
         </div>
+        <div class="player-selector" id="playerSelector"></div>
         <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
         <div class="sub-title" id="subTitle">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
         <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
@@ -795,6 +799,7 @@
                 <button class="top-btn" id="soundToggleBtnDesktop">🔊 <span id="soundTextDesktop">បិទសំឡេង</span></button>
                 <button class="top-btn" id="langToggleBtnDesktop">🌐 <span id="langTextDesktop">ភាសាខ្មែរ</span></button>
             </div>
+            <div class="player-selector" id="playerSelectorDesktop"></div>
             <div class="main-title" id="mainTitleDesktop">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
             <div class="sub-title" id="subTitleDesktop">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
             <div class="live-time-badge" id="liveClockDesktop">📅 --/--/---- | ⏰ --:--:--</div>
@@ -875,17 +880,15 @@
     <div class="admin-title">🔧 ផ្ទាំងគ្រប់គ្រង Admin</div>
     <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
     
-    <!-- Balance Summary -->
     <div class="admin-balance">
         <div class="admin-balance-label">💰 សមតុល្យ Admin</div>
         <div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div>
     </div>
     <div class="admin-balance" style="margin-top: -10px;">
-        <div class="admin-balance-label">👤 សមតុល្យអ្នកលេង</div>
+        <div class="admin-balance-label">👤 សមតុល្យអ្នកលេងបច្ចុប្បន្ន</div>
         <div class="admin-balance-amount">$<span id="playerBalanceDisplay">0.00</span></div>
     </div>
     
-    <!-- Statistics -->
     <div class="admin-stats">
         <div class="stat-card"><div class="stat-label">🎲 ចំនួនភ្នាល់សរុប</div><div class="stat-value" id="totalBets">0</div></div>
         <div class="stat-card"><div class="stat-label">🏆 ចំនួនឈ្នះសរុប</div><div class="stat-value" id="totalWins">0</div></div>
@@ -893,14 +896,12 @@
         <div class="stat-card"><div class="stat-label">💰 ប្រាក់ចំណេញសុទ្ធ</div><div class="stat-value" id="netProfit">$0.00</div></div>
     </div>
     
-    <!-- Reward Multiplier -->
     <div class="commission-box">
         <div class="commission-row"><span>🎮 មេគុណរង្វាន់បច្ចុប្បន្ន</span><span id="currentMultiplier">10x</span></div>
         <div class="commission-row"><span>កំណត់មេគុណថ្មី</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div>
         <button class="save-btn" id="saveMultiplierBtn">💾 រក្សាទុក</button>
     </div>
     
-    <!-- Daily Financial Report -->
     <div class="commission-box">
         <div class="commission-row"><span>📅 របាយការណ៍ប្រចាំថ្ងៃ</span></div>
         
@@ -923,7 +924,6 @@
         </div>
     </div>
     
-    <!-- Admin Buttons Section -->
     <div class="admin-buttons-section">
         <div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div>
         <div class="admin-buttons">
@@ -933,7 +933,6 @@
         </div>
     </div>
     
-    <!-- Player Management Buttons -->
     <div class="player-buttons-section">
         <div class="player-section-title">🎮 ប៊ូតុងគ្រប់គ្រងអ្នកលេង</div>
         <div class="player-admin-buttons">
@@ -952,7 +951,6 @@
 <div class="confirm-modal" id="confirmPredictModal"><div class="confirm-box"><div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div><div class="confirm-message" id="confirmPredictMsg">តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelPredictConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesPredictConfirm">យល់ព្រម</button></div></div></div>
 <div class="confirm-modal" id="confirmAdminModal"><div class="confirm-box"><div class="confirm-title" id="confirmAdminTitle">⚠️ បញ្ជាក់សកម្មភាព</div><div class="confirm-message" id="confirmAdminMsg">តើអ្នកពិតជាចង់ធ្វើសកម្មភាពនេះមែនទេ?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelAdminConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesAdminConfirm">យល់ព្រម</button></div></div></div>
 
-<!-- History Modal for Admin Deposit -->
 <div class="modal" id="adminHistoryModal">
     <div class="modal-content">
         <div class="modal-title">📜 ប្រវត្តិបញ្ចូលលុយរបស់ Admin</div>
@@ -966,12 +964,47 @@
 </div>
 
 <script>
-    const SECRET_PIN = "Qq2026";
-    const ADMIN_PIN = "Qq1280";
+    // ========== GET PLAYER ID FROM URL ==========
+    function getPlayerId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        // Check if admin mode
+        if (urlParams.get('admin') === 'true') {
+            return 'admin';
+        }
+        // Get player ID from URL parameter
+        const playerId = urlParams.get('player');
+        if (playerId && playerId.startsWith('player')) {
+            return playerId;
+        }
+        // Default player
+        return 'player1';
+    }
     
+    const CURRENT_PLAYER = getPlayerId();
+    const IS_ADMIN = (CURRENT_PLAYER === 'admin');
+    
+    // ========== STORAGE KEYS WITH PLAYER ID ==========
+    function getStorageKey(baseKey) {
+        if (IS_ADMIN) {
+            return `admin_${baseKey}`;
+        }
+        return `${CURRENT_PLAYER}_${baseKey}`;
+    }
+    
+    // Admin global data (shared across all admin sessions)
+    let adminBalance = 0;
+    let adminDepositHistory = [];
+    let globalBetHistory = [];
+    let globalDepositHistory = [];
+    
+    // Player data (separate for each player)
     let currentBalance = 0;
     let depositHistory = [];
     let betHistory = [];
+    
+    const SECRET_PIN = "Qq2026";
+    const ADMIN_PIN = "Qq1280";
+    
     let selectedZodiac = "";
     let currentAction = "";
     let pendingBetAmount = 0;
@@ -982,16 +1015,28 @@
     let currentLang = "km";
     let rewardMultiplier = 10;
     
-    let adminBalance = 0;
-    let adminDepositHistory = [];
-    
-    const savedMultiplier = localStorage.getItem('rewardMultiplier');
+    const savedMultiplier = localStorage.getItem('global_rewardMultiplier');
     if (savedMultiplier) rewardMultiplier = parseInt(savedMultiplier);
     
-    const savedAdminBalance = localStorage.getItem('adminBalance');
+    // Load Admin Data (global)
+    const savedAdminBalance = localStorage.getItem('global_adminBalance');
     if (savedAdminBalance) adminBalance = parseFloat(savedAdminBalance);
-    const savedAdminDepositHistory = localStorage.getItem('adminDepositHistory');
+    const savedAdminDepositHistory = localStorage.getItem('global_adminDepositHistory');
     if (savedAdminDepositHistory) adminDepositHistory = JSON.parse(savedAdminDepositHistory);
+    
+    // Load Player Data
+    const savedBalance = localStorage.getItem(getStorageKey('balance'));
+    if (savedBalance) currentBalance = parseFloat(savedBalance);
+    const savedDeposit = localStorage.getItem(getStorageKey('depositHistory'));
+    if (savedDeposit) depositHistory = JSON.parse(savedDeposit);
+    const savedBet = localStorage.getItem(getStorageKey('betHistory'));
+    if (savedBet) betHistory = JSON.parse(savedBet);
+    
+    // Load Global Bet/Deposit History for Admin Reports
+    const savedGlobalBet = localStorage.getItem('global_betHistory');
+    if (savedGlobalBet) globalBetHistory = JSON.parse(savedGlobalBet);
+    const savedGlobalDeposit = localStorage.getItem('global_depositHistory');
+    if (savedGlobalDeposit) globalDepositHistory = JSON.parse(savedGlobalDeposit);
     
     window.togglePasswordVisibility = function(inputId, btn) {
         const input = document.getElementById(inputId);
@@ -1125,6 +1170,16 @@
     function getNextHour(hour) { return hour === 23 ? 0 : hour + 1; }
     function getZodiacDisplay(z) { return currentLang === 'en' ? `${z.icon} ${z.nameEn} (${z.orderEn})` : `${z.icon} ${z.name} (${z.order})`; }
     
+    // Update player selector display
+    function updatePlayerSelector() {
+        const selectorHtml = !IS_ADMIN ? `<div class="player-badge">🎮 អ្នកលេង: ${CURRENT_PLAYER}</div>` : `<div class="player-badge admin-badge">👑 របៀប Admin</div>`;
+        const elements = ['playerSelector', 'playerSelectorDesktop'];
+        elements.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = selectorHtml;
+        });
+    }
+    
     function playSound(isWin) {
         if (!soundEnabled) return;
         try {
@@ -1167,11 +1222,13 @@
     }
     
     function updateAdminStats() {
-        const totalBets = betHistory.length;
-        const totalWins = betHistory.filter(b => b.status === 'win').length;
+        if (!IS_ADMIN) return;
+        
+        const totalBets = globalBetHistory.length;
+        const totalWins = globalBetHistory.filter(b => b.status === 'win').length;
         const winRate = totalBets > 0 ? ((totalWins / totalBets) * 100).toFixed(1) : 0;
-        const totalDeposits = depositHistory.reduce((sum, d) => sum + d.amount, 0);
-        const totalPayouts = betHistory.filter(b => b.status === 'win').reduce((sum, b) => sum + (b.reward || 0), 0);
+        const totalDeposits = globalDepositHistory.reduce((sum, d) => sum + d.amount, 0);
+        const totalPayouts = globalBetHistory.filter(b => b.status === 'win').reduce((sum, b) => sum + (b.reward || 0), 0);
         const netProfit = totalDeposits - totalPayouts;
         
         document.getElementById('totalBets').innerText = totalBets;
@@ -1194,12 +1251,12 @@
         document.getElementById('summaryNetProfit').style.color = netProfitColor;
         
         const dailyData = {};
-        depositHistory.forEach(dep => {
+        globalDepositHistory.forEach(dep => {
             const dateKey = dep.date.split(' ')[0];
             if (!dailyData[dateKey]) dailyData[dateKey] = { deposits: 0, payouts: 0, bets: 0, wins: 0, losses: 0, totalBetAmount: 0 };
             dailyData[dateKey].deposits += dep.amount;
         });
-        betHistory.forEach(bet => {
+        globalBetHistory.forEach(bet => {
             const dateKey = bet.date.split(' ')[0];
             if (!dailyData[dateKey]) dailyData[dateKey] = { deposits: 0, payouts: 0, bets: 0, wins: 0, losses: 0, totalBetAmount: 0 };
             dailyData[dateKey].bets++;
@@ -1217,7 +1274,28 @@
         document.getElementById('dailyReportList').innerHTML = reportHtml || '<div style="text-align:center;padding:15px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
-    // AUTO PAYMENT SYSTEM - Updates instantly when player wins/loses
+    // Save player data to localStorage
+    function savePlayerData() {
+        if (!IS_ADMIN) {
+            localStorage.setItem(getStorageKey('balance'), currentBalance);
+            localStorage.setItem(getStorageKey('depositHistory'), JSON.stringify(depositHistory));
+            localStorage.setItem(getStorageKey('betHistory'), JSON.stringify(betHistory));
+        }
+    }
+    
+    // Add to global history (for admin reports)
+    function addToGlobalHistory(type, data) {
+        if (type === 'bet') {
+            globalBetHistory.unshift(data);
+            if (globalBetHistory.length > 200) globalBetHistory.pop();
+            localStorage.setItem('global_betHistory', JSON.stringify(globalBetHistory));
+        } else if (type === 'deposit') {
+            globalDepositHistory.unshift(data);
+            if (globalDepositHistory.length > 200) globalDepositHistory.pop();
+            localStorage.setItem('global_depositHistory', JSON.stringify(globalDepositHistory));
+        }
+    }
+    
     function settleBets(currentHour, currentDate, currentSeconds) {
         if (currentSeconds === 1) {
             const numbers = generateNumbers(currentDate);
@@ -1237,7 +1315,6 @@
                         bet.resultDate = formatDateTime(resultDate);
                         
                         if (bet.picked === correctZodiac.name || bet.picked === correctZodiac.nameEn) {
-                            // WIN: Player gets bet amount + reward, Admin pays
                             const totalWinAmount = bet.amount + bet.amount * rewardMultiplier;
                             bet.status = "win";
                             bet.reward = bet.amount * rewardMultiplier;
@@ -1246,7 +1323,6 @@
                             playSound(true);
                             showToast(`${currentLang==='km'?'🎉 ឈ្នះ!':'🎉 Win!'} ${bet.picked} = ${correctZodiac.name} (+$${totalWinAmount.toFixed(2)})`, 'win');
                         } else {
-                            // LOSE: Player loses bet amount, Admin gains
                             bet.status = "lose";
                             bet.reward = 0;
                             adminBalance += bet.amount;
@@ -1259,12 +1335,12 @@
             });
             
             if (changed) {
-                localStorage.setItem('balance', currentBalance);
-                localStorage.setItem('adminBalance', adminBalance);
-                localStorage.setItem('betHistory', JSON.stringify(betHistory));
+                savePlayerData();
+                localStorage.setItem('global_adminBalance', adminBalance);
+                localStorage.setItem('global_adminDepositHistory', JSON.stringify(adminDepositHistory));
                 updateAllBalanceDisplays();
                 renderBetHistory();
-                updateAdminStats();
+                if (IS_ADMIN) updateAdminStats();
             }
         }
     }
@@ -1434,16 +1510,18 @@
     
     function executePredictionFromConfirm() {
         currentBalance -= pendingBetAmount;
-        localStorage.setItem('balance', currentBalance);
+        savePlayerData();
         updateAllBalanceDisplays();
         updateDesktopPreview();
         
         const now = new Date();
         const targetHour = getNextHour(now.getHours());
-        betHistory.unshift({ id: Date.now(), date: formatDateTime(now), targetHour: targetHour, picked: pendingZodiac, result: null, status: "pending", amount: pendingBetAmount, reward: 0 });
-        localStorage.setItem('betHistory', JSON.stringify(betHistory));
+        const betData = { id: Date.now(), date: formatDateTime(now), targetHour: targetHour, picked: pendingZodiac, result: null, status: "pending", amount: pendingBetAmount, reward: 0, player: CURRENT_PLAYER };
+        betHistory.unshift(betData);
+        addToGlobalHistory('bet', betData);
+        savePlayerData();
         renderBetHistory();
-        updateAdminStats();
+        if (IS_ADMIN) updateAdminStats();
         playSound(null);
         showToast(`${translations[currentLang].betPlaced} ${pendingZodiac} $${pendingBetAmount.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(targetHour)}`, 'pending');
         
@@ -1457,27 +1535,27 @@
     function executeAdminAction() {
         if (pendingAdminAction === "clear_deposit") {
             depositHistory = [];
-            localStorage.removeItem('depositHistory');
+            savePlayerData();
             renderDepositHistory();
-            updateAdminStats();
+            if (IS_ADMIN) updateAdminStats();
             showToast(translations[currentLang].confirmClearDeposit, 'pending');
         } else if (pendingAdminAction === "clear_bet") {
             betHistory = [];
-            localStorage.removeItem('betHistory');
+            savePlayerData();
             renderBetHistory();
-            updateAdminStats();
+            if (IS_ADMIN) updateAdminStats();
             showToast(translations[currentLang].confirmClearBet, 'pending');
         } else if (pendingAdminAction === "clear_balance") {
             currentBalance = 0;
-            localStorage.setItem('balance', currentBalance);
+            savePlayerData();
             updateAllBalanceDisplays();
             updateDesktopPreview();
             showToast(translations[currentLang].confirmClearBalance, 'pending');
         } else if (pendingAdminAction === "clear_admin_deposit") {
             adminDepositHistory = [];
-            localStorage.setItem('adminDepositHistory', JSON.stringify(adminDepositHistory));
+            localStorage.setItem('global_adminDepositHistory', JSON.stringify(adminDepositHistory));
+            if (IS_ADMIN) updateAdminStats();
             showToast(translations[currentLang].confirmClearDeposit + " (Admin)", 'pending');
-            updateAdminStats();
         }
     }
     
@@ -1495,18 +1573,19 @@
     }
     
     function loadData() { 
-        const saved = localStorage.getItem('balance'); 
-        if (saved) currentBalance = parseFloat(saved); 
-        const savedDeposit = localStorage.getItem('depositHistory'); 
-        if (savedDeposit) depositHistory = JSON.parse(savedDeposit); 
-        const savedBet = localStorage.getItem('betHistory'); 
-        if (savedBet) betHistory = JSON.parse(savedBet); 
         updateAllBalanceDisplays(); 
-        updateAdminStats(); 
+        if (IS_ADMIN) updateAdminStats(); 
         updateDesktopPreview(); 
     }
     
-    function showAdminPanel() { document.getElementById('mainContainer').style.display = 'none'; document.getElementById('adminContainer').classList.add('show'); }
+    function showAdminPanel() { 
+        if (!IS_ADMIN) {
+            showToast('អ្នកមិនមែនជា Admin! សូមប្រើ URL: ?admin=true', 'lose');
+            return;
+        }
+        document.getElementById('mainContainer').style.display = 'none'; 
+        document.getElementById('adminContainer').classList.add('show'); 
+    }
     function hideAdminPanel() { document.getElementById('mainContainer').style.display = 'block'; document.getElementById('adminContainer').classList.remove('show'); window.dispatchEvent(new Event('resize')); }
     
     function applyLanguage() {
@@ -1530,6 +1609,7 @@
     function toggleSound() { soundEnabled = !soundEnabled; const text = soundEnabled ? translations[currentLang].soundOn : translations[currentLang].soundOff; ['soundText', 'soundTextDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = text; }); showToast(soundEnabled ? (currentLang==='km'?'បើកសំឡេង':'Sound on') : (currentLang==='km'?'បិទសំឡេង':'Sound off'), 'pending'); }
     
     function init() {
+        updatePlayerSelector();
         loadData();
         renderZodiacs();
         updateDisplay();
@@ -1577,7 +1657,7 @@
         document.getElementById('closeAdminEntryModal').addEventListener('click', () => adminEntryModal.classList.remove('show'));
         document.getElementById('confirmAdminEntryBtn').addEventListener('click', () => { const pin = document.getElementById('adminEntryPinInput').value; if (pin === ADMIN_PIN) { adminEntryModal.classList.remove('show'); showAdminPanel(); showToast(currentLang==='km'?'បានចូលទៅកាន់ Admin Panel!':'Entered Admin Panel!', 'pending'); } else { showToast(currentLang==='km'?'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!':'Wrong password!', 'lose'); document.getElementById('adminEntryPinInput').value = ''; } });
         document.getElementById('backToMainBtn').addEventListener('click', hideAdminPanel);
-        document.getElementById('saveMultiplierBtn').addEventListener('click', () => { const newMultiplier = parseInt(document.getElementById('newMultiplier').value); if (newMultiplier >= 1 && newMultiplier <= 20) { rewardMultiplier = newMultiplier; localStorage.setItem('rewardMultiplier', rewardMultiplier); document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x'; showToast(`${currentLang==='km'?'បានកំណត់មេគុណរង្វាន់ទៅ':'Set reward multiplier to'} ${rewardMultiplier}x`, 'pending'); } else { showToast(`${currentLang==='km'?'សូមបញ្ចូលលេខចន្លោះ 1-20':'Please enter number between 1-20'}`, 'lose'); } });
+        document.getElementById('saveMultiplierBtn').addEventListener('click', () => { const newMultiplier = parseInt(document.getElementById('newMultiplier').value); if (newMultiplier >= 1 && newMultiplier <= 20) { rewardMultiplier = newMultiplier; localStorage.setItem('global_rewardMultiplier', rewardMultiplier); document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x'; showToast(`${currentLang==='km'?'បានកំណត់មេគុណរង្វាន់ទៅ':'Set reward multiplier to'} ${rewardMultiplier}x`, 'pending'); } else { showToast(`${currentLang==='km'?'សូមបញ្ចូលលេខចន្លោះ 1-20':'Please enter number between 1-20'}`, 'lose'); } });
         
         const setupTabs = (resultId, depositId, betId) => { document.querySelectorAll(`.tab`).forEach(tab => { tab.addEventListener('click', function() { const tabName = this.getAttribute('data-tab'); document.getElementById(resultId).style.display = tabName === 'result' ? 'block' : 'none'; document.getElementById(depositId).style.display = tabName === 'deposit' ? 'block' : 'none'; document.getElementById(betId).style.display = tabName === 'bet' ? 'block' : 'none'; document.querySelectorAll(`.tab`).forEach(t => t.classList.remove('active')); this.classList.add('active'); }); }); };
         setupTabs('resultTab', 'depositTab', 'betTab'); setupTabs('resultTabDesktop', 'depositTabDesktop', 'betTabDesktop');
@@ -1608,8 +1688,8 @@
         const confirmAdminModal = document.getElementById('confirmAdminModal');
         const adminHistoryModal = document.getElementById('adminHistoryModal');
         
-        // Admin Deposit
         document.getElementById('adminDepositMoneyBtn').addEventListener('click', () => {
+            if (!IS_ADMIN) { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
             currentAction = 'admin_deposit';
             document.getElementById('pinStep').style.display = 'block';
             document.getElementById('amountStep').style.display = 'none';
@@ -1617,38 +1697,33 @@
             depositModal.classList.add('show');
         });
         
-        // View Admin Deposit History
         document.getElementById('adminViewDepositHistoryBtn').addEventListener('click', () => {
+            if (!IS_ADMIN) { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
             const historyList = document.getElementById('adminHistoryList');
             if (adminDepositHistory.length === 0) {
                 historyList.innerHTML = '<div style="text-align:center;padding:15px;color:#aaa">មិនមានប្រវត្តិបញ្ចូលលុយ</div>';
             } else {
                 let html = '';
                 adminDepositHistory.forEach(item => {
-                    html += `<div class="history-modal-item">
-                                <div class="history-modal-date">📅 ${item.date}</div>
-                                <div class="history-modal-amount">💰 +$${item.amount.toFixed(2)}</div>
-                            </div>`;
+                    html += `<div class="history-modal-item"><div class="history-modal-date">📅 ${item.date}</div><div class="history-modal-amount">💰 +$${item.amount.toFixed(2)}</div></div>`;
                 });
                 historyList.innerHTML = html;
             }
             adminHistoryModal.classList.add('show');
         });
         
-        document.getElementById('closeAdminHistoryModal').addEventListener('click', () => {
-            adminHistoryModal.classList.remove('show');
-        });
+        document.getElementById('closeAdminHistoryModal').addEventListener('click', () => { adminHistoryModal.classList.remove('show'); });
         
-        // Clear Admin Deposit History
         document.getElementById('adminClearDepositHistoryBtn').addEventListener('click', () => {
+            if (!IS_ADMIN) { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin':'⚠️ Confirm Clear Admin Deposit History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
             pendingAdminAction = "clear_admin_deposit";
             confirmAdminModal.classList.add('show');
         });
         
-        // Player Deposit
         document.getElementById('playerDepositMoneyBtn').addEventListener('click', () => {
+            if (!IS_ADMIN) { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
             currentAction = 'deposit';
             document.getElementById('pinStep').style.display = 'block';
             document.getElementById('amountStep').style.display = 'none';
@@ -1656,24 +1731,24 @@
             depositModal.classList.add('show');
         });
         
-        // Clear Player Balance
         document.getElementById('playerClearBalanceBtn').addEventListener('click', () => {
+            if (!IS_ADMIN) { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបទឹកប្រាក់អ្នកលេង':'⚠️ Confirm Clear Player Balance';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBalance;
             pendingAdminAction = "clear_balance";
             confirmAdminModal.classList.add('show');
         });
         
-        // Clear Player Deposit History
         document.getElementById('playerClearDepositHistoryBtn').addEventListener('click', () => {
+            if (!IS_ADMIN) { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេង':'⚠️ Confirm Clear Player Deposit History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
             pendingAdminAction = "clear_deposit";
             confirmAdminModal.classList.add('show');
         });
         
-        // Clear Player Bet History
         document.getElementById('playerClearBetHistoryBtn').addEventListener('click', () => {
+            if (!IS_ADMIN) { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេង':'⚠️ Confirm Clear Player Bet History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBet;
             pendingAdminAction = "clear_bet";
@@ -1705,21 +1780,23 @@
             
             if (currentAction === 'deposit') {
                 currentBalance += amt; 
-                localStorage.setItem('balance', currentBalance); 
+                savePlayerData();
                 updateAllBalanceDisplays(); 
                 updateDesktopPreview(); 
-                depositHistory.unshift({ date: formatDateTime(new Date()), amount: amt }); 
-                localStorage.setItem('depositHistory', JSON.stringify(depositHistory)); 
+                const depositData = { date: formatDateTime(new Date()), amount: amt, player: CURRENT_PLAYER };
+                depositHistory.unshift(depositData); 
+                addToGlobalHistory('deposit', depositData);
+                savePlayerData();
                 renderDepositHistory(); 
-                updateAdminStats(); 
+                if (IS_ADMIN) updateAdminStats(); 
                 playSound(null); 
                 showToast(`${translations[currentLang].depositSuccess} $${amt.toFixed(2)}!`, 'pending');
             } else if (currentAction === 'admin_deposit') {
                 adminBalance += amt;
-                localStorage.setItem('adminBalance', adminBalance);
+                localStorage.setItem('global_adminBalance', adminBalance);
                 adminDepositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
-                localStorage.setItem('adminDepositHistory', JSON.stringify(adminDepositHistory));
-                updateAdminStats();
+                localStorage.setItem('global_adminDepositHistory', JSON.stringify(adminDepositHistory));
+                if (IS_ADMIN) updateAdminStats();
                 playSound(null);
                 showToast(`Admin: +$${amt.toFixed(2)}!`, 'pending');
             }
