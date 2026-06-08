@@ -113,6 +113,7 @@
             .desktop-right .zodiac-grid {
                 grid-template-columns: repeat(4, 1fr) !important;
                 gap: 15px;
+                margin-bottom: 20px;
             }
             .desktop-right .zodiac-card {
                 padding: 15px 10px;
@@ -123,10 +124,131 @@
             .desktop-right .zodiac-name {
                 font-size: 0.85rem;
             }
-            /* Enlarge Predict Button */
+            /* Desktop Bet Input Section */
+            .desktop-bet-section {
+                background: rgba(255,255,255,0.03);
+                border-radius: 20px;
+                padding: 20px;
+                margin-top: 5px;
+            }
+            .desktop-bet-title {
+                font-size: 1rem;
+                color: #fbd38d;
+                margin-bottom: 15px;
+                text-align: left;
+            }
+            .desktop-bet-input {
+                display: flex;
+                gap: 15px;
+                margin-bottom: 15px;
+                flex-wrap: wrap;
+            }
+            .desktop-bet-input .bet-input-field {
+                flex: 2;
+                background: #0f0f2a;
+                border: 1px solid #2a2a4a;
+                border-radius: 50px;
+                padding: 14px 20px;
+                color: white;
+                font-size: 1.2rem;
+                text-align: center;
+            }
+            .desktop-bet-input .bet-input-field:focus {
+                outline: none;
+                border-color: #4ade80;
+            }
+            .desktop-bet-shortcuts {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+            }
+            .desktop-bet-shortcut {
+                background: #2a2a4a;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 50px;
+                color: white;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 1rem;
+                transition: all 0.2s;
+            }
+            .desktop-bet-shortcut:hover {
+                background: #f6ad55;
+                color: #0f0c20;
+            }
+            .desktop-zodiac-select {
+                margin-bottom: 20px;
+            }
+            .desktop-zodiac-select-title {
+                font-size: 0.85rem;
+                color: #a0aec0;
+                margin-bottom: 10px;
+                text-align: left;
+            }
+            .desktop-zodiac-options {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            .desktop-zodiac-option {
+                background: #0b0816;
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 12px;
+                padding: 10px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .desktop-zodiac-option.selected {
+                background: linear-gradient(135deg, #ec4899, #f43f5e);
+                border-color: #f43f5e;
+            }
+            .desktop-zodiac-option:hover {
+                background: rgba(236,72,153,0.3);
+            }
+            .desktop-preview-box {
+                background: rgba(0,0,0,0.3);
+                border-radius: 16px;
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            .desktop-preview-row {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+            }
+            .desktop-preview-label {
+                color: #a0aec0;
+            }
+            .desktop-preview-value {
+                color: #4ade80;
+                font-weight: bold;
+            }
+            .desktop-preview-value.negative {
+                color: #fc8181;
+            }
+            .desktop-bet-confirm {
+                background: linear-gradient(135deg, #4ade80, #22c55e);
+                width: 100%;
+                border: none;
+                padding: 14px;
+                border-radius: 50px;
+                color: #1a1a2e;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .desktop-bet-confirm:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 20px rgba(74,222,128,0.4);
+            }
+            /* Enlarge Predict Button (original - may hide or keep) */
             .desktop-right .predict-btn {
-                padding: 16px;
-                font-size: 1.1rem;
+                display: none;
             }
             /* Player actions horizontal */
             .desktop-right .player-actions {
@@ -1112,7 +1234,40 @@
             <div class="zodiac-single-box">
                 <div class="zodiac-title" id="zodiacTitleDesktop">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
                 <div class="zodiac-grid" id="zodiacGridDesktop"></div>
-                <button class="predict-btn" id="openPredictBtnDesktop">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+            </div>
+            
+            <!-- Desktop Bet Input Section (Directly below zodiac table) -->
+            <div class="desktop-bet-section">
+                <div class="desktop-bet-title">💰 បញ្ចូលទឹកប្រាក់ដើម្បីទស្សន៍ទាយ</div>
+                <div class="desktop-bet-input">
+                    <input type="number" class="bet-input-field" id="desktopBetAmount" placeholder="បញ្ចូលចំនួនទឹកប្រាក់" min="0.01" step="0.01" value="0">
+                </div>
+                <div class="desktop-bet-shortcuts">
+                    <button class="desktop-bet-shortcut" data-amount="1">$1</button>
+                    <button class="desktop-bet-shortcut" data-amount="5">$5</button>
+                    <button class="desktop-bet-shortcut" data-amount="10">$10</button>
+                    <button class="desktop-bet-shortcut" data-amount="20">$20</button>
+                    <button class="desktop-bet-shortcut" data-amount="50">$50</button>
+                </div>
+                <div class="desktop-zodiac-select">
+                    <div class="desktop-zodiac-select-title">⭐ ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)</div>
+                    <div class="desktop-zodiac-options" id="desktopZodiacSelectGrid"></div>
+                </div>
+                <div class="desktop-preview-box">
+                    <div class="desktop-preview-row">
+                        <span class="desktop-preview-label">ទឹកប្រាក់បច្ចុប្បន្ន:</span>
+                        <span class="desktop-preview-value" id="desktopPreCurrent">$0.00</span>
+                    </div>
+                    <div class="desktop-preview-row">
+                        <span class="desktop-preview-label">ត្រូវកាត់:</span>
+                        <span class="desktop-preview-value negative" id="desktopPreCost">$0.00</span>
+                    </div>
+                    <div class="desktop-preview-row">
+                        <span class="desktop-preview-label">នៅសល់:</span>
+                        <span class="desktop-preview-value" id="desktopPreRemain">$0.00</span>
+                    </div>
+                </div>
+                <button class="desktop-bet-confirm" id="desktopConfirmBetBtn">✅ យល់ព្រមទស្សន៍ទាយ</button>
             </div>
             
             <div class="history-wrapper">
@@ -1192,7 +1347,7 @@
     </div>
 </div>
 
-<!-- Modals -->
+<!-- Modals (shared) -->
 <div class="modal" id="depositModal">
     <div class="modal-content">
         <div id="pinStep">
@@ -1718,6 +1873,28 @@
             if (el) el.innerHTML = grid;
         });
         
+        // Desktop zodiac select grid
+        let desktopSelectGrid = "";
+        zodiacs.forEach(z => {
+            desktopSelectGrid += `<div class="desktop-zodiac-option" data-name="${currentLang==='km'?z.name:z.nameEn}" data-name-km="${z.name}" data-name-en="${z.nameEn}">
+                                    <div style="font-size:1.2rem">${z.icon}</div>
+                                    <div style="font-size:0.7rem">${currentLang==='km'?z.name:z.nameEn}</div>
+                                </div>`;
+        });
+        const desktopZodiacGrid = document.getElementById('desktopZodiacSelectGrid');
+        if (desktopZodiacGrid) desktopZodiacGrid.innerHTML = desktopSelectGrid;
+        
+        // Desktop zodiac selection
+        document.querySelectorAll('.desktop-zodiac-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.desktop-zodiac-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedZodiac = this.getAttribute('data-name');
+                updateDesktopPreview();
+            });
+        });
+        
+        // Original modal zodiac selection
         let selectGrid = "";
         zodiacs.forEach(z => {
             selectGrid += `<div class="zodiac-option" data-name="${currentLang==='km'?z.name:z.nameEn}" data-name-km="${z.name}" data-name-en="${z.nameEn}">
@@ -1742,6 +1919,19 @@
         document.getElementById('preCurrent').innerText = currentBalance.toFixed(2);
         document.getElementById('preCost').innerText = amt.toFixed(2);
         document.getElementById('preRemain').innerText = remain >= 0 ? remain.toFixed(2) : '0.00';
+    }
+    
+    function updateDesktopPreview() {
+        const amt = parseFloat(document.getElementById('desktopBetAmount').value) || 0;
+        const remain = currentBalance - amt;
+        document.getElementById('desktopPreCurrent').innerText = '$' + currentBalance.toFixed(2);
+        document.getElementById('desktopPreCost').innerText = '$' + amt.toFixed(2);
+        document.getElementById('desktopPreRemain').innerText = remain >= 0 ? '$' + remain.toFixed(2) : '$0.00';
+        if (remain < 0) {
+            document.getElementById('desktopPreRemain').style.color = '#fc8181';
+        } else {
+            document.getElementById('desktopPreRemain').style.color = '#4ade80';
+        }
     }
     
     function renderDepositHistory() {
@@ -1816,10 +2006,33 @@
         });
     }
     
-    function executePrediction() {
+    function executeDesktopPrediction() {
+        const betAmount = parseFloat(document.getElementById('desktopBetAmount').value);
+        if (isNaN(betAmount) || betAmount <= 0) {
+            showToast(currentLang==='km'?'បញ្ចូលទឹកប្រាក់!':'Enter amount!', 'lose');
+            return;
+        }
+        if (!selectedZodiac) {
+            showToast(currentLang==='km'?'ជ្រើសរើសឆ្នាំ!':'Select zodiac!', 'lose');
+            return;
+        }
+        if (currentBalance < betAmount) {
+            showToast(currentLang==='km'?'សមតុល្យមិនគ្រប់! សូមបញ្ចូលលុយបន្ថែម។':'Insufficient balance!', 'lose');
+            return;
+        }
+        
+        // Show confirmation modal
+        pendingBetAmount = betAmount;
+        pendingZodiac = selectedZodiac;
+        document.getElementById('confirmPredictMsg').innerHTML = `${translations[currentLang].confirmPredictMsg} ${selectedZodiac} $${betAmount.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(getNextHour(new Date().getHours()))}?`;
+        document.getElementById('confirmPredictModal').classList.add('show');
+    }
+    
+    function executePredictionFromConfirm() {
         currentBalance -= pendingBetAmount;
         localStorage.setItem('balance', currentBalance);
         updateAllBalanceDisplays();
+        updateDesktopPreview();
         
         const now = new Date();
         const targetHour = getNextHour(now.getHours());
@@ -1838,6 +2051,12 @@
         updateAdminStats();
         playSound(null);
         showToast(`${translations[currentLang].betPlaced} ${pendingZodiac} $${pendingBetAmount.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(targetHour)}`, 'pending');
+        
+        // Reset desktop form
+        document.getElementById('desktopBetAmount').value = '';
+        selectedZodiac = '';
+        document.querySelectorAll('.desktop-zodiac-option').forEach(o => o.classList.remove('selected'));
+        updateDesktopPreview();
     }
     
     function executeAdminAction() {
@@ -1857,6 +2076,7 @@
             currentBalance = 0;
             localStorage.setItem('balance', currentBalance);
             updateAllBalanceDisplays();
+            updateDesktopPreview();
             showToast(translations[currentLang].confirmClearBalance, 'pending');
         }
     }
@@ -1869,6 +2089,7 @@
         updateCountdown();
         updateLuckyNumber();
         updateScheduleList();
+        updateDesktopPreview();
     }
     
     function loadData() {
@@ -1880,6 +2101,7 @@
         if (savedBet) betHistory = JSON.parse(savedBet);
         updateAllBalanceDisplays();
         updateAdminStats();
+        updateDesktopPreview();
     }
     
     function showAdminPanel() {
@@ -1890,7 +2112,6 @@
     function hideAdminPanel() {
         document.getElementById('mainContainer').style.display = 'block';
         document.getElementById('adminContainer').classList.remove('show');
-        // Trigger resize to ensure layout correct
         window.dispatchEvent(new Event('resize'));
     }
     
@@ -1912,7 +2133,7 @@
         });
         
         // Update desktop elements
-        const desktopTexts = ['mainTitleDesktop', 'subTitleDesktop', 'balanceLabelDesktop', 'infoBadgeDesktop', 'zodiacTitleDesktop', 'openPredictBtnDesktop'];
+        const desktopTexts = ['mainTitleDesktop', 'subTitleDesktop', 'balanceLabelDesktop', 'infoBadgeDesktop', 'zodiacTitleDesktop'];
         desktopTexts.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -1921,7 +2142,6 @@
                 else if (id === 'balanceLabelDesktop') el.innerText = t.balanceLabel;
                 else if (id === 'infoBadgeDesktop') el.innerText = t.infoBadge;
                 else if (id === 'zodiacTitleDesktop') el.innerText = t.zodiacTitle;
-                else if (id === 'openPredictBtnDesktop') el.innerText = t.predictBtn;
             }
         });
         
@@ -2016,6 +2236,28 @@
         document.getElementById('langToggleBtnDesktop').addEventListener('click', toggleLanguage);
         document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
         document.getElementById('soundToggleBtnDesktop').addEventListener('click', toggleSound);
+        
+        // Desktop bet input events
+        const desktopBetAmount = document.getElementById('desktopBetAmount');
+        if (desktopBetAmount) {
+            desktopBetAmount.addEventListener('input', updateDesktopPreview);
+        }
+        
+        // Desktop shortcut buttons
+        document.querySelectorAll('.desktop-bet-shortcut').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const amount = parseFloat(this.getAttribute('data-amount'));
+                const current = parseFloat(desktopBetAmount.value) || 0;
+                desktopBetAmount.value = current + amount;
+                updateDesktopPreview();
+            });
+        });
+        
+        // Desktop confirm button
+        const desktopConfirmBtn = document.getElementById('desktopConfirmBetBtn');
+        if (desktopConfirmBtn) {
+            desktopConfirmBtn.addEventListener('click', executeDesktopPrediction);
+        }
         
         // Law button toggle
         let lawVisible = false;
@@ -2124,19 +2366,23 @@
         document.getElementById('toggleHistoryBtn').addEventListener('click', toggleHistory);
         document.getElementById('toggleHistoryBtnDesktop').addEventListener('click', toggleHistory);
         
-        // Predict Modal
-        const predictModal = document.getElementById('predictModal');
+        // Confirm modal for prediction
         const confirmPredictModal = document.getElementById('confirmPredictModal');
-        const openPredict = () => {
+        document.getElementById('cancelPredictConfirm').addEventListener('click', () => confirmPredictModal.classList.remove('show'));
+        document.getElementById('yesPredictConfirm').addEventListener('click', () => {
+            confirmPredictModal.classList.remove('show');
+            executePredictionFromConfirm();
+        });
+        
+        // Mobile predict modal (original)
+        const predictModal = document.getElementById('predictModal');
+        document.getElementById('openPredictBtn').addEventListener('click', () => {
             document.getElementById('betAmount').value = '';
             selectedZodiac = '';
             document.querySelectorAll('.zodiac-option').forEach(o => o.classList.remove('selected'));
             updatePreview();
             predictModal.classList.add('show');
-        };
-        document.getElementById('openPredictBtn').addEventListener('click', openPredict);
-        document.getElementById('openPredictBtnDesktop').addEventListener('click', openPredict);
-        
+        });
         document.getElementById('closePredictModal').addEventListener('click', () => predictModal.classList.remove('show'));
         document.getElementById('betAmount').addEventListener('input', updatePreview);
         
@@ -2159,11 +2405,6 @@
             predictModal.classList.remove('show');
             document.getElementById('confirmPredictMsg').innerHTML = `${translations[currentLang].confirmPredictMsg} ${selectedZodiac} $${amt.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(getNextHour(new Date().getHours()))}?`;
             confirmPredictModal.classList.add('show');
-        });
-        document.getElementById('cancelPredictConfirm').addEventListener('click', () => confirmPredictModal.classList.remove('show'));
-        document.getElementById('yesPredictConfirm').addEventListener('click', () => {
-            confirmPredictModal.classList.remove('show');
-            executePrediction();
         });
         
         // Admin Action Buttons
@@ -2240,6 +2481,7 @@
             currentBalance += amt;
             localStorage.setItem('balance', currentBalance);
             updateAllBalanceDisplays();
+            updateDesktopPreview();
             depositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
             localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
             renderDepositHistory();
