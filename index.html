@@ -6,6 +6,7 @@
     <title>ឆ្នាំសំណាងទាំង 12 - ប្រព័ន្ធទស្សន៍ទាយ</title>
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* [ALL PREVIOUS CSS REMAINS THE SAME - KEEP YOUR ORIGINAL STYLES] */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -133,7 +134,7 @@
             border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 28px;
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
             padding: 20px 16px;
             text-align: center;
             display: none;
@@ -395,10 +396,92 @@
         .commission-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.75rem; flex-wrap: wrap; gap: 8px; }
         .commission-input { background: #0f0f2a; border: 1px solid #2a2a4a; border-radius: 12px; padding: 6px; width: 70px; color: white; text-align: center; }
         .save-btn { background: #4ade80; color: #1a1a2e; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 0.7rem; }
-        .daily-report { max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 16px; padding: 8px; margin-top: 10px; }
-        .report-item { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 8px; margin-bottom: 6px; font-size: 0.65rem; }
-        .report-header { display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: bold; color: #c4b5fd; flex-wrap: wrap; gap: 5px; }
-        .report-details { display: flex; justify-content: space-between; font-size: 0.6rem; color: #a0aec0; flex-wrap: wrap; gap: 8px; }
+        
+        /* ENHANCED DAILY REPORT STYLES */
+        .report-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+        .report-summary {
+            background: linear-gradient(135deg, #1e3a5f, #2a1a5a);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .report-summary-title {
+            font-size: 0.7rem;
+            color: #fbd38d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .report-summary-amount {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #4ade80;
+        }
+        .report-summary-amount.negative {
+            color: #fc8181;
+        }
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .report-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 8px;
+            text-align: center;
+        }
+        .report-card-label {
+            font-size: 0.6rem;
+            color: #a0aec0;
+            margin-bottom: 4px;
+        }
+        .report-card-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #c4b5fd;
+        }
+        .report-card-value.win { color: #4ade80; }
+        .report-card-value.loss { color: #fc8181; }
+        .daily-report-list {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .daily-report-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 6px;
+            font-size: 0.65rem;
+        }
+        .daily-report-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-weight: bold;
+            color: #c4b5fd;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .daily-report-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.6rem;
+            color: #a0aec0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .profit-positive { color: #4ade80; }
+        .profit-negative { color: #fc8181; }
+        
         .admin-buttons-section { margin-top: 15px; border-top: 1px solid rgba(139,92,246,0.3); padding-top: 12px; }
         .section-title { font-size: 0.75rem; color: #c4b5fd; margin-bottom: 10px; text-align: center; font-weight: 600; }
         .admin-buttons { display: flex; flex-direction: column; gap: 10px; }
@@ -761,21 +844,69 @@
     <button class="back-btn" id="backToMainBtn">← ត្រឡប់ទៅកាន់ទំព័រដើម</button>
     <div class="admin-title">🔧 Admin Control Panel</div>
     <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
-    <div class="admin-balance"><div class="admin-balance-label">សមតុល្យ Admin</div><div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div></div>
+    
+    <!-- Admin Balance Display -->
+    <div class="admin-balance">
+        <div class="admin-balance-label">សមតុល្យទឹកប្រាក់ Admin</div>
+        <div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div>
+    </div>
+    
+    <!-- Statistics Cards -->
     <div class="admin-stats">
         <div class="stat-card"><div class="stat-label">សរុបភ្នាល់</div><div class="stat-value" id="totalBets">0</div></div>
         <div class="stat-card"><div class="stat-label">សរុបឈ្នះ</div><div class="stat-value" id="totalWins">0</div></div>
         <div class="stat-card"><div class="stat-label">ភាគរយឈ្នះ</div><div class="stat-value" id="winRate">0%</div></div>
-        <div class="stat-card"><div class="stat-label">ប្រាក់ចំណេញ</div><div class="stat-value" id="profit">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">ប្រាក់ចំណេញសុទ្ធ</div><div class="stat-value" id="netProfit">$0.00</div></div>
     </div>
+    
+    <!-- Reward Multiplier Setting -->
     <div class="commission-box">
         <div class="commission-row"><span>មេគុណរង្វាន់បច្ចុប្បន្ន</span><span id="currentMultiplier">10x</span></div>
         <div class="commission-row"><span>កំណត់មេគុណថ្មី</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div>
         <button class="save-btn" id="saveMultiplierBtn">រក្សាទុក</button>
     </div>
+    
+    <!-- ========== ENHANCED DAILY REPORT SECTION ========== -->
     <div class="commission-box">
-        <div class="commission-row"><span>📊 របាយការណ៍ប្រចាំថ្ងៃ</span></div>
-        <div class="daily-report" id="dailyReport"><div style="text-align:center;padding:10px;color:#aaa">កំពុងផ្ទុក...</div></div>
+        <div class="commission-row"><span>📊 របាយការណ៍ប្រចាំថ្ងៃ (Daily Report)</span></div>
+        
+        <!-- Summary Section -->
+        <div class="report-summary">
+            <div class="report-summary-title">💰 សមតុល្យបច្ចុប្បន្ន</div>
+            <div class="report-summary-amount" id="summaryCurrentBalance">$0.00</div>
+        </div>
+        
+        <div class="report-grid">
+            <div class="report-card">
+                <div class="report-card-label">👤 សមតុល្យអ្នកលេង</div>
+                <div class="report-card-value" id="summaryPlayerBalance">$0.00</div>
+            </div>
+            <div class="report-card">
+                <div class="report-card-label">🔧 សមតុល្យ Admin</div>
+                <div class="report-card-value" id="summaryAdminBalance">$0.00</div>
+            </div>
+            <div class="report-card">
+                <div class="report-card-label">📥 ប្រាក់ដាក់សរុប</div>
+                <div class="report-card-value" id="summaryTotalDeposits">$0.00</div>
+            </div>
+            <div class="report-card">
+                <div class="report-card-label">💸 ប្រាក់បង់សរុប</div>
+                <div class="report-card-value" id="summaryTotalPayouts">$0.00</div>
+            </div>
+            <div class="report-card">
+                <div class="report-card-label">📈 ប្រាក់ចំណេញ/ខាត</div>
+                <div class="report-card-value" id="summaryNetProfit">$0.00</div>
+            </div>
+            <div class="report-card">
+                <div class="report-card-label">🎲 ចំនួនភ្នាល់សរុប</div>
+                <div class="report-card-value" id="summaryTotalBets">0</div>
+            </div>
+        </div>
+        
+        <!-- Daily Report List -->
+        <div class="daily-report-list" id="dailyReportList">
+            <div style="text-align:center;padding:15px;color:#aaa">កំពុងផ្ទុក...</div>
+        </div>
     </div>
     
     <!-- SECTION 1: BUTTONS FOR ADMIN (2 buttons only) -->
@@ -913,29 +1044,49 @@
         return numCache[key];
     }
     
+    // ENHANCED: Update Admin Stats with Full Financial Report
     function updateAdminStats() {
         const totalBets = betHistory.length;
         const totalWins = betHistory.filter(b => b.status === 'win').length;
         const winRate = totalBets > 0 ? ((totalWins / totalBets) * 100).toFixed(1) : 0;
-        const totalDeposits = depositHistory.reduce((sum, d) => sum + d.amount, 0);
-        const totalPayouts = betHistory.filter(b => b.status === 'win').reduce((sum, b) => sum + (b.reward || 0), 0);
-        const profit = totalDeposits - totalPayouts;
         
+        // Calculate total deposits from players
+        const totalDeposits = depositHistory.reduce((sum, d) => sum + d.amount, 0);
+        
+        // Calculate total payouts from winning bets
+        const totalPayouts = betHistory.filter(b => b.status === 'win').reduce((sum, b) => sum + (b.reward || 0), 0);
+        
+        // Net profit = totalDeposits - totalPayouts
+        const netProfit = totalDeposits - totalPayouts;
+        
+        // Update DOM elements
         document.getElementById('totalBets').innerText = totalBets;
         document.getElementById('totalWins').innerText = totalWins;
         document.getElementById('winRate').innerText = winRate + '%';
-        document.getElementById('profit').innerText = '$' + profit.toFixed(2);
-        document.getElementById('adminBalance').innerText = adminBalance.toFixed(2);
+        document.getElementById('netProfit').innerHTML = '$' + netProfit.toFixed(2);
+        document.getElementById('adminBalance').innerHTML = '$' + adminBalance.toFixed(2);
         document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x';
         
-        // ===== FIXED DAILY REPORT - Calculate from betHistory correctly =====
+        // Update Summary Section
+        document.getElementById('summaryCurrentBalance').innerHTML = '$' + currentBalance.toFixed(2);
+        document.getElementById('summaryPlayerBalance').innerHTML = '$' + currentBalance.toFixed(2);
+        document.getElementById('summaryAdminBalance').innerHTML = '$' + adminBalance.toFixed(2);
+        document.getElementById('summaryTotalDeposits').innerHTML = '$' + totalDeposits.toFixed(2);
+        document.getElementById('summaryTotalPayouts').innerHTML = '$' + totalPayouts.toFixed(2);
+        document.getElementById('summaryNetProfit').innerHTML = '$' + netProfit.toFixed(2);
+        document.getElementById('summaryTotalBets').innerHTML = totalBets;
+        
+        const netProfitColor = netProfit >= 0 ? '#4ade80' : '#fc8181';
+        document.getElementById('summaryNetProfit').style.color = netProfitColor;
+        
+        // Build Daily Report List
         const dailyData = {};
         
         // Process deposit history
         depositHistory.forEach(dep => {
             const dateKey = dep.date.split(' ')[0];
             if (!dailyData[dateKey]) {
-                dailyData[dateKey] = { totalBet: 0, totalPayout: 0, bets: 0, wins: 0, losses: 0, deposits: 0 };
+                dailyData[dateKey] = { deposits: 0, payouts: 0, bets: 0, wins: 0, losses: 0, totalBetAmount: 0 };
             }
             dailyData[dateKey].deposits += dep.amount;
         });
@@ -944,34 +1095,46 @@
         betHistory.forEach(bet => {
             const dateKey = bet.date.split(' ')[0];
             if (!dailyData[dateKey]) {
-                dailyData[dateKey] = { totalBet: 0, totalPayout: 0, bets: 0, wins: 0, losses: 0, deposits: 0 };
+                dailyData[dateKey] = { deposits: 0, payouts: 0, bets: 0, wins: 0, losses: 0, totalBetAmount: 0 };
             }
             dailyData[dateKey].bets++;
-            dailyData[dateKey].totalBet += bet.amount;
+            dailyData[dateKey].totalBetAmount += bet.amount;
             if (bet.status === 'win') {
                 dailyData[dateKey].wins++;
-                dailyData[dateKey].totalPayout += bet.reward;
+                dailyData[dateKey].payouts += bet.reward;
             } else if (bet.status === 'lose') {
                 dailyData[dateKey].losses++;
             }
         });
         
         const reportHtml = Object.entries(dailyData).slice(-14).reverse().map(([date, data]) => {
-            const netProfit = data.deposits - data.totalPayout;
-            const netColor = netProfit >= 0 ? '#4ade80' : '#fc8181';
-            const netSign = netProfit >= 0 ? '+' : '-';
-            return `<div class="report-item">
-                        <div class="report-header"><span>📅 ${date}</span><span style="color:${netColor}">${netSign}$${Math.abs(netProfit).toFixed(2)}</span></div>
-                        <div class="report-details"><span>💰 ដាក់លុយ: $${data.deposits.toFixed(2)}</span><span>💸 បង់រង្វាន់: $${data.totalPayout.toFixed(2)}</span></div>
-                        <div class="report-details"><span>🎲 ភ្នាល់: ${data.bets}</span><span>🏆 ឈ្នះ: ${data.wins}</span><span>💔 ចាញ់: ${data.losses}</span></div>
-                        <div class="report-details"><span>📊 ភ្នាល់សរុប: $${data.totalBet.toFixed(2)}</span></div>
+            const dailyProfit = data.deposits - data.payouts;
+            const profitClass = dailyProfit >= 0 ? 'profit-positive' : 'profit-negative';
+            const profitSign = dailyProfit >= 0 ? '+' : '-';
+            return `<div class="daily-report-item">
+                        <div class="daily-report-header">
+                            <span>📅 ${date}</span>
+                            <span class="${profitClass}">${profitSign}$${Math.abs(dailyProfit).toFixed(2)}</span>
+                        </div>
+                        <div class="daily-report-details">
+                            <span>💰 ដាក់លុយ: $${data.deposits.toFixed(2)}</span>
+                            <span>💸 បង់រង្វាន់: $${data.payouts.toFixed(2)}</span>
+                        </div>
+                        <div class="daily-report-details">
+                            <span>🎲 ភ្នាល់: ${data.bets}</span>
+                            <span>🏆 ឈ្នះ: ${data.wins}</span>
+                            <span>💔 ចាញ់: ${data.losses}</span>
+                        </div>
+                        <div class="daily-report-details">
+                            <span>📊 ទឹកប្រាក់ភ្នាល់សរុប: $${data.totalBetAmount.toFixed(2)}</span>
+                        </div>
                     </div>`;
         }).join('');
         
-        document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:10px;color:#aaa">គ្មានទិន្នន័យ</div>';
+        document.getElementById('dailyReportList').innerHTML = reportHtml || '<div style="text-align:center;padding:15px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
-    // ========== Result announces at 20:00:01 ==========
+    // Result announces at 20:00:01 (at 1 second after target hour)
     function settleBets(currentHour, currentDate, currentSeconds) {
         if (currentSeconds === 1) {
             const numbers = generateNumbers(currentDate);
@@ -1425,7 +1588,6 @@
             if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលចំនួនលុយ!':'Enter amount!', 'lose'); return; } 
             
             if (currentAction === 'deposit') {
-                // Add to player balance
                 currentBalance += amt; 
                 localStorage.setItem('balance', currentBalance); 
                 updateAllBalanceDisplays(); 
@@ -1437,7 +1599,6 @@
                 playSound(null); 
                 showToast(`${translations[currentLang].depositSuccess} $${amt.toFixed(2)}!`, 'pending');
             } else if (currentAction === 'admin_deposit') {
-                // Add to admin balance
                 adminBalance += amt;
                 localStorage.setItem('adminBalance', adminBalance);
                 adminDepositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
