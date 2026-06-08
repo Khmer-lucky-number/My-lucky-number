@@ -16,26 +16,76 @@
         body {
             background: linear-gradient(180deg, #0a0a2a 0%, #12123a 100%);
             color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             padding: 16px;
         }
 
-        /* Main Container - Default (Mobile) */
-        .container {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 500px;
-            padding: 20px 16px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-            text-align: center;
-            transition: all 0.3s ease;
+        /* Main Wrapper */
+        .main-wrapper {
+            max-width: 1400px;
             margin: 0 auto;
+        }
+
+        /* Desktop Layout (≥1024px) - 3 Columns using CSS Grid */
+        @media (min-width: 1024px) {
+            body {
+                padding: 20px;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+            }
+            .desktop-grid {
+                display: grid;
+                grid-template-columns: 1.2fr 1.5fr 1.2fr;
+                gap: 20px;
+                align-items: start;
+            }
+            .mobile-only {
+                display: none !important;
+            }
+            .col-card {
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 28px;
+                padding: 20px 16px;
+                box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+            /* Right column history box - fixed height scrollable */
+            .col-card:last-child .history-box {
+                max-height: 500px;
+                overflow-y: auto;
+            }
+            .col-card:last-child .history-wrapper {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+            }
+        }
+
+        /* Mobile/Tablet Layout (≤1023px) */
+        @media (max-width: 1023px) {
+            .desktop-grid {
+                display: none !important;
+            }
+            .mobile-only {
+                display: block;
+            }
+            .mobile-container {
+                background: rgba(255, 255, 255, 0.03);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 28px;
+                width: 100%;
+                max-width: 500px;
+                margin: 0 auto;
+                padding: 20px 16px;
+                box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+                text-align: center;
+            }
         }
 
         /* Admin Container */
@@ -49,14 +99,13 @@
             padding: 20px 16px;
             box-shadow: 0 25px 45px rgba(0,0,0,0.3);
             text-align: center;
-            transition: all 0.3s ease;
-            display: none;
             margin: 0 auto;
+            display: none;
         }
         .admin-container.show {
             display: block;
         }
-        .container.hide {
+        .main-wrapper.hide {
             display: none;
         }
 
@@ -290,11 +339,9 @@
             box-shadow: 0 5px 20px rgba(236,72,153,0.4);
         }
 
-        /* History Wrapper - Scrollable with fixed height */
-        .history-wrapper { 
+        /* History Wrapper */
+        .history-wrapper {
             margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
         }
         .history-header {
             display: flex;
@@ -334,7 +381,6 @@
             cursor: pointer;
             font-size: 0.65rem;
         }
-        /* History Box - Scrollable */
         .history-box {
             background: rgba(0,0,0,0.2);
             border-radius: 16px;
@@ -545,7 +591,6 @@
             gap: 8px;
         }
         
-        /* Admin Action Buttons Section */
         .admin-buttons-section {
             margin-top: 15px;
             border-top: 1px solid rgba(139,92,246,0.3);
@@ -584,7 +629,6 @@
             transform: translateY(-1px);
         }
         
-        /* Player Action Buttons inside Admin Panel */
         .player-buttons-section {
             margin-top: 15px;
             border-top: 1px solid rgba(74,222,128,0.3);
@@ -830,293 +874,142 @@
             text-align: left;
         }
 
-        /* ==================== DESKTOP LAYOUT (≥1024px) - 3 Columns ==================== */
-        @media (min-width: 1024px) {
-            body {
-                padding: 20px;
-                align-items: flex-start;
-            }
-            
-            .container {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                max-width: 1400px;
-                width: 100%;
-                gap: 20px;
-                background: transparent;
-                backdrop-filter: none;
-                border: none;
-                box-shadow: none;
-                padding: 0;
-            }
-            
-            /* Column 1 - Left Side */
-            .desktop-col-left {
-                flex: 1.2;
-                min-width: 280px;
-                background: rgba(255, 255, 255, 0.03);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 28px;
-                padding: 20px 16px;
-                box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-            }
-            
-            /* Column 2 - Center */
-            .desktop-col-center {
-                flex: 1.5;
-                min-width: 320px;
-                background: rgba(255, 255, 255, 0.03);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 28px;
-                padding: 20px 16px;
-                box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-            }
-            
-            /* Column 3 - Right Side */
-            .desktop-col-right {
-                flex: 1.2;
-                min-width: 300px;
-                background: rgba(255, 255, 255, 0.03);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                border-radius: 28px;
-                padding: 20px 16px;
-                box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-            }
-            
-            /* Hide mobile layout elements */
-            .mobile-layout .desktop-col-left,
-            .mobile-layout .desktop-col-center,
-            .mobile-layout .desktop-col-right {
-                display: none;
-            }
-            
-            /* Show desktop layout */
-            .desktop-layout {
-                display: flex !important;
-                width: 100%;
-                gap: 20px;
-            }
-            
-            /* Hide single column elements */
-            .single-col-content {
-                display: none;
-            }
-            
-            /* Right column history box - fixed height scrollable */
-            .desktop-col-right .history-wrapper {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                min-height: 400px;
-            }
-            
-            .desktop-col-right .history-box {
-                flex: 1;
-                max-height: 450px;
-                overflow-y: auto;
-            }
-        }
-
-        /* Mobile/Tablet Layout (default) */
-        @media (max-width: 1023px) {
-            .desktop-layout {
-                display: none !important;
-            }
-            .single-col-content {
-                display: block;
-            }
-        }
-
-        /* Small Phones (≤480px) */
+        /* Responsive adjustments */
         @media (max-width: 480px) {
             body { padding: 8px; }
-            .container { padding: 14px 10px; border-radius: 20px; }
+            .mobile-container, .admin-container { padding: 14px 10px; border-radius: 20px; }
             .main-title { font-size: 1.1rem; }
-            .sub-title { font-size: 0.55rem; margin-bottom: 12px; }
             .balance-amount { font-size: 1.4rem; }
-            .balance-inner { padding: 10px; }
             .history-box { max-height: 250px; }
-        }
-
-        /* Tablets (641px - 900px) */
-        @media (min-width: 641px) and (max-width: 900px) {
-            .container { max-width: 650px; padding: 24px 20px; }
-            .main-title { font-size: 1.6rem; }
-            .balance-amount { font-size: 2rem; }
-            .history-box { max-height: 350px; }
         }
     </style>
 </head>
 <body>
-<!-- Main Container - Unified -->
-<div id="mainContainer" class="container">
-    <!-- Single Column Content (Mobile/Tablet) -->
-    <div class="single-col-content">
-        <div class="top-controls">
-            <button class="top-btn" id="soundToggleBtn">
-                <span id="soundIcon">🔊</span>
-                <span id="soundText">បិទសំឡេង</span>
-            </button>
-            <button class="top-btn" id="langToggleBtn">
-                <span>🌐</span>
-                <span id="langText">ភាសាខ្មែរ</span>
-            </button>
-        </div>
-
-        <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
-        <div class="sub-title" id="subTitle">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
-        
-        <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
-        
-        <div class="balance-card">
-            <div class="floating-money">
-                <div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div>
-                <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
-            </div>
-            <div class="balance-inner">
-                <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
-                <div class="balance-amount">$<span id="userBalance">0.00</span></div>
-            </div>
-        </div>
-        
-        <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
-        
-        <div class="section-indicator" id="currentHourText">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
-        <div class="lucky-circle" id="luckyNumber">?</div>
-        
-        <div class="countdown-box" id="countdownText">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimer">--:--</span></div>
-        
-        <div class="zodiac-single-box">
-            <div class="zodiac-title" id="zodiacTitle">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
-            <div class="zodiac-grid" id="zodiacGrid"></div>
-            <button class="predict-btn" id="openPredictBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
-        </div>
-        
-        <div class="history-wrapper">
-            <div class="history-header">
-                <div class="tabs">
-                    <button class="tab active" data-tab="result" id="tabResult">លទ្ធផលម៉ោង</button>
-                    <button class="tab" data-tab="deposit" id="tabDeposit">ប្រវត្តិបញ្ចូលលុយ</button>
-                    <button class="tab" data-tab="bet" id="tabBet">ប្រវត្តិទស្សន៍ទាយ</button>
-                </div>
-                <button class="toggle-history" id="toggleHistoryBtn">👁️ លាក់</button>
-            </div>
-            <div class="history-box" id="historyBox">
-                <div id="resultTab"><div id="scheduleList"></div></div>
-                <div id="depositTab" style="display:none;"><div id="depositList"></div></div>
-                <div id="betTab" style="display:none;"><div id="betList"></div></div>
-            </div>
-        </div>
-        
-        <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
-        
-        <div class="player-actions">
-            <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
-            <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
-        </div>
-        
-        <div class="law-text" id="lawText">
-            <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
-            <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
-            <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
-            <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ (ឧទាហរណ៍: ចាក់នៅម៉ោង 4:53 → លទ្ធផលចេញនៅម៉ោង 5:00)</p>
-            <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ និងមិនអាចតវ៉ាបាន</p>
-            <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
-        </div>
-    </div>
-
-    <!-- Desktop Layout (3 Columns) -->
-    <div class="desktop-layout" style="display: none;">
+<div class="main-wrapper" id="mainWrapper">
+    <!-- Desktop Layout (3 Columns) - visible on ≥1024px -->
+    <div class="desktop-grid">
         <!-- Column 1 - Left Side -->
-        <div class="desktop-col-left">
+        <div class="col-card">
             <div class="top-controls">
-                <button class="top-btn" id="soundToggleBtnDesktop">
-                    <span>🔊</span>
-                    <span>បិទសំឡេង</span>
-                </button>
-                <button class="top-btn" id="langToggleBtnDesktop">
-                    <span>🌐</span>
-                    <span>ភាសាខ្មែរ</span>
-                </button>
+                <button class="top-btn" id="soundToggleBtn">🔊 <span id="soundText">បិទសំឡេង</span></button>
+                <button class="top-btn" id="langToggleBtn">🌐 <span id="langText">ភាសាខ្មែរ</span></button>
             </div>
-
-            <div class="main-title" id="mainTitleDesktop">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
-            <div class="sub-title" id="subTitleDesktop">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
-            
-            <div class="live-time-badge" id="liveClockDesktop">📅 --/--/---- | ⏰ --:--:--</div>
-            
+            <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
+            <div class="sub-title" id="subTitle">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
+            <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
             <div class="balance-card">
                 <div class="floating-money">
                     <div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div>
                     <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
                 </div>
                 <div class="balance-inner">
-                    <div class="balance-label" id="balanceLabelDesktop">សមតុល្យបច្ចុប្បន្ន</div>
-                    <div class="balance-amount">$<span id="userBalanceDesktop">0.00</span></div>
+                    <div class="balance-label" id="balanceLabel">សមតុល្យបច្ចុប្បន្ន</div>
+                    <div class="balance-amount">$<span id="userBalance">0.00</span></div>
                 </div>
             </div>
-            
-            <div class="info-badge" id="infoBadgeDesktop">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
-            
-            <div class="section-indicator" id="currentHourTextDesktop">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
-            <div class="lucky-circle" id="luckyNumberDesktop">?</div>
-            
-            <div class="countdown-box" id="countdownTextDesktop">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimerDesktop">--:--</span></div>
+            <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
+            <div class="section-indicator" id="currentHourText">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
+            <div class="lucky-circle" id="luckyNumber">?</div>
+            <div class="countdown-box" id="countdownText">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimer">--:--</span></div>
         </div>
         
         <!-- Column 2 - Center -->
-        <div class="desktop-col-center">
+        <div class="col-card">
             <div class="zodiac-single-box">
-                <div class="zodiac-title" id="zodiacTitleDesktop">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
-                <div class="zodiac-grid" id="zodiacGridDesktop"></div>
-                <button class="predict-btn" id="openPredictBtnDesktop">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+                <div class="zodiac-title" id="zodiacTitle">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
+                <div class="zodiac-grid" id="zodiacGrid"></div>
+                <button class="predict-btn" id="openPredictBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
             </div>
         </div>
         
         <!-- Column 3 - Right Side -->
-        <div class="desktop-col-right">
+        <div class="col-card">
             <div class="history-wrapper">
                 <div class="history-header">
                     <div class="tabs">
-                        <button class="tab active" data-tab="result" id="tabResultDesktop">លទ្ធផលម៉ោង</button>
-                        <button class="tab" data-tab="deposit" id="tabDepositDesktop">ប្រវត្តិបញ្ចូលលុយ</button>
-                        <button class="tab" data-tab="bet" id="tabBetDesktop">ប្រវត្តិទស្សន៍ទាយ</button>
+                        <button class="tab active" data-tab="result">លទ្ធផលម�ោង</button>
+                        <button class="tab" data-tab="deposit">ប្រវត្តិបញ្ចូលលុយ</button>
+                        <button class="tab" data-tab="bet">ប្រវត្តិទស្សន៍ទាយ</button>
                     </div>
-                    <button class="toggle-history" id="toggleHistoryBtnDesktop">👁️ លាក់</button>
+                    <button class="toggle-history" id="toggleHistoryBtn">👁️ លាក់</button>
                 </div>
-                <div class="history-box" id="historyBoxDesktop">
-                    <div id="resultTabDesktop"><div id="scheduleListDesktop"></div></div>
-                    <div id="depositTabDesktop" style="display:none;"><div id="depositListDesktop"></div></div>
-                    <div id="betTabDesktop" style="display:none;"><div id="betListDesktop"></div></div>
+                <div class="history-box" id="historyBox">
+                    <div id="resultTab"><div id="scheduleList"></div></div>
+                    <div id="depositTab" style="display:none;"><div id="depositList"></div></div>
+                    <div id="betTab" style="display:none;"><div id="betList"></div></div>
                 </div>
             </div>
-            
-            <button class="admin-panel-btn" id="adminPanelBtnDesktop">🔧 Admin Panel</button>
-            
+            <button class="admin-panel-btn" id="adminPanelBtn">🔧 Admin Panel</button>
             <div class="player-actions">
-                <button class="player-btn" id="playerLawBtnDesktop">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
-                <button class="player-btn" id="playerTelegramBtnDesktop">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
+                <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
+                <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
             </div>
-            
-            <div class="law-text" id="lawTextDesktop">
+            <div class="law-text" id="lawText">
                 <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
                 <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
                 <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
-                <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ (ឧទាហរណ៍: ចាក់នៅម៉ោង 4:53 → លទ្ធផលចេញនៅម៉ោង 5:00)</p>
-                <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ និងមិនអាចតវ៉ាបាន</p>
+                <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p>
+                <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p>
+                <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile/Tablet Layout (single column) -->
+    <div class="mobile-only">
+        <div class="mobile-container">
+            <div class="top-controls">
+                <button class="top-btn" id="soundToggleBtnM">🔊 <span id="soundTextM">បិទសំឡេង</span></button>
+                <button class="top-btn" id="langToggleBtnM">🌐 <span id="langTextM">ភាសាខ្មែរ</span></button>
+            </div>
+            <div class="main-title" id="mainTitleM">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
+            <div class="sub-title" id="subTitleM">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
+            <div class="live-time-badge" id="liveClockM">📅 --/--/---- | ⏰ --:--:--</div>
+            <div class="balance-card">
+                <div class="floating-money">
+                    <div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div>
+                    <div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div>
+                </div>
+                <div class="balance-inner">
+                    <div class="balance-label" id="balanceLabelM">សមតុល្យបច្ចុប្បន្ន</div>
+                    <div class="balance-amount">$<span id="userBalanceM">0.00</span></div>
+                </div>
+            </div>
+            <div class="info-badge" id="infoBadgeM">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!</div>
+            <div class="section-indicator" id="currentHourTextM">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
+            <div class="lucky-circle" id="luckyNumberM">?</div>
+            <div class="countdown-box" id="countdownTextM">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimerM">--:--</span></div>
+            <div class="zodiac-single-box">
+                <div class="zodiac-title" id="zodiacTitleM">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
+                <div class="zodiac-grid" id="zodiacGridM"></div>
+                <button class="predict-btn" id="openPredictBtnM">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+            </div>
+            <div class="history-wrapper">
+                <div class="history-header">
+                    <div class="tabs">
+                        <button class="tab active" data-tab="result">លទ្ធផលម៉ោង</button>
+                        <button class="tab" data-tab="deposit">ប្រវត្តិបញ្ចូលលុយ</button>
+                        <button class="tab" data-tab="bet">ប្រវត្តិទស្សន៍ទាយ</button>
+                    </div>
+                    <button class="toggle-history" id="toggleHistoryBtnM">👁️ លាក់</button>
+                </div>
+                <div class="history-box" id="historyBoxM">
+                    <div id="resultTabM"><div id="scheduleListM"></div></div>
+                    <div id="depositTabM" style="display:none;"><div id="depositListM"></div></div>
+                    <div id="betTabM" style="display:none;"><div id="betListM"></div></div>
+                </div>
+            </div>
+            <button class="admin-panel-btn" id="adminPanelBtnM">🔧 Admin Panel</button>
+            <div class="player-actions">
+                <button class="player-btn" id="playerLawBtnM">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
+                <button class="player-btn" id="playerTelegramBtnM">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
+            </div>
+            <div class="law-text" id="lawTextM">
+                <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
+                <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
+                <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
+                <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p>
+                <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p>
                 <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
             </div>
         </div>
@@ -1126,55 +1019,27 @@
 <!-- Admin Panel Container -->
 <div id="adminContainer" class="admin-container">
     <button class="back-btn" id="backToMainBtn">← ត្រឡប់ទៅកាន់ទំព័រដើម</button>
-    
     <div class="admin-title">🔧 Admin Control Panel</div>
     <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
-    
     <div class="admin-balance">
         <div class="admin-balance-label">សមតុល្យ Admin</div>
         <div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div>
     </div>
-    
     <div class="admin-stats">
-        <div class="stat-card">
-            <div class="stat-label">សរុបភ្នាល់</div>
-            <div class="stat-value" id="totalBets">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">សរុបឈ្នះ</div>
-            <div class="stat-value" id="totalWins">0</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">ភាគរយឈ្នះ</div>
-            <div class="stat-value" id="winRate">0%</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">ប្រាក់ចំណេញ</div>
-            <div class="stat-value" id="profit">$0.00</div>
-        </div>
+        <div class="stat-card"><div class="stat-label">សរុបភ្នាល់</div><div class="stat-value" id="totalBets">0</div></div>
+        <div class="stat-card"><div class="stat-label">សរុបឈ្នះ</div><div class="stat-value" id="totalWins">0</div></div>
+        <div class="stat-card"><div class="stat-label">ភាគរយឈ្នះ</div><div class="stat-value" id="winRate">0%</div></div>
+        <div class="stat-card"><div class="stat-label">ប្រាក់ចំណេញ</div><div class="stat-value" id="profit">$0.00</div></div>
     </div>
-    
     <div class="commission-box">
-        <div class="commission-row">
-            <span>មេគុណរង្វាន់បច្ចុប្បន្ន</span>
-            <span id="currentMultiplier">10x</span>
-        </div>
-        <div class="commission-row">
-            <span>កំណត់មេគុណថ្មី</span>
-            <input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10">
-        </div>
+        <div class="commission-row"><span>មេគុណរង្វាន់បច្ចុប្បន្ន</span><span id="currentMultiplier">10x</span></div>
+        <div class="commission-row"><span>កំណត់មេគុណថ្មី</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div>
         <button class="save-btn" id="saveMultiplierBtn">រក្សាទុក</button>
     </div>
-    
     <div class="commission-box">
-        <div class="commission-row">
-            <span>📊 របាយការណ៍ប្រចាំថ្ងៃ</span>
-        </div>
-        <div class="daily-report" id="dailyReport">
-            <div style="text-align:center;padding:10px;color:#aaa">កំពុងផ្ទុក...</div>
-        </div>
+        <div class="commission-row"><span>📊 របាយការណ៍ប្រចាំថ្ងៃ</span></div>
+        <div class="daily-report" id="dailyReport"><div style="text-align:center;padding:10px;color:#aaa">កំពុងផ្ទុក...</div></div>
     </div>
-    
     <div class="admin-buttons-section">
         <div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div>
         <div class="admin-buttons">
@@ -1182,7 +1047,6 @@
             <button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលទឹកប្រាក់របស់ Admin</button>
         </div>
     </div>
-    
     <div class="player-buttons-section">
         <div class="player-section-title">🎮 ប៊ូតុងសម្រាប់អ្នកលេង</div>
         <div class="player-admin-buttons">
@@ -1194,7 +1058,7 @@
     </div>
 </div>
 
-<!-- Modals -->
+<!-- Modals (shared) -->
 <div class="modal" id="depositModal">
     <div class="modal-content">
         <div id="pinStep">
@@ -1203,18 +1067,12 @@
                 <input type="password" class="password-input" id="pinInput" placeholder="កូដសម្ងាត់" maxlength="10">
                 <button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInput', this)">👁️</button>
             </div>
-            <div class="modal-buttons">
-                <button class="modal-btn btn-cancel" id="closeDepositModal">បោះបង់</button>
-                <button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button>
-            </div>
+            <div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeDepositModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button></div>
         </div>
         <div id="amountStep" style="display:none;">
             <div class="modal-title">💵 បញ្ចូលទឹកប្រាក់</div>
             <input type="number" class="modal-input" id="amountInput" placeholder="ចំនួនទឹកប្រាក់" min="0.01" step="0.01">
-            <div class="modal-buttons">
-                <button class="modal-btn btn-cancel" id="backToPinBtn">ត្រឡប់</button>
-                <button class="modal-btn btn-confirm" id="submitDepositBtn">បញ្ចូល</button>
-            </div>
+            <div class="modal-buttons"><button class="modal-btn btn-cancel" id="backToPinBtn">ត្រឡប់</button><button class="modal-btn btn-confirm" id="submitDepositBtn">បញ្ចូល</button></div>
         </div>
     </div>
 </div>
@@ -1226,10 +1084,7 @@
             <input type="password" class="password-input" id="adminEntryPinInput" placeholder="ពាក្យសម្ងាត់">
             <button type="button" class="toggle-password" onclick="togglePasswordVisibility('adminEntryPinInput', this)">👁️</button>
         </div>
-        <div class="modal-buttons">
-            <button class="modal-btn btn-cancel" id="closeAdminEntryModal">បោះបង់</button>
-            <button class="modal-btn btn-confirm" id="confirmAdminEntryBtn">ផ្ទៀងផ្ទាត់</button>
-        </div>
+        <div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminEntryModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmAdminEntryBtn">ផ្ទៀងផ្ទាត់</button></div>
     </div>
 </div>
 
@@ -1243,18 +1098,13 @@
         </div>
         <input type="number" class="modal-input" id="betAmount" placeholder="បញ្ចូលទឹកប្រាក់" min="0.01" step="0.01" value="0">
         <div class="shortcut-grid">
-            <button class="shortcut" data-amount="1">$1</button>
-            <button class="shortcut" data-amount="5">$5</button>
-            <button class="shortcut" data-amount="10">$10</button>
-            <button class="shortcut" data-amount="20">$20</button>
+            <button class="shortcut" data-amount="1">$1</button><button class="shortcut" data-amount="5">$5</button>
+            <button class="shortcut" data-amount="10">$10</button><button class="shortcut" data-amount="20">$20</button>
             <button class="shortcut" data-amount="50">$50</button>
         </div>
         <div class="zodiac-select-title" id="selectZodiacTitle">ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)៖</div>
         <div class="zodiac-select-grid" id="zodiacSelectGrid"></div>
-        <div class="modal-buttons">
-            <button class="modal-btn btn-cancel" id="closePredictModal">បោះបង់</button>
-            <button class="modal-btn btn-confirm" id="confirmPredictBtn">ទស្សន៍ទាយ</button>
-        </div>
+        <div class="modal-buttons"><button class="modal-btn btn-cancel" id="closePredictModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPredictBtn">ទស្សន៍ទាយ</button></div>
     </div>
 </div>
 
@@ -1262,10 +1112,7 @@
     <div class="confirm-box">
         <div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div>
         <div class="confirm-message" id="confirmPredictMsg">តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?</div>
-        <div class="confirm-buttons">
-            <button class="confirm-btn confirm-no" id="cancelPredictConfirm">បោះបង់</button>
-            <button class="confirm-btn confirm-yes" id="yesPredictConfirm">យល់ព្រម</button>
-        </div>
+        <div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelPredictConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesPredictConfirm">យល់ព្រម</button></div>
     </div>
 </div>
 
@@ -1273,10 +1120,7 @@
     <div class="confirm-box">
         <div class="confirm-title" id="confirmAdminTitle">⚠️ បញ្ជាក់សកម្មភាព</div>
         <div class="confirm-message" id="confirmAdminMsg">តើអ្នកពិតជាចង់ធ្វើសកម្មភាពនេះមែនទេ?</div>
-        <div class="confirm-buttons">
-            <button class="confirm-btn confirm-no" id="cancelAdminConfirm">បោះបង់</button>
-            <button class="confirm-btn confirm-yes" id="yesAdminConfirm">យល់ព្រម</button>
-        </div>
+        <div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelAdminConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesAdminConfirm">យល់ព្រម</button></div>
     </div>
 </div>
 
@@ -1556,19 +1400,9 @@
         const reportHtml = Object.entries(dailyData).slice(-10).reverse().map(([date, data]) => {
             const net = data.totalBet - data.totalPayout;
             return `<div class="report-item">
-                        <div class="report-header">
-                            <span>📅 ${date}</span>
-                            <span style="color:${net>=0?'#4ade80':'#fc8181'}">${net>=0?'+':'-'}$${Math.abs(net).toFixed(2)}</span>
-                        </div>
-                        <div class="report-details">
-                            <span>🎲 ${data.bets}</span>
-                            <span>🏆 ${data.wins}</span>
-                            <span>💔 ${data.losses}</span>
-                        </div>
-                        <div class="report-details" style="margin-top:4px;">
-                            <span>💰 $${data.totalBet.toFixed(2)}</span>
-                            <span>💸 $${data.totalPayout.toFixed(2)}</span>
-                        </div>
+                        <div class="report-header"><span>📅 ${date}</span><span style="color:${net>=0?'#4ade80':'#fc8181'}">${net>=0?'+':'-'}$${Math.abs(net).toFixed(2)}</span></div>
+                        <div class="report-details"><span>🎲 ${data.bets}</span><span>🏆 ${data.wins}</span><span>💔 ${data.losses}</span></div>
+                        <div class="report-details" style="margin-top:4px;"><span>💰 $${data.totalBet.toFixed(2)}</span><span>💸 $${data.totalPayout.toFixed(2)}</span></div>
                     </div>`;
         }).join('');
         
@@ -1584,7 +1418,7 @@
             const numbers = generateNumbers(currentDate);
             let changed = false;
             
-            betHistory.forEach((bet, index) => {
+            betHistory.forEach((bet) => {
                 if (bet.status === "pending" && bet.targetHour === lastProcessedHour) {
                     const correctNum = numbers[lastProcessedHour];
                     const correctZodiac = zodiacMap[correctNum];
@@ -1623,7 +1457,7 @@
     }
     
     function updateAllBalanceDisplays() {
-        const elements = ['userBalance', 'userBalanceDesktop'];
+        const elements = ['userBalance', 'userBalanceM'];
         elements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerText = currentBalance.toFixed(2);
@@ -1638,7 +1472,7 @@
         const timeStr = `${ch.toString().padStart(2,'0')}:${cm.toString().padStart(2,'0')}:${cs.toString().padStart(2,'0')}`;
         const clockHtml = `📅 ${dateStr} | ⏰ ${timeStr}`;
         
-        const elements = ['liveClock', 'liveClockDesktop'];
+        const elements = ['liveClock', 'liveClockM'];
         elements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = clockHtml;
@@ -1649,7 +1483,7 @@
         const now = new Date();
         const nextHour = getNextHour(now.getHours());
         const text = `${translations[currentLang].currentHourLabel} ${formatHour(nextHour)}`;
-        const elements = ['currentHourText', 'currentHourTextDesktop'];
+        const elements = ['currentHourText', 'currentHourTextM'];
         elements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = text;
@@ -1662,13 +1496,13 @@
         const remainM = 59-cm, remainS = 59-cs;
         const countdown = `${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
         
-        const timerElements = ['countdownTimer', 'countdownTimerDesktop'];
+        const timerElements = ['countdownTimer', 'countdownTimerM'];
         timerElements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = countdown;
         });
         
-        const textElements = ['countdownText', 'countdownTextDesktop'];
+        const textElements = ['countdownText', 'countdownTextM'];
         textElements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = `${translations[currentLang].countdownLabel} <span class="countdown-time">${countdown}</span>`;
@@ -1683,7 +1517,7 @@
         const currentZodiac = zodiacMap[todayNums[ch]];
         const display = currentZodiac ? getZodiacDisplay(currentZodiac) : "?";
         
-        const elements = ['luckyNumber', 'luckyNumberDesktop'];
+        const elements = ['luckyNumber', 'luckyNumberM'];
         elements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = display;
@@ -1727,7 +1561,7 @@
                     </div>`;
         }
         
-        const elements = ['scheduleList', 'scheduleListDesktop'];
+        const elements = ['scheduleList', 'scheduleListM'];
         elements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = html;
@@ -1744,7 +1578,7 @@
                     </div>`;
         });
         
-        const elements = ['zodiacGrid', 'zodiacGridDesktop'];
+        const elements = ['zodiacGrid', 'zodiacGridM'];
         elements.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerHTML = grid;
@@ -1769,11 +1603,12 @@
     }
     
     function renderDepositHistory() {
-        const container = document.getElementById('depositList');
+        const containers = ['depositList', 'depositListM'];
         if (!depositHistory.length) {
-            if (container) container.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិបញ្ចូលលុយ':'No deposit history'}</div>`;
-            const containerDesktop = document.getElementById('depositListDesktop');
-            if (containerDesktop) containerDesktop.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិបញ្ចូលលុយ':'No deposit history'}</div>`;
+            containers.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិបញ្ចូលលុយ':'No deposit history'}</div>`;
+            });
             return;
         }
         let html = "";
@@ -1783,17 +1618,19 @@
                         <div style="color:#4ade80">+$${d.amount.toFixed(2)}</div>
                     </div>`;
         });
-        if (container) container.innerHTML = html;
-        const containerDesktop = document.getElementById('depositListDesktop');
-        if (containerDesktop) containerDesktop.innerHTML = html;
+        containers.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        });
     }
     
     function renderBetHistory() {
-        const container = document.getElementById('betList');
+        const containers = ['betList', 'betListM'];
         if (!betHistory.length) {
-            if (container) container.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិទស្សន៍ទាយ':'No bet history'}</div>`;
-            const containerDesktop = document.getElementById('betListDesktop');
-            if (containerDesktop) containerDesktop.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិទស្សន៍ទាយ':'No bet history'}</div>`;
+            containers.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិទស្សន៍ទាយ':'No bet history'}</div>`;
+            });
             return;
         }
         let html = "";
@@ -1824,21 +1661,17 @@
             }
             html += `<div class="history-item" style="flex-direction:column; align-items:flex-start;">
                         <div style="display:flex; justify-content:space-between; width:100%;">
-                            <div>
-                                <strong>🎯 ${b.picked}</strong>
-                                <div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div>
-                            </div>
-                            <div class="${statusClass}" style="text-align:right;">
-                                ${statusText}<br>${rewardHtml}
-                            </div>
+                            <div><strong>🎯 ${b.picked}</strong><div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div></div>
+                            <div class="${statusClass}" style="text-align:right;">${statusText}<br>${rewardHtml}</div>
                         </div>
                         <div style="font-size:0.7rem; margin-top:4px;">🎲 ${translations[currentLang].betPlaced} ${translations[currentLang].forHour} <strong>${formatHour(b.targetHour)}</strong></div>
                         ${resultHtml}
                     </div>`;
         });
-        if (container) container.innerHTML = html;
-        const containerDesktop = document.getElementById('betListDesktop');
-        if (containerDesktop) containerDesktop.innerHTML = html;
+        containers.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        });
     }
     
     function updatePreview() {
@@ -1916,25 +1749,22 @@
     }
     
     function showAdminPanel() {
-        document.getElementById('mainContainer').style.display = 'none';
+        document.getElementById('mainWrapper').classList.add('hide');
         document.getElementById('adminContainer').classList.add('show');
     }
     
     function hideAdminPanel() {
-        document.getElementById('mainContainer').style.display = 'block';
+        document.getElementById('mainWrapper').classList.remove('hide');
         document.getElementById('adminContainer').classList.remove('show');
-        // Reset layout display
-        if (window.innerWidth >= 1024) {
-            document.querySelector('.desktop-layout').style.display = 'flex';
-        }
     }
     
     function applyLanguage() {
         const t = translations[currentLang];
         
-        // Update mobile elements
-        const mobileTexts = ['mainTitle', 'subTitle', 'balanceLabel', 'infoBadge', 'zodiacTitle', 'openPredictBtn', 'tabResult', 'tabDeposit', 'tabBet'];
-        mobileTexts.forEach(id => {
+        const desktopTexts = ['mainTitle', 'subTitle', 'balanceLabel', 'infoBadge', 'zodiacTitle', 'openPredictBtn', 'tabResult', 'tabDeposit', 'tabBet'];
+        const mobileTexts = ['mainTitleM', 'subTitleM', 'balanceLabelM', 'infoBadgeM', 'zodiacTitleM', 'openPredictBtnM', 'tabResultM', 'tabDepositM', 'tabBetM'];
+        
+        desktopTexts.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
                 if (id === 'mainTitle') el.innerText = t.mainTitle;
@@ -1949,37 +1779,33 @@
             }
         });
         
-        // Update desktop elements
-        const desktopTexts = ['mainTitleDesktop', 'subTitleDesktop', 'balanceLabelDesktop', 'infoBadgeDesktop', 'zodiacTitleDesktop', 'openPredictBtnDesktop', 'tabResultDesktop', 'tabDepositDesktop', 'tabBetDesktop'];
-        desktopTexts.forEach(id => {
+        mobileTexts.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                if (id === 'mainTitleDesktop') el.innerText = t.mainTitle;
-                else if (id === 'subTitleDesktop') el.innerText = t.subTitle;
-                else if (id === 'balanceLabelDesktop') el.innerText = t.balanceLabel;
-                else if (id === 'infoBadgeDesktop') el.innerText = t.infoBadge;
-                else if (id === 'zodiacTitleDesktop') el.innerText = t.zodiacTitle;
-                else if (id === 'openPredictBtnDesktop') el.innerText = t.predictBtn;
-                else if (id === 'tabResultDesktop') el.innerText = t.tabResult;
-                else if (id === 'tabDepositDesktop') el.innerText = t.tabDeposit;
-                else if (id === 'tabBetDesktop') el.innerText = t.tabBet;
+                if (id === 'mainTitleM') el.innerText = t.mainTitle;
+                else if (id === 'subTitleM') el.innerText = t.subTitle;
+                else if (id === 'balanceLabelM') el.innerText = t.balanceLabel;
+                else if (id === 'infoBadgeM') el.innerText = t.infoBadge;
+                else if (id === 'zodiacTitleM') el.innerText = t.zodiacTitle;
+                else if (id === 'openPredictBtnM') el.innerText = t.predictBtn;
+                else if (id === 'tabResultM') el.innerText = t.tabResult;
+                else if (id === 'tabDepositM') el.innerText = t.tabDeposit;
+                else if (id === 'tabBetM') el.innerText = t.tabBet;
             }
         });
         
-        // Update sound and language buttons
-        const soundTexts = ['soundText', 'soundTextDesktop'];
+        const soundTexts = ['soundText', 'soundTextM'];
         soundTexts.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerText = soundEnabled ? t.soundOn : t.soundOff;
         });
         
-        const langTexts = ['langText', 'langTextDesktop'];
+        const langTexts = ['langText', 'langTextM'];
         langTexts.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerText = currentLang === 'km' ? t.langKhmer : t.langEnglish;
         });
         
-        // Update modal texts
         document.getElementById('preCurrentLabel').innerText = t.preCurrent;
         document.getElementById('preCostLabel').innerText = t.preCost;
         document.getElementById('preRemainLabel').innerText = t.preRemain;
@@ -2001,7 +1827,7 @@
     function toggleSound() {
         soundEnabled = !soundEnabled;
         const text = soundEnabled ? translations[currentLang].soundOn : translations[currentLang].soundOff;
-        const soundTexts = ['soundText', 'soundTextDesktop'];
+        const soundTexts = ['soundText', 'soundTextM'];
         soundTexts.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerText = text;
@@ -2017,52 +1843,32 @@
         renderDepositHistory();
         renderBetHistory();
         
-        // Check desktop layout on resize
-        function checkDesktopLayout() {
-            const desktopLayout = document.querySelector('.desktop-layout');
-            const singleCol = document.querySelector('.single-col-content');
-            if (window.innerWidth >= 1024) {
-                if (desktopLayout) desktopLayout.style.display = 'flex';
-                if (singleCol) singleCol.style.display = 'none';
-            } else {
-                if (desktopLayout) desktopLayout.style.display = 'none';
-                if (singleCol) singleCol.style.display = 'block';
-            }
-        }
-        
-        window.addEventListener('resize', checkDesktopLayout);
-        checkDesktopLayout();
-        
-        // Event listeners
+        // Event listeners for desktop and mobile
         document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
-        document.getElementById('langToggleBtnDesktop').addEventListener('click', toggleLanguage);
+        document.getElementById('langToggleBtnM').addEventListener('click', toggleLanguage);
         document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
-        document.getElementById('soundToggleBtnDesktop').addEventListener('click', toggleSound);
+        document.getElementById('soundToggleBtnM').addEventListener('click', toggleSound);
         
         // Law button toggle
         let lawVisible = false;
         const toggleLaw = () => {
-            const lawBoxMobile = document.getElementById('lawText');
-            const lawBoxDesktop = document.getElementById('lawTextDesktop');
+            const lawBoxDesktop = document.getElementById('lawText');
+            const lawBoxMobile = document.getElementById('lawTextM');
             if (lawVisible) {
-                if (lawBoxMobile) lawBoxMobile.style.display = 'none';
                 if (lawBoxDesktop) lawBoxDesktop.style.display = 'none';
+                if (lawBoxMobile) lawBoxMobile.style.display = 'none';
             } else {
-                if (lawBoxMobile) lawBoxMobile.style.display = 'block';
                 if (lawBoxDesktop) lawBoxDesktop.style.display = 'block';
+                if (lawBoxMobile) lawBoxMobile.style.display = 'block';
             }
             lawVisible = !lawVisible;
         };
         document.getElementById('playerLawBtn').addEventListener('click', toggleLaw);
-        document.getElementById('playerLawBtnDesktop').addEventListener('click', toggleLaw);
+        document.getElementById('playerLawBtnM').addEventListener('click', toggleLaw);
         
         // Telegram buttons
-        document.getElementById('playerTelegramBtn').addEventListener('click', () => {
-            window.open('https://t.me/Application_Receiving_Officer', '_blank');
-        });
-        document.getElementById('playerTelegramBtnDesktop').addEventListener('click', () => {
-            window.open('https://t.me/Application_Receiving_Officer', '_blank');
-        });
+        document.getElementById('playerTelegramBtn').addEventListener('click', () => window.open('https://t.me/Application_Receiving_Officer', '_blank'));
+        document.getElementById('playerTelegramBtnM').addEventListener('click', () => window.open('https://t.me/Application_Receiving_Officer', '_blank'));
         
         // Admin Panel Entry
         const adminEntryModal = document.getElementById('adminEntryPinModal');
@@ -2071,7 +1877,7 @@
             adminEntryModal.classList.add('show');
         };
         document.getElementById('adminPanelBtn').addEventListener('click', showAdminPinModal);
-        document.getElementById('adminPanelBtnDesktop').addEventListener('click', showAdminPinModal);
+        document.getElementById('adminPanelBtnM').addEventListener('click', showAdminPinModal);
         
         document.getElementById('closeAdminEntryModal').addEventListener('click', () => adminEntryModal.classList.remove('show'));
         document.getElementById('confirmAdminEntryBtn').addEventListener('click', () => {
@@ -2101,45 +1907,46 @@
             }
         });
         
-        // Tabs for mobile and desktop
-        const setupTabs = (tabPrefix, resultId, depositId, betId) => {
-            const tabs = document.querySelectorAll(`[id^="${tabPrefix}"]`);
+        // Tabs for desktop and mobile
+        const setupTabs = (resultId, depositId, betId, tabPrefix) => {
+            const tabs = document.querySelectorAll(`.tab[data-tab]`);
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-tab');
-                    document.getElementById(`${resultId}`).style.display = tabName === 'result' ? 'block' : 'none';
-                    document.getElementById(`${depositId}`).style.display = tabName === 'deposit' ? 'block' : 'none';
-                    document.getElementById(`${betId}`).style.display = tabName === 'bet' ? 'block' : 'none';
-                    document.querySelectorAll(`[id^="${tabPrefix}"]`).forEach(t => t.classList.remove('active'));
+                    document.getElementById(resultId).style.display = tabName === 'result' ? 'block' : 'none';
+                    document.getElementById(depositId).style.display = tabName === 'deposit' ? 'block' : 'none';
+                    document.getElementById(betId).style.display = tabName === 'bet' ? 'block' : 'none';
+                    document.querySelectorAll(`.tab`).forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                 });
             });
         };
-        setupTabs('tabResult', 'resultTab', 'depositTab', 'betTab');
-        setupTabs('tabResultDesktop', 'resultTabDesktop', 'depositTabDesktop', 'betTabDesktop');
+        
+        setupTabs('resultTab', 'depositTab', 'betTab', '');
+        setupTabs('resultTabM', 'depositTabM', 'betTabM', 'M');
         
         // Toggle history
         let historyVisible = true;
         const toggleHistory = () => {
-            const boxMobile = document.getElementById('historyBox');
-            const boxDesktop = document.getElementById('historyBoxDesktop');
-            const btnMobile = document.getElementById('toggleHistoryBtn');
-            const btnDesktop = document.getElementById('toggleHistoryBtnDesktop');
+            const boxDesktop = document.getElementById('historyBox');
+            const boxMobile = document.getElementById('historyBoxM');
+            const btnDesktop = document.getElementById('toggleHistoryBtn');
+            const btnMobile = document.getElementById('toggleHistoryBtnM');
             if (historyVisible) {
-                if (boxMobile) boxMobile.style.display = 'none';
                 if (boxDesktop) boxDesktop.style.display = 'none';
-                if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show';
+                if (boxMobile) boxMobile.style.display = 'none';
                 if (btnDesktop) btnDesktop.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show';
+                if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show';
             } else {
-                if (boxMobile) boxMobile.style.display = 'block';
                 if (boxDesktop) boxDesktop.style.display = 'block';
-                if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide';
+                if (boxMobile) boxMobile.style.display = 'block';
                 if (btnDesktop) btnDesktop.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide';
+                if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide';
             }
             historyVisible = !historyVisible;
         };
         document.getElementById('toggleHistoryBtn').addEventListener('click', toggleHistory);
-        document.getElementById('toggleHistoryBtnDesktop').addEventListener('click', toggleHistory);
+        document.getElementById('toggleHistoryBtnM').addEventListener('click', toggleHistory);
         
         // Predict Modal
         const predictModal = document.getElementById('predictModal');
@@ -2152,7 +1959,7 @@
             predictModal.classList.add('show');
         };
         document.getElementById('openPredictBtn').addEventListener('click', openPredict);
-        document.getElementById('openPredictBtnDesktop').addEventListener('click', openPredict);
+        document.getElementById('openPredictBtnM').addEventListener('click', openPredict);
         
         document.getElementById('closePredictModal').addEventListener('click', () => predictModal.classList.remove('show'));
         document.getElementById('betAmount').addEventListener('input', updatePreview);
@@ -2272,7 +2079,6 @@
             executeAdminAction();
         });
         
-        // Close modals on outside click
         window.addEventListener('click', (e) => {
             if (e.target === depositModal) depositModal.classList.remove('show');
             if (e.target === predictModal) predictModal.classList.remove('show');
