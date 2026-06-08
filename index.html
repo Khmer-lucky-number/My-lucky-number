@@ -142,7 +142,6 @@
             .live-time-badge { font-size: 0.7rem !important; white-space: nowrap; overflow-x: auto; max-width: 100%; }
         }
 
-        /* SELECTED ZODIAC STYLES */
         .desktop-right .zodiac-card.selected,
         .desktop-right .zodiac-card.selected:hover {
             background: linear-gradient(135deg, #ec4899, #f43f5e) !important;
@@ -821,7 +820,6 @@
     let pendingBetAmount = 0;
     let pendingZodiac = "";
     let pendingAdminAction = "";
-    let lastProcessedHour = -1;
     let soundEnabled = true;
     let audioContext = null;
     let currentLang = "km";
@@ -939,25 +937,17 @@
         document.getElementById('dailyReport').innerHTML = reportHtml || '<div style="text-align:center;padding:10px;color:#aaa">គ្មានទិន្នន័យ</div>';
     }
     
-    // ========== FIXED: Result announces at 59th second of target hour ==========
-    function settleBets(currentHour, currentDate) {
-        const now = new Date();
-        const currentSeconds = now.getSeconds();
-        
-        if (lastProcessedHour === -1) {
-            lastProcessedHour = currentHour;
-            return;
-        }
-        
-        // Process pending bets when we reach 59 seconds
-        if (currentSeconds === 59) {
+    // ========== FIXED: Result announces after target hour (e.g., at 20:00:01) ==========
+    function settleBets(currentHour, currentDate, currentSeconds) {
+        // Check if we need to process bets for the target hour that just passed
+        // Example: Bet targetHour = 20, currentHour = 20, currentSeconds = 1 (after hour 20 has started)
+        if (currentSeconds === 1) {
             const numbers = generateNumbers(currentDate);
             let changed = false;
             
             betHistory.forEach((bet) => {
-                // Check if this bet's target hour is the next hour (currentHour + 1)
-                // Example: Bet for 20:00 should be processed at 19:59:59 (currentHour = 19, targetHour = 20)
-                if (bet.status === "pending" && bet.targetHour === currentHour + 1) {
+                // Process bets whose target hour equals current hour (just started)
+                if (bet.status === "pending" && bet.targetHour === currentHour) {
                     const correctNum = numbers[bet.targetHour];
                     const correctZodiac = zodiacMap[correctNum];
                     if (correctZodiac) {
@@ -966,7 +956,7 @@
                         bet.resultIcon = correctZodiac.icon;
                         bet.resultOrder = correctZodiac.order;
                         const resultDate = new Date(currentDate);
-                        resultDate.setHours(bet.targetHour, 0, 0, 0);
+                        resultDate.setHours(bet.targetHour, 0, 1, 0);
                         bet.resultDate = formatDateTime(resultDate);
                         
                         if (bet.picked === correctZodiac.name || bet.picked === correctZodiac.nameEn) {
@@ -1188,8 +1178,31 @@
         else if (pendingAdminAction === "clear_balance") { currentBalance = 0; localStorage.setItem('balance', currentBalance); updateAllBalanceDisplays(); updateDesktopPreview(); showToast(translations[currentLang].confirmClearBalance, 'pending'); }
     }
     
-    function updateDisplay() { const now = new Date(); settleBets(now.getHours(), now); updateAllLiveClocks(); updateCurrentHourText(); updateCountdown(); updateLuckyNumber(); updateScheduleList(); updateDesktopPreview(); }
-    function loadData() { const saved = localStorage.getItem('balance'); if (saved) currentBalance = parseFloat(saved); const savedDeposit = localStorage.getItem('depositHistory'); if (savedDeposit) depositHistory = JSON.parse(savedDeposit); const savedBet = localStorage.getItem('betHistory'); if (savedBet) betHistory = JSON.parse(savedBet); updateAllBalanceDisplays(); updateAdminStats(); updateDesktopPreview(); }
+    function updateDisplay() { 
+        const now = new Date(); 
+        const currentHour = now.getHours();
+        const currentSeconds = now.getSeconds();
+        settleBets(currentHour, now, currentSeconds); 
+        updateAllLiveClocks(); 
+        updateCurrentHourText(); 
+        updateCountdown(); 
+        updateLuckyNumber(); 
+        updateScheduleList(); 
+        updateDesktopPreview(); 
+    }
+    
+    function loadData() { 
+        const saved = localStorage.getItem('balance'); 
+        if (saved) currentBalance = parseFloat(saved); 
+        const savedDeposit = localStorage.getItem('depositHistory'); 
+        if (savedDeposit) depositHistory = JSON.parse(savedDeposit); 
+        const savedBet = localStorage.getItem('betHistory'); 
+        if (savedBet) betHistory = JSON.parse(savedBet); 
+        updateAllBalanceDisplays(); 
+        updateAdminStats(); 
+        updateDesktopPreview(); 
+    }
+    
     function showAdminPanel() { document.getElementById('mainContainer').style.display = 'none'; document.getElementById('adminContainer').classList.add('show'); }
     function hideAdminPanel() { document.getElementById('mainContainer').style.display = 'block'; document.getElementById('adminContainer').classList.remove('show'); window.dispatchEvent(new Event('resize')); }
     
