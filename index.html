@@ -134,7 +134,7 @@
             border: 1px solid rgba(139, 92, 246, 0.3);
             border-radius: 28px;
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
             padding: 20px 16px;
             text-align: center;
             display: none;
@@ -499,6 +499,11 @@
             justify-content: center;
             gap: 6px;
         }
+        .admin-btn.view-history {
+            background: rgba(56, 161, 105, 0.2);
+            border-color: rgba(56, 161, 105, 0.5);
+            color: #68d391;
+        }
         .profit-btn {
             background: linear-gradient(135deg, #f6ad55, #ed8936) !important;
             color: #1a1a2e !important;
@@ -552,7 +557,7 @@
             border-radius: 28px;
             padding: 20px;
             width: 90%;
-            max-width: 360px;
+            max-width: 400px;
             border: 1px solid rgba(255,255,255,0.1);
         }
         .modal-title { font-size: 1rem; color: #fbd38d; text-align: center; margin-bottom: 15px; }
@@ -590,6 +595,31 @@
             font-size: 1.1rem;
             padding: 5px;
             border-radius: 50%;
+        }
+        .history-modal-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        .history-modal-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .history-modal-date {
+            font-size: 0.7rem;
+            color: #a0aec0;
+        }
+        .history-modal-amount {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #4ade80;
         }
         .zodiac-select-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
         .zodiac-option {
@@ -842,72 +872,98 @@
 
 <div id="adminContainer" class="admin-container">
     <button class="back-btn" id="backToMainBtn">← ត្រឡប់ទៅកាន់ទំព័រដើម</button>
-    <div class="admin-title">🔧 Admin Control Panel</div>
+    <div class="admin-title">🔧 ADMIN CONTROL PANEL</div>
     <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
     
+    <!-- Balance Summary -->
     <div class="admin-balance">
-        <div class="admin-balance-label">សមតុល្យទឹកប្រាក់ Admin</div>
+        <div class="admin-balance-label">💰 ADMIN BALANCE</div>
         <div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div>
     </div>
+    <div class="admin-balance" style="margin-top: -10px;">
+        <div class="admin-balance-label">👤 PLAYER BALANCE</div>
+        <div class="admin-balance-amount">$<span id="playerBalanceDisplay">0.00</span></div>
+    </div>
     
+    <!-- Statistics -->
     <div class="admin-stats">
-        <div class="stat-card"><div class="stat-label">សរុបភ្នាល់</div><div class="stat-value" id="totalBets">0</div></div>
-        <div class="stat-card"><div class="stat-label">សរុបឈ្នះ</div><div class="stat-value" id="totalWins">0</div></div>
-        <div class="stat-card"><div class="stat-label">ភាគរយឈ្នះ</div><div class="stat-value" id="winRate">0%</div></div>
-        <div class="stat-card"><div class="stat-label">ប្រាក់ចំណេញសុទ្ធ</div><div class="stat-value" id="netProfit">$0.00</div></div>
+        <div class="stat-card"><div class="stat-label">🎲 TOTAL BETS</div><div class="stat-value" id="totalBets">0</div></div>
+        <div class="stat-card"><div class="stat-label">🏆 TOTAL WINS</div><div class="stat-value" id="totalWins">0</div></div>
+        <div class="stat-card"><div class="stat-label">📊 WIN RATE</div><div class="stat-value" id="winRate">0%</div></div>
+        <div class="stat-card"><div class="stat-label">💰 NET PROFIT</div><div class="stat-value" id="netProfit">$0.00</div></div>
     </div>
     
+    <!-- Reward Multiplier -->
     <div class="commission-box">
-        <div class="commission-row"><span>មេគុណរង្វាន់បច្ចុប្បន្ន</span><span id="currentMultiplier">10x</span></div>
-        <div class="commission-row"><span>កំណត់មេគុណថ្មី</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div>
-        <button class="save-btn" id="saveMultiplierBtn">រក្សាទុក</button>
+        <div class="commission-row"><span>🎮 REWARD MULTIPLIER</span><span id="currentMultiplier">10x</span></div>
+        <div class="commission-row"><span>SET NEW MULTIPLIER</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div>
+        <button class="save-btn" id="saveMultiplierBtn">💾 SAVE</button>
     </div>
     
+    <!-- Daily Financial Report -->
     <div class="commission-box">
-        <div class="commission-row"><span>📊 របាយការណ៍ប្រចាំថ្ងៃ (Daily Report)</span></div>
+        <div class="commission-row"><span>📅 DAILY FINANCIAL REPORT</span></div>
         
         <div class="report-summary">
-            <div class="report-summary-title">💰 សមតុល្យបច្ចុប្បន្ន</div>
+            <div class="report-summary-title">💰 CURRENT BALANCE SUMMARY</div>
             <div class="report-summary-amount" id="summaryCurrentBalance">$0.00</div>
         </div>
         
         <div class="report-grid">
-            <div class="report-card"><div class="report-card-label">👤 សមតុល្យអ្នកលេង</div><div class="report-card-value" id="summaryPlayerBalance">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">🔧 សមតុល្យ Admin</div><div class="report-card-value" id="summaryAdminBalance">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">📥 ប្រាក់ដាក់សរុប</div><div class="report-card-value" id="summaryTotalDeposits">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">💸 ប្រាក់បង់សរុប</div><div class="report-card-value" id="summaryTotalPayouts">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">📈 ប្រាក់ចំណេញ/ខាត</div><div class="report-card-value" id="summaryNetProfit">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">🎲 ចំនួនភ្នាល់សរុប</div><div class="report-card-value" id="summaryTotalBets">0</div></div>
+            <div class="report-card"><div class="report-card-label">👤 PLAYER BALANCE</div><div class="report-card-value" id="summaryPlayerBalance">$0.00</div></div>
+            <div class="report-card"><div class="report-card-label">🔧 ADMIN BALANCE</div><div class="report-card-value" id="summaryAdminBalance">$0.00</div></div>
+            <div class="report-card"><div class="report-card-label">📥 TOTAL DEPOSITS</div><div class="report-card-value" id="summaryTotalDeposits">$0.00</div></div>
+            <div class="report-card"><div class="report-card-label">💸 TOTAL PAYOUTS</div><div class="report-card-value" id="summaryTotalPayouts">$0.00</div></div>
+            <div class="report-card"><div class="report-card-label">📈 NET PROFIT/LOSS</div><div class="report-card-value" id="summaryNetProfit">$0.00</div></div>
+            <div class="report-card"><div class="report-card-label">🎲 TOTAL BETS</div><div class="report-card-value" id="summaryTotalBets">0</div></div>
         </div>
         
-        <div class="daily-report-list" id="dailyReportList"><div style="text-align:center;padding:15px;color:#aaa">កំពុងផ្ទុក...</div></div>
-    </div>
-    
-    <div class="admin-buttons-section">
-        <div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div>
-        <div class="admin-buttons">
-            <button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់សម្រាប់ Admin</button>
-            <button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin</button>
+        <div class="daily-report-list" id="dailyReportList">
+            <div style="text-align:center;padding:15px;color:#aaa">Loading...</div>
         </div>
     </div>
     
+    <!-- Admin Buttons Section -->
+    <div class="admin-buttons-section">
+        <div class="section-title">🔐 ADMIN BUTTONS</div>
+        <div class="admin-buttons">
+            <button class="admin-btn" id="adminDepositMoneyBtn">💵 ADMIN DEPOSIT</button>
+            <button class="admin-btn view-history" id="adminViewDepositHistoryBtn">📜 VIEW ADMIN DEPOSIT HISTORY</button>
+            <button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ CLEAR ADMIN DEPOSIT HISTORY</button>
+        </div>
+    </div>
+    
+    <!-- Player Management Buttons -->
     <div class="player-buttons-section">
-        <div class="player-section-title">🎮 ប៊ូតុងគ្រប់គ្រងអ្នកលេង</div>
+        <div class="player-section-title">🎮 PLAYER MANAGEMENT</div>
         <div class="player-admin-buttons">
-            <button class="player-admin-btn" id="playerDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់</button>
-            <button class="player-admin-btn" id="playerClearBalanceBtn">💰 លុបទឹកប្រាក់</button>
-            <button class="player-admin-btn" id="playerClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
-            <button class="player-admin-btn" id="playerClearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
+            <button class="player-admin-btn" id="playerDepositMoneyBtn">💵 ADD PLAYER MONEY</button>
+            <button class="player-admin-btn" id="playerClearBalanceBtn">💰 CLEAR PLAYER BALANCE</button>
+            <button class="player-admin-btn" id="playerClearDepositHistoryBtn">🗑️ CLEAR DEPOSIT HISTORY</button>
+            <button class="player-admin-btn" id="playerClearBetHistoryBtn">🗑️ CLEAR BET HISTORY</button>
         </div>
     </div>
 </div>
 
 <!-- Modals -->
-<div class="modal" id="depositModal"><div class="modal-content"><div id="pinStep"><div class="modal-title">🔐 បញ្ចូលកូដសម្ងាត់</div><div class="password-wrapper"><input type="password" class="password-input" id="pinInput" placeholder="កូដសម្ងាត់" maxlength="10"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInput', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeDepositModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button></div></div><div id="amountStep" style="display:none;"><div class="modal-title">💵 បញ្ចូលទឹកប្រាក់</div><input type="number" class="modal-input" id="amountInput" placeholder="ចំនួនទឹកប្រាក់" min="0.01" step="0.01"><div class="modal-buttons"><button class="modal-btn btn-cancel" id="backToPinBtn">ត្រឡប់</button><button class="modal-btn btn-confirm" id="submitDepositBtn">បញ្ចូល</button></div></div></div></div>
-<div class="modal" id="adminEntryPinModal"><div class="modal-content"><div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div><div class="password-wrapper"><input type="password" class="password-input" id="adminEntryPinInput" placeholder="ពាក្យសម្ងាត់"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('adminEntryPinInput', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminEntryModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmAdminEntryBtn">ផ្ទៀងផ្ទាត់</button></div></div></div>
-<div class="modal" id="predictModal"><div class="modal-content"><div class="modal-title">🎲 ទស្សន៍ទាយ</div><div class="preview-box"><div class="preview-row"><span id="preCurrentLabel">ទឹកប្រាក់បច្ចុប្បន្ន:</span><span>$<span id="preCurrent">0.00</span></span></div><div class="preview-row"><span id="preCostLabel">ត្រូវកាត់:</span><span>$<span id="preCost">0.00</span></span></div><div class="preview-row"><span id="preRemainLabel">នៅសល់:</span><span>$<span id="preRemain">0.00</span></span></div></div><input type="number" class="modal-input" id="betAmount" placeholder="បញ្ចូលទឹកប្រាក់" min="0.01" step="0.01" value="0"><div class="shortcut-grid"><button class="shortcut" data-amount="1">$1</button><button class="shortcut" data-amount="5">$5</button><button class="shortcut" data-amount="10">$10</button><button class="shortcut" data-amount="20">$20</button><button class="shortcut" data-amount="50">$50</button></div><div class="zodiac-select-title" id="selectZodiacTitle">ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)៖</div><div class="zodiac-select-grid" id="zodiacSelectGrid"></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closePredictModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPredictBtn">ទស្សន៍ទាយ</button></div></div></div>
-<div class="confirm-modal" id="confirmPredictModal"><div class="confirm-box"><div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div><div class="confirm-message" id="confirmPredictMsg">តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelPredictConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesPredictConfirm">យល់ព្រម</button></div></div></div>
-<div class="confirm-modal" id="confirmAdminModal"><div class="confirm-box"><div class="confirm-title" id="confirmAdminTitle">⚠️ បញ្ជាក់សកម្មភាព</div><div class="confirm-message" id="confirmAdminMsg">តើអ្នកពិតជាចង់ធ្វើសកម្មភាពនេះមែនទេ?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelAdminConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesAdminConfirm">យល់ព្រម</button></div></div></div>
+<div class="modal" id="depositModal"><div class="modal-content"><div id="pinStep"><div class="modal-title">🔐 ENTER SECRET CODE</div><div class="password-wrapper"><input type="password" class="password-input" id="pinInput" placeholder="Secret Code" maxlength="10"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInput', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeDepositModal">CANCEL</button><button class="modal-btn btn-confirm" id="confirmPinBtn">VERIFY</button></div></div><div id="amountStep" style="display:none;"><div class="modal-title">💵 ENTER AMOUNT</div><input type="number" class="modal-input" id="amountInput" placeholder="Amount" min="0.01" step="0.01"><div class="modal-buttons"><button class="modal-btn btn-cancel" id="backToPinBtn">BACK</button><button class="modal-btn btn-confirm" id="submitDepositBtn">SUBMIT</button></div></div></div></div>
+<div class="modal" id="adminEntryPinModal"><div class="modal-content"><div class="modal-title">🔐 ENTER ADMIN PASSWORD</div><div class="password-wrapper"><input type="password" class="password-input" id="adminEntryPinInput" placeholder="Password"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('adminEntryPinInput', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminEntryModal">CANCEL</button><button class="modal-btn btn-confirm" id="confirmAdminEntryBtn">VERIFY</button></div></div></div>
+<div class="modal" id="predictModal"><div class="modal-content"><div class="modal-title">🎲 PREDICTION</div><div class="preview-box"><div class="preview-row"><span id="preCurrentLabel">Current Balance:</span><span>$<span id="preCurrent">0.00</span></span></div><div class="preview-row"><span id="preCostLabel">Amount to deduct:</span><span>$<span id="preCost">0.00</span></span></div><div class="preview-row"><span id="preRemainLabel">Remaining:</span><span>$<span id="preRemain">0.00</span></span></div></div><input type="number" class="modal-input" id="betAmount" placeholder="Enter amount" min="0.01" step="0.01" value="0"><div class="shortcut-grid"><button class="shortcut" data-amount="1">$1</button><button class="shortcut" data-amount="5">$5</button><button class="shortcut" data-amount="10">$10</button><button class="shortcut" data-amount="20">$20</button><button class="shortcut" data-amount="50">$50</button></div><div class="zodiac-select-title" id="selectZodiacTitle">Select Zodiac (Reward x10):</div><div class="zodiac-select-grid" id="zodiacSelectGrid"></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closePredictModal">CANCEL</button><button class="modal-btn btn-confirm" id="confirmPredictBtn">PREDICT</button></div></div></div>
+<div class="confirm-modal" id="confirmPredictModal"><div class="confirm-box"><div class="confirm-title">⚠️ CONFIRM PREDICTION</div><div class="confirm-message" id="confirmPredictMsg">Are you sure you want to predict?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelPredictConfirm">CANCEL</button><button class="confirm-btn confirm-yes" id="yesPredictConfirm">CONFIRM</button></div></div></div>
+<div class="confirm-modal" id="confirmAdminModal"><div class="confirm-box"><div class="confirm-title" id="confirmAdminTitle">⚠️ CONFIRM ACTION</div><div class="confirm-message" id="confirmAdminMsg">Are you sure you want to perform this action?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelAdminConfirm">CANCEL</button><button class="confirm-btn confirm-yes" id="yesAdminConfirm">CONFIRM</button></div></div></div>
+
+<!-- History Modal for Admin Deposit -->
+<div class="modal" id="adminHistoryModal">
+    <div class="modal-content">
+        <div class="modal-title">📜 ADMIN DEPOSIT HISTORY</div>
+        <div class="history-modal-list" id="adminHistoryList">
+            <div style="text-align:center;padding:15px;color:#aaa">No history found</div>
+        </div>
+        <div class="modal-buttons">
+            <button class="modal-btn btn-cancel" id="closeAdminHistoryModal">CLOSE</button>
+        </div>
+    </div>
+</div>
 
 <script>
     const SECRET_PIN = "Qq2026";
@@ -1027,9 +1083,10 @@
         document.getElementById('winRate').innerText = winRate + '%';
         document.getElementById('netProfit').innerHTML = '$' + netProfit.toFixed(2);
         document.getElementById('adminBalance').innerHTML = '$' + adminBalance.toFixed(2);
+        document.getElementById('playerBalanceDisplay').innerHTML = '$' + currentBalance.toFixed(2);
         document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x';
         
-        document.getElementById('summaryCurrentBalance').innerHTML = '$' + currentBalance.toFixed(2);
+        document.getElementById('summaryCurrentBalance').innerHTML = '$' + (adminBalance + currentBalance).toFixed(2);
         document.getElementById('summaryPlayerBalance').innerHTML = '$' + currentBalance.toFixed(2);
         document.getElementById('summaryAdminBalance').innerHTML = '$' + adminBalance.toFixed(2);
         document.getElementById('summaryTotalDeposits').innerHTML = '$' + totalDeposits.toFixed(2);
@@ -1059,12 +1116,11 @@
             const dailyProfit = data.deposits - data.payouts;
             const profitClass = dailyProfit >= 0 ? 'profit-positive' : 'profit-negative';
             const profitSign = dailyProfit >= 0 ? '+' : '-';
-            return `<div class="daily-report-item"><div class="daily-report-header"><span>📅 ${date}</span><span class="${profitClass}">${profitSign}$${Math.abs(dailyProfit).toFixed(2)}</span></div><div class="daily-report-details"><span>💰 ដាក់លុយ: $${data.deposits.toFixed(2)}</span><span>💸 បង់រង្វាន់: $${data.payouts.toFixed(2)}</span></div><div class="daily-report-details"><span>🎲 ភ្នាល់: ${data.bets}</span><span>🏆 ឈ្នះ: ${data.wins}</span><span>💔 ចាញ់: ${data.losses}</span></div><div class="daily-report-details"><span>📊 ទឹកប្រាក់ភ្នាល់សរុប: $${data.totalBetAmount.toFixed(2)}</span></div></div>`;
+            return `<div class="daily-report-item"><div class="daily-report-header"><span>📅 ${date}</span><span class="${profitClass}">${profitSign}$${Math.abs(dailyProfit).toFixed(2)}</span></div><div class="daily-report-details"><span>💰 Deposits: $${data.deposits.toFixed(2)}</span><span>💸 Payouts: $${data.payouts.toFixed(2)}</span></div><div class="daily-report-details"><span>🎲 Bets: ${data.bets}</span><span>🏆 Wins: ${data.wins}</span><span>💔 Losses: ${data.losses}</span></div><div class="daily-report-details"><span>📊 Total Bet Amount: $${data.totalBetAmount.toFixed(2)}</span></div></div>`;
         }).join('');
-        document.getElementById('dailyReportList').innerHTML = reportHtml || '<div style="text-align:center;padding:15px;color:#aaa">គ្មានទិន្នន័យ</div>';
+        document.getElementById('dailyReportList').innerHTML = reportHtml || '<div style="text-align:center;padding:15px;color:#aaa">No data available</div>';
     }
     
-    // ========== UPDATED: Payment System between Player and Admin ==========
     function settleBets(currentHour, currentDate, currentSeconds) {
         if (currentSeconds === 1) {
             const numbers = generateNumbers(currentDate);
@@ -1084,8 +1140,6 @@
                         bet.resultDate = formatDateTime(resultDate);
                         
                         if (bet.picked === correctZodiac.name || bet.picked === correctZodiac.nameEn) {
-                            // WIN: Player gets bet.amount + reward
-                            // Admin pays: bet.amount (returned) + reward
                             const totalWinAmount = bet.amount + bet.amount * rewardMultiplier;
                             bet.status = "win";
                             bet.reward = bet.amount * rewardMultiplier;
@@ -1094,7 +1148,6 @@
                             playSound(true);
                             showToast(`${currentLang==='km'?'🎉 ឈ្នះ!':'🎉 Win!'} ${bet.picked} = ${correctZodiac.name} (+$${totalWinAmount.toFixed(2)})`, 'win');
                         } else {
-                            // LOSE: Player loses bet.amount, Admin gains bet.amount
                             bet.status = "lose";
                             bet.reward = 0;
                             adminBalance += bet.amount;
@@ -1116,7 +1169,6 @@
             }
         }
     }
-    // ========== END OF UPDATED FUNCTION ==========
     
     function updateAllBalanceDisplays() {
         const elements = ['userBalance', 'userBalanceDesktop'];
@@ -1259,7 +1311,7 @@
         let html = "";
         betHistory.forEach(b => {
             let statusClass = "", statusText = "", rewardHtml = "";
-            if (b.status === 'win') { statusClass = 'status-win'; statusText = translations[currentLang].win; rewardHtml = `<span style="color:#4ade80">🏆 +$${b.reward.toFixed(2)} (${rewardMultiplier}x) + $${b.amount.toFixed(2)} ដើម</span>`; }
+            if (b.status === 'win') { statusClass = 'status-win'; statusText = translations[currentLang].win; rewardHtml = `<span style="color:#4ade80">🏆 +$${b.reward.toFixed(2)} (${rewardMultiplier}x) + $${b.amount.toFixed(2)} principal</span>`; }
             else if (b.status === 'lose') { statusClass = 'status-lose'; statusText = translations[currentLang].lose; rewardHtml = `<span style="color:#fc8181">💔 -$${b.amount.toFixed(2)}</span>`; }
             else { statusClass = 'status-pending'; statusText = translations[currentLang].pending; rewardHtml = `<span>⏳ $${b.amount.toFixed(2)}</span>`; }
             let resultHtml = "";
@@ -1455,7 +1507,9 @@
         
         const depositModal = document.getElementById('depositModal');
         const confirmAdminModal = document.getElementById('confirmAdminModal');
+        const adminHistoryModal = document.getElementById('adminHistoryModal');
         
+        // Admin Deposit
         document.getElementById('adminDepositMoneyBtn').addEventListener('click', () => {
             currentAction = 'admin_deposit';
             document.getElementById('pinStep').style.display = 'block';
@@ -1464,6 +1518,29 @@
             depositModal.classList.add('show');
         });
         
+        // View Admin Deposit History
+        document.getElementById('adminViewDepositHistoryBtn').addEventListener('click', () => {
+            const historyList = document.getElementById('adminHistoryList');
+            if (adminDepositHistory.length === 0) {
+                historyList.innerHTML = '<div style="text-align:center;padding:15px;color:#aaa">No deposit history found</div>';
+            } else {
+                let html = '';
+                adminDepositHistory.forEach(item => {
+                    html += `<div class="history-modal-item">
+                                <div class="history-modal-date">📅 ${item.date}</div>
+                                <div class="history-modal-amount">💰 +$${item.amount.toFixed(2)}</div>
+                            </div>`;
+                });
+                historyList.innerHTML = html;
+            }
+            adminHistoryModal.classList.add('show');
+        });
+        
+        document.getElementById('closeAdminHistoryModal').addEventListener('click', () => {
+            adminHistoryModal.classList.remove('show');
+        });
+        
+        // Clear Admin Deposit History
         document.getElementById('adminClearDepositHistoryBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin':'⚠️ Confirm Clear Admin Deposit History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
@@ -1471,6 +1548,7 @@
             confirmAdminModal.classList.add('show');
         });
         
+        // Player Deposit
         document.getElementById('playerDepositMoneyBtn').addEventListener('click', () => {
             currentAction = 'deposit';
             document.getElementById('pinStep').style.display = 'block';
@@ -1479,6 +1557,7 @@
             depositModal.classList.add('show');
         });
         
+        // Clear Player Balance
         document.getElementById('playerClearBalanceBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបទឹកប្រាក់អ្នកលេង':'⚠️ Confirm Clear Player Balance';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBalance;
@@ -1486,6 +1565,7 @@
             confirmAdminModal.classList.add('show');
         });
         
+        // Clear Player Deposit History
         document.getElementById('playerClearDepositHistoryBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេង':'⚠️ Confirm Clear Player Deposit History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
@@ -1493,6 +1573,7 @@
             confirmAdminModal.classList.add('show');
         });
         
+        // Clear Player Bet History
         document.getElementById('playerClearBetHistoryBtn').addEventListener('click', () => {
             document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេង':'⚠️ Confirm Clear Player Bet History';
             document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBet;
@@ -1541,7 +1622,7 @@
                 localStorage.setItem('adminDepositHistory', JSON.stringify(adminDepositHistory));
                 updateAdminStats();
                 playSound(null);
-                showToast(`Admin: +$${amt.toFixed(2)}!`, 'pending');
+                showToast(`Admin Deposit: +$${amt.toFixed(2)}!`, 'pending');
             }
             depositModal.classList.remove('show'); 
         });
@@ -1549,7 +1630,14 @@
         document.getElementById('cancelAdminConfirm').addEventListener('click', () => confirmAdminModal.classList.remove('show'));
         document.getElementById('yesAdminConfirm').addEventListener('click', () => { confirmAdminModal.classList.remove('show'); executeAdminAction(); });
         
-        window.addEventListener('click', (e) => { if (e.target === depositModal) depositModal.classList.remove('show'); if (e.target === predictModal) predictModal.classList.remove('show'); if (e.target === adminEntryModal) adminEntryModal.classList.remove('show'); if (e.target === confirmPredictModal) confirmPredictModal.classList.remove('show'); if (e.target === confirmAdminModal) confirmAdminModal.classList.remove('show'); });
+        window.addEventListener('click', (e) => { 
+            if (e.target === depositModal) depositModal.classList.remove('show'); 
+            if (e.target === predictModal) predictModal.classList.remove('show'); 
+            if (e.target === adminEntryModal) adminEntryModal.classList.remove('show'); 
+            if (e.target === confirmPredictModal) confirmPredictModal.classList.remove('show'); 
+            if (e.target === confirmAdminModal) confirmAdminModal.classList.remove('show');
+            if (e.target === adminHistoryModal) adminHistoryModal.classList.remove('show');
+        });
         
         applyLanguage();
     }
