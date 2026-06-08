@@ -26,7 +26,7 @@
             margin: 0 auto;
         }
 
-        /* Desktop Layout (≥1024px) - 3 Columns using CSS Grid */
+        /* Desktop Layout (≥1024px) - 1 Column (Horizontal/Vertical stack) */
         @media (min-width: 1024px) {
             body {
                 padding: 20px;
@@ -35,10 +35,12 @@
                 justify-content: center;
             }
             .desktop-grid {
-                display: grid;
-                grid-template-columns: 1.2fr 1.5fr 1.2fr;
+                display: flex;
+                flex-direction: column;
                 gap: 20px;
-                align-items: start;
+                width: 100%;
+                max-width: 800px;
+                margin: 0 auto;
             }
             .mobile-only {
                 display: none !important;
@@ -48,21 +50,62 @@
                 backdrop-filter: blur(10px);
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 border-radius: 28px;
-                padding: 20px 16px;
+                padding: 24px 20px;
                 box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
+                width: 100%;
             }
-            /* Right column history box - fixed height scrollable */
-            .col-card:last-child .history-box {
-                max-height: 500px;
+            /* Make sections within each card */
+            .col-card .top-controls {
+                justify-content: flex-start;
+            }
+            .col-card .balance-card,
+            .col-card .info-badge,
+            .col-card .section-indicator,
+            .col-card .lucky-circle,
+            .col-card .countdown-box,
+            .col-card .zodiac-single-box,
+            .col-card .history-wrapper,
+            .col-card .admin-panel-btn,
+            .col-card .player-actions {
+                width: 100%;
+            }
+            /* History box height adjustment */
+            .col-card .history-box {
+                max-height: 350px;
                 overflow-y: auto;
             }
-            .col-card:last-child .history-wrapper {
+            /* Zodiac grid adjustment */
+            .col-card .zodiac-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 12px;
+            }
+            .col-card .zodiac-card {
+                padding: 10px 6px;
+            }
+            .col-card .zodiac-icon {
+                font-size: 1.3rem;
+            }
+            .col-card .zodiac-name {
+                font-size: 0.7rem;
+            }
+            /* Top controls layout */
+            .col-card .top-controls {
                 display: flex;
-                flex-direction: column;
+                justify-content: flex-start;
+                gap: 15px;
+            }
+            /* Player actions - horizontal on desktop */
+            .col-card .player-actions {
+                display: flex;
+                flex-direction: row;
+                gap: 12px;
+            }
+            .col-card .player-btn {
                 flex: 1;
+            }
+            /* Admin panel button */
+            .col-card .admin-panel-btn {
+                margin-bottom: 15px;
             }
         }
 
@@ -85,6 +128,9 @@
                 padding: 20px 16px;
                 box-shadow: 0 25px 45px rgba(0,0,0,0.3);
                 text-align: center;
+            }
+            .mobile-container .zodiac-grid {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
@@ -142,14 +188,14 @@
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 40px;
-            padding: 6px 12px;
-            font-size: 0.7rem;
+            padding: 8px 16px;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             color: #e2e8f0;
         }
         .top-btn:hover {
@@ -160,16 +206,18 @@
 
         .main-title {
             color: #fbd38d;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            text-align: center;
         }
 
         .sub-title {
             color: #a0aec0;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             margin-bottom: 20px;
             line-height: 1.4;
+            text-align: center;
         }
 
         .live-time-badge {
@@ -179,8 +227,8 @@
             background: rgba(43, 108, 176, 0.3);
             backdrop-filter: blur(5px);
             border-radius: 40px;
-            padding: 5px 12px;
-            font-size: 0.75rem;
+            padding: 6px 14px;
+            font-size: 0.8rem;
             margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.1);
         }
@@ -189,7 +237,7 @@
         .balance-card {
             background: linear-gradient(135deg, #1e3a5f 0%, #2a1a5a 100%);
             border-radius: 24px;
-            padding: 4px;
+            padding: 5px;
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
@@ -225,22 +273,22 @@
             100% { transform: translateY(0px) rotate(0deg); }
         }
         .balance-inner {
-            background: rgba(10, 20, 35, 0.4);
+            background: rgba(10, 20, 35, 0.5);
             border-radius: 20px;
-            padding: 15px;
+            padding: 18px;
             position: relative;
             z-index: 1;
-            border: 1px solid rgba(74,222,128,0.4);
+            border: 1px solid rgba(74,222,128,0.5);
             backdrop-filter: none;
         }
         .balance-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #a0aec0;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
         .balance-amount {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
             color: #4ade80;
             text-shadow: 0 0 15px rgba(74,222,128,0.4);
@@ -251,16 +299,16 @@
             background: rgba(74, 222, 128, 0.1);
             border: 1px solid rgba(74, 222, 128, 0.3);
             border-radius: 12px;
-            padding: 8px 10px;
+            padding: 10px 12px;
             margin-bottom: 15px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #4ade80;
             line-height: 1.4;
         }
 
         .section-indicator {
             color: #4ade80;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 12px;
         }
@@ -268,58 +316,58 @@
         .lucky-circle {
             background: linear-gradient(135deg, #f5a623, #f7b733);
             border-radius: 50px;
-            padding: 10px 16px;
+            padding: 12px 20px;
             margin: 0 auto 15px auto;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1rem;
+            gap: 10px;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #fff;
             box-shadow: 0 0 25px rgba(247,183,51,0.4);
         }
 
         .countdown-box {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             background: rgba(0,0,0,0.3);
             display: inline-block;
-            padding: 4px 12px;
+            padding: 5px 15px;
             border-radius: 40px;
             margin-bottom: 20px;
         }
         .countdown-time {
             color: #fc8181;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         .zodiac-single-box {
             background: rgba(255,255,255,0.03);
             border-radius: 20px;
-            padding: 12px;
+            padding: 15px;
             margin-bottom: 20px;
         }
         .zodiac-title {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #fbd38d;
             text-align: left;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         .zodiac-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 15px;
         }
         .zodiac-card {
             background: rgba(0,0,0,0.3);
             border-radius: 12px;
-            padding: 8px 4px;
+            padding: 10px 5px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.05);
         }
-        .zodiac-icon { font-size: 1.1rem; }
-        .zodiac-name { font-size: 0.6rem; color: #ddd; }
+        .zodiac-icon { font-size: 1.2rem; }
+        .zodiac-name { font-size: 0.65rem; color: #ddd; }
         .zodiac-order { font-size: 0.55rem; color: #888; }
 
         .predict-btn {
@@ -331,7 +379,7 @@
             color: white;
             font-weight: 700;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
         .predict-btn:hover {
@@ -347,22 +395,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
         .tabs {
             display: flex;
-            gap: 4px;
+            gap: 5px;
             background: rgba(0,0,0,0.3);
-            padding: 3px;
+            padding: 4px;
             border-radius: 40px;
             flex-wrap: wrap;
         }
         .tab {
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 30px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             cursor: pointer;
             background: transparent;
             border: none;
@@ -375,20 +423,19 @@
         .toggle-history {
             background: rgba(255,255,255,0.1);
             border: none;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 30px;
             color: white;
             cursor: pointer;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
         }
         .history-box {
             background: rgba(0,0,0,0.2);
             border-radius: 16px;
-            padding: 10px;
-            max-height: 320px;
+            padding: 12px;
+            max-height: 350px;
             overflow-y: auto;
         }
-        /* Custom scrollbar */
         .history-box::-webkit-scrollbar {
             width: 5px;
         }
@@ -403,7 +450,7 @@
         .time-item, .history-item {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
-            padding: 8px 10px;
+            padding: 10px 12px;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
@@ -415,20 +462,20 @@
             background: rgba(74,222,128,0.1);
             border-left: 3px solid #4ade80;
         }
-        .time-label { font-weight: 600; font-size: 0.75rem; }
-        .time-date { font-size: 0.55rem; color: #aaa; }
+        .time-label { font-weight: 600; font-size: 0.8rem; }
+        .time-date { font-size: 0.6rem; color: #aaa; }
         .result-badge {
             background: rgba(255,255,255,0.05);
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
         }
 
         /* Player Bottom Action Buttons */
         .player-actions {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 15px;
         }
         .player-btn {
@@ -438,13 +485,13 @@
             border-radius: 50px;
             color: #4ade80;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
         }
         .player-btn:hover {
             background: #4ade80;
@@ -462,8 +509,8 @@
             color: white;
             font-weight: 700;
             cursor: pointer;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
         }
         .admin-panel-btn:hover {
@@ -878,17 +925,27 @@
         @media (max-width: 480px) {
             body { padding: 8px; }
             .mobile-container, .admin-container { padding: 14px 10px; border-radius: 20px; }
-            .main-title { font-size: 1.1rem; }
-            .balance-amount { font-size: 1.4rem; }
+            .main-title { font-size: 1.2rem; }
+            .balance-amount { font-size: 1.6rem; }
             .history-box { max-height: 250px; }
+            .zodiac-grid { gap: 6px; }
+            .zodiac-icon { font-size: 1rem; }
+            .zodiac-name { font-size: 0.55rem; }
+            .tab { padding: 4px 8px; font-size: 0.6rem; }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .mobile-container { max-width: 600px; }
+            .main-title { font-size: 1.4rem; }
+            .balance-amount { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 <div class="main-wrapper" id="mainWrapper">
-    <!-- Desktop Layout (3 Columns) - visible on ≥1024px -->
+    <!-- Desktop Layout (1 Column - Vertical/Horizontal stack) -->
     <div class="desktop-grid">
-        <!-- Column 1 - Left Side -->
+        <!-- Card 1: Top Section (Time, Balance, Info, Countdown) -->
         <div class="col-card">
             <div class="top-controls">
                 <button class="top-btn" id="soundToggleBtn">🔊 <span id="soundText">បិទសំឡេង</span></button>
@@ -913,7 +970,7 @@
             <div class="countdown-box" id="countdownText">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimer">--:--</span></div>
         </div>
         
-        <!-- Column 2 - Center -->
+        <!-- Card 2: Zodiac Section + Predict Button -->
         <div class="col-card">
             <div class="zodiac-single-box">
                 <div class="zodiac-title" id="zodiacTitle">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
@@ -922,12 +979,12 @@
             </div>
         </div>
         
-        <!-- Column 3 - Right Side -->
+        <!-- Card 3: History Section + Admin Panel + Law + Telegram -->
         <div class="col-card">
             <div class="history-wrapper">
                 <div class="history-header">
                     <div class="tabs">
-                        <button class="tab active" data-tab="result">លទ្ធផលម�ោង</button>
+                        <button class="tab active" data-tab="result">លទ្ធផលម៉ោង</button>
                         <button class="tab" data-tab="deposit">ប្រវត្តិបញ្ចូលលុយ</button>
                         <button class="tab" data-tab="bet">ប្រវត្តិទស្សន៍ទាយ</button>
                     </div>
@@ -975,7 +1032,7 @@
                     <div class="balance-amount">$<span id="userBalanceM">0.00</span></div>
                 </div>
             </div>
-            <div class="info-badge" id="infoBadgeM">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់!</div>
+            <div class="info-badge" id="infoBadgeM">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
             <div class="section-indicator" id="currentHourTextM">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
             <div class="lucky-circle" id="luckyNumberM">?</div>
             <div class="countdown-box" id="countdownTextM">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimerM">--:--</span></div>
@@ -1761,8 +1818,8 @@
     function applyLanguage() {
         const t = translations[currentLang];
         
-        const desktopTexts = ['mainTitle', 'subTitle', 'balanceLabel', 'infoBadge', 'zodiacTitle', 'openPredictBtn', 'tabResult', 'tabDeposit', 'tabBet'];
-        const mobileTexts = ['mainTitleM', 'subTitleM', 'balanceLabelM', 'infoBadgeM', 'zodiacTitleM', 'openPredictBtnM', 'tabResultM', 'tabDepositM', 'tabBetM'];
+        const desktopTexts = ['mainTitle', 'subTitle', 'balanceLabel', 'infoBadge', 'zodiacTitle', 'openPredictBtn'];
+        const mobileTexts = ['mainTitleM', 'subTitleM', 'balanceLabelM', 'infoBadgeM', 'zodiacTitleM', 'openPredictBtnM'];
         
         desktopTexts.forEach(id => {
             const el = document.getElementById(id);
@@ -1773,9 +1830,6 @@
                 else if (id === 'infoBadge') el.innerText = t.infoBadge;
                 else if (id === 'zodiacTitle') el.innerText = t.zodiacTitle;
                 else if (id === 'openPredictBtn') el.innerText = t.predictBtn;
-                else if (id === 'tabResult') el.innerText = t.tabResult;
-                else if (id === 'tabDeposit') el.innerText = t.tabDeposit;
-                else if (id === 'tabBet') el.innerText = t.tabBet;
             }
         });
         
@@ -1788,10 +1842,22 @@
                 else if (id === 'infoBadgeM') el.innerText = t.infoBadge;
                 else if (id === 'zodiacTitleM') el.innerText = t.zodiacTitle;
                 else if (id === 'openPredictBtnM') el.innerText = t.predictBtn;
-                else if (id === 'tabResultM') el.innerText = t.tabResult;
-                else if (id === 'tabDepositM') el.innerText = t.tabDeposit;
-                else if (id === 'tabBetM') el.innerText = t.tabBet;
             }
+        });
+        
+        // Update tab texts
+        const tabTexts = document.querySelectorAll('.tab');
+        tabTexts.forEach(tab => {
+            const tabType = tab.getAttribute('data-tab');
+            if (tabType === 'result') tab.innerText = t.tabResult;
+            else if (tabType === 'deposit') tab.innerText = t.tabDeposit;
+            else if (tabType === 'bet') tab.innerText = t.tabBet;
+        });
+        
+        const toggleBtns = document.querySelectorAll('.toggle-history');
+        toggleBtns.forEach(btn => {
+            const isHidden = document.getElementById('historyBox')?.style.display === 'none';
+            btn.innerText = isHidden ? (currentLang === 'km' ? '👁️ បង្ហាញ' : '👁️ Show') : (currentLang === 'km' ? '👁️ លាក់' : '👁️ Hide');
         });
         
         const soundTexts = ['soundText', 'soundTextM'];
@@ -1843,7 +1909,7 @@
         renderDepositHistory();
         renderBetHistory();
         
-        // Event listeners for desktop and mobile
+        // Event listeners
         document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
         document.getElementById('langToggleBtnM').addEventListener('click', toggleLanguage);
         document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
@@ -1908,8 +1974,8 @@
         });
         
         // Tabs for desktop and mobile
-        const setupTabs = (resultId, depositId, betId, tabPrefix) => {
-            const tabs = document.querySelectorAll(`.tab[data-tab]`);
+        const setupTabs = (resultId, depositId, betId) => {
+            const tabs = document.querySelectorAll(`.tab`);
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-tab');
@@ -1922,8 +1988,8 @@
             });
         };
         
-        setupTabs('resultTab', 'depositTab', 'betTab', '');
-        setupTabs('resultTabM', 'depositTabM', 'betTabM', 'M');
+        setupTabs('resultTab', 'depositTab', 'betTab');
+        setupTabs('resultTabM', 'depositTabM', 'betTabM');
         
         // Toggle history
         let historyVisible = true;
