@@ -2,2014 +2,1058 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-    <title>ឆ្នាំសំណាងទាំង 12 - ប្រព័ន្ធទស្សន៍ទាយ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialScheduler Pro | កំណត់ពេលបង្ហោះលើបណ្តាញសង្គមទាំងអស់</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ========== YOUR ORIGINAL CSS - COMPLETELY UNCHANGED ========== */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Battambang', 'Poppins', sans-serif;
+            box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(180deg, #0a0a2a 0%, #12123a 100%);
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 16px;
+            color: #1a1a2e;
         }
 
-        .container {
-            background: rgba(255, 255, 255, 0.03);
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 500px;
-            padding: 20px 16px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-            text-align: center;
-            transition: all 0.3s ease;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 1024px) {
-            body { padding: 30px; align-items: flex-start; }
-            .container { max-width: 1400px; padding: 35px 40px; }
-            .desktop-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 35px; align-items: start; }
-            .desktop-left { display: flex; flex-direction: column; gap: 25px; }
-            .desktop-right { display: flex; flex-direction: column; gap: 25px; }
-            .desktop-left .live-time-badge { display: flex; justify-content: center; align-items: center; width: fit-content; margin: 0 auto 20px auto; font-size: 1rem !important; padding: 10px 22px !important; white-space: nowrap; }
-            .desktop-left .main-title { font-size: 2rem !important; }
-            .desktop-left .sub-title { font-size: 1rem !important; }
-            .desktop-left .balance-amount { font-size: 2.8rem !important; }
-            .desktop-left .balance-label { font-size: 0.9rem !important; }
-            .desktop-left .info-badge { font-size: 0.9rem !important; padding: 12px 15px !important; }
-            .desktop-left .section-indicator { font-size: 1.1rem !important; }
-            .desktop-left .lucky-circle { font-size: 1.6rem !important; padding: 20px 35px !important; }
-            .desktop-left .countdown-box { font-size: 1rem !important; padding: 10px 25px !important; }
-            .desktop-left .countdown-time { font-size: 1.2rem !important; }
-            .desktop-right .zodiac-title { font-size: 1rem !important; }
-            .desktop-right .zodiac-icon { font-size: 1.8rem !important; }
-            .desktop-right .zodiac-name { font-size: 0.9rem !important; margin-top: 6px; }
-            .desktop-right .zodiac-order { font-size: 0.75rem !important; }
-            .desktop-right .zodiac-card { padding: 15px 10px !important; cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent; }
-            .desktop-right .zodiac-card:hover { background: rgba(236,72,153,0.2); transform: translateY(-2px); }
-            .desktop-bet-title { font-size: 1rem; }
-            .desktop-selected-zodiac { font-size: 0.95rem; padding: 12px 18px; }
-            .desktop-bet-input .bet-input-field { font-size: 1.1rem; padding: 14px 20px; }
-            .desktop-bet-shortcut { font-size: 0.95rem; padding: 10px 20px; }
-            .desktop-preview-row { font-size: 0.95rem; }
-            .desktop-bet-confirm { font-size: 1.05rem; padding: 14px; }
-            .tab { font-size: 0.85rem !important; padding: 6px 14px !important; }
-            .toggle-history { font-size: 0.8rem !important; }
-            .time-label { font-size: 0.9rem !important; }
-            .result-badge { font-size: 0.85rem !important; }
-            .player-btn { font-size: 0.95rem; padding: 12px; }
-            .admin-panel-btn { font-size: 1rem; padding: 14px; }
-            .law-text { font-size: 0.8rem; }
-            .mobile-only { display: none; }
-            .desktop-grid { display: grid; }
-        }
-
-        @media (max-width: 1023px) {
-            .desktop-grid { display: none; }
-            .mobile-only { display: block; }
-            .live-time-badge { display: flex; justify-content: center; margin: 0 auto 20px auto; width: fit-content; font-size: 0.85rem !important; padding: 8px 18px !important; }
-            .main-title { font-size: 1.6rem !important; }
-            .sub-title { font-size: 0.85rem !important; }
-            .balance-amount { font-size: 2rem !important; }
-            .balance-label { font-size: 0.8rem !important; }
-            .info-badge { font-size: 0.8rem !important; padding: 10px 12px !important; }
-            .section-indicator { font-size: 1rem !important; }
-            .lucky-circle { font-size: 1.3rem !important; padding: 16px 28px !important; }
-            .countdown-box { font-size: 0.9rem !important; padding: 8px 20px !important; }
-            .countdown-time { font-size: 1rem !important; }
-            .zodiac-title { font-size: 0.9rem !important; }
-            .zodiac-icon { font-size: 1.5rem !important; }
-            .zodiac-name { font-size: 0.8rem !important; }
-            .zodiac-order { font-size: 0.65rem !important; }
-            .predict-btn { font-size: 1rem; padding: 14px; }
-            .tab { font-size: 0.8rem !important; padding: 6px 12px !important; }
-            .toggle-history { font-size: 0.75rem !important; }
-            .time-label { font-size: 0.85rem !important; }
-            .result-badge { font-size: 0.8rem !important; }
-            .player-btn, .admin-panel-btn { font-size: 0.95rem; padding: 12px; }
-            .law-text { font-size: 0.75rem; }
-        }
-
-        @media (max-width: 480px) {
-            body { padding: 8px; }
-            .container { padding: 14px 10px; border-radius: 20px; }
-            .main-title { font-size: 1.3rem !important; }
-            .balance-amount { font-size: 1.6rem !important; }
-            .lucky-circle { font-size: 1rem !important; padding: 12px 20px !important; }
-            .zodiac-icon { font-size: 1.2rem !important; }
-            .zodiac-name { font-size: 0.7rem !important; }
-            .tab { font-size: 0.7rem !important; padding: 4px 8px !important; }
-            .live-time-badge { font-size: 0.7rem !important; white-space: nowrap; overflow-x: auto; max-width: 100%; }
-        }
-
-        .desktop-right .zodiac-card.selected,
-        .desktop-right .zodiac-card.selected:hover {
-            background: linear-gradient(135deg, #ec4899, #f43f5e) !important;
-            border: 2px solid #f43f5e !important;
-            box-shadow: 0 0 15px rgba(244,63,94,0.6) !important;
-            transform: scale(1.02) !important;
-        }
-        .zodiac-card.selected {
-            background: linear-gradient(135deg, #ec4899, #f43f5e) !important;
-            border: 2px solid #f43f5e !important;
-            box-shadow: 0 0 10px rgba(244,63,94,0.5) !important;
-        }
-
-        .admin-container {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 600px;
-            padding: 20px 16px;
-            text-align: center;
-            display: none;
-            margin: 0 auto;
-        }
-        .admin-container.show { display: block; }
-        .container.hide { display: none; }
-        .back-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            color: white;
-            cursor: pointer;
-            margin-bottom: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-        }
-        .top-controls {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        .top-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 40px;
-            padding: 6px 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: #e2e8f0;
-        }
-        .main-title { color: #fbd38d; font-size: 1.3rem; font-weight: 700; margin-bottom: 5px; }
-        .sub-title { color: #a0aec0; font-size: 0.65rem; margin-bottom: 20px; }
-        .live-time-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(43, 108, 176, 0.3);
-            border-radius: 40px;
-            padding: 5px 12px;
-            font-size: 0.75rem;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .balance-card {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2a1a5a 100%);
-            border-radius: 24px;
-            padding: 4px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        .floating-money { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0; }
-        .money-note {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.6;
-            animation: floatMoney 8s ease-in-out infinite;
-        }
-        .money-note:nth-child(1) { top: 10%; left: -20px; animation-delay: 0s; }
-        .money-note:nth-child(2) { top: 35%; right: -15px; animation-delay: 1.5s; font-size: 2.2rem; }
-        .money-note:nth-child(3) { bottom: 15%; left: 5%; animation-delay: 3s; font-size: 1.8rem; }
-        .money-note:nth-child(4) { top: 60%; left: -25px; animation-delay: 0.8s; font-size: 1.6rem; }
-        .money-note:nth-child(5) { bottom: 25%; right: -20px; animation-delay: 2.2s; font-size: 2.5rem; }
-        .money-note:nth-child(6) { top: 15%; right: 20%; animation-delay: 4s; font-size: 2rem; }
-        .money-note:nth-child(7) { bottom: 40%; left: 25%; animation-delay: 5.5s; font-size: 1.7rem; }
-        @keyframes floatMoney {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(8deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
-        }
-        .balance-inner {
-            background: rgba(10, 20, 35, 0.4);
-            border-radius: 20px;
-            padding: 15px;
-            position: relative;
-            z-index: 1;
-            border: 1px solid rgba(74,222,128,0.4);
-        }
-        .balance-label { font-size: 0.65rem; color: #a0aec0; text-transform: uppercase; }
-        .balance-amount { font-size: 2rem; font-weight: 700; color: #4ade80; font-family: 'Poppins', monospace; }
-        .info-badge {
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            border-radius: 12px;
-            padding: 8px 10px;
-            margin-bottom: 15px;
-            font-size: 0.65rem;
-            color: #4ade80;
-        }
-        .section-indicator { color: #4ade80; font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; }
-        .lucky-circle {
-            background: linear-gradient(135deg, #f5a623, #f7b733);
-            border-radius: 60px;
-            padding: 12px 20px;
-            margin: 0 auto 15px auto;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        .countdown-box {
-            font-size: 0.8rem;
-            background: rgba(0,0,0,0.3);
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 40px;
-            margin-bottom: 20px;
-        }
-        .countdown-time { color: #fc8181; font-weight: 700; font-size: 1rem; }
-        .zodiac-single-box {
-            background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-            padding: 12px;
-            margin-bottom: 20px;
-        }
-        .zodiac-title { font-size: 0.75rem; color: #fbd38d; text-align: left; margin-bottom: 12px; }
-        .zodiac-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .zodiac-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 12px;
-            padding: 10px 5px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .zodiac-icon { font-size: 1.2rem; }
-        .zodiac-name { font-size: 0.65rem; color: #ddd; }
-        .zodiac-order { font-size: 0.55rem; color: #888; }
-        .predict-btn {
-            background: linear-gradient(135deg, #ec4899, #f43f5e);
-            width: 100%;
-            border: none;
-            padding: 12px;
-            border-radius: 50px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-        .history-wrapper { margin-bottom: 20px; }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .tabs {
-            display: flex;
-            gap: 5px;
-            background: rgba(0,0,0,0.3);
-            padding: 4px;
-            border-radius: 40px;
-            flex-wrap: wrap;
-        }
-        .tab {
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            background: transparent;
-            border: none;
-            color: #aaa;
-        }
-        .tab.active { background: #2b6cb0; color: white; }
-        .toggle-history {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 5px 12px;
-            border-radius: 30px;
-            color: white;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        .history-box {
-            background: rgba(0,0,0,0.2);
-            border-radius: 16px;
-            padding: 12px;
-            max-height: 350px;
-            overflow-y: auto;
-        }
-        .time-item, .history-item {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .time-item.active { background: rgba(74,222,128,0.1); border-left: 3px solid #4ade80; }
-        .time-label { font-weight: 600; font-size: 0.8rem; }
-        .time-date { font-size: 0.6rem; color: #aaa; }
-        .result-badge { background: rgba(255,255,255,0.05); padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; }
-        .player-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
-        .player-btn {
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            padding: 10px;
-            border-radius: 50px;
-            color: #4ade80;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .admin-panel-btn {
-            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
-            width: 100%;
-            border: none;
-            padding: 12px;
-            border-radius: 50px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-        .admin-title { color: #c4b5fd; font-size: 1.2rem; margin-bottom: 5px; }
-        .admin-sub { color: #a0aec0; font-size: 0.65rem; margin-bottom: 20px; }
-        .admin-balance {
-            background: linear-gradient(135deg, #1e3a5f, #2a1a5a);
-            border-radius: 20px;
-            padding: 12px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .admin-balance-label { font-size: 0.65rem; color: #a0aec0; }
-        .admin-balance-amount { font-size: 1.6rem; font-weight: 700; color: #4ade80; }
-        .admin-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-card { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 10px; text-align: center; }
-        .stat-label { font-size: 0.6rem; color: #a0aec0; margin-bottom: 5px; }
-        .stat-value { font-size: 1.1rem; font-weight: 700; color: #c4b5fd; }
-        .commission-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 10px; margin-bottom: 15px; }
-        .commission-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.75rem; flex-wrap: wrap; gap: 8px; }
-        .commission-input { background: #0f0f2a; border: 1px solid #2a2a4a; border-radius: 12px; padding: 6px; width: 70px; color: white; text-align: center; }
-        .save-btn { background: #4ade80; color: #1a1a2e; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 0.7rem; }
-        
-        /* ENHANCED DAILY REPORT STYLES */
-        .report-container {
-            background: rgba(0,0,0,0.3);
-            border-radius: 16px;
-            padding: 12px;
-            margin-top: 10px;
-        }
-        .report-summary {
-            background: linear-gradient(135deg, #1e3a5f, #2a1a5a);
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        .report-summary-title {
-            font-size: 0.7rem;
-            color: #fbd38d;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .report-summary-amount {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #4ade80;
-        }
-        .report-summary-amount.negative {
-            color: #fc8181;
-        }
-        .report-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .report-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 8px;
-            text-align: center;
-        }
-        .report-card-label {
-            font-size: 0.6rem;
-            color: #a0aec0;
-            margin-bottom: 4px;
-        }
-        .report-card-value {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #c4b5fd;
-        }
-        .report-card-value.win { color: #4ade80; }
-        .report-card-value.loss { color: #fc8181; }
-        .daily-report-list {
-            max-height: 250px;
-            overflow-y: auto;
-            margin-top: 10px;
-        }
-        .daily-report-item {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 8px;
-            margin-bottom: 6px;
-            font-size: 0.65rem;
-        }
-        .daily-report-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-            font-weight: bold;
-            color: #c4b5fd;
-            flex-wrap: wrap;
-            gap: 5px;
-        }
-        .daily-report-details {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.6rem;
-            color: #a0aec0;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .profit-positive { color: #4ade80; }
-        .profit-negative { color: #fc8181; }
-        
-        .admin-buttons-section { margin-top: 15px; border-top: 1px solid rgba(139,92,246,0.3); padding-top: 12px; }
-        .section-title { font-size: 0.75rem; color: #c4b5fd; margin-bottom: 10px; text-align: center; font-weight: 600; }
-        .admin-buttons { display: flex; flex-direction: column; gap: 10px; }
-        .admin-btn {
-            background: rgba(139,92,246,0.15);
-            border: 1px solid rgba(139,92,246,0.3);
-            padding: 10px;
-            border-radius: 50px;
-            color: #c4b5fd;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .admin-btn.view-history {
-            background: rgba(56, 161, 105, 0.2);
-            border-color: rgba(56, 161, 105, 0.5);
-            color: #68d391;
-        }
-        .profit-btn {
-            background: linear-gradient(135deg, #f6ad55, #ed8936) !important;
-            color: #1a1a2e !important;
-        }
-        .profit-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(246,173,85,0.4); }
-        .player-buttons-section { margin-top: 15px; border-top: 1px solid rgba(74,222,128,0.3); padding-top: 12px; }
-        .player-section-title { font-size: 0.75rem; color: #4ade80; margin-bottom: 10px; text-align: center; font-weight: 600; }
-        .player-admin-buttons { display: flex; flex-direction: column; gap: 10px; }
-        .player-admin-btn {
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid rgba(74, 222, 128, 0.3);
-            padding: 10px;
-            border-radius: 50px;
-            color: #4ade80;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .law-text {
-            background: rgba(0,0,0,0.5);
-            border-radius: 12px;
-            padding: 10px;
-            font-size: 0.65rem;
-            display: none;
-            margin-top: 10px;
-            text-align: left;
-        }
-        .modal {
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            top: 0;
             z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.2s;
-            padding: 16px;
         }
-        .modal.show { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: #1a1a3a;
-            border-radius: 28px;
-            padding: 20px;
-            width: 90%;
-            max-width: 400px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .modal-title { font-size: 1rem; color: #fbd38d; text-align: center; margin-bottom: 15px; }
-        .modal-input {
-            width: 100%;
-            padding: 10px;
-            background: #0f0f2a;
-            border: 1px solid #2a2a4a;
-            border-radius: 16px;
-            color: white;
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-        }
-        .password-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
-        .password-input {
-            width: 100%;
-            padding: 10px;
-            padding-right: 40px;
-            background: #0f0f2a;
-            border: 1px solid #2a2a4a;
-            border-radius: 16px;
-            color: white;
-            text-align: center;
-            font-size: 1rem;
-        }
-        .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 5px;
-            border-radius: 50%;
-        }
-        .history-modal-list {
-            max-height: 400px;
-            overflow-y: auto;
-            margin: 15px 0;
-        }
-        .history-modal-item {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
         }
-        .history-modal-date {
-            font-size: 0.7rem;
-            color: #a0aec0;
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .history-modal-amount {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #4ade80;
+
+        .logo i {
+            background: none;
+            -webkit-text-fill-color: #667eea;
+            margin-right: 8px;
         }
-        .zodiac-select-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0; }
-        .zodiac-option {
-            background: #0f0f2a;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            padding: 6px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        .zodiac-option.selected { background: linear-gradient(135deg, #ec4899, #f43f5e); }
-        .preview-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 10px; margin-bottom: 15px; }
-        .preview-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.75rem; }
-        .shortcut-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 15px; }
-        .shortcut { background: #2a2a4a; border: none; padding: 8px; border-radius: 40px; color: white; cursor: pointer; font-weight: 600; font-size: 0.75rem; }
-        .modal-buttons { display: flex; gap: 12px; margin-top: 15px; justify-content: space-between; }
-        .modal-btn { flex: 1; padding: 10px; border-radius: 40px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
-        .btn-cancel { background: #4a5568; color: white; }
-        .btn-confirm { background: #4ade80; color: #1a1a2e; }
-        .confirm-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
+
+        .nav-links {
             display: flex;
+            gap: 2rem;
             align-items: center;
-            justify-content: center;
-            z-index: 1100;
-            opacity: 0;
-            visibility: hidden;
-            padding: 16px;
         }
-        .confirm-modal.show { opacity: 1; visibility: visible; }
-        .confirm-box {
-            background: #1a1a3a;
-            border-radius: 28px;
-            padding: 25px;
-            width: 90%;
-            max-width: 340px;
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .btn-nav {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white !important;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+        }
+
+        .hero {
+            padding: 120px 2rem 60px;
             text-align: center;
-            border: 2px solid #ecc94b;
+            color: white;
         }
-        .confirm-title { color: #ecc94b; font-size: 1.1rem; margin-bottom: 12px; font-weight: 700; }
-        .confirm-message { color: #e2e8f0; margin-bottom: 25px; line-height: 1.4; font-size: 0.85rem; }
-        .confirm-buttons { display: flex; gap: 15px; justify-content: space-between; }
-        .confirm-btn { flex: 1; padding: 10px; border-radius: 50px; border: none; cursor: pointer; font-weight: 700; font-size: 0.9rem; }
-        .confirm-yes { background: #4ade80; color: #1a1a2e; order: 2; }
-        .confirm-no { background: #4a5568; color: white; order: 1; }
-        .notification-toast {
-            position: fixed;
-            bottom: 20px;
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .cta-button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 0 0.5rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .cta-button-outline {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .pricing {
+            background: #f7fafc;
+            padding: 60px 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1a1a2e;
+        }
+
+        .pricing-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .pricing-card.popular {
+            border: 2px solid #667eea;
+            position: relative;
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background: #1a3a2a;
-            border: 1px solid #4ade80;
-            border-radius: 50px;
-            padding: 8px 16px;
-            z-index: 1200;
-            font-size: 0.75rem;
-            animation: fadeInUp 0.3s ease;
-            white-space: nowrap;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        .waiting-text { color: #f6ad55; font-size: 0.65rem; }
-        .status-win { color: #4ade80; }
-        .status-lose { color: #fc8181; }
-        .status-pending { color: #f6ad55; }
-        .desktop-bet-section {
-            background: rgba(255,255,255,0.03);
+            background: #667eea;
+            color: white;
+            padding: 0.25rem 1rem;
             border-radius: 20px;
-            padding: 18px;
-            margin-top: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
-        .desktop-bet-title { font-size: 0.9rem; color: #fbd38d; margin-bottom: 15px; text-align: left; }
-        .desktop-bet-input { display: flex; gap: 12px; margin-bottom: 15px; flex-wrap: wrap; }
-        .desktop-bet-input .bet-input-field { flex: 2; background: #0f0f2a; border: 1px solid #2a2a4a; border-radius: 50px; padding: 12px 20px; color: white; font-size: 1rem; text-align: center; }
-        .desktop-bet-shortcuts { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .desktop-bet-shortcut { background: #2a2a4a; border: none; padding: 8px 18px; border-radius: 50px; color: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
-        .desktop-selected-zodiac {
-            background: rgba(74,222,128,0.1);
-            border: 1px solid rgba(74,222,128,0.3);
-            border-radius: 50px;
-            padding: 10px 15px;
-            margin-bottom: 15px;
+
+        .price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #667eea;
+            margin: 1rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: #718096;
+        }
+
+        .features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .features li {
+            padding: 0.5rem 0;
+            color: #4a5568;
+        }
+
+        .features i {
+            color: #48bb78;
+            margin-right: 0.5rem;
+        }
+
+        .pricing-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .dashboard {
+            display: none;
+            background: #f7fafc;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        .desktop-preview-box { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 12px; margin-bottom: 18px; }
-        .desktop-preview-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.85rem; }
-        .desktop-preview-label { color: #a0aec0; }
-        .desktop-preview-value { color: #4ade80; font-weight: bold; }
-        .desktop-preview-value.negative { color: #fc8181; }
-        .desktop-bet-confirm {
-            background: linear-gradient(135deg, #4ade80, #22c55e);
-            width: 100%;
+
+        .welcome-badge {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .create-post-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
             border: none;
-            padding: 12px;
-            border-radius: 50px;
-            color: #1a1a2e;
-            font-weight: 700;
-            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
             cursor: pointer;
+            font-weight: 600;
         }
-        
-        /* ========== LOGIN STYLES ========== */
-        .login-overlay {
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #718096;
+            margin-top: 0.5rem;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .post-platforms {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .platform-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .platform-fb { background: #1877f2; }
+        .platform-ig { background: #e4405f; }
+        .platform-tw { background: #1da1f2; }
+        .platform-li { background: #0077b5; }
+        .platform-tt { background: #000000; }
+        .platform-pt { background: #bd081c; }
+        .platform-yt { background: #ff0000; }
+        .platform-tg { background: #0088cc; }
+        .platform-sc { background: #fffc00; color: #000; }
+        .platform-rd { background: #ff4500; }
+
+        .post-content {
+            color: #2d3748;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+
+        .post-schedule {
+            font-size: 0.85rem;
+            color: #718096;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-scheduled { background: #fef3c7; color: #d97706; }
+        .status-published { background: #d1fae5; color: #059669; }
+        .status-failed { background: #fee2e2; color: #dc2626; }
+
+        .delete-post {
+            background: none;
+            border: none;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem;
+        }
+
+        .modal {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
-            backdrop-filter: blur(15px);
+            background: rgba(0,0,0,0.5);
             z-index: 2000;
-            display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
-        .login-box {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 32px;
-            padding: 30px 25px;
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
             width: 90%;
-            max-width: 380px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group textarea,
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .platform-checkbox {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .platform-checkbox label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .platform-checkbox label:hover {
+            background: #f7fafc;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-box {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .auth-box h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .footer {
+            background: #1a1a2e;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .platforms-showcase {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1000px;
+        }
+
+        .platforms-showcase h3 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
             text-align: center;
         }
-        .login-box h2 { color: #fbd38d; font-size: 1.5rem; margin-bottom: 8px; }
-        .login-box p { color: #a0aec0; font-size: 0.7rem; margin-bottom: 25px; }
-        .login-input {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 50px;
-            color: white;
-            font-size: 0.9rem;
-            margin-bottom: 12px;
-            outline: none;
+
+        .platform-item {
+            padding: 0.75rem;
+            border-radius: 10px;
+            background: #f7fafc;
+            transition: transform 0.3s;
         }
-        .login-input:focus { border-color: #4ade80; }
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #4ade80, #22c55e);
-            border: none;
-            border-radius: 50px;
-            color: #1a1a2e;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            margin-top: 8px;
+
+        .platform-item:hover {
+            transform: translateY(-3px);
         }
-        .register-btn {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            margin-top: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
+
+        .platform-item i {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            display: block;
         }
-        .login-error {
-            background: rgba(220,38,38,0.2);
-            border: 1px solid #ef4444;
-            border-radius: 50px;
-            padding: 8px;
-            font-size: 0.7rem;
-            color: #fca5a5;
-            margin-bottom: 12px;
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-links { gap: 1rem; }
+            .nav-links a { font-size: 0.85rem; }
+            .platform-checkbox { grid-template-columns: repeat(2, 1fr); }
         }
-        .login-success {
-            background: rgba(34,197,94,0.2);
-            border: 1px solid #4ade80;
-            color: #86efac;
-        }
-        .demo-users {
-            font-size: 0.65rem;
-            color: #a0aec0;
-            margin-top: 20px;
-        }
-        .demo-users span { color: #4ade80; cursor: pointer; text-decoration: underline; }
-        .user-badge-login {
-            background: rgba(74,222,128,0.2);
-            border-radius: 50px;
-            padding: 6px 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
-            margin-bottom: 15px;
-        }
-        .logout-icon {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 4px 10px;
-            border-radius: 40px;
-            color: #fc8181;
-            cursor: pointer;
-            font-size: 0.7rem;
-            margin-left: 10px;
-        }
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
-<!-- ========== LOGIN OVERLAY ========== -->
-<div id="loginOverlay" class="login-overlay">
-    <div class="login-box">
-        <h2>🔮 ឆ្នាំសំណាងទាំង 12</h2>
-        <p>សូមបញ្ចូលគណនីរបស់អ្នក</p>
-        <div id="loginMessage" class="login-error" style="display:none"></div>
-        <input type="text" id="loginUsername" class="login-input" placeholder="ឈ្មោះអ្នកប្រើប្រាស់">
-        <input type="password" id="loginPassword" class="login-input" placeholder="ពាក្យសម្ងាត់">
-        <button id="doLoginBtn" class="login-btn">🔓 ចូលប្រើប្រាស់</button>
-        <button id="showRegisterBtn" class="login-btn register-btn">📝 ចុះឈ្មោះគណនីថ្មី</button>
-        <div class="demo-users">
-            គណនីសាកល្បង៖ 
-            <span id="demoPlayer1">Player1 / 1234</span> | 
-            <span id="demoPlayer2">Player2 / 1234</span> | 
-            <span id="demoAdmin">Admin / admin123</span>
+
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-calendar-alt"></i>
+            SocialScheduler Pro
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a onclick="showSection('home')">ទំព័រដើម</a>
+            <a onclick="showSection('pricing')">តម្លៃ</a>
+            <a id="dashboardNavLink" style="display: none;" onclick="showDashboard()">Dashboard</a>
+            <a id="loginNavBtn" onclick="showAuth('login')">ចូលប្រើ</a>
+            <a id="registerNavBtn" onclick="showAuth('register')">ចុះឈ្មោះ</a>
+            <a id="logoutNavBtn" style="display: none;" onclick="logout()">ចាកចេញ</a>
+        </div>
+    </div>
+</nav>
+
+<section id="homeSection" class="hero">
+    <h1>គ្រប់គ្រងបណ្តាញសង្គមទាំងអស់<br>នៅកន្លែងតែមួយ</h1>
+    <p>កំណត់ពេលបង្ហោះលើបណ្តាញសង្គមជាង 10+ ដោយស្វ័យប្រវត្តិ និងសន្សំពេលវេលារបស់អ្នក</p>
+    <div>
+        <button class="cta-button" onclick="showAuth('register')">ចាប់ផ្តើមឥឡូវនេះ</button>
+        <button class="cta-button cta-button-outline" onclick="showSection('pricing')">មើលតម្លៃ</button>
+    </div>
+
+    <div class="platforms-showcase">
+        <h3><i class="fas fa-share-alt"></i> បណ្តាញសង្គមដែលគាំទ្រ</h3>
+        <div class="platforms-grid">
+            <div class="platform-item"><i class="fab fa-facebook" style="color:#1877f2"></i> Facebook</div>
+            <div class="platform-item"><i class="fab fa-instagram" style="color:#e4405f"></i> Instagram</div>
+            <div class="platform-item"><i class="fab fa-twitter" style="color:#1da1f2"></i> Twitter/X</div>
+            <div class="platform-item"><i class="fab fa-linkedin" style="color:#0077b5"></i> LinkedIn</div>
+            <div class="platform-item"><i class="fab fa-tiktok" style="color:#000"></i> TikTok</div>
+            <div class="platform-item"><i class="fab fa-pinterest" style="color:#bd081c"></i> Pinterest</div>
+            <div class="platform-item"><i class="fab fa-youtube" style="color:#ff0000"></i> YouTube</div>
+            <div class="platform-item"><i class="fab fa-telegram" style="color:#0088cc"></i> Telegram</div>
+            <div class="platform-item"><i class="fab fa-snapchat" style="color:#fffc00"></i> Snapchat</div>
+            <div class="platform-item"><i class="fab fa-reddit" style="color:#ff4500"></i> Reddit</div>
+        </div>
+    </div>
+</section>
+
+<section id="pricingSection" class="pricing" style="display: none;">
+    <h2 class="section-title">ជ្រើសរើសកញ្ចប់សេវាកម្មរបស់អ្នក</h2>
+    <div class="pricing-grid">
+        <div class="pricing-card">
+            <h3>ឥតគិតថ្លៃ</h3>
+            <div class="price">$0<span>/ខែ</span></div>
+            <ul class="features">
+                <li><i class="fas fa-check"></i> 5 បង្ហោះ/ខែ</li>
+                <li><i class="fas fa-check"></i> 3 បណ្តាញសង្គម</li>
+                <li><i class="fas fa-check"></i> កំណត់ពេលមូលដ្ឋាន</li>
+                <li><i class="fas fa-times" style="color: #dc2626;"></i> ពុំមានការវិភាគ</li>
+            </ul>
+            <button class="pricing-btn" onclick="showAuth('register')">ចាប់ផ្តើម</button>
+        </div>
+
+        <div class="pricing-card popular">
+            <div class="popular-badge">ពេញនិយមបំផុត</div>
+            <h3>ប្រូ</h3>
+            <div class="price">$15<span>/ខែ</span></div>
+            <ul class="features">
+                <li><i class="fas fa-check"></i> គ្មានដែនកំណត់បង្ហោះ</li>
+                <li><i class="fas fa-check"></i> 10+ បណ្តាញសង្គមទាំងអស់</li>
+                <li><i class="fas fa-check"></i> កំណត់ពេលកម្រិតខ្ពស់</li>
+                <li><i class="fas fa-check"></i> របាយការណ៍វិភាគលម្អិត</li>
+                <li><i class="fas fa-check"></i> គាំទ្រអាទិភាព</li>
+            </ul>
+            <button class="pricing-btn" onclick="showAuth('register')">សាកល្បងឥឡូវ</button>
+        </div>
+
+        <div class="pricing-card">
+            <h3>អាជីវកម្ម</h3>
+            <div class="price">$49<span>/ខែ</span></div>
+            <ul class="features">
+                <li><i class="fas fa-check"></i> មុខងារប្រូទាំងអស់</li>
+                <li><i class="fas fa-check"></i> គ្រប់គ្រងក្រុមគ្មានដែនកំណត់</li>
+                <li><i class="fas fa-check"></i> API សម្រាប់អភិវឌ្ឍន៍</li>
+                <li><i class="fas fa-check"></i> គាំទ្រ 24/7</li>
+            </ul>
+            <button class="pricing-btn" onclick="showAuth('register')">ទាក់ទងពាណិជ្ជកម្ម</button>
+        </div>
+    </div>
+</section>
+
+<section id="dashboardSection" class="dashboard">
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="welcome-badge">
+                <i class="fas fa-user-circle"></i> ស្វាគមន៍, <span id="userName">User</span>!
+            </div>
+            <div class="welcome-badge">
+                <i class="fas fa-tag"></i> កញ្ចប់: <span id="userPlan">ឥតគិតថ្លៃ</span>
+            </div>
+            <button class="create-post-btn" onclick="openPostModal()">
+                <i class="fas fa-plus"></i> បង្កើតការបង្ហោះថ្មី
+            </button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalPosts">0</div>
+                <div class="stat-label">សរុបការបង្ហោះ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="publishedPosts">0</div>
+                <div class="stat-label">បានបង្ហោះរួច</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="scheduledPosts">0</div>
+                <div class="stat-label">កំពុងរង់ចាំ</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="engagementRate">0</div>
+                <div class="stat-label">ការចូលរួម (%)</div>
+            </div>
+        </div>
+
+        <div class="posts-grid" id="postsGrid"></div>
+    </div>
+</section>
+
+<div id="authSection" class="auth-container" style="display: none;">
+    <div class="auth-box">
+        <h2 id="authTitle">ចូលប្រើប្រាស់</h2>
+        <input type="text" id="authEmail" class="auth-input" placeholder="អ៊ីមែល">
+        <input type="password" id="authPassword" class="auth-input" placeholder="ពាក្យសម្ងាត់">
+        <input type="text" id="authName" class="auth-input" placeholder="ឈ្មោះពេញ" style="display: none;">
+        <button class="auth-btn" id="authSubmitBtn" onclick="handleAuth()">ចូលប្រើ</button>
+        <div class="auth-link">
+            <a href="#" id="toggleAuthLink" onclick="toggleAuthMode()">មិនទាន់មានគណនី? ចុះឈ្មោះ</a>
         </div>
     </div>
 </div>
 
-<!-- ========== REGISTER OVERLAY ========== -->
-<div id="registerOverlay" class="login-overlay hidden">
-    <div class="login-box">
-        <h2>📝 ចុះឈ្មោះគណនីថ្មី</h2>
-        <p>បង្កើតគណនីដើម្បីចាប់ផ្តើម</p>
-        <div id="registerMessage" class="login-error" style="display:none"></div>
-        <input type="text" id="regUsername" class="login-input" placeholder="ឈ្មោះអ្នកប្រើប្រាស់">
-        <input type="password" id="regPassword" class="login-input" placeholder="ពាក្យសម្ងាត់">
-        <input type="password" id="regConfirmPassword" class="login-input" placeholder="បញ្ជាក់ពាក្យសម្ងាត់">
-        <button id="doRegisterBtn" class="login-btn">✅ ចុះឈ្មោះ</button>
-        <button id="backToLoginBtn" class="login-btn register-btn">← ត្រឡប់ទៅចូលប្រើប្រាស់</button>
-    </div>
-</div>
-
-<!-- ========== MAIN GAME CONTAINER ========== -->
-<div class="container" id="mainContainer" style="display:none">
-    <div class="mobile-only">
-        <div class="top-controls">
-            <button class="top-btn" id="soundToggleBtn">🔊 <span id="soundText">បិទសំឡេង</span></button>
-            <button class="top-btn" id="langToggleBtn">🌐 <span id="langText">ភាសាខ្មែរ</span></button>
-            <button class="top-btn" id="logoutBtnGame" style="background:#fc8181; color:#1a1a2e;">🚪 ចាកចេញ</button>
+<div id="postModal" class="modal">
+    <div class="modal-content">
+        <h3><i class="fas fa-plus-circle"></i> បង្កើតការបង្ហោះថ្មី</h3>
+        <div class="form-group">
+            <label>ខ្លឹមសារ</label>
+            <textarea id="postContent" rows="4" placeholder="សរសេរអ្វីដែលអ្នកចង់បង្ហោះ..."></textarea>
         </div>
-        <div class="user-badge-login" id="userBadge">👤 ភ្ញៀវ</div>
-        <div class="main-title" id="mainTitle">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
-        <div class="sub-title" id="subTitle">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
-        <div class="live-time-badge" id="liveClock">📅 --/--/---- | ⏰ --:--:--</div>
-        <div class="balance-card">
-            <div class="floating-money"><div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div><div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div></div>
-            <div class="balance-inner">
-                <div class="balance-label" id="balanceLabel">សមតុល្យទឹកប្រាក់របស់អ្នក</div>
-                <div class="balance-amount">$<span id="userBalance">0.00</span></div>
+        <div class="form-group">
+            <label>ជ្រើសរើសបណ្តាញសង្គម (អាចជ្រើសច្រើន)</label>
+            <div class="platform-checkbox" id="platformCheckboxGroup">
+                <label><input type="checkbox" value="facebook"> <i class="fab fa-facebook"></i> Facebook</label>
+                <label><input type="checkbox" value="instagram"> <i class="fab fa-instagram"></i> Instagram</label>
+                <label><input type="checkbox" value="twitter"> <i class="fab fa-twitter"></i> Twitter/X</label>
+                <label><input type="checkbox" value="linkedin"> <i class="fab fa-linkedin"></i> LinkedIn</label>
+                <label><input type="checkbox" value="tiktok"> <i class="fab fa-tiktok"></i> TikTok</label>
+                <label><input type="checkbox" value="pinterest"> <i class="fab fa-pinterest"></i> Pinterest</label>
+                <label><input type="checkbox" value="youtube"> <i class="fab fa-youtube"></i> YouTube</label>
+                <label><input type="checkbox" value="telegram"> <i class="fab fa-telegram"></i> Telegram</label>
+                <label><input type="checkbox" value="snapchat"> <i class="fab fa-snapchat"></i> Snapchat</label>
+                <label><input type="checkbox" value="reddit"> <i class="fab fa-reddit"></i> Reddit</label>
             </div>
         </div>
-        <div class="info-badge" id="infoBadge">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
-        <div class="section-indicator" id="currentHourText">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
-        <div class="lucky-circle" id="luckyNumber">?</div>
-        <div class="countdown-box" id="countdownText">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimer">--:--</span></div>
-        <div class="zodiac-single-box">
-            <div class="zodiac-title" id="zodiacTitle">🗓️ តារាងឆ្នាំសំណាងទាំង ១២</div>
-            <div class="zodiac-grid" id="zodiacGrid"></div>
-            <button class="predict-btn" id="openPredictBtn">🎲 ចុចដើម្បីទស្សន៍ទាយ</button>
+        <div class="form-group">
+            <label>កាលបរិច្ឆេទ និងពេលវេលា</label>
+            <input type="datetime-local" id="postScheduleTime">
         </div>
-        <div class="history-wrapper">
-            <div class="history-header">
-                <div class="tabs">
-                    <button class="tab active" data-tab="result" id="tabResult">លទ្ធផលម៉ោង</button>
-                    <button class="tab" data-tab="deposit" id="tabDeposit">ប្រវត្តិបញ្ចូលលុយ</button>
-                    <button class="tab" data-tab="bet" id="tabBet">ប្រវត្តិទស្សន៍ទាយ</button>
-                </div>
-                <button class="toggle-history" id="toggleHistoryBtn">👁️ លាក់</button>
-            </div>
-            <div class="history-box" id="historyBox">
-                <div id="resultTab"><div id="scheduleList"></div></div>
-                <div id="depositTab" style="display:none;"><div id="depositList"></div></div>
-                <div id="betTab" style="display:none;"><div id="betList"></div></div>
-            </div>
-        </div>
-        <button class="admin-panel-btn" id="adminPanelBtn">🔧 ផ្ទាំងគ្រប់គ្រង</button>
-        <div class="player-actions">
-            <button class="player-btn" id="playerLawBtn">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
-            <button class="player-btn" id="playerTelegramBtn">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
-        </div>
-        <div class="law-text" id="lawText">
-            <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
-            <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
-            <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
-            <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p>
-            <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p>
-            <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
-        </div>
-    </div>
-
-    <div class="desktop-grid">
-        <div class="desktop-left">
-            <div class="top-controls">
-                <button class="top-btn" id="soundToggleBtnDesktop">🔊 <span id="soundTextDesktop">បិទសំឡេង</span></button>
-                <button class="top-btn" id="langToggleBtnDesktop">🌐 <span id="langTextDesktop">ភាសាខ្មែរ</span></button>
-                <button class="top-btn" id="logoutBtnDesktop" style="background:#fc8181; color:#1a1a2e;">🚪 ចាកចេញ</button>
-            </div>
-            <div class="user-badge-login" id="userBadgeDesktop">👤 ភ្ញៀវ</div>
-            <div class="main-title" id="mainTitleDesktop">ឆ្នាំសំណាងទាំង 12 🎁🎉</div>
-            <div class="sub-title" id="subTitleDesktop">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div>
-            <div class="live-time-badge" id="liveClockDesktop">📅 --/--/---- | ⏰ --:--:--</div>
-            <div class="balance-card">
-                <div class="floating-money"><div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div><div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div></div>
-                <div class="balance-inner">
-                    <div class="balance-label" id="balanceLabelDesktop">សមតុល្យទឹកប្រាក់របស់អ្នក</div>
-                    <div class="balance-amount">$<span id="userBalanceDesktop">0.00</span></div>
-                </div>
-            </div>
-            <div class="info-badge" id="infoBadgeDesktop">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div>
-            <div class="section-indicator" id="currentHourTextDesktop">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div>
-            <div class="lucky-circle" id="luckyNumberDesktop">?</div>
-            <div class="countdown-box" id="countdownTextDesktop">លទ្ធផលបន្ទាប់ចេញក្នុង៖ <span class="countdown-time" id="countdownTimerDesktop">--:--</span></div>
-        </div>
-        <div class="desktop-right">
-            <div class="zodiac-single-box">
-                <div class="zodiac-title" id="zodiacTitleDesktop">🗓️ តារាងឆ្នាំសំណាងទាំង ១២ (ចុចជ្រើសរើស)</div>
-                <div class="zodiac-grid" id="zodiacGridDesktop"></div>
-            </div>
-            <div class="desktop-bet-section">
-                <div class="desktop-bet-title">💰 បញ្ចូលទឹកប្រាក់ដើម្បីទស្សន៍ទាយ</div>
-                <div class="desktop-selected-zodiac" id="desktopSelectedZodiac">
-                    <span>⭐ ឆ្នាំដែលបានជ្រើសរើស៖</span>
-                    <span id="selectedZodiacName">មិនទាន់ជ្រើសរើស</span>
-                </div>
-                <div class="desktop-bet-input">
-                    <input type="number" class="bet-input-field" id="desktopBetAmount" placeholder="បញ្ចូលចំនួនទឹកប្រាក់" min="0.01" step="0.01" value="0">
-                </div>
-                <div class="desktop-bet-shortcuts">
-                    <button class="desktop-bet-shortcut" data-amount="1">$1</button>
-                    <button class="desktop-bet-shortcut" data-amount="5">$5</button>
-                    <button class="desktop-bet-shortcut" data-amount="10">$10</button>
-                    <button class="desktop-bet-shortcut" data-amount="20">$20</button>
-                    <button class="desktop-bet-shortcut" data-amount="50">$50</button>
-                </div>
-                <div class="desktop-preview-box">
-                    <div class="desktop-preview-row"><span class="desktop-preview-label">ទឹកប្រាក់បច្ចុប្បន្ន:</span><span class="desktop-preview-value" id="desktopPreCurrent">$0.00</span></div>
-                    <div class="desktop-preview-row"><span class="desktop-preview-label">ត្រូវកាត់:</span><span class="desktop-preview-value negative" id="desktopPreCost">$0.00</span></div>
-                    <div class="desktop-preview-row"><span class="desktop-preview-label">នៅសល់:</span><span class="desktop-preview-value" id="desktopPreRemain">$0.00</span></div>
-                </div>
-                <button class="desktop-bet-confirm" id="desktopConfirmBetBtn">✅ យល់ព្រមទស្សន៍ទាយ</button>
-            </div>
-            <div class="history-wrapper">
-                <div class="history-header">
-                    <div class="tabs">
-                        <button class="tab active" data-tab="result" id="tabResultDesktop">លទ្ធផលម៉ោង</button>
-                        <button class="tab" data-tab="deposit" id="tabDepositDesktop">ប្រវត្តិបញ្ចូលលុយ</button>
-                        <button class="tab" data-tab="bet" id="tabBetDesktop">ប្រវត្តិទស្សន៍ទាយ</button>
-                    </div>
-                    <button class="toggle-history" id="toggleHistoryBtnDesktop">👁️ លាក់</button>
-                </div>
-                <div class="history-box" id="historyBoxDesktop">
-                    <div id="resultTabDesktop"><div id="scheduleListDesktop"></div></div>
-                    <div id="depositTabDesktop" style="display:none;"><div id="depositListDesktop"></div></div>
-                    <div id="betTabDesktop" style="display:none;"><div id="betListDesktop"></div></div>
-                </div>
-            </div>
-            <button class="admin-panel-btn" id="adminPanelBtnDesktop">🔧 ផ្ទាំងគ្រប់គ្រង</button>
-            <div class="player-actions">
-                <button class="player-btn" id="playerLawBtnDesktop">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button>
-                <button class="player-btn" id="playerTelegramBtnDesktop">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button>
-            </div>
-            <div class="law-text" id="lawTextDesktop">
-                <p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p>
-                <p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p>
-                <p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p>
-                <p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p>
-                <p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p>
-                <p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p>
-            </div>
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closePostModal()">បោះបង់</button>
+            <button class="btn-submit" onclick="createPost()">កំណត់ពេលបង្ហោះ</button>
         </div>
     </div>
 </div>
 
-<!-- ========== ADMIN CONTAINER ========== -->
-<div id="adminContainer" class="admin-container">
-    <button class="back-btn" id="backToMainBtn">← ត្រឡប់ទៅកាន់ទំព័រដើម</button>
-    <div class="admin-title">🔧 ផ្ទាំងគ្រប់គ្រង Admin</div>
-    <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងទិន្នន័យ</div>
-    
-    <div class="commission-box">
-        <div class="commission-row"><span>💸 ផ្ទេរប្រាក់ទៅអ្នកលេង (ពី Admin Balance)</span></div>
-        <select id="transferPlayerSelect" class="commission-input" style="width:100%; margin-bottom:10px; padding:10px;"></select>
-        <input type="number" id="transferAmount" class="commission-input" placeholder="ចំនួនទឹកប្រាក់" style="width:100%; margin-bottom:10px;">
-        <button class="save-btn" id="transferToPlayerBtn" style="background:#f6ad55; width:100%;">💸 ផ្ទេរប្រាក់</button>
-    </div>
-    
-    <div class="admin-balance">
-        <div class="admin-balance-label">💰 សមតុល្យ Admin</div>
-        <div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div>
-    </div>
-    <div class="admin-balance" style="margin-top: -10px;">
-        <div class="admin-balance-label">👤 សមតុល្យអ្នកលេង</div>
-        <div class="admin-balance-amount">$<span id="playerBalanceDisplay">0.00</span></div>
-    </div>
-    
-    <div class="admin-stats">
-        <div class="stat-card"><div class="stat-label">🎲 ចំនួនភ្នាល់សរុប</div><div class="stat-value" id="totalBets">0</div></div>
-        <div class="stat-card"><div class="stat-label">🏆 ចំនួនឈ្នះសរុប</div><div class="stat-value" id="totalWins">0</div></div>
-        <div class="stat-card"><div class="stat-label">📊 ភាគរយឈ្នះ</div><div class="stat-value" id="winRate">0%</div></div>
-        <div class="stat-card"><div class="stat-label">💰 ប្រាក់ចំណេញសុទ្ធ</div><div class="stat-value" id="netProfit">$0.00</div></div>
-    </div>
-    
-    <div class="commission-box">
-        <div class="commission-row"><span>🎮 មេគុណរង្វាន់បច្ចុប្បន្ន</span><span id="currentMultiplier">10x</span></div>
-        <div class="commission-row"><span>កំណត់មេគុណថ្មី</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div>
-        <button class="save-btn" id="saveMultiplierBtn">💾 រក្សាទុក</button>
-    </div>
-    
-    <div class="commission-box">
-        <div class="commission-row"><span>📅 របាយការណ៍ប្រចាំថ្ងៃ</span></div>
-        <div class="report-summary">
-            <div class="report-summary-title">💰 សង្ខេបសមតុល្យបច្ចុប្បន្ន</div>
-            <div class="report-summary-amount" id="summaryCurrentBalance">$0.00</div>
-        </div>
-        <div class="report-grid">
-            <div class="report-card"><div class="report-card-label">👤 សមតុល្យអ្នកលេង</div><div class="report-card-value" id="summaryPlayerBalance">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">🔧 សមតុល្យ Admin</div><div class="report-card-value" id="summaryAdminBalance">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">📥 ប្រាក់ដាក់សរុប</div><div class="report-card-value" id="summaryTotalDeposits">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">💸 ប្រាក់បង់សរុប</div><div class="report-card-value" id="summaryTotalPayouts">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">📈 ប្រាក់ចំណេញ/ខាត</div><div class="report-card-value" id="summaryNetProfit">$0.00</div></div>
-            <div class="report-card"><div class="report-card-label">🎲 ចំនួនភ្នាល់សរុប</div><div class="report-card-value" id="summaryTotalBets">0</div></div>
-        </div>
-        <div class="daily-report-list" id="dailyReportList"><div style="text-align:center;padding:15px;color:#aaa">កំពុងផ្ទុក...</div></div>
-    </div>
-    
-    <div class="admin-buttons-section">
-        <div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div>
-        <div class="admin-buttons">
-            <button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់សម្រាប់ Admin</button>
-            <button class="admin-btn view-history" id="adminViewDepositHistoryBtn">📜 មើលប្រវត្តិបញ្ចូលលុយ Admin</button>
-            <button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ Admin</button>
-        </div>
-    </div>
-    
-    <div class="player-buttons-section">
-        <div class="player-section-title">🎮 ប៊ូតុងគ្រប់គ្រងអ្នកលេង</div>
-        <div class="player-admin-buttons">
-            <button class="player-admin-btn" id="playerDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់អ្នកលេង</button>
-            <button class="player-admin-btn" id="playerClearBalanceBtn">💰 លុបទឹកប្រាក់អ្នកលេង</button>
-            <button class="player-admin-btn" id="playerClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
-            <button class="player-admin-btn" id="playerClearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
-        </div>
-    </div>
-</div>
-
-<!-- ========== MODALS ========== -->
-<div class="modal" id="depositModal"><div class="modal-content"><div id="pinStep"><div class="modal-title">🔐 បញ្ចូលកូដសម្ងាត់</div><div class="password-wrapper"><input type="password" class="password-input" id="pinInput" placeholder="កូដសម្ងាត់" maxlength="10"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInput', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeDepositModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPinBtn">ផ្ទៀងផ្ទាត់</button></div></div><div id="amountStep" style="display:none;"><div class="modal-title">💵 បញ្ចូលចំនួនទឹកប្រាក់</div><input type="number" class="modal-input" id="amountInput" placeholder="ចំនួនទឹកប្រាក់" min="0.01" step="0.01"><div class="modal-buttons"><button class="modal-btn btn-cancel" id="backToPinBtn">ត្រឡប់</button><button class="modal-btn btn-confirm" id="submitDepositBtn">បញ្ចូល</button></div></div></div></div>
-<div class="modal" id="adminEntryPinModal"><div class="modal-content"><div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div><div class="password-wrapper"><input type="password" class="password-input" id="adminEntryPinInput" placeholder="ពាក្យសម្ងាត់"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('adminEntryPinInput', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminEntryModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmAdminEntryBtn">ផ្ទៀងផ្ទាត់</button></div></div></div>
-<div class="modal" id="predictModal"><div class="modal-content"><div class="modal-title">🎲 ទស្សន៍ទាយ</div><div class="preview-box"><div class="preview-row"><span id="preCurrentLabel">ទឹកប្រាក់បច្ចុប្បន្ន:</span><span>$<span id="preCurrent">0.00</span></span></div><div class="preview-row"><span id="preCostLabel">ត្រូវកាត់:</span><span>$<span id="preCost">0.00</span></span></div><div class="preview-row"><span id="preRemainLabel">នៅសល់:</span><span>$<span id="preRemain">0.00</span></span></div></div><input type="number" class="modal-input" id="betAmount" placeholder="បញ្ចូលទឹកប្រាក់" min="0.01" step="0.01" value="0"><div class="shortcut-grid"><button class="shortcut" data-amount="1">$1</button><button class="shortcut" data-amount="5">$5</button><button class="shortcut" data-amount="10">$10</button><button class="shortcut" data-amount="20">$20</button><button class="shortcut" data-amount="50">$50</button></div><div class="zodiac-select-title" id="selectZodiacTitle">ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)៖</div><div class="zodiac-select-grid" id="zodiacSelectGrid"></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closePredictModal">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPredictBtn">ទស្សន៍ទាយ</button></div></div></div>
-<div class="confirm-modal" id="confirmPredictModal"><div class="confirm-box"><div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div><div class="confirm-message" id="confirmPredictMsg">តើអ្នកពិតជាចង់ទស្សន៍ទាយមែនទេ?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelPredictConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesPredictConfirm">យល់ព្រម</button></div></div></div>
-<div class="confirm-modal" id="confirmAdminModal"><div class="confirm-box"><div class="confirm-title" id="confirmAdminTitle">⚠️ បញ្ជាក់សកម្មភាព</div><div class="confirm-message" id="confirmAdminMsg">តើអ្នកពិតជាចង់ធ្វើសកម្មភាពនេះមែនទេ?</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelAdminConfirm">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesAdminConfirm">យល់ព្រម</button></div></div></div>
-<div class="modal" id="adminHistoryModal"><div class="modal-content"><div class="modal-title">📜 ប្រវត្តិបញ្ចូលលុយរបស់ Admin</div><div class="history-modal-list" id="adminHistoryList"><div style="text-align:center;padding:15px;color:#aaa">មិនមានទិន្នន័យ</div></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminHistoryModal">បិទ</button></div></div></div>
+<footer class="footer">
+    <p>&copy; 2024 SocialScheduler Pro. All rights reserved.</p>
+    <p style="margin-top: 0.5rem; opacity: 0.7;">គ្រប់គ្រងបណ្តាញសង្គមរបស់អ្នកប្រកបដោយវិជ្ជាជីវៈ</p>
+</footer>
 
 <script>
-    // ========== USER ACCOUNT SYSTEM ==========
     let currentUser = null;
-    let currentUserType = null;
-    
-    // Default users
-    let users = {
-        'Player1': { password: '1234', type: 'player', balance: 1000, depositHistory: [], betHistory: [] },
-        'Player2': { password: '1234', type: 'player', balance: 1000, depositHistory: [], betHistory: [] },
-        'Admin': { password: 'admin123', type: 'admin', balance: 10000, depositHistory: [], betHistory: [] }
-    };
-    
-    function loadUsers() {
-        const saved = localStorage.getItem('game_users');
-        if (saved) {
-            const parsed = JSON.parse(saved);
-            for (let name in parsed) {
-                if (parsed[name].depositHistory === undefined) parsed[name].depositHistory = [];
-                if (parsed[name].betHistory === undefined) parsed[name].betHistory = [];
+    let allPosts = [];
+
+    function loadData() {
+        const users = JSON.parse(localStorage.getItem('social_users') || '[]');
+        const posts = JSON.parse(localStorage.getItem('social_posts') || '[]');
+        allPosts = posts;
+        
+        const savedUser = localStorage.getItem('social_current_user');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            updateUIForLoggedInUser();
+        }
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem('social_users', JSON.stringify(users));
+    }
+
+    function savePosts() {
+        localStorage.setItem('social_posts', JSON.stringify(allPosts));
+    }
+
+    function checkAndPublishPosts() {
+        const now = new Date();
+        let updated = false;
+        
+        allPosts.forEach(post => {
+            if (post.status === 'scheduled' && new Date(post.scheduleTime) <= now) {
+                post.status = 'published';
+                post.publishedAt = now.toISOString();
+                updated = true;
             }
-            users = parsed;
-        }
-    }
-    
-    function saveUsers() {
-        localStorage.setItem('game_users', JSON.stringify(users));
-    }
-    
-    loadUsers();
-    
-    // Original game variables
-    let currentBalance = 0;
-    let depositHistory = [];
-    let betHistory = [];
-    let selectedZodiac = "";
-    let currentAction = "";
-    let pendingBetAmount = 0;
-    let pendingZodiac = "";
-    let pendingAdminAction = "";
-    let soundEnabled = true;
-    let audioContext = null;
-    let currentLang = "km";
-    let rewardMultiplier = 10;
-    
-    let adminBalance = 0;
-    let adminDepositHistory = [];
-    
-    const savedMultiplier = localStorage.getItem('rewardMultiplier');
-    if (savedMultiplier) rewardMultiplier = parseInt(savedMultiplier);
-    
-    const savedAdminBalance = localStorage.getItem('adminBalance');
-    if (savedAdminBalance) adminBalance = parseFloat(savedAdminBalance);
-    const savedAdminDepositHistory = localStorage.getItem('adminDepositHistory');
-    if (savedAdminDepositHistory) adminDepositHistory = JSON.parse(savedAdminDepositHistory);
-    
-    function loadUserData() {
-        if (!currentUser) return;
-        const user = users[currentUser];
-        currentBalance = user.balance || 0;
-        depositHistory = user.depositHistory || [];
-        betHistory = user.betHistory || [];
-        updateAllBalanceDisplays();
-        renderDepositHistory();
-        renderBetHistory();
-        updateAdminStats();
-        updateDesktopPreview();
-    }
-    
-    function saveCurrentUserData() {
-        if (!currentUser) return;
-        const user = users[currentUser];
-        user.balance = currentBalance;
-        user.depositHistory = depositHistory;
-        user.betHistory = betHistory;
-        saveUsers();
-    }
-    
-    function updatePlayerSelect() {
-        const select = document.getElementById('transferPlayerSelect');
-        if (!select) return;
-        let options = '<option value="">-- ជ្រើសរើសអ្នកលេង --</option>';
-        for (let name in users) {
-            if (users[name].type === 'player') {
-                options += `<option value="${name}">${name} (សល់: $${(users[name].balance || 0).toFixed(2)})</option>`;
-            }
-        }
-        select.innerHTML = options;
-    }
-    
-    function transferToPlayer() {
-        const targetPlayer = document.getElementById('transferPlayerSelect').value;
-        const amount = parseFloat(document.getElementById('transferAmount').value);
-        if (!targetPlayer) { showToast('សូមជ្រើសរើសអ្នកលេង!', 'lose'); return; }
-        if (isNaN(amount) || amount <= 0) { showToast('បញ្ចូលចំនួនទឹកប្រាក់ត្រឹមត្រូវ!', 'lose'); return; }
-        if (adminBalance < amount) { showToast(`Admin Balance មិនគ្រប់! សល់ $${adminBalance.toFixed(2)}`, 'lose'); return; }
-        if (!users[targetPlayer]) { showToast('រកមិនឃើញអ្នកលេង!', 'lose'); return; }
-        
-        adminBalance -= amount;
-        users[targetPlayer].balance = (users[targetPlayer].balance || 0) + amount;
-        
-        localStorage.setItem('adminBalance', adminBalance);
-        saveUsers();
-        updateAdminStats();
-        updatePlayerSelect();
-        document.getElementById('transferAmount').value = '';
-        showToast(`បានផ្ទេរ $${amount.toFixed(2)} ទៅ ${targetPlayer} ដោយជោគជ័យ!`, 'pending');
-        
-        if (currentUser === targetPlayer) {
-            currentBalance = users[targetPlayer].balance;
-            updateAllBalanceDisplays();
-        }
-    }
-    
-    function updateUserBadge() {
-        const badgeHtml = `👤 ${currentUser} (${currentUserType === 'admin' ? 'Admin' : 'អ្នកលេង'})`;
-        const elements = ['userBadge', 'userBadgeDesktop'];
-        elements.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = badgeHtml;
-        });
-    }
-    
-    function login(username, password) {
-        const user = users[username];
-        if (!user || user.password !== password) {
-            return false;
-        }
-        currentUser = username;
-        currentUserType = user.type;
-        updateUserBadge();
-        loadUserData();
-        return true;
-    }
-    
-    function register(username, password, confirm) {
-        if (!username || !password) {
-            return { success: false, message: 'បញ្ចូលឈ្មោះ និងពាក្យសម្ងាត់!' };
-        }
-        if (password !== confirm) {
-            return { success: false, message: 'ពាក្យសម្ងាត់មិនត្រូវគ្នា!' };
-        }
-        if (users[username]) {
-            return { success: false, message: 'ឈ្មោះនេះមានរួចហើយ!' };
-        }
-        users[username] = {
-            password: password,
-            type: 'player',
-            balance: 1000,
-            depositHistory: [],
-            betHistory: []
-        };
-        saveUsers();
-        return { success: true, message: 'ចុះឈ្មោះជោគជ័យ! សូមចូលប្រើប្រាស់' };
-    }
-    
-    function logout() {
-        saveCurrentUserData();
-        currentUser = null;
-        currentUserType = null;
-        currentBalance = 0;
-        depositHistory = [];
-        betHistory = [];
-        document.getElementById('loginOverlay').classList.remove('hidden');
-        document.getElementById('registerOverlay').classList.add('hidden');
-        document.getElementById('mainContainer').style.display = 'none';
-        document.getElementById('adminContainer').classList.remove('show');
-    }
-    
-    function showGame() {
-        document.getElementById('loginOverlay').classList.add('hidden');
-        document.getElementById('registerOverlay').classList.add('hidden');
-        document.getElementById('mainContainer').style.display = 'block';
-        document.getElementById('adminContainer').classList.remove('show');
-        renderZodiacs();
-        updateDisplay();
-    }
-    
-    // ========== ORIGINAL GAME FUNCTIONS ==========
-    window.togglePasswordVisibility = function(inputId, btn) {
-        const input = document.getElementById(inputId);
-        if (input.type === "password") { input.type = "text"; btn.innerHTML = "🙈"; }
-        else { input.type = "password"; btn.innerHTML = "👁️"; }
-    };
-    
-    const translations = {
-        km: { 
-            mainTitle: "ឆ្នាំសំណាងទាំង 12 🎁🎉", subTitle: "ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង", balanceLabel: "សមតុល្យទឹកប្រាក់របស់អ្នក", 
-            infoBadge: "⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ", 
-            currentHourLabel: "🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង", countdownLabel: "លទ្ធផលបន្ទាប់ចេញក្នុង៖", 
-            zodiacTitle: "🗓️ តារាងឆ្នាំសំណាងទាំង ១២", predictBtn: "🎲 ចុចដើម្បីទស្សន៍ទាយ", 
-            tabResult: "លទ្ធផលម៉ោង", tabDeposit: "ប្រវត្តិបញ្ចូលលុយ", tabBet: "ប្រវត្តិទស្សន៍ទាយ", 
-            toggleHide: "👁️ លាក់", toggleShow: "👁️ បង្ហាញ", soundOn: "បិទសំឡេង", soundOff: "បើកសំឡេង", 
-            langKhmer: "ភាសាខ្មែរ", langEnglish: "English", adminPanel: "🔧 Admin Panel", 
-            preCurrent: "ទឹកប្រាក់បច្ចុប្បន្ន:", preCost: "ត្រូវកាត់:", preRemain: "នៅសល់:", 
-            selectZodiac: "ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)៖", cancel: "បោះបង់", confirm: "ទស្សន៍ទាយ", 
-            confirmPredictMsg: "តើអ្នកពិតជាចង់ទស្សន៍ទាយ", yes: "យល់ព្រម", no: "បោះបង់", 
-            waiting: "រង់ចាំ", win: "ឈ្នះ", lose: "ចាញ់", pending: "កំពុងរង់ចាំ", 
-            hour: "ម៉ោង", result: "លទ្ធផល", at: "ចេញនៅ", betPlaced: "បានចាក់", forHour: "សម្រាប់ម៉ោង", depositSuccess: "បញ្ចូលលុយជោគជ័យ" 
-        },
-        en: { 
-            mainTitle: "12 Lucky Zodiacs 🎁🎉", subTitle: "24-Hour Fortune Telling System", balanceLabel: "Your Balance", 
-            infoBadge: "⏰ Betting at any hour will be for the next hour! Result will appear immediately when target hour arrives", 
-            currentHourLabel: "🔮 If you bet now, it will be for hour", countdownLabel: "Next result in:", 
-            zodiacTitle: "🗓️ 12 Zodiac Signs Chart", predictBtn: "🎲 Click to Predict", 
-            tabResult: "Hourly Results", tabDeposit: "Deposit History", tabBet: "Bet History", 
-            toggleHide: "👁️ Hide", toggleShow: "👁️ Show", soundOn: "Mute", soundOff: "Unmute", 
-            langKhmer: "ភាសាខ្មែរ", langEnglish: "English", adminPanel: "🔧 Admin Panel", 
-            preCurrent: "Current Balance:", preCost: "Amount to deduct:", preRemain: "Remaining:", 
-            selectZodiac: "Select Zodiac (Reward x10):", cancel: "Cancel", confirm: "Predict", 
-            confirmPredictMsg: "Are you sure you want to bet", yes: "Yes", no: "No", 
-            waiting: "Waiting", win: "Win", lose: "Lose", pending: "Pending", 
-            hour: "Hour", result: "Result", at: "at", betPlaced: "Placed bet on", forHour: "for hour", depositSuccess: "Deposit successful" 
-        }
-    };
-    
-    const zodiacs = [
-        { name: "ឆ្នាំជូត", nameEn: "Rat", icon: "🐭", order: "ទី១", orderEn: "1st", num: "01" },
-        { name: "ឆ្នាំឆ្លូវ", nameEn: "Ox", icon: "🐮", order: "ទី២", orderEn: "2nd", num: "02" },
-        { name: "ឆ្នាំខាល", nameEn: "Tiger", icon: "🐯", order: "ទី៣", orderEn: "3rd", num: "03" },
-        { name: "ឆ្នាំថោះ", nameEn: "Rabbit", icon: "🐰", order: "ទី៤", orderEn: "4th", num: "04" },
-        { name: "ឆ្នាំរោង", nameEn: "Dragon", icon: "🐉", order: "ទី៥", orderEn: "5th", num: "05" },
-        { name: "ឆ្នាំម្សាញ់", nameEn: "Snake", icon: "🐍", order: "ទី៦", orderEn: "6th", num: "06" },
-        { name: "ឆ្នាំមមី", nameEn: "Horse", icon: "🐴", order: "ទី៧", orderEn: "7th", num: "07" },
-        { name: "ឆ្នាំមមែ", nameEn: "Goat", icon: "🐐", order: "ទី៨", orderEn: "8th", num: "08" },
-        { name: "ឆ្នាំវក", nameEn: "Monkey", icon: "🐵", order: "ទី៩", orderEn: "9th", num: "09" },
-        { name: "ឆ្នាំរកា", nameEn: "Rooster", icon: "🐔", order: "ទី១០", orderEn: "10th", num: "10" },
-        { name: "ឆ្នាំច", nameEn: "Dog", icon: "🐶", order: "ទី១១", orderEn: "11th", num: "11" },
-        { name: "ឆ្នាំកុរ", nameEn: "Pig", icon: "🐷", order: "ទី១២", orderEn: "12th", num: "12" }
-    ];
-    
-    const zodiacMap = {};
-    zodiacs.forEach(z => { zodiacMap[z.num] = z; });
-    const hoursList = [7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,0,1,2,3,4,5,6];
-    
-    function formatHour(hour) { return hour === 0 ? "00:00" : (hour < 10 ? "0"+hour+":00" : hour+":00"); }
-    function formatDate(date) { return `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`; }
-    function formatDateTime(date) { return `${date.getDate()}/${date.getMonth()+1} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`; }
-    function getNextHour(hour) { return hour === 23 ? 0 : hour + 1; }
-    function getZodiacDisplay(z) { return currentLang === 'en' ? `${z.icon} ${z.nameEn} (${z.orderEn})` : `${z.icon} ${z.name} (${z.order})`; }
-    
-    function playSound(isWin) {
-        if (!soundEnabled) return;
-        try {
-            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            osc.type = 'sine';
-            if (isWin === true) { osc.frequency.value = 880; gain.gain.value = 0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.6); setTimeout(() => osc.stop(), 600); }
-            else if (isWin === false) { osc.frequency.value = 440; gain.gain.value = 0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.5); setTimeout(() => osc.stop(), 500); }
-            else { osc.frequency.value = 660; gain.gain.value = 0.15; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3); setTimeout(() => osc.stop(), 300); }
-        } catch(e) {}
-    }
-    
-    function showToast(msg, type) {
-        const existing = document.querySelector('.notification-toast');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = 'notification-toast';
-        toast.innerHTML = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-    
-    const numCache = {};
-    function generateNumbers(date) {
-        const key = formatDate(date);
-        if (numCache[key]) return numCache[key];
-        const seed = date.getFullYear() * 10000 + (date.getMonth()+1)*100 + date.getDate();
-        let s = seed;
-        const rand = () => { let x = Math.sin(s++) * 10000; return x - Math.floor(x); };
-        const shuffle = () => {
-            let pool = [1,2,3,4,5,6,7,8,9,10,11,12];
-            for(let i=pool.length-1; i>0; i--) { let j = Math.floor(rand()*(i+1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
-            return pool.map(n => n<10?'0'+n:''+n);
-        };
-        numCache[key] = [...shuffle(), ...shuffle()];
-        return numCache[key];
-    }
-    
-    function updateAdminStats() {
-        const totalBets = betHistory.length;
-        const totalWins = betHistory.filter(b => b.status === 'win').length;
-        const winRate = totalBets > 0 ? ((totalWins / totalBets) * 100).toFixed(1) : 0;
-        const totalDeposits = depositHistory.reduce((sum, d) => sum + d.amount, 0);
-        const totalPayouts = betHistory.filter(b => b.status === 'win').reduce((sum, b) => sum + (b.reward || 0), 0);
-        const netProfit = totalDeposits - totalPayouts;
-        
-        document.getElementById('totalBets').innerText = totalBets;
-        document.getElementById('totalWins').innerText = totalWins;
-        document.getElementById('winRate').innerText = winRate + '%';
-        document.getElementById('netProfit').innerHTML = '$' + netProfit.toFixed(2);
-        document.getElementById('adminBalance').innerHTML = '$' + adminBalance.toFixed(2);
-        document.getElementById('playerBalanceDisplay').innerHTML = '$' + currentBalance.toFixed(2);
-        document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x';
-        
-        document.getElementById('summaryCurrentBalance').innerHTML = '$' + (adminBalance + currentBalance).toFixed(2);
-        document.getElementById('summaryPlayerBalance').innerHTML = '$' + currentBalance.toFixed(2);
-        document.getElementById('summaryAdminBalance').innerHTML = '$' + adminBalance.toFixed(2);
-        document.getElementById('summaryTotalDeposits').innerHTML = '$' + totalDeposits.toFixed(2);
-        document.getElementById('summaryTotalPayouts').innerHTML = '$' + totalPayouts.toFixed(2);
-        document.getElementById('summaryNetProfit').innerHTML = '$' + netProfit.toFixed(2);
-        document.getElementById('summaryTotalBets').innerHTML = totalBets;
-        
-        const netProfitColor = netProfit >= 0 ? '#4ade80' : '#fc8181';
-        document.getElementById('summaryNetProfit').style.color = netProfitColor;
-        
-        const dailyData = {};
-        depositHistory.forEach(dep => {
-            const dateKey = dep.date.split(' ')[0];
-            if (!dailyData[dateKey]) dailyData[dateKey] = { deposits: 0, payouts: 0, bets: 0, wins: 0, losses: 0, totalBetAmount: 0 };
-            dailyData[dateKey].deposits += dep.amount;
-        });
-        betHistory.forEach(bet => {
-            const dateKey = bet.date.split(' ')[0];
-            if (!dailyData[dateKey]) dailyData[dateKey] = { deposits: 0, payouts: 0, bets: 0, wins: 0, losses: 0, totalBetAmount: 0 };
-            dailyData[dateKey].bets++;
-            dailyData[dateKey].totalBetAmount += bet.amount;
-            if (bet.status === 'win') { dailyData[dateKey].wins++; dailyData[dateKey].payouts += bet.reward; }
-            else if (bet.status === 'lose') { dailyData[dateKey].losses++; }
         });
         
-        const reportHtml = Object.entries(dailyData).slice(-14).reverse().map(([date, data]) => {
-            const dailyProfit = data.deposits - data.payouts;
-            const profitClass = dailyProfit >= 0 ? 'profit-positive' : 'profit-negative';
-            const profitSign = dailyProfit >= 0 ? '+' : '-';
-            return `<div class="daily-report-item"><div class="daily-report-header"><span>📅 ${date}</span><span class="${profitClass}">${profitSign}$${Math.abs(dailyProfit).toFixed(2)}</span></div><div class="daily-report-details"><span>💰 ដាក់លុយ: $${data.deposits.toFixed(2)}</span><span>💸 បង់រង្វាន់: $${data.payouts.toFixed(2)}</span></div><div class="daily-report-details"><span>🎲 ភ្នាល់: ${data.bets}</span><span>🏆 ឈ្នះ: ${data.wins}</span><span>💔 ចាញ់: ${data.losses}</span></div><div class="daily-report-details"><span>📊 ទឹកប្រាក់ភ្នាល់សរុប: $${data.totalBetAmount.toFixed(2)}</span></div></div>`;
-        }).join('');
-        document.getElementById('dailyReportList').innerHTML = reportHtml || '<div style="text-align:center;padding:15px;color:#aaa">គ្មានទិន្នន័យ</div>';
+        if (updated) {
+            savePosts();
+            if (currentUser) renderDashboard();
+        }
     }
-    
-    function settleBets(currentHour, currentDate, currentSeconds) {
-        if (currentSeconds === 1) {
-            const numbers = generateNumbers(currentDate);
-            let changed = false;
+
+    function updateUIForLoggedInUser() {
+        if (currentUser) {
+            document.getElementById('loginNavBtn').style.display = 'none';
+            document.getElementById('registerNavBtn').style.display = 'none';
+            document.getElementById('logoutNavBtn').style.display = 'inline';
+            document.getElementById('dashboardNavLink').style.display = 'inline';
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userPlan').textContent = currentUser.plan || 'ឥតគិតថ្លៃ';
             
-            betHistory.forEach((bet) => {
-                if (bet.status === "pending" && bet.targetHour === currentHour) {
-                    const correctNum = numbers[bet.targetHour];
-                    const correctZodiac = zodiacMap[correctNum];
-                    if (correctZodiac) {
-                        bet.result = correctZodiac.name;
-                        bet.resultEn = correctZodiac.nameEn;
-                        bet.resultIcon = correctZodiac.icon;
-                        bet.resultOrder = correctZodiac.order;
-                        const resultDate = new Date(currentDate);
-                        resultDate.setHours(bet.targetHour, 0, 1, 0);
-                        bet.resultDate = formatDateTime(resultDate);
-                        
-                        if (bet.picked === correctZodiac.name || bet.picked === correctZodiac.nameEn) {
-                            const totalWinAmount = bet.amount + bet.amount * rewardMultiplier;
-                            bet.status = "win";
-                            bet.reward = bet.amount * rewardMultiplier;
-                            currentBalance += totalWinAmount;
-                            adminBalance -= totalWinAmount;
-                            playSound(true);
-                            showToast(`${currentLang==='km'?'🎉 ឈ្នះ!':'🎉 Win!'} ${bet.picked} = ${correctZodiac.name} (+$${totalWinAmount.toFixed(2)})`, 'win');
-                        } else {
-                            bet.status = "lose";
-                            bet.reward = 0;
-                            adminBalance += bet.amount;
-                            playSound(false);
-                            showToast(`${currentLang==='km'?'😢 ចាញ់!':'😢 Lose!'} ${bet.picked} ≠ ${correctZodiac.name} (-$${bet.amount.toFixed(2)})`, 'lose');
-                        }
-                        changed = true;
-                    }
-                }
-            });
+            allPosts = allPosts.filter(p => p.userId === currentUser.id);
+            savePosts();
             
-            if (changed) {
-                localStorage.setItem('balance', currentBalance);
-                localStorage.setItem('adminBalance', adminBalance);
-                localStorage.setItem('betHistory', JSON.stringify(betHistory));
-                saveCurrentUserData();
-                updateAllBalanceDisplays();
-                renderBetHistory();
-                updateAdminStats();
-            }
+            showDashboard();
+        } else {
+            document.getElementById('loginNavBtn').style.display = 'inline';
+            document.getElementById('registerNavBtn').style.display = 'inline';
+            document.getElementById('logoutNavBtn').style.display = 'none';
+            document.getElementById('dashboardNavLink').style.display = 'none';
         }
     }
-    
-    function updateAllBalanceDisplays() {
-        const elements = ['userBalance', 'userBalanceDesktop'];
-        elements.forEach(id => { const el = document.getElementById(id); if (el) el.innerText = currentBalance.toFixed(2); });
+
+    function showSection(section) {
+        document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
+        document.getElementById('pricingSection').style.display = section === 'pricing' ? 'block' : 'none';
+        document.getElementById('dashboardSection').style.display = 'none';
+        document.getElementById('authSection').style.display = 'none';
+        if (section === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    
-    function updateAllLiveClocks() {
-        const now = new Date();
-        const ch = now.getHours(), cm = now.getMinutes(), cs = now.getSeconds();
-        const dateStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
-        const timeStr = `${ch.toString().padStart(2,'0')}:${cm.toString().padStart(2,'0')}:${cs.toString().padStart(2,'0')}`;
-        const clockHtml = `📅 ${dateStr} | ⏰ ${timeStr}`;
-        ['liveClock', 'liveClockDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = clockHtml; });
-    }
-    
-    function updateCurrentHourText() {
-        const now = new Date();
-        const nextHour = getNextHour(now.getHours());
-        const text = `${translations[currentLang].currentHourLabel} ${formatHour(nextHour)}`;
-        ['currentHourText', 'currentHourTextDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = text; });
-    }
-    
-    function updateCountdown() {
-        const now = new Date();
-        const remainM = 59-now.getMinutes(), remainS = 59-now.getSeconds();
-        const countdown = `${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
-        ['countdownTimer', 'countdownTimerDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = countdown; });
-        ['countdownText', 'countdownTextDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = `${translations[currentLang].countdownLabel} <span class="countdown-time">${countdown}</span>`; });
-    }
-    
-    function updateLuckyNumber() {
-        const now = new Date();
-        const todayNums = generateNumbers(now);
-        const currentZodiac = zodiacMap[todayNums[now.getHours()]];
-        const display = currentZodiac ? getZodiacDisplay(currentZodiac) : "?";
-        ['luckyNumber', 'luckyNumberDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = display; });
-    }
-    
-    function updateScheduleList() {
-        const now = new Date();
-        const ch = now.getHours();
-        const today = new Date(now);
-        const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
-        const yesterday = new Date(now); yesterday.setDate(yesterday.getDate()-1);
-        const formatDateShort = (d) => `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
-        
-        const todayNums = generateNumbers(today);
-        const yesterdayNums = generateNumbers(yesterday);
-        const tomorrowNums = generateNumbers(tomorrow);
-        const currentIdx = hoursList.indexOf(ch);
-        
-        let html = "";
-        for(let i=0; i<hoursList.length; i++) {
-            const hr = hoursList[i];
-            let dateStr = formatDateShort(today);
-            let num = todayNums[hr];
-            let isActive = (i === currentIdx);
-            let display = "";
-            if (i < currentIdx) {
-                if (ch < 7 && hr >= 7) { dateStr = formatDateShort(yesterday); num = yesterdayNums[hr]; }
-                const z = zodiacMap[num];
-                display = z ? getZodiacDisplay(z) : "?";
-            } else if (i === currentIdx) {
-                const z = zodiacMap[num];
-                display = z ? getZodiacDisplay(z) : "?";
-            } else {
-                display = `<span class="waiting-text">${translations[currentLang].waiting}</span>`;
-                if (ch >= 7 && hr < 7) dateStr = formatDateShort(tomorrow);
-            }
-            html += `<div class="time-item ${isActive ? 'active' : ''}"><div><div class="time-label">${translations[currentLang].hour} ${formatHour(hr)}</div><div class="time-date">${dateStr}</div></div><div class="result-badge">${display}</div></div>`;
-        }
-        ['scheduleList', 'scheduleListDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = html; });
-    }
-    
-    function renderZodiacs() {
-        let desktopGridHtml = "";
-        zodiacs.forEach(z => {
-            desktopGridHtml += `<div class="zodiac-card" data-name="${currentLang==='km'?z.name:z.nameEn}" data-name-km="${z.name}" data-name-en="${z.nameEn}" data-icon="${z.icon}" data-order="${z.order}"><div class="zodiac-icon">${z.icon}</div><div class="zodiac-name">${currentLang==='km'?z.name:z.nameEn}</div><div class="zodiac-order">${currentLang==='km'?z.order:z.orderEn}</div></div>`;
-        });
-        const desktopGrid = document.getElementById('zodiacGridDesktop');
-        if (desktopGrid) desktopGrid.innerHTML = desktopGridHtml;
-        
-        document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedZodiac = this.getAttribute('data-name');
-                const selectedSpan = document.getElementById('selectedZodiacName');
-                if (selectedSpan) selectedSpan.innerHTML = `${this.getAttribute('data-icon')} ${selectedZodiac} (${this.getAttribute('data-order')})`;
-                updateDesktopPreview();
-            });
-        });
-        
-        let mobileGridHtml = "";
-        zodiacs.forEach(z => { mobileGridHtml += `<div class="zodiac-card"><div class="zodiac-icon">${z.icon}</div><div class="zodiac-name">${currentLang==='km'?z.name:z.nameEn}</div><div class="zodiac-order">${currentLang==='km'?z.order:z.orderEn}</div></div>`; });
-        const mobileGrid = document.getElementById('zodiacGrid');
-        if (mobileGrid) mobileGrid.innerHTML = mobileGridHtml;
-        
-        let selectGrid = "";
-        zodiacs.forEach(z => { selectGrid += `<div class="zodiac-option" data-name="${currentLang==='km'?z.name:z.nameEn}" data-name-km="${z.name}" data-name-en="${z.nameEn}"><div>${z.icon}</div><div style="font-size:0.6rem">${currentLang==='km'?z.name:z.nameEn}</div></div>`; });
-        document.getElementById('zodiacSelectGrid').innerHTML = selectGrid;
-        document.querySelectorAll('.zodiac-option').forEach(opt => {
-            opt.addEventListener('click', function() {
-                document.querySelectorAll('.zodiac-option').forEach(o => o.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedZodiac = this.getAttribute('data-name');
-            });
-        });
-    }
-    
-    function updatePreview() {
-        const amt = parseFloat(document.getElementById('betAmount').value) || 0;
-        const remain = currentBalance - amt;
-        document.getElementById('preCurrent').innerText = currentBalance.toFixed(2);
-        document.getElementById('preCost').innerText = amt.toFixed(2);
-        document.getElementById('preRemain').innerText = remain >= 0 ? remain.toFixed(2) : '0.00';
-    }
-    
-    function updateDesktopPreview() {
-        const amt = parseFloat(document.getElementById('desktopBetAmount').value) || 0;
-        const remain = currentBalance - amt;
-        document.getElementById('desktopPreCurrent').innerHTML = '$' + currentBalance.toFixed(2);
-        document.getElementById('desktopPreCost').innerHTML = '$' + amt.toFixed(2);
-        const remainEl = document.getElementById('desktopPreRemain');
-        remainEl.innerHTML = remain >= 0 ? '$' + remain.toFixed(2) : '$0.00';
-        remainEl.style.color = remain < 0 ? '#fc8181' : '#4ade80';
-    }
-    
-    function renderDepositHistory() {
-        const containers = ['depositList', 'depositListDesktop'];
-        if (!depositHistory.length) { containers.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិបញ្ចូលលុយ':'No deposit history'}</div>`; }); return; }
-        let html = "";
-        depositHistory.forEach(d => { html += `<div class="history-item"><div><strong>📥 ${translations[currentLang].depositSuccess}</strong><br><span style="font-size:0.6rem">${d.date}</span></div><div style="color:#4ade80">+$${d.amount.toFixed(2)}</div></div>`; });
-        containers.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = html; });
-    }
-    
-    function renderBetHistory() {
-        const containers = ['betList', 'betListDesktop'];
-        if (!betHistory.length) { containers.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = `<div style="text-align:center;padding:15px;color:#aaa">${currentLang==='km'?'គ្មានប្រវត្តិទស្សន៍ទាយ':'No bet history'}</div>`; }); return; }
-        let html = "";
-        betHistory.forEach(b => {
-            let statusClass = "", statusText = "", rewardHtml = "";
-            if (b.status === 'win') { statusClass = 'status-win'; statusText = translations[currentLang].win; rewardHtml = `<span style="color:#4ade80">🏆 +$${b.reward.toFixed(2)} (${rewardMultiplier}x) + $${b.amount.toFixed(2)} ដើម</span>`; }
-            else if (b.status === 'lose') { statusClass = 'status-lose'; statusText = translations[currentLang].lose; rewardHtml = `<span style="color:#fc8181">💔 -$${b.amount.toFixed(2)}</span>`; }
-            else { statusClass = 'status-pending'; statusText = translations[currentLang].pending; rewardHtml = `<span>⏳ $${b.amount.toFixed(2)}</span>`; }
-            let resultHtml = "";
-            if (b.result) { const resultName = currentLang==='km' ? b.result : (b.resultEn || b.result); resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">📊 ${translations[currentLang].result} ${formatHour(b.targetHour)}: ${b.resultIcon} ${resultName} (${b.resultOrder})${b.resultDate ? `<br>📅 ${translations[currentLang].at} ${b.resultDate}` : ''}</div>`; }
-            else { resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">⏰ ${translations[currentLang].waiting} ${formatHour(b.targetHour)}...</div>`; }
-            html += `<div class="history-item" style="flex-direction:column; align-items:flex-start;"><div style="display:flex; justify-content:space-between; width:100%;"><div><strong>🎯 ${b.picked}</strong><div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div></div><div class="${statusClass}" style="text-align:right;">${statusText}<br>${rewardHtml}</div></div><div style="font-size:0.7rem; margin-top:4px;">🎲 ${translations[currentLang].betPlaced} ${translations[currentLang].forHour} <strong>${formatHour(b.targetHour)}</strong></div>${resultHtml}</div>`;
-        });
-        containers.forEach(id => { const el = document.getElementById(id); if (el) el.innerHTML = html; });
-    }
-    
-    function executeDesktopPrediction() {
-        const betAmount = parseFloat(document.getElementById('desktopBetAmount').value);
-        if (isNaN(betAmount) || betAmount <= 0) { showToast(currentLang==='km'?'បញ្ចូលទឹកប្រាក់!':'Enter amount!', 'lose'); return; }
-        if (!selectedZodiac) { showToast(currentLang==='km'?'សូមចុចជ្រើសរើសឆ្នាំនៅលើតារាងខាងលើ!':'Please click to select a zodiac from the table above!', 'lose'); return; }
-        if (currentBalance < betAmount) { showToast(currentLang==='km'?'សមតុល្យមិនគ្រប់! សូមបញ្ចូលលុយបន្ថែម។':'Insufficient balance!', 'lose'); return; }
-        pendingBetAmount = betAmount;
-        pendingZodiac = selectedZodiac;
-        document.getElementById('confirmPredictMsg').innerHTML = `${translations[currentLang].confirmPredictMsg} ${selectedZodiac} $${betAmount.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(getNextHour(new Date().getHours()))}?`;
-        document.getElementById('confirmPredictModal').classList.add('show');
-    }
-    
-    function executePredictionFromConfirm() {
-        currentBalance -= pendingBetAmount;
-        localStorage.setItem('balance', currentBalance);
-        updateAllBalanceDisplays();
-        updateDesktopPreview();
-        
-        const now = new Date();
-        const targetHour = getNextHour(now.getHours());
-        betHistory.unshift({ id: Date.now(), date: formatDateTime(now), targetHour: targetHour, picked: pendingZodiac, result: null, status: "pending", amount: pendingBetAmount, reward: 0 });
-        localStorage.setItem('betHistory', JSON.stringify(betHistory));
-        renderBetHistory();
-        updateAdminStats();
-        playSound(null);
-        showToast(`${translations[currentLang].betPlaced} ${pendingZodiac} $${pendingBetAmount.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(targetHour)}`, 'pending');
-        
-        document.getElementById('desktopBetAmount').value = '';
-        document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c => c.classList.remove('selected'));
-        selectedZodiac = '';
-        document.getElementById('selectedZodiacName').innerHTML = 'មិនទាន់ជ្រើសរើស';
-        updateDesktopPreview();
-        saveCurrentUserData();
-    }
-    
-    function executeAdminAction() {
-        if (pendingAdminAction === "clear_deposit") {
-            depositHistory = [];
-            localStorage.removeItem('depositHistory');
-            renderDepositHistory();
-            updateAdminStats();
-            saveCurrentUserData();
-            showToast(translations[currentLang].confirmClearDeposit, 'pending');
-        } else if (pendingAdminAction === "clear_bet") {
-            betHistory = [];
-            localStorage.removeItem('betHistory');
-            renderBetHistory();
-            updateAdminStats();
-            saveCurrentUserData();
-            showToast(translations[currentLang].confirmClearBet, 'pending');
-        } else if (pendingAdminAction === "clear_balance") {
-            currentBalance = 0;
-            localStorage.setItem('balance', currentBalance);
-            updateAllBalanceDisplays();
-            updateDesktopPreview();
-            saveCurrentUserData();
-            showToast(translations[currentLang].confirmClearBalance, 'pending');
-        } else if (pendingAdminAction === "clear_admin_deposit") {
-            adminDepositHistory = [];
-            localStorage.setItem('adminDepositHistory', JSON.stringify(adminDepositHistory));
-            showToast(translations[currentLang].confirmClearDeposit + " (Admin)", 'pending');
-            updateAdminStats();
-        }
-    }
-    
-    function updateDisplay() { 
-        const now = new Date(); 
-        const currentHour = now.getHours();
-        const currentSeconds = now.getSeconds();
-        settleBets(currentHour, now, currentSeconds); 
-        updateAllLiveClocks(); 
-        updateCurrentHourText(); 
-        updateCountdown(); 
-        updateLuckyNumber(); 
-        updateScheduleList(); 
-        updateDesktopPreview(); 
-    }
-    
-    function showAdminPanel() { 
-        if (currentUserType !== 'admin') {
-            showToast('មានតែ Admin ទេដែលអាចចូលផ្ទាំងគ្រប់គ្រង!', 'lose');
+
+    function showDashboard() {
+        if (!currentUser) {
+            showAuth('login');
             return;
         }
-        updatePlayerSelect();
-        document.getElementById('mainContainer').style.display = 'none'; 
-        document.getElementById('adminContainer').classList.add('show'); 
+        document.getElementById('homeSection').style.display = 'none';
+        document.getElementById('pricingSection').style.display = 'none';
+        document.getElementById('dashboardSection').style.display = 'block';
+        document.getElementById('authSection').style.display = 'none';
+        renderDashboard();
+        checkAndPublishPosts();
+        setInterval(checkAndPublishPosts, 60000);
     }
-    function hideAdminPanel() { document.getElementById('mainContainer').style.display = 'block'; document.getElementById('adminContainer').classList.remove('show'); window.dispatchEvent(new Event('resize')); }
-    
-    function applyLanguage() {
-        const t = translations[currentLang];
-        ['mainTitle', 'subTitle', 'balanceLabel', 'infoBadge', 'zodiacTitle', 'openPredictBtn'].forEach(id => { const el = document.getElementById(id); if (el) { if (id === 'mainTitle') el.innerText = t.mainTitle; else if (id === 'subTitle') el.innerText = t.subTitle; else if (id === 'balanceLabel') el.innerText = t.balanceLabel; else if (id === 'infoBadge') el.innerText = t.infoBadge; else if (id === 'zodiacTitle') el.innerText = t.zodiacTitle; else if (id === 'openPredictBtn') el.innerText = t.predictBtn; } });
-        ['mainTitleDesktop', 'subTitleDesktop', 'balanceLabelDesktop', 'infoBadgeDesktop', 'zodiacTitleDesktop'].forEach(id => { const el = document.getElementById(id); if (el) { if (id === 'mainTitleDesktop') el.innerText = t.mainTitle; else if (id === 'subTitleDesktop') el.innerText = t.subTitle; else if (id === 'balanceLabelDesktop') el.innerText = t.balanceLabel; else if (id === 'infoBadgeDesktop') el.innerText = t.infoBadge; else if (id === 'zodiacTitleDesktop') el.innerText = t.zodiacTitle + " (ចុចជ្រើសរើស)"; } });
-        document.querySelectorAll('.tab').forEach(tab => { const tabType = tab.getAttribute('data-tab'); if (tabType === 'result') tab.innerText = t.tabResult; else if (tabType === 'deposit') tab.innerText = t.tabDeposit; else if (tabType === 'bet') tab.innerText = t.tabBet; });
-        ['toggleHistoryBtn', 'toggleHistoryBtnDesktop'].forEach(id => { const btn = document.getElementById(id); if (btn) { const isHidden = document.getElementById('historyBox')?.style.display === 'none'; btn.innerText = isHidden ? (currentLang === 'km' ? '👁️ បង្ហាញ' : '👁️ Show') : (currentLang === 'km' ? '👁️ លាក់' : '👁️ Hide'); } });
-        ['soundText', 'soundTextDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = soundEnabled ? t.soundOn : t.soundOff; });
-        ['langText', 'langTextDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = currentLang === 'km' ? t.langKhmer : t.langEnglish; });
-        document.getElementById('preCurrentLabel').innerText = t.preCurrent;
-        document.getElementById('preCostLabel').innerText = t.preCost;
-        document.getElementById('preRemainLabel').innerText = t.preRemain;
-        document.getElementById('selectZodiacTitle').innerText = t.selectZodiac;
-        document.getElementById('closePredictModal').innerText = t.cancel;
-        document.getElementById('confirmPredictBtn').innerText = t.confirm;
-        renderZodiacs(); renderDepositHistory(); renderBetHistory(); updateDisplay();
+
+    function getPlatformIcon(platform) {
+        const icons = {
+            facebook: 'fab fa-facebook-f',
+            instagram: 'fab fa-instagram',
+            twitter: 'fab fa-twitter',
+            linkedin: 'fab fa-linkedin-in',
+            tiktok: 'fab fa-tiktok',
+            pinterest: 'fab fa-pinterest-p',
+            youtube: 'fab fa-youtube',
+            telegram: 'fab fa-telegram-plane',
+            snapchat: 'fab fa-snapchat-ghost',
+            reddit: 'fab fa-reddit-alien'
+        };
+        return icons[platform] || 'fab fa-share-alt';
     }
-    
-    function toggleLanguage() { currentLang = currentLang === 'km' ? 'en' : 'km'; applyLanguage(); }
-    function toggleSound() { soundEnabled = !soundEnabled; const text = soundEnabled ? translations[currentLang].soundOn : translations[currentLang].soundOff; ['soundText', 'soundTextDesktop'].forEach(id => { const el = document.getElementById(id); if (el) el.innerText = text; }); showToast(soundEnabled ? (currentLang==='km'?'បើកសំឡេង':'Sound on') : (currentLang==='km'?'បិទសំឡេង':'Sound off'), 'pending'); }
-    
-    // ========== INITIALIZATION ==========
-    function init() {
-        // Login handlers
-        document.getElementById('doLoginBtn').addEventListener('click', () => {
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const msgDiv = document.getElementById('loginMessage');
-            if (login(username, password)) {
-                showGame();
-            } else {
-                msgDiv.style.display = 'block';
-                msgDiv.innerHTML = 'ឈ្មោះអ្នកប្រើប្រាស់ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ!';
-            }
-        });
+
+    function getPlatformColor(platform) {
+        const colors = {
+            facebook: '#1877f2',
+            instagram: '#e4405f',
+            twitter: '#1da1f2',
+            linkedin: '#0077b5',
+            tiktok: '#000000',
+            pinterest: '#bd081c',
+            youtube: '#ff0000',
+            telegram: '#0088cc',
+            snapchat: '#fffc00',
+            reddit: '#ff4500'
+        };
+        return colors[platform] || '#718096';
+    }
+
+    function renderDashboard() {
+        const userPosts = allPosts.filter(p => p.userId === currentUser.id);
+        const total = userPosts.length;
+        const published = userPosts.filter(p => p.status === 'published').length;
+        const scheduled = userPosts.filter(p => p.status === 'scheduled').length;
+        const engagement = published > 0 ? Math.floor(Math.random() * 30) + 50 : 0;
         
-        document.getElementById('showRegisterBtn').addEventListener('click', () => {
-            document.getElementById('loginOverlay').classList.add('hidden');
-            document.getElementById('registerOverlay').classList.remove('hidden');
-        });
+        document.getElementById('totalPosts').textContent = total;
+        document.getElementById('publishedPosts').textContent = published;
+        document.getElementById('scheduledPosts').textContent = scheduled;
+        document.getElementById('engagementRate').textContent = engagement;
         
-        document.getElementById('backToLoginBtn').addEventListener('click', () => {
-            document.getElementById('registerOverlay').classList.add('hidden');
-            document.getElementById('loginOverlay').classList.remove('hidden');
-        });
-        
-        document.getElementById('doRegisterBtn').addEventListener('click', () => {
-            const username = document.getElementById('regUsername').value.trim();
-            const password = document.getElementById('regPassword').value;
-            const confirm = document.getElementById('regConfirmPassword').value;
-            const msgDiv = document.getElementById('registerMessage');
-            const result = register(username, password, confirm);
-            msgDiv.style.display = 'block';
-            if (result.success) {
-                msgDiv.className = 'login-error login-success';
-                msgDiv.innerHTML = result.message;
-                setTimeout(() => {
-                    document.getElementById('registerOverlay').classList.add('hidden');
-                    document.getElementById('loginOverlay').classList.remove('hidden');
-                    msgDiv.style.display = 'none';
-                    msgDiv.className = 'login-error';
-                }, 2000);
-            } else {
-                msgDiv.className = 'login-error';
-                msgDiv.innerHTML = result.message;
-            }
-        });
-        
-        // Demo account shortcuts
-        document.getElementById('demoPlayer1').addEventListener('click', () => {
-            document.getElementById('loginUsername').value = 'Player1';
-            document.getElementById('loginPassword').value = '1234';
-            document.getElementById('doLoginBtn').click();
-        });
-        document.getElementById('demoPlayer2').addEventListener('click', () => {
-            document.getElementById('loginUsername').value = 'Player2';
-            document.getElementById('loginPassword').value = '1234';
-            document.getElementById('doLoginBtn').click();
-        });
-        document.getElementById('demoAdmin').addEventListener('click', () => {
-            document.getElementById('loginUsername').value = 'Admin';
-            document.getElementById('loginPassword').value = 'admin123';
-            document.getElementById('doLoginBtn').click();
-        });
-        
-        // Logout buttons
-        document.getElementById('logoutBtnGame').addEventListener('click', logout);
-        document.getElementById('logoutBtnDesktop').addEventListener('click', logout);
-        
-        // Game initialization
-        renderZodiacs();
-        updateDisplay();
-        setInterval(updateDisplay, 1000);
-        renderDepositHistory();
-        renderBetHistory();
-        
-        function checkDesktopLayout() {
-            const desktopGrid = document.querySelector('.desktop-grid');
-            const mobileOnly = document.querySelector('.mobile-only');
-            if (window.innerWidth >= 1024) { if (desktopGrid) desktopGrid.style.display = 'grid'; if (mobileOnly) mobileOnly.style.display = 'none'; }
-            else { if (desktopGrid) desktopGrid.style.display = 'none'; if (mobileOnly) mobileOnly.style.display = 'block'; }
+        const postsGrid = document.getElementById('postsGrid');
+        if (userPosts.length === 0) {
+            postsGrid.innerHTML = '<div style="text-align: center; padding: 3rem; color: #718096;">អ្នកមិនទាន់មានការបង្ហោះណាមួយនៅឡើយទេ។ ចុចប៊ូតុង "បង្កើតការបង្ហោះថ្មី" ដើម្បីចាប់ផ្តើម!</div>';
+            return;
         }
-        window.addEventListener('resize', checkDesktopLayout);
-        checkDesktopLayout();
         
-        document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
-        document.getElementById('langToggleBtnDesktop').addEventListener('click', toggleLanguage);
-        document.getElementById('soundToggleBtn').addEventListener('click', toggleSound);
-        document.getElementById('soundToggleBtnDesktop').addEventListener('click', toggleSound);
-        
-        const desktopBetAmount = document.getElementById('desktopBetAmount');
-        if (desktopBetAmount) desktopBetAmount.addEventListener('input', updateDesktopPreview);
-        document.querySelectorAll('.desktop-bet-shortcut').forEach(btn => { btn.addEventListener('click', function() { const amount = parseFloat(this.getAttribute('data-amount')); const current = parseFloat(desktopBetAmount.value) || 0; desktopBetAmount.value = current + amount; updateDesktopPreview(); }); });
-        const desktopConfirmBtn = document.getElementById('desktopConfirmBetBtn');
-        if (desktopConfirmBtn) desktopConfirmBtn.addEventListener('click', executeDesktopPrediction);
-        
-        let lawVisible = false;
-        const toggleLaw = () => {
-            const lawBoxMobile = document.getElementById('lawText');
-            const lawBoxDesktop = document.getElementById('lawTextDesktop');
-            if (lawVisible) { if (lawBoxMobile) lawBoxMobile.style.display = 'none'; if (lawBoxDesktop) lawBoxDesktop.style.display = 'none'; document.getElementById('playerLawBtn').innerHTML = '📜 អានច្បាប់ និងលក្ខខណ្ឌ'; document.getElementById('playerLawBtnDesktop').innerHTML = '📜 អានច្បាប់ និងលក្ខខណ្ឌ'; }
-            else { if (lawBoxMobile) lawBoxMobile.style.display = 'block'; if (lawBoxDesktop) lawBoxDesktop.style.display = 'block'; document.getElementById('playerLawBtn').innerHTML = '📜 លាក់ច្បាប់'; document.getElementById('playerLawBtnDesktop').innerHTML = '📜 លាក់ច្បាប់'; }
-            lawVisible = !lawVisible;
-        };
-        document.getElementById('playerLawBtn').addEventListener('click', toggleLaw);
-        document.getElementById('playerLawBtnDesktop').addEventListener('click', toggleLaw);
-        document.getElementById('playerTelegramBtn').addEventListener('click', () => window.open('https://t.me/Application_Receiving_Officer', '_blank'));
-        document.getElementById('playerTelegramBtnDesktop').addEventListener('click', () => window.open('https://t.me/Application_Receiving_Officer', '_blank'));
-        
-        const adminEntryModal = document.getElementById('adminEntryPinModal');
-        const showAdminPinModal = () => { document.getElementById('adminEntryPinInput').value = ''; adminEntryModal.classList.add('show'); };
-        document.getElementById('adminPanelBtn').addEventListener('click', showAdminPinModal);
-        document.getElementById('adminPanelBtnDesktop').addEventListener('click', showAdminPinModal);
-        document.getElementById('closeAdminEntryModal').addEventListener('click', () => adminEntryModal.classList.remove('show'));
-        document.getElementById('confirmAdminEntryBtn').addEventListener('click', () => { const pin = document.getElementById('adminEntryPinInput').value; if (pin === ADMIN_PIN) { adminEntryModal.classList.remove('show'); showAdminPanel(); showToast(currentLang==='km'?'បានចូលទៅកាន់ Admin Panel!':'Entered Admin Panel!', 'pending'); } else { showToast(currentLang==='km'?'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!':'Wrong password!', 'lose'); document.getElementById('adminEntryPinInput').value = ''; } });
-        document.getElementById('backToMainBtn').addEventListener('click', hideAdminPanel);
-        document.getElementById('saveMultiplierBtn').addEventListener('click', () => { const newMultiplier = parseInt(document.getElementById('newMultiplier').value); if (newMultiplier >= 1 && newMultiplier <= 20) { rewardMultiplier = newMultiplier; localStorage.setItem('rewardMultiplier', rewardMultiplier); document.getElementById('currentMultiplier').innerHTML = rewardMultiplier + 'x'; showToast(`${currentLang==='km'?'បានកំណត់មេគុណរង្វាន់ទៅ':'Set reward multiplier to'} ${rewardMultiplier}x`, 'pending'); } else { showToast(`${currentLang==='km'?'សូមបញ្ចូលលេខចន្លោះ 1-20':'Please enter number between 1-20'}`, 'lose'); } });
-        
-        const setupTabs = (resultId, depositId, betId) => { document.querySelectorAll(`.tab`).forEach(tab => { tab.addEventListener('click', function() { const tabName = this.getAttribute('data-tab'); document.getElementById(resultId).style.display = tabName === 'result' ? 'block' : 'none'; document.getElementById(depositId).style.display = tabName === 'deposit' ? 'block' : 'none'; document.getElementById(betId).style.display = tabName === 'bet' ? 'block' : 'none'; document.querySelectorAll(`.tab`).forEach(t => t.classList.remove('active')); this.classList.add('active'); }); }); };
-        setupTabs('resultTab', 'depositTab', 'betTab'); setupTabs('resultTabDesktop', 'depositTabDesktop', 'betTabDesktop');
-        
-        let historyVisible = true;
-        const toggleHistory = () => {
-            const boxMobile = document.getElementById('historyBox'); const boxDesktop = document.getElementById('historyBoxDesktop');
-            const btnMobile = document.getElementById('toggleHistoryBtn'); const btnDesktop = document.getElementById('toggleHistoryBtnDesktop');
-            if (historyVisible) { if (boxMobile) boxMobile.style.display = 'none'; if (boxDesktop) boxDesktop.style.display = 'none'; if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show'; if (btnDesktop) btnDesktop.innerHTML = currentLang==='km'?'👁️ បង្ហាញ':'👁️ Show'; }
-            else { if (boxMobile) boxMobile.style.display = 'block'; if (boxDesktop) boxDesktop.style.display = 'block'; if (btnMobile) btnMobile.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide'; if (btnDesktop) btnDesktop.innerHTML = currentLang==='km'?'👁️ លាក់':'👁️ Hide'; }
-            historyVisible = !historyVisible;
-        };
-        document.getElementById('toggleHistoryBtn').addEventListener('click', toggleHistory);
-        document.getElementById('toggleHistoryBtnDesktop').addEventListener('click', toggleHistory);
-        
-        const confirmPredictModal = document.getElementById('confirmPredictModal');
-        document.getElementById('cancelPredictConfirm').addEventListener('click', () => confirmPredictModal.classList.remove('show'));
-        document.getElementById('yesPredictConfirm').addEventListener('click', () => { confirmPredictModal.classList.remove('show'); executePredictionFromConfirm(); });
-        
-        const predictModal = document.getElementById('predictModal');
-        document.getElementById('openPredictBtn').addEventListener('click', () => { document.getElementById('betAmount').value = ''; selectedZodiac = ''; document.querySelectorAll('.zodiac-option').forEach(o => o.classList.remove('selected')); updatePreview(); predictModal.classList.add('show'); });
-        document.getElementById('closePredictModal').addEventListener('click', () => predictModal.classList.remove('show'));
-        document.getElementById('betAmount').addEventListener('input', updatePreview);
-        document.querySelectorAll('.shortcut').forEach(btn => { btn.addEventListener('click', function() { const amount = parseFloat(this.getAttribute('data-amount')); const current = parseFloat(document.getElementById('betAmount').value) || 0; document.getElementById('betAmount').value = current + amount; updatePreview(); }); });
-        document.getElementById('confirmPredictBtn').addEventListener('click', () => { const amt = parseFloat(document.getElementById('betAmount').value); if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលទឹកប្រាក់!':'Enter amount!', 'lose'); return; } if (!selectedZodiac) { showToast(currentLang==='km'?'ជ្រើសរើសឆ្នាំ!':'Select zodiac!', 'lose'); return; } if (currentBalance < amt) { showToast(currentLang==='km'?'សមតុល្យមិនគ្រប់!':'Insufficient balance!', 'lose'); return; } pendingBetAmount = amt; pendingZodiac = selectedZodiac; predictModal.classList.remove('show'); document.getElementById('confirmPredictMsg').innerHTML = `${translations[currentLang].confirmPredictMsg} ${selectedZodiac} $${amt.toFixed(2)} ${translations[currentLang].forHour} ${formatHour(getNextHour(new Date().getHours()))}?`; confirmPredictModal.classList.add('show'); });
-        
-        const depositModal = document.getElementById('depositModal');
-        const confirmAdminModal = document.getElementById('confirmAdminModal');
-        const adminHistoryModal = document.getElementById('adminHistoryModal');
-        
-        document.getElementById('adminDepositMoneyBtn').addEventListener('click', () => {
-            if (currentUserType !== 'admin') { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
-            currentAction = 'admin_deposit';
-            document.getElementById('pinStep').style.display = 'block';
-            document.getElementById('amountStep').style.display = 'none';
-            document.getElementById('pinInput').value = '';
-            depositModal.classList.add('show');
-        });
-        
-        document.getElementById('adminViewDepositHistoryBtn').addEventListener('click', () => {
-            if (currentUserType !== 'admin') { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
-            const historyList = document.getElementById('adminHistoryList');
-            if (adminDepositHistory.length === 0) {
-                historyList.innerHTML = '<div style="text-align:center;padding:15px;color:#aaa">មិនមានប្រវត្តិបញ្ចូលលុយ</div>';
-            } else {
-                let html = '';
-                adminDepositHistory.forEach(item => {
-                    html += `<div class="history-modal-item"><div class="history-modal-date">📅 ${item.date}</div><div class="history-modal-amount">💰 +$${item.amount.toFixed(2)}</div></div>`;
-                });
-                historyList.innerHTML = html;
-            }
-            adminHistoryModal.classList.add('show');
-        });
-        
-        document.getElementById('closeAdminHistoryModal').addEventListener('click', () => { adminHistoryModal.classList.remove('show'); });
-        
-        document.getElementById('adminClearDepositHistoryBtn').addEventListener('click', () => {
-            if (currentUserType !== 'admin') { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
-            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin':'⚠️ Confirm Clear Admin Deposit History';
-            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
-            pendingAdminAction = "clear_admin_deposit";
-            confirmAdminModal.classList.add('show');
-        });
-        
-        document.getElementById('playerDepositMoneyBtn').addEventListener('click', () => {
-            if (currentUserType !== 'admin') { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
-            if (!currentUser) { showToast('សូមជ្រើសរើសអ្នកលេងមុន!', 'lose'); return; }
-            if (users[currentUser]?.type === 'admin') { showToast('មិនអាចបញ្ចូលលុយឲ្យ Admin តាមប៊ូតុងនេះទេ!', 'lose'); return; }
-            currentAction = 'deposit';
-            document.getElementById('pinStep').style.display = 'block';
-            document.getElementById('amountStep').style.display = 'none';
-            document.getElementById('pinInput').value = '';
-            depositModal.classList.add('show');
-        });
-        
-        document.getElementById('playerClearBalanceBtn').addEventListener('click', () => {
-            if (currentUserType !== 'admin') { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
-            if (!currentUser) { showToast('សូមជ្រើសរើសអ្នកលេងមុន!', 'lose'); return; }
-            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបទឹកប្រាក់អ្នកលេង':'⚠️ Confirm Clear Player Balance';
-            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBalance;
-            pendingAdminAction = "clear_balance";
-            confirmAdminModal.classList.add('show');
-        });
-        
-        document.getElementById('playerClearDepositHistoryBtn').addEventListener('click', () => {
-            if (currentUserType !== 'admin') { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
-            if (!currentUser) { showToast('សូមជ្រើសរើសអ្នកលេងមុន!', 'lose'); return; }
-            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេង':'⚠️ Confirm Clear Player Deposit History';
-            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearDeposit;
-            pendingAdminAction = "clear_deposit";
-            confirmAdminModal.classList.add('show');
-        });
-        
-        document.getElementById('playerClearBetHistoryBtn').addEventListener('click', () => {
-            if (currentUserType !== 'admin') { showToast('មានតែ Admin ទេដែលអាចប្រើប៊ូតុងនេះ!', 'lose'); return; }
-            if (!currentUser) { showToast('សូមជ្រើសរើសអ្នកលេងមុន!', 'lose'); return; }
-            document.getElementById('confirmAdminTitle').innerHTML = currentLang==='km'?'⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេង':'⚠️ Confirm Clear Player Bet History';
-            document.getElementById('confirmAdminMsg').innerHTML = translations[currentLang].confirmClearBet;
-            pendingAdminAction = "clear_bet";
-            confirmAdminModal.classList.add('show');
-        });
-        
-        document.getElementById('transferToPlayerBtn').addEventListener('click', transferToPlayer);
-        
-        document.getElementById('closeDepositModal').addEventListener('click', () => depositModal.classList.remove('show'));
-        document.getElementById('confirmPinBtn').addEventListener('click', () => { 
-            const pin = document.getElementById('pinInput').value; 
-            if (pin === SECRET_PIN) { 
-                if (currentAction === 'deposit') { 
-                    document.getElementById('pinStep').style.display = 'none'; 
-                    document.getElementById('amountStep').style.display = 'block'; 
-                    document.getElementById('amountInput').value = ''; 
-                } else if (currentAction === 'admin_deposit') {
-                    document.getElementById('pinStep').style.display = 'none'; 
-                    document.getElementById('amountStep').style.display = 'block'; 
-                    document.getElementById('amountInput').value = '';
-                }
-            } else { 
-                showToast(currentLang==='km'?'កូដសម្ងាត់មិនត្រឹមត្រូវ!':'Wrong PIN!', 'lose'); 
-                document.getElementById('pinInput').value = ''; 
-            } 
-        });
-        document.getElementById('backToPinBtn').addEventListener('click', () => { document.getElementById('pinStep').style.display = 'block'; document.getElementById('amountStep').style.display = 'none'; document.getElementById('pinInput').value = ''; });
-        document.getElementById('submitDepositBtn').addEventListener('click', () => { 
-            const amt = parseFloat(document.getElementById('amountInput').value); 
-            if (isNaN(amt) || amt <= 0) { showToast(currentLang==='km'?'បញ្ចូលចំនួនលុយ!':'Enter amount!', 'lose'); return; } 
-            
-            if (currentAction === 'deposit') {
-                currentBalance += amt; 
-                localStorage.setItem('balance', currentBalance); 
-                updateAllBalanceDisplays(); 
-                updateDesktopPreview(); 
-                depositHistory.unshift({ date: formatDateTime(new Date()), amount: amt }); 
-                localStorage.setItem('depositHistory', JSON.stringify(depositHistory)); 
-                renderDepositHistory(); 
-                updateAdminStats(); 
-                playSound(null); 
-                saveCurrentUserData();
-                showToast(`${translations[currentLang].depositSuccess} $${amt.toFixed(2)}!`, 'pending');
-            } else if (currentAction === 'admin_deposit') {
-                adminBalance += amt;
-                localStorage.setItem('adminBalance', adminBalance);
-                adminDepositHistory.unshift({ date: formatDateTime(new Date()), amount: amt });
-                localStorage.setItem('adminDepositHistory', JSON.stringify(adminDepositHistory));
-                updateAdminStats();
-                playSound(null);
-                showToast(`Admin: +$${amt.toFixed(2)}!`, 'pending');
-            }
-            depositModal.classList.remove('show'); 
-        });
-        
-        document.getElementById('cancelAdminConfirm').addEventListener('click', () => confirmAdminModal.classList.remove('show'));
-        document.getElementById('yesAdminConfirm').addEventListener('click', () => { confirmAdminModal.classList.remove('show'); executeAdminAction(); });
-        
-        window.addEventListener('click', (e) => { 
-            if (e.target === depositModal) depositModal.classList.remove('show'); 
-            if (e.target === predictModal) predictModal.classList.remove('show'); 
-            if (e.target === adminEntryModal) adminEntryModal.classList.remove('show'); 
-            if (e.target === confirmPredictModal) confirmPredictModal.classList.remove('show'); 
-            if (e.target === confirmAdminModal) confirmAdminModal.classList.remove('show');
-            if (e.target === adminHistoryModal) adminHistoryModal.classList.remove('show');
-        });
-        
-        applyLanguage();
+        postsGrid.innerHTML = userPosts.map(post => `
+            <div class="post-card">
+                <div class="post-platforms">
+                    ${post.platforms.map(p => `
+                        <div class="platform-icon" style="background: ${getPlatformColor(p)}">
+                            <i class="${getPlatformIcon(p)}"></i>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="post-content">${post.content.substring(0, 150)}${post.content.length > 150 ? '...' : ''}</div>
+                <div class="post-schedule">
+                    <span><i class="far fa-clock"></i> ${new Date(post.scheduleTime).toLocaleString()}</span>
+                    <span class="status-badge status-${post.status}">${post.status === 'scheduled' ? 'កំពុងរង់ចាំ' : 'បានបង្ហោះរួច'}</span>
+                    <button class="delete-post" onclick="deletePost(${post.id})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `).join('');
     }
-    
-    init();
+
+    function openPostModal() {
+        if (!currentUser) {
+            showAuth('login');
+            return;
+        }
+        document.getElementById('postModal').style.display = 'flex';
+        document.getElementById('postContent').value = '';
+        document.querySelectorAll('.platform-checkbox input').forEach(cb => cb.checked = false);
+        document.getElementById('postScheduleTime').value = '';
+    }
+
+    function closePostModal() {
+        document.getElementById('postModal').style.display = 'none';
+    }
+
+    function createPost() {
+        const content = document.getElementById('postContent').value.trim();
+        const platforms = Array.from(document.querySelectorAll('.platform-checkbox input:checked')).map(cb => cb.value);
+        const scheduleTime = document.getElementById('postScheduleTime').value;
+        
+        if (!content) {
+            alert('សូមបញ្ចូលខ្លឹមសារដែលអ្នកចង់បង្ហោះ');
+            return;
+        }
+        if (platforms.length === 0) {
+            alert('សូមជ្រើសរើសយ៉ាងហោចណាស់មួយបណ្តាញសង្គម');
+            return;
+        }
+        if (!scheduleTime) {
+            alert('សូមជ្រើសរើសកាលបរិច្ឆេទ និងពេលវេលាសម្រាប់ការបង្ហោះ');
+            return;
+        }
+        
+        const userPostsCount = allPosts.filter(p => p.userId === currentUser.id && new Date(p.createdAt).getMonth() === new Date().getMonth()).length;
+        
+        let maxPlatforms = 3;
+        if (currentUser.plan === 'pro') maxPlatforms = 10;
+        if (currentUser.plan === 'business') maxPlatforms = 10;
+        
+        if (platforms.length > maxPlatforms) {
+            alert(`កញ្ចប់ ${currentUser.plan === 'free' ? 'ឥតគិតថ្លៃ' : currentUser.plan} អាចបង្ហោះបានត្រឹមតែ ${maxPlatforms} បណ្តាញសង្គមប៉ុណ្ណោះក្នុងមួយការបង្ហោះ`);
+            return;
+        }
+        
+        if (currentUser.plan === 'free' && userPostsCount >= 5) {
+            alert('កញ្ចប់ឥតគិតថ្លៃអាចបង្ហោះបានត្រឹមតែ 5 ដងប៉ុណ្ណោះក្នុងមួយខែ។ សូមដំឡើងកញ្ចប់ប្រូដើម្បីប្រើប្រាស់គ្មានដែនកំណត់!');
+            return;
+        }
+        
+        const newPost = {
+            id: Date.now(),
+            userId: currentUser.id,
+            content: content,
+            platforms: platforms,
+            scheduleTime: scheduleTime,
+            status: 'scheduled',
+            createdAt: new Date().toISOString()
+        };
+        
+        allPosts.push(newPost);
+        savePosts();
+        closePostModal();
+        renderDashboard();
+        
+        const platformNames = platforms.map(p => {
+            const names = { facebook: 'Facebook', instagram: 'Instagram', twitter: 'Twitter/X', linkedin: 'LinkedIn', tiktok: 'TikTok', pinterest: 'Pinterest', youtube: 'YouTube', telegram: 'Telegram', snapchat: 'Snapchat', reddit: 'Reddit' };
+            return names[p] || p;
+        }).join(', ');
+        
+        alert(`✅ ការបង្ហោះរបស់អ្នកត្រូវបានកំណត់ពេលរួចរាល់!\n\nបណ្តាញសង្គម: ${platformNames}\nពេលវេលា: ${new Date(scheduleTime).toLocaleString()}`);
+    }
+
+    function deletePost(postId) {
+        if (confirm('តើអ្នកពិតជាចង់លុបការបង្ហោះនេះមែនទេ?')) {
+            allPosts = allPosts.filter(p => p.id !== postId);
+            savePosts();
+            renderDashboard();
+        }
+    }
+
+    let authMode = 'login';
+
+    function showAuth(mode) {
+        authMode = mode;
+        document.getElementById('homeSection').style.display = 'none';
+        document.getElementById('pricingSection').style.display = 'none';
+        document.getElementById('dashboardSection').style.display = 'none';
+        document.getElementById('authSection').style.display = 'flex';
+        
+        if (mode === 'login') {
+            document.getElementById('authTitle').textContent = 'ចូលប្រើប្រាស់';
+            document.getElementById('authName').style.display = 'none';
+            document.getElementById('authSubmitBtn').textContent = 'ចូលប្រើ';
+            document.getElementById('toggleAuthLink').innerHTML = 'មិនទាន់មានគណនី? ចុះឈ្មោះ';
+        } else {
+            document.getElementById('authTitle').textContent = 'ចុះឈ្មោះ';
+            document.getElementById('authName').style.display = 'block';
+            document.getElementById('authSubmitBtn').textContent = 'ចុះឈ្មោះ';
+            document.getElementById('toggleAuthLink').innerHTML = 'មានគណនីរួចហើយ? ចូលប្រើ';
+        }
+        
+        document.getElementById('authEmail').value = '';
+        document.getElementById('authPassword').value = '';
+        document.getElementById('authName').value = '';
+    }
+
+    function toggleAuthMode() {
+        if (authMode === 'login') {
+            showAuth('register');
+        } else {
+            showAuth('login');
+        }
+    }
+
+    function handleAuth() {
+        const email = document.getElementById('authEmail').value.trim();
+        const password = document.getElementById('authPassword').value;
+        const name = document.getElementById('authName').value.trim();
+        
+        if (!email || !password) {
+            alert('សូមបំពេញអ៊ីមែល និងពាក្យសម្ងាត់');
+            return;
+        }
+        
+        const users = JSON.parse(localStorage.getItem('social_users') || '[]');
+        
+        if (authMode === 'login') {
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('social_current_user', JSON.stringify(user));
+                updateUIForLoggedInUser();
+                showDashboard();
+            } else {
+                alert('អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ');
+            }
+        } else {
+            if (!name) {
+                alert('សូមបញ្ចូលឈ្មោះពេញរបស់អ្នក');
+                return;
+            }
+            if (users.find(u => u.email === email)) {
+                alert('អ៊ីមែលនេះត្រូវបានចុះឈ្មោះរួចហើយ');
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                plan: 'free',
+                createdAt: new Date().toISOString()
+            };
+            users.push(newUser);
+            saveUsers(users);
+            currentUser = newUser;
+            localStorage.setItem('social_current_user', JSON.stringify(newUser));
+            updateUIForLoggedInUser();
+            showDashboard();
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('social_current_user');
+        updateUIForLoggedInUser();
+        showSection('home');
+    }
+
+    loadData();
+    setInterval(checkAndPublishPosts, 60000);
 </script>
 </body>
 </html>
