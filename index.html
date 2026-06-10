@@ -265,7 +265,6 @@
     let adminBalance = 0, adminDepositHistory = [];
     let onlineCount = 0;
     let profitChart = null;
-    let lastAlertSecond = -1;
     let userSessions = [];
     let countdownBlinkInterval = null;
     
@@ -564,19 +563,7 @@
         const countdownTimerDesktop = document.getElementById('countdownTimerDesktop');
         if(countdownTimer) countdownTimer.innerHTML=countdown;
         if(countdownTimerDesktop) countdownTimerDesktop.innerHTML=countdown;
-        
-        // Trigger alert at 3 seconds before result (57, 58, 59 seconds)
-        if (remainS === 57 || remainS === 58 || remainS === 59) {
-            if (lastAlertSecond !== remainS) {
-                playTripleBeep();
-                startCountdownBlink();
-                lastAlertSecond = remainS;
-            }
-        } else if (remainS < 57 || remainS > 59) {
-            if (lastAlertSecond >= 57 && lastAlertSecond <= 59) {
-                lastAlertSecond = -1;
-            }
-        }
+        // REMOVED: No more sound and blink at 57,58,59 seconds
     }
     
     function updateLuckyNumber(){
@@ -597,14 +584,14 @@
         if(liveClockDesktop) liveClockDesktop.innerHTML=clock;
     }
     
-    // ==================== settleBets with Blink & Sound on Result Announcement ====================
+    // ==================== settleBets with Blink & Sound ONLY on Result Announcement ====================
     function settleBets(currentHour, currentDate, currentSeconds){
         if(currentSeconds === 1){
             const nums = generateNumbers(currentDate);
             let changed = false;
             const announceDateTime = formatDateTime(new Date());
             
-            // Trigger blink and sound when result is announced (at second 1)
+            // Trigger blink and sound ONLY when result is announced (at second 1)
             playTripleBeep();
             startCountdownBlink();
             
