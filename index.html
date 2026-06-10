@@ -210,7 +210,6 @@
             <div class="commission-box"><div class="commission-row"><span>🎮 មេគុណរង្វាន់បច្ចុប្បន្ន</span><span id="currentMultiplier">10x</span></div><div class="commission-row"><span>កំណត់មេគុណថ្មី</span><input type="number" id="newMultiplier" class="commission-input" min="1" max="20" step="1" value="10"></div><button class="save-btn" id="saveMultiplierBtn">💾 រក្សាទុក</button></div>
             <div class="admin-buttons-section"><div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div><div class="admin-buttons"><button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់សម្រាប់ Admin</button><button class="admin-btn view-history" id="adminViewDepositHistoryBtn">📜 មើលប្រវត្តិបញ្ចូលលុយ Admin</button><button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ Admin</button></div></div>
             <div class="player-buttons-section"><div class="player-section-title">🎮 ប៊ូតុងគ្រប់គ្រងអ្នកលេង</div><div class="player-admin-buttons"><button class="player-admin-btn" id="playerDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់អ្នកលេង</button><button class="player-admin-btn" id="playerClearBalanceBtn">💰 លុបទឹកប្រាក់អ្នកលេង</button><button class="player-admin-btn" id="playerClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button><button class="player-admin-btn" id="playerClearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button></div></div>
-            <!-- Reset System Button placed outside, below all buttons -->
             <button class="reset-btn" id="resetSystemBtn">🔄 កំណត់ប្រព័ន្ធឡើងវិញទាំងស្រុង</button>
         </div>
         
@@ -373,17 +372,46 @@
         else if(sec!==3 && sec!==2 && sec!==1){if(sec<3)lastAlertSecond=-1;}
     }
     
+    // FIXED: renderBetHistory shows target hour
     function renderBetHistory(){
         const containers=['betList','betListDesktop'];let html="";
-        betHistory.slice(0,50).forEach(b=>{let statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),color=b.status==='win'?'#4ade80':(b.status==='lose'?'#fc8181':'#f6ad55');html+=`<div class="history-item"><div><strong>${b.picked}</strong><br><span style="font-size:0.6rem">${b.date}</span><br><span style="font-size:0.6rem">${currentLang==='km'?'ម៉ោងគោលដៅ':'Target Hour'}: ${formatHour(b.targetHour)}</span></div><div style="color:${color}">${statusText}<br>$${b.amount.toFixed(2)}</div></div>`;});
-        if(!betHistory.length)html='<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិទស្សន៍ទាយ</div>';
+        if(betHistory.length===0){
+            html='<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិទស្សន៍ទាយ</div>';
+        }else{
+            betHistory.slice(0,50).forEach(b=>{
+                let statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ');
+                let color=b.status==='win'?'#4ade80':(b.status==='lose'?'#fc8181':'#f6ad55');
+                let amountText=`$${b.amount.toFixed(2)}`;
+                if(b.status==='win') amountText=`+$${(b.amount + b.reward).toFixed(2)} (ភ្នាល់ $${b.amount.toFixed(2)} + រង្វាន់ $${b.reward.toFixed(2)})`;
+                else if(b.status==='lose') amountText=`-$${b.amount.toFixed(2)}`;
+                html+=`<div class="history-item">
+                    <div>
+                        <strong>🎯 ${b.picked}</strong>
+                        <div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div>
+                        <div style="font-size:0.6rem; color:#aaa;">⏰ ${currentLang==='km'?'ម៉ោងគោលដៅ':'Target Hour'}: ${formatHour(b.targetHour)}</div>
+                    </div>
+                    <div style="color:${color}; text-align:right;">
+                        ${statusText}<br>${amountText}
+                    </div>
+                </div>`;
+            });
+        }
         containers.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
     }
     
+    // FIXED: renderDepositHistory
     function renderDepositHistory(){
         const containers=['depositList','depositListDesktop'];let html="";
-        depositHistory.slice(0,30).forEach(d=>{html+=`<div class="history-item"><div>📥 ${d.date}</div><div style="color:#4ade80">+$${d.amount.toFixed(2)}</div></div>`;});
-        if(!depositHistory.length)html='<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិបញ្ចូលលុយ</div>';
+        if(depositHistory.length===0){
+            html='<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិបញ្ចូលលុយ</div>';
+        }else{
+            depositHistory.slice(0,30).forEach(d=>{
+                html+=`<div class="history-item">
+                    <div>📥 ${d.date}</div>
+                    <div style="color:#4ade80">+$${d.amount.toFixed(2)}</div>
+                </div>`;
+            });
+        }
         containers.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
     }
     
