@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* ===== COMPLETE CSS RETAINED ===== */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Battambang', 'Poppins', sans-serif; }
         body { background: linear-gradient(180deg, #0a0a2a 0%, #12123a 100%); color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
         .container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px; width: 100%; max-width: 500px; padding: 20px 16px; box-shadow: 0 25px 45px rgba(0,0,0,0.3); text-align: center; transition: all 0.3s ease; margin: 0 auto; }
@@ -159,6 +158,15 @@
         .weekly-report, .monthly-report, .chart-container { background: rgba(0,0,0,0.3); border-radius: 16px; padding: 12px; margin-bottom: 15px; }
         .report-title { font-size: 0.7rem; color: #fbd38d; margin-bottom: 8px; }
         .telegram-input { width: 100%; padding: 8px; background: #0f0f2a; border: 1px solid #2a2a4a; border-radius: 12px; color: white; margin-bottom: 8px; font-size: 0.7rem; }
+        
+        /* Active tab style */
+        .tab.active-tab {
+            background: #2b6cb0 !important;
+            color: white !important;
+        }
+        .tab {
+            transition: all 0.2s ease;
+        }
     </style>
 </head>
 <body>
@@ -193,7 +201,6 @@
     <div class="admin-title">🔧 ផ្ទាំងគ្រប់គ្រង Admin</div>
     <div class="admin-sub">គ្រប់គ្រងប្រព័ន្ធ និងត្រួតពិនិត្យអ្នកលេង</div>
     
-    <!-- Online Users Section -->
     <div class="online-users-section">
         <div class="online-users-header">
             <h3 style="color:#fbd38d; font-size:0.9rem;">👥 អ្នកប្រើប្រាស់កំពុងប្រើប្រាស់ប្រព័ន្ធ</h3>
@@ -205,9 +212,7 @@
         </div>
     </div>
     
-    <!-- 3 Columns Grid -->
     <div class="admin-grid-3col">
-        <!-- Column 1: System Management -->
         <div>
             <div class="admin-balance"><div class="admin-balance-label">💰 សមតុល្យ Admin</div><div class="admin-balance-amount">$<span id="adminBalance">0.00</span></div></div>
             <div class="admin-balance" style="margin-top:-10px;"><div class="admin-balance-label">👤 សមតុល្យអ្នកលេង</div><div class="admin-balance-amount">$<span id="playerBalanceDisplay">0.00</span></div></div>
@@ -219,7 +224,6 @@
             <button class="reset-btn" id="resetSystemBtn">🔄 កំណត់ប្រព័ន្ធឡើងវិញទាំងស្រុង</button>
         </div>
         
-        <!-- Column 2: Player Bet Monitoring -->
         <div class="player-bets-table">
             <h3>📋 តារាងត្រួតពិនិត្យការភ្នាល់របស់អ្នកលេង</h3>
             <div class="filter-bar">
@@ -247,7 +251,6 @@
             </div>
         </div>
         
-        <!-- Column 3: Admin Actions -->
         <div>
             <div class="admin-buttons-section"><div class="section-title">🔐 ប៊ូតុងសម្រាប់ Admin</div><div class="admin-buttons"><button class="admin-btn" id="adminDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់សម្រាប់ Admin</button><button class="admin-btn view-history" id="adminViewDepositHistoryBtn">📜 មើលប្រវត្តិបញ្ចូលលុយ Admin</button><button class="admin-btn" id="adminClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ Admin</button></div></div>
             <div class="player-buttons-section"><div class="player-section-title">🎮 ប៊ូតុងគ្រប់គ្រងអ្នកលេង</div><div class="player-admin-buttons"><button class="player-admin-btn" id="playerDepositMoneyBtn">💵 បញ្ចូលទឹកប្រាក់អ្នកលេង</button><button class="player-admin-btn" id="playerClearBalanceBtn">💰 លុបទឹកប្រាក់អ្នកលេង</button><button class="player-admin-btn" id="playerClearDepositHistoryBtn">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button><button class="player-admin-btn" id="playerClearBetHistoryBtn">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button></div></div>
@@ -273,35 +276,27 @@
     let profitChart = null;
     let lastAlertSecond = -1;
     let userSessions = [];
+    let countdownBlinkInterval = null;
     
-    // ==================== LOAD DATA FROM localStorage ====================
     function loadAllData() {
         const savedBalance = localStorage.getItem('balance');
         currentBalance = (savedBalance !== null && !isNaN(parseFloat(savedBalance))) ? parseFloat(savedBalance) : 0;
-        
         const savedDeposit = localStorage.getItem('depositHistory');
         depositHistory = savedDeposit ? JSON.parse(savedDeposit) : [];
-        
         const savedBet = localStorage.getItem('betHistory');
         betHistory = savedBet ? JSON.parse(savedBet) : [];
-        
         const savedMultiplier = localStorage.getItem('rewardMultiplier');
         rewardMultiplier = savedMultiplier ? parseInt(savedMultiplier) : 10;
-        
         const savedAdminBalance = localStorage.getItem('adminBalance');
         adminBalance = (savedAdminBalance !== null && !isNaN(parseFloat(savedAdminBalance))) ? parseFloat(savedAdminBalance) : 0;
-        
         const savedAdminDepositHistory = localStorage.getItem('adminDepositHistory');
         adminDepositHistory = savedAdminDepositHistory ? JSON.parse(savedAdminDepositHistory) : [];
-        
         const savedUserSessions = localStorage.getItem('userSessions');
         userSessions = savedUserSessions ? JSON.parse(savedUserSessions) : [];
     }
     
-    // Call load immediately
     loadAllData();
     
-    // Helper functions
     function getDeviceId() { let id = localStorage.getItem('deviceId'); if (!id) { id = 'dev_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('deviceId', id); } return id; }
     function getDeviceInfo() { const ua = navigator.userAgent; if (ua.includes('Mobile')) return 'ម៉ូប៊ីល'; if (ua.includes('Tablet')) return 'ថេប្លេត'; return 'កុំព្យូទ័រ'; }
     function getSimulatedIP() { return '192.168.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255); }
@@ -347,11 +342,48 @@
     window.togglePasswordVisibility = togglePasswordVisibility;
     
     function playBeep(freq, dur) { if(!soundEnabled) return; try { if(!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); const osc = audioContext.createOscillator(), gain = audioContext.createGain(); osc.connect(gain); gain.connect(audioContext.destination); osc.type = 'sine'; osc.frequency.value = freq; gain.gain.value = 0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + dur); setTimeout(() => osc.stop(), dur * 1000); } catch(e){} }
-    function playCountdownAlert() { playBeep(880,0.2); setTimeout(()=>playBeep(880,0.2),250); setTimeout(()=>playBeep(660,0.3),500); }
-    function startCountdownBlink() { 
-        const boxes = ['countdownBox', 'countdownBoxDesktop'];
-        boxes.forEach(id => { const box = document.getElementById(id); if(box) { box.classList.add('blink'); setTimeout(()=>{ if(box) box.classList.remove('blink'); }, 1500); } });
+    
+    function playTripleBeep() {
+        playBeep(880, 0.15);
+        setTimeout(() => playBeep(880, 0.15), 200);
+        setTimeout(() => playBeep(880, 0.15), 400);
     }
+    
+    function startCountdownBlink() {
+        const boxes = ['countdownBox', 'countdownBoxDesktop'];
+        if (countdownBlinkInterval) clearInterval(countdownBlinkInterval);
+        let blinkCount = 0;
+        countdownBlinkInterval = setInterval(() => {
+            boxes.forEach(id => {
+                const box = document.getElementById(id);
+                if (box) {
+                    if (blinkCount % 2 === 0) {
+                        box.style.background = '#fc8181';
+                        box.style.color = '#1a1a2e';
+                        box.style.boxShadow = '0 0 20px #fc8181';
+                    } else {
+                        box.style.background = 'rgba(0,0,0,0.3)';
+                        box.style.color = '#ffffff';
+                        box.style.boxShadow = 'none';
+                    }
+                }
+            });
+            blinkCount++;
+            if (blinkCount >= 6) {
+                clearInterval(countdownBlinkInterval);
+                countdownBlinkInterval = null;
+                boxes.forEach(id => {
+                    const box = document.getElementById(id);
+                    if (box) {
+                        box.style.background = '';
+                        box.style.color = '';
+                        box.style.boxShadow = '';
+                    }
+                });
+            }
+        }, 200);
+    }
+    
     function showToast(msg) { const toast = document.createElement('div'); toast.className = 'notification-toast'; toast.innerHTML = msg; document.body.appendChild(toast); setTimeout(()=>toast.remove(),3000); }
     function playSound(win) { if(!soundEnabled) return; try { if(!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); const osc = audioContext.createOscillator(), gain = audioContext.createGain(); osc.connect(gain); gain.connect(audioContext.destination); osc.type = 'sine'; if(win===true){ osc.frequency.value=880; gain.gain.value=0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001,audioContext.currentTime+0.6); setTimeout(()=>osc.stop(),600); } else if(win===false){ osc.frequency.value=440; gain.gain.value=0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001,audioContext.currentTime+0.5); setTimeout(()=>osc.stop(),500); } else { osc.frequency.value=660; gain.gain.value=0.15; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001,audioContext.currentTime+0.3); setTimeout(()=>osc.stop(),300); } } catch(e){} }
     function formatDateTime(d) { return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`; }
@@ -405,7 +437,6 @@
         userBalanceSpans.forEach(el => { if(el) el.innerText = currentBalance.toFixed(2); });
     }
     
-    // ==================== FIXED: Bet History Render (works for both Mobile & Desktop) ====================
     function renderBetHistory(){
         const containers = ['betList', 'betListDesktop'];
         let html = "";
@@ -439,7 +470,6 @@
         containers.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = html; });
     }
     
-    // ==================== FIXED: Deposit History Render (works for both Mobile & Desktop) ====================
     function renderDepositHistory(){
         const containers = ['depositList', 'depositListDesktop'];
         let html = "";
@@ -453,7 +483,6 @@
         containers.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = html; });
     }
     
-    // ==================== Admin Bet Table ====================
     function renderAdminBetsTable(){
         const filterZodiacInput = document.getElementById('filterZodiac');
         const filterStatusSelect = document.getElementById('filterStatus');
@@ -471,7 +500,7 @@
         if(summaryTotalLosses) summaryTotalLosses.innerHTML='$'+totalLossesAmt.toFixed(2);
         if(summaryTotalRewards) summaryTotalRewards.innerHTML='$'+totalRewards.toFixed(2);
         let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}</td><td style="font-size:0.65rem">${b.date}</td><td>${b.picked}</td><td>$${b.amount.toFixed(2)}</td><td>${formatHour(b.targetHour)}</td><td class="${statusClass}">${statusText}</td><td class="${statusClass}">${rewardText}</td><td style="font-size:0.65rem">${resultText}</td></tr>`;});
-        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យ</td></tr>';
+        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យ</td><tr>';
         const adminBetsTableBody = document.getElementById('adminBetsTableBody');
         if(adminBetsTableBody) adminBetsTableBody.innerHTML=html;
     }
@@ -543,7 +572,18 @@
         const countdownTimerDesktop = document.getElementById('countdownTimerDesktop');
         if(countdownTimer) countdownTimer.innerHTML=countdown;
         if(countdownTimerDesktop) countdownTimerDesktop.innerHTML=countdown;
-        checkCountdownAlert(remainS);
+        
+        if (remainS === 57 || remainS === 58 || remainS === 59) {
+            if (lastAlertSecond !== remainS) {
+                playTripleBeep();
+                startCountdownBlink();
+                lastAlertSecond = remainS;
+            }
+        } else if (remainS < 57 || remainS > 59) {
+            if (lastAlertSecond >= 57 && lastAlertSecond <= 59) {
+                lastAlertSecond = -1;
+            }
+        }
     }
     
     function updateLuckyNumber(){
@@ -590,11 +630,6 @@
                 updateAdminStats();
             }
         }
-    }
-    
-    function checkCountdownAlert(sec){
-        if(sec===3 && lastAlertSecond!==3){playCountdownAlert();startCountdownBlink();lastAlertSecond=3;}
-        else if(sec!==3 && sec!==2 && sec!==1){if(sec<3)lastAlertSecond=-1;}
     }
     
     function updateDisplay(){
@@ -723,7 +758,6 @@
         showToast(soundEnabled?(currentLang==='km'?'បើកសំឡេង':'Sound on'):(currentLang==='km'?'បិទសំឡេង':'Sound off'));
     }
     
-    // ==================== INITIALIZATION ====================
     function init(){
         loadData();
         renderZodiacs();
@@ -746,7 +780,6 @@
         window.addEventListener('resize',checkDesktopLayout);
         checkDesktopLayout();
         
-        // Event Listeners
         const langToggleBtn = document.getElementById('langToggleBtn');
         const langToggleBtnDesktop = document.getElementById('langToggleBtnDesktop');
         if(langToggleBtn) langToggleBtn.addEventListener('click',toggleLanguage);
@@ -950,7 +983,7 @@
         const refreshBetsBtn = document.getElementById('refreshBetsBtn');
         if(refreshBetsBtn) refreshBetsBtn.addEventListener('click',()=>{renderAdminBetsTable();showToast('បានធ្វើឲ្យតារាងភ្នាល់ស្រស់');});
         
-        // Tab setup for Mobile
+        // Tab setup for Mobile with active class
         const tabResult = document.getElementById('tabResult');
         const tabDeposit = document.getElementById('tabDeposit');
         const tabBet = document.getElementById('tabBet');
@@ -958,12 +991,17 @@
         const depositDiv = document.getElementById('depositTab');
         const betDiv = document.getElementById('betTab');
         if(tabResult && tabDeposit && tabBet && resultDiv && depositDiv && betDiv){
-            tabResult.addEventListener('click',()=>{ resultDiv.style.display='block'; depositDiv.style.display='none'; betDiv.style.display='none'; });
-            tabDeposit.addEventListener('click',()=>{ resultDiv.style.display='none'; depositDiv.style.display='block'; betDiv.style.display='none'; });
-            tabBet.addEventListener('click',()=>{ resultDiv.style.display='none'; depositDiv.style.display='none'; betDiv.style.display='block'; });
+            function setActiveTab(activeTab) {
+                [tabResult, tabDeposit, tabBet].forEach(tab => tab.classList.remove('active-tab'));
+                activeTab.classList.add('active-tab');
+            }
+            tabResult.addEventListener('click',()=>{ resultDiv.style.display='block'; depositDiv.style.display='none'; betDiv.style.display='none'; setActiveTab(tabResult); });
+            tabDeposit.addEventListener('click',()=>{ resultDiv.style.display='none'; depositDiv.style.display='block'; betDiv.style.display='none'; setActiveTab(tabDeposit); });
+            tabBet.addEventListener('click',()=>{ resultDiv.style.display='none'; depositDiv.style.display='none'; betDiv.style.display='block'; setActiveTab(tabBet); });
+            setActiveTab(tabResult);
         }
         
-        // Tab setup for Desktop
+        // Tab setup for Desktop with active class
         const tabResultDesktop = document.getElementById('tabResultDesktop');
         const tabDepositDesktop = document.getElementById('tabDepositDesktop');
         const tabBetDesktop = document.getElementById('tabBetDesktop');
@@ -971,9 +1009,14 @@
         const depositDivDesktop = document.getElementById('depositTabDesktop');
         const betDivDesktop = document.getElementById('betTabDesktop');
         if(tabResultDesktop && tabDepositDesktop && tabBetDesktop && resultDivDesktop && depositDivDesktop && betDivDesktop){
-            tabResultDesktop.addEventListener('click',()=>{ resultDivDesktop.style.display='block'; depositDivDesktop.style.display='none'; betDivDesktop.style.display='none'; });
-            tabDepositDesktop.addEventListener('click',()=>{ resultDivDesktop.style.display='none'; depositDivDesktop.style.display='block'; betDivDesktop.style.display='none'; });
-            tabBetDesktop.addEventListener('click',()=>{ resultDivDesktop.style.display='none'; depositDivDesktop.style.display='none'; betDivDesktop.style.display='block'; });
+            function setActiveTabDesktop(activeTab) {
+                [tabResultDesktop, tabDepositDesktop, tabBetDesktop].forEach(tab => tab.classList.remove('active-tab'));
+                activeTab.classList.add('active-tab');
+            }
+            tabResultDesktop.addEventListener('click',()=>{ resultDivDesktop.style.display='block'; depositDivDesktop.style.display='none'; betDivDesktop.style.display='none'; setActiveTabDesktop(tabResultDesktop); });
+            tabDepositDesktop.addEventListener('click',()=>{ resultDivDesktop.style.display='none'; depositDivDesktop.style.display='block'; betDivDesktop.style.display='none'; setActiveTabDesktop(tabDepositDesktop); });
+            tabBetDesktop.addEventListener('click',()=>{ resultDivDesktop.style.display='none'; depositDivDesktop.style.display='none'; betDivDesktop.style.display='block'; setActiveTabDesktop(tabBetDesktop); });
+            setActiveTabDesktop(tabResultDesktop);
         }
         
         let histVisible=true;
@@ -1001,7 +1044,6 @@
         if(toggleHistoryBtn) toggleHistoryBtn.addEventListener('click',toggleHistory);
         if(toggleHistoryBtnDesktop) toggleHistoryBtnDesktop.addEventListener('click',toggleHistory);
         
-        // Deposit Modal
         const depositModal = document.getElementById('depositModal');
         const confirmAdminModal = document.getElementById('confirmAdminModal');
         const adminHistoryModal = document.getElementById('adminHistoryModal');
