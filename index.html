@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* ===== ORIGINAL CSS RETAINED ===== */
+        /* ===== COMPLETE CSS RETAINED ===== */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Battambang', 'Poppins', sans-serif; }
         body { background: linear-gradient(180deg, #0a0a2a 0%, #12123a 100%); color: #ffffff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
         .container { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 28px; width: 100%; max-width: 500px; padding: 20px 16px; box-shadow: 0 25px 45px rgba(0,0,0,0.3); text-align: center; transition: all 0.3s ease; margin: 0 auto; }
@@ -312,7 +312,7 @@
             const timeText = secAgo < 60 ? `${secAgo} វិនាទី` : `${Math.floor(secAgo/60)} នាទី`;
             html += `<tr><td>${i+1}</td><td>${u.deviceName}</td><td>${u.ip}</td><td style="font-size:0.6rem">${timeText} មុន</td><td class="${u.status === 'online' ? 'status-online' : 'status-offline'}">${u.status === 'online' ? '🟢 Online' : '🔴 Offline'}</td></tr>`;
         });
-        if(!userSessions.length) html = '<tr><td colspan="5" style="text-align:center;padding:20px">គ្មានអ្នកប្រើប្រាស់</td></tr>';
+        if(!userSessions.length) html = '<tr><td colspan="5" style="text-align:center;padding:20px">គ្មានអ្នកប្រើប្រាស់</tr>';
         tbody.innerHTML = html;
     }
     
@@ -330,7 +330,10 @@
     
     function playBeep(freq, dur) { if(!soundEnabled) return; try { if(!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); const osc = audioContext.createOscillator(), gain = audioContext.createGain(); osc.connect(gain); gain.connect(audioContext.destination); osc.type = 'sine'; osc.frequency.value = freq; gain.gain.value = 0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + dur); setTimeout(() => osc.stop(), dur * 1000); } catch(e){} }
     function playCountdownAlert() { playBeep(880,0.2); setTimeout(()=>playBeep(880,0.2),250); setTimeout(()=>playBeep(660,0.3),500); }
-    function startCountdownBlink() { ['countdownBox','countdownBoxDesktop'].forEach(id => { const box = document.getElementById(id); if(box) { box.classList.add('blink'); setTimeout(()=>box.classList.remove('blink'),1500); } }); }
+    function startCountdownBlink() { 
+        const boxes = ['countdownBox', 'countdownBoxDesktop'];
+        boxes.forEach(id => { const box = document.getElementById(id); if(box) { box.classList.add('blink'); setTimeout(()=>{ if(box) box.classList.remove('blink'); }, 1500); } });
+    }
     function showToast(msg) { const toast = document.createElement('div'); toast.className = 'notification-toast'; toast.innerHTML = msg; document.body.appendChild(toast); setTimeout(()=>toast.remove(),3000); }
     function playSound(win) { if(!soundEnabled) return; try { if(!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); const osc = audioContext.createOscillator(), gain = audioContext.createGain(); osc.connect(gain); gain.connect(audioContext.destination); osc.type = 'sine'; if(win===true){ osc.frequency.value=880; gain.gain.value=0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001,audioContext.currentTime+0.6); setTimeout(()=>osc.stop(),600); } else if(win===false){ osc.frequency.value=440; gain.gain.value=0.2; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001,audioContext.currentTime+0.5); setTimeout(()=>osc.stop(),500); } else { osc.frequency.value=660; gain.gain.value=0.15; osc.start(); gain.gain.exponentialRampToValueAtTime(0.00001,audioContext.currentTime+0.3); setTimeout(()=>osc.stop(),300); } } catch(e){} }
     function formatDateTime(d) { return `${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`; }
@@ -393,20 +396,55 @@
         else if(sec!==3 && sec!==2 && sec!==1){if(sec<3)lastAlertSecond=-1;}
     }
     
+    // ========== FIXED: Bet History for Player Page ==========
     function renderBetHistory(){
-        const containers=['betList','betListDesktop'];let html="";
-        if(betHistory.length===0){html='<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិទស្សន៍ទាយ</div>';}
-        else{betHistory.slice(0,50).forEach(b=>{let statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ');let color=b.status==='win'?'#4ade80':(b.status==='lose'?'#fc8181':'#f6ad55');let amountText=`$${b.amount.toFixed(2)}`;if(b.status==='win') amountText=`+$${(b.amount + b.reward).toFixed(2)} (ភ្នាល់ $${b.amount.toFixed(2)} + រង្វាន់ $${b.reward.toFixed(2)})`;else if(b.status==='lose') amountText=`-$${b.amount.toFixed(2)}`;html+=`<div class="history-item"><div><strong>🎯 ${b.picked}</strong><div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div><div style="font-size:0.6rem; color:#aaa;">⏰ ${currentLang==='km'?'ម៉ោងគោលដៅ':'Target Hour'}: ${formatHour(b.targetHour)}</div></div><div style="color:${color}; text-align:right;">${statusText}<br>${amountText}</div></div>`;});}
-        containers.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+        const containers = ['betList', 'betListDesktop'];
+        let html = "";
+        if(betHistory.length === 0){
+            html = '<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិទស្សន៍ទាយ</div>';
+        } else {
+            betHistory.slice(0, 100).forEach(b => {
+                let statusText = b.status === 'win' ? 'ឈ្នះ' : (b.status === 'lose' ? 'ចាញ់' : 'កំពុងរង់ចាំ');
+                let color = b.status === 'win' ? '#4ade80' : (b.status === 'lose' ? '#fc8181' : '#f6ad55');
+                let amountText = `$${b.amount.toFixed(2)}`;
+                if(b.status === 'win') amountText = `+$${(b.amount + b.reward).toFixed(2)} (ភ្នាល់ $${b.amount.toFixed(2)} + រង្វាន់ $${b.reward.toFixed(2)})`;
+                else if(b.status === 'lose') amountText = `-$${b.amount.toFixed(2)}`;
+                
+                let resultHtml = "";
+                if(b.resultZodiac) {
+                    resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">📊 លទ្ធផល: ${b.resultIcon} ${b.resultZodiac} (${b.resultOrder})</div>`;
+                } else if(b.status === 'pending') {
+                    resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">⏰ កំពុងរង់ចាំលទ្ធផលម៉ោង ${formatHour(b.targetHour)}...</div>`;
+                }
+                
+                html += `<div class="history-item" style="flex-direction:column; align-items:flex-start;">
+                            <div style="display:flex; justify-content:space-between; width:100%;">
+                                <div><strong>🎯 ${b.picked}</strong><div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div></div>
+                                <div style="color:${color}; text-align:right;">${statusText}<br>${amountText}</div>
+                            </div>
+                            <div style="font-size:0.7rem; margin-top:4px;">🎲 ${currentLang==='km'?'ភ្នាល់សម្រាប់ម៉ោង':'Bet for hour'}: <strong>${formatHour(b.targetHour)}</strong></div>
+                            ${resultHtml}
+                        </div>`;
+            });
+        }
+        containers.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = html; });
     }
     
+    // ========== FIXED: Deposit History for Player Page ==========
     function renderDepositHistory(){
-        const containers=['depositList','depositListDesktop'];let html="";
-        if(depositHistory.length===0){html='<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិបញ្ចូលលុយ</div>';}
-        else{depositHistory.slice(0,30).forEach(d=>{html+=`<div class="history-item"><div>📥 ${d.date}</div><div style="color:#4ade80">+$${d.amount.toFixed(2)}</div></div>`;});}
-        containers.forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html;});
+        const containers = ['depositList', 'depositListDesktop'];
+        let html = "";
+        if(depositHistory.length === 0){
+            html = '<div style="text-align:center;padding:15px;color:#aaa">គ្មានប្រវត្តិបញ្ចូលលុយ</div>';
+        } else {
+            depositHistory.slice(0, 50).forEach(d => {
+                html += `<div class="history-item"><div>📥 ${d.date}</div><div style="color:#4ade80">+$${d.amount.toFixed(2)}</div></div>`;
+            });
+        }
+        containers.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = html; });
     }
     
+    // ========== Admin Bet Table ==========
     function renderAdminBetsTable(){
         let filterZodiac=document.getElementById('filterZodiac')?document.getElementById('filterZodiac').value.toLowerCase():'';
         let filterStatus=document.getElementById('filterStatus')?document.getElementById('filterStatus').value:'all';
@@ -418,7 +456,7 @@
         document.getElementById('summaryTotalLossesFiltered').innerHTML='$'+totalLossesAmt.toFixed(2);
         document.getElementById('summaryTotalRewardsFiltered').innerHTML='$'+totalRewards.toFixed(2);
         let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}</td><td style="font-size:0.65rem">${b.date}</td><td>${b.picked}</td><td>$${b.amount.toFixed(2)}</td><td>${formatHour(b.targetHour)}</td><td class="${statusClass}">${statusText}</td><td class="${statusClass}">${rewardText}</td><td style="font-size:0.65rem">${resultText}</td></tr>`;});
-        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យ</td></tr>';
+        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យ</tr>';
         document.getElementById('adminBetsTableBody').innerHTML=html;
     }
     
