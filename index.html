@@ -57,11 +57,7 @@
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
         .tabs { display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 4px; border-radius: 40px; flex-wrap: wrap; }
         .tab { padding: 5px 12px; border-radius: 30px; font-size: 0.7rem; cursor: pointer; background: transparent; border: none; color: #aaa; transition: all 0.2s ease; }
-        /* REMOVED BLUE COLOR - Now no background color on active tab */
-        .tab.active-tab {
-            color: #4ade80 !important;
-            font-weight: bold;
-        }
+        .tab.active-tab { color: #4ade80 !important; font-weight: bold; }
         .toggle-history { background: rgba(255,255,255,0.1); border: none; padding: 5px 12px; border-radius: 30px; color: white; cursor: pointer; font-size: 0.7rem; }
         .history-box { background: rgba(0,0,0,0.2); border-radius: 16px; padding: 12px; max-height: 350px; overflow-y: auto; }
         .time-item, .history-item { background: rgba(255,255,255,0.03); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
@@ -319,7 +315,7 @@
         userSessions.slice(0, 30).forEach((u, i) => {
             const lastSeen = new Date(u.lastSeen); const secAgo = Math.floor((new Date() - lastSeen) / 1000);
             const timeText = secAgo < 60 ? `${secAgo} វិនាទី` : `${Math.floor(secAgo/60)} នាទី`;
-            html += `<tr><td>${i+1}</td><td>${u.deviceName}</td><td>${u.ip}</td><td style="font-size:0.6rem">${timeText} មុន</td><td class="${u.status === 'online' ? 'status-online' : 'status-offline'}">${u.status === 'online' ? '🟢 Online' : '🔴 Offline'}</td></tr>`;
+            html += `<tr><td>${i+1}NonNull<td>${u.deviceName}NonNull<td>${u.ip}NonNull<td style="font-size:0.6rem">${timeText} មុន</td><td class="${u.status === 'online' ? 'status-online' : 'status-offline'}">${u.status === 'online' ? '🟢 Online' : '🔴 Offline'}</td></tr>`;
         });
         if(!userSessions.length) html = '<tr><td colspan="5" style="text-align:center;padding:20px">គ្មានអ្នកប្រើប្រាស់</td></tr>';
         tbody.innerHTML = html;
@@ -432,6 +428,7 @@
         userBalanceSpans.forEach(el => { if(el) el.innerText = currentBalance.toFixed(2); });
     }
     
+    // ==================== Bet History with Result Announcement Date ====================
     function renderBetHistory(){
         const containers = ['betList', 'betListDesktop'];
         let html = "";
@@ -447,15 +444,16 @@
                 
                 let resultHtml = "";
                 if(b.resultZodiac) {
-                    const announceDate = b.resultAnnounceDate ? ` | 📢 ${b.resultAnnounceDate}` : '';
-                    resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">📊 លទ្ធផល: ${b.resultIcon || ''} ${b.resultZodiac} (${b.resultOrder || ''})${announceDate}</div>`;
+                    // Show result announcement date if available
+                    const announceDate = b.resultAnnounceDate ? `<div style="font-size:0.6rem; color:#aaa; margin-top:4px;">📢 ប្រកាសលទ្ធផលនៅ: ${b.resultAnnounceDate}</div>` : '';
+                    resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">📊 លទ្ធផល: ${b.resultIcon || ''} ${b.resultZodiac} (${b.resultOrder || ''})</div>${announceDate}`;
                 } else if(b.status === 'pending') {
                     resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">⏰ កំពុងរង់ចាំលទ្ធផលម៉ោង ${formatHour(b.targetHour)}...</div>`;
                 }
                 
                 html += `<div class="history-item" style="flex-direction:column; align-items:flex-start;">
                             <div style="display:flex; justify-content:space-between; width:100%;">
-                                <div><strong>🎯 ${b.picked}</strong><div style="font-size:0.6rem; color:#aaa;">📅 ${b.date}</div></div>
+                                <div><strong>🎯 ${b.picked}</strong><div style="font-size:0.6rem; color:#aaa;">📅 ភ្នាល់នៅ: ${b.date}</div></div>
                                 <div style="color:${color}; text-align:right;">${statusText}<br>${amountText}</div>
                             </div>
                             <div style="font-size:0.7rem; margin-top:4px;">🎲 ${currentLang==='km'?'ភ្នាល់សម្រាប់ម៉ោង':'Bet for hour'}: <strong>${formatHour(b.targetHour)}</strong></div>
@@ -495,8 +493,8 @@
         if(summaryTotalWins) summaryTotalWins.innerHTML='$'+totalWinsAmt.toFixed(2);
         if(summaryTotalLosses) summaryTotalLosses.innerHTML='$'+totalLossesAmt.toFixed(2);
         if(summaryTotalRewards) summaryTotalRewards.innerHTML='$'+totalRewards.toFixed(2);
-        let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}</td><td style="font-size:0.65rem">${b.date}</td><td>${b.picked}</td><td>$${b.amount.toFixed(2)}</td><td>${formatHour(b.targetHour)}</td><td class="${statusClass}">${statusText}</td><td class="${statusClass}">${rewardText}</td><td style="font-size:0.65rem">${resultText}</td></tr>`;});
-        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យ</tr>';
+        let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}NonNull<td style="font-size:0.65rem">${b.date}</td><td>${b.picked}</td><td>$${b.amount.toFixed(2)}</td><td>${formatHour(b.targetHour)}</td><td class="${statusClass}">${statusText}</td><td class="${statusClass}">${rewardText}</td><td style="font-size:0.65rem">${resultText}</td></tr>`;});
+        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យ</td></tr>';
         const adminBetsTableBody = document.getElementById('adminBetsTableBody');
         if(adminBetsTableBody) adminBetsTableBody.innerHTML=html;
     }
@@ -600,6 +598,7 @@
         if(liveClockDesktop) liveClockDesktop.innerHTML=clock;
     }
     
+    // ==================== settleBets with Result Announcement Date ====================
     function settleBets(currentHour, currentDate, currentSeconds){
         if(currentSeconds === 1){
             const nums = generateNumbers(currentDate);
@@ -1001,7 +1000,7 @@
         const refreshBetsBtn = document.getElementById('refreshBetsBtn');
         if(refreshBetsBtn) refreshBetsBtn.addEventListener('click',()=>{renderAdminBetsTable();showToast('បានធ្វើឲ្យតារាងភ្នាល់ស្រស់');});
         
-        // Tab setup for Mobile - NO BLUE BACKGROUND
+        // Tab setup for Mobile
         const tabResult = document.getElementById('tabResult');
         const tabDeposit = document.getElementById('tabDeposit');
         const tabBet = document.getElementById('tabBet');
@@ -1019,7 +1018,7 @@
             setActiveTab(tabResult);
         }
         
-        // Tab setup for Desktop - NO BLUE BACKGROUND
+        // Tab setup for Desktop
         const tabResultDesktop = document.getElementById('tabResultDesktop');
         const tabDepositDesktop = document.getElementById('tabDepositDesktop');
         const tabBetDesktop = document.getElementById('tabBetDesktop');
