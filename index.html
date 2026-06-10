@@ -3,1057 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SocialScheduler Pro | កំណត់ពេលបង្ហោះលើបណ្តាញសង្គមទាំងអស់</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>គេហទំព័ររបស់ខ្ញុំ</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #1a1a2e;
         }
-
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
+        
+        .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 20px;
         }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        
+        header {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .logo i {
-            background: none;
-            -webkit-text-fill-color: #667eea;
-            margin-right: 8px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
+        
+        nav a {
+            margin: 0 15px;
             text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: color 0.3s;
+            color: #667eea;
+            font-weight: bold;
             cursor: pointer;
         }
-
-        .nav-links a:hover {
-            color: #667eea;
-        }
-
-        .btn-nav {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white !important;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
-        }
-
-        .hero {
-            padding: 120px 2rem 60px;
-            text-align: center;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            font-weight: 800;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-
-        .cta-button {
+        
+        .page {
+            display: none;
             background: white;
-            color: #667eea;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin: 0 0.5rem;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 500px;
         }
-
-        .cta-button:hover {
+        
+        .active-page {
+            display: block;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-
-        .cta-button-outline {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
-
-        .pricing {
+        
+        .card {
             background: #f7fafc;
-            padding: 60px 2rem;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: #1a1a2e;
-        }
-
-        .pricing-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .pricing-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .pricing-card.popular {
-            border: 2px solid #667eea;
-            position: relative;
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #667eea;
-            color: white;
-            padding: 0.25rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .price {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #667eea;
-            margin: 1rem 0;
-        }
-
-        .price span {
-            font-size: 1rem;
-            color: #718096;
-        }
-
-        .features {
-            list-style: none;
-            margin: 2rem 0;
-        }
-
-        .features li {
-            padding: 0.5rem 0;
-            color: #4a5568;
-        }
-
-        .features i {
-            color: #48bb78;
-            margin-right: 0.5rem;
-        }
-
-        .pricing-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
+        
+        input, textarea {
             width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
-
-        .dashboard {
-            display: none;
+        
+        .todo-item {
             background: #f7fafc;
-            min-height: 100vh;
-            padding-top: 80px;
-        }
-
-        .dashboard-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .dashboard-header {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
         }
-
-        .welcome-badge {
-            background: white;
-            padding: 0.5rem 1rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        
+        .delete-btn {
+            background: #dc2626;
+            padding: 5px 10px;
+            font-size: 12px;
         }
-
-        .create-post-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #667eea;
-        }
-
-        .stat-label {
-            color: #718096;
-            margin-top: 0.5rem;
-        }
-
-        .posts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .post-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s;
-        }
-
-        .post-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .post-platforms {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .platform-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .platform-fb { background: #1877f2; }
-        .platform-ig { background: #e4405f; }
-        .platform-tw { background: #1da1f2; }
-        .platform-li { background: #0077b5; }
-        .platform-tt { background: #000000; }
-        .platform-pt { background: #bd081c; }
-        .platform-yt { background: #ff0000; }
-        .platform-tg { background: #0088cc; }
-        .platform-sc { background: #fffc00; color: #000; }
-        .platform-rd { background: #ff4500; }
-
-        .post-content {
-            color: #2d3748;
-            margin: 1rem 0;
-            line-height: 1.5;
-        }
-
-        .post-schedule {
-            font-size: 0.85rem;
-            color: #718096;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e2e8f0;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .status-scheduled { background: #fef3c7; color: #d97706; }
-        .status-published { background: #d1fae5; color: #059669; }
-        .status-failed { background: #fee2e2; color: #dc2626; }
-
-        .delete-post {
-            background: none;
-            border: none;
-            color: #dc2626;
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0.25rem;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-content h3 {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-group textarea,
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            font-family: inherit;
-        }
-
-        .platform-checkbox {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 0.75rem;
-        }
-
-        .platform-checkbox label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: normal;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .platform-checkbox label:hover {
-            background: #f7fafc;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 0.75rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .btn-submit {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-        }
-
-        .btn-cancel {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-
-        .auth-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .auth-box {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-        }
-
-        .auth-box h2 {
+        
+        footer {
             text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .auth-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-        }
-
-        .auth-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 20px;
             color: white;
-            border: none;
-            padding: 0.75rem;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
+            margin-top: 30px;
         }
-
-        .auth-link {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .footer {
-            background: #1a1a2e;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .platforms-showcase {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 1000px;
-        }
-
-        .platforms-showcase h3 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .platforms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 1rem;
-            text-align: center;
-        }
-
-        .platform-item {
-            padding: 0.75rem;
-            border-radius: 10px;
-            background: #f7fafc;
-            transition: transform 0.3s;
-        }
-
-        .platform-item:hover {
-            transform: translateY(-3px);
-        }
-
-        .platform-item i {
-            font-size: 1.5rem;
-            margin-bottom: 0.25rem;
-            display: block;
-        }
-
+        
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2rem; }
-            .nav-links { gap: 1rem; }
-            .nav-links a { font-size: 0.85rem; }
-            .platform-checkbox { grid-template-columns: repeat(2, 1fr); }
+            nav a {
+                display: inline-block;
+                margin: 5px;
+                font-size: 14px;
+            }
+            .container {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <nav>
+                <a onclick="showPage('home')">🏠 ទំព័រដើម</a>
+                <a onclick="showPage('about')">📖 អំពីយើង</a>
+                <a onclick="showPage('todo')">✅ កិច្ចការ</a>
+                <a onclick="showPage('contact')">📞 ទំនាក់ទំនង</a>
+                <a onclick="showPage('settings')">⚙️ កំណត់</a>
+            </nav>
+        </header>
 
-<nav class="navbar" id="navbar">
-    <div class="nav-container">
-        <div class="logo">
-            <i class="fas fa-calendar-alt"></i>
-            SocialScheduler Pro
-        </div>
-        <div class="nav-links" id="navLinks">
-            <a onclick="showSection('home')">ទំព័រដើម</a>
-            <a onclick="showSection('pricing')">តម្លៃ</a>
-            <a id="dashboardNavLink" style="display: none;" onclick="showDashboard()">Dashboard</a>
-            <a id="loginNavBtn" onclick="showAuth('login')">ចូលប្រើ</a>
-            <a id="registerNavBtn" onclick="showAuth('register')">ចុះឈ្មោះ</a>
-            <a id="logoutNavBtn" style="display: none;" onclick="logout()">ចាកចេញ</a>
-        </div>
-    </div>
-</nav>
-
-<section id="homeSection" class="hero">
-    <h1>គ្រប់គ្រងបណ្តាញសង្គមទាំងអស់<br>នៅកន្លែងតែមួយ</h1>
-    <p>កំណត់ពេលបង្ហោះលើបណ្តាញសង្គមជាង 10+ ដោយស្វ័យប្រវត្តិ និងសន្សំពេលវេលារបស់អ្នក</p>
-    <div>
-        <button class="cta-button" onclick="showAuth('register')">ចាប់ផ្តើមឥឡូវនេះ</button>
-        <button class="cta-button cta-button-outline" onclick="showSection('pricing')">មើលតម្លៃ</button>
-    </div>
-
-    <div class="platforms-showcase">
-        <h3><i class="fas fa-share-alt"></i> បណ្តាញសង្គមដែលគាំទ្រ</h3>
-        <div class="platforms-grid">
-            <div class="platform-item"><i class="fab fa-facebook" style="color:#1877f2"></i> Facebook</div>
-            <div class="platform-item"><i class="fab fa-instagram" style="color:#e4405f"></i> Instagram</div>
-            <div class="platform-item"><i class="fab fa-twitter" style="color:#1da1f2"></i> Twitter/X</div>
-            <div class="platform-item"><i class="fab fa-linkedin" style="color:#0077b5"></i> LinkedIn</div>
-            <div class="platform-item"><i class="fab fa-tiktok" style="color:#000"></i> TikTok</div>
-            <div class="platform-item"><i class="fab fa-pinterest" style="color:#bd081c"></i> Pinterest</div>
-            <div class="platform-item"><i class="fab fa-youtube" style="color:#ff0000"></i> YouTube</div>
-            <div class="platform-item"><i class="fab fa-telegram" style="color:#0088cc"></i> Telegram</div>
-            <div class="platform-item"><i class="fab fa-snapchat" style="color:#fffc00"></i> Snapchat</div>
-            <div class="platform-item"><i class="fab fa-reddit" style="color:#ff4500"></i> Reddit</div>
-        </div>
-    </div>
-</section>
-
-<section id="pricingSection" class="pricing" style="display: none;">
-    <h2 class="section-title">ជ្រើសរើសកញ្ចប់សេវាកម្មរបស់អ្នក</h2>
-    <div class="pricing-grid">
-        <div class="pricing-card">
-            <h3>ឥតគិតថ្លៃ</h3>
-            <div class="price">$0<span>/ខែ</span></div>
-            <ul class="features">
-                <li><i class="fas fa-check"></i> 5 បង្ហោះ/ខែ</li>
-                <li><i class="fas fa-check"></i> 3 បណ្តាញសង្គម</li>
-                <li><i class="fas fa-check"></i> កំណត់ពេលមូលដ្ឋាន</li>
-                <li><i class="fas fa-times" style="color: #dc2626;"></i> ពុំមានការវិភាគ</li>
-            </ul>
-            <button class="pricing-btn" onclick="showAuth('register')">ចាប់ផ្តើម</button>
-        </div>
-
-        <div class="pricing-card popular">
-            <div class="popular-badge">ពេញនិយមបំផុត</div>
-            <h3>ប្រូ</h3>
-            <div class="price">$15<span>/ខែ</span></div>
-            <ul class="features">
-                <li><i class="fas fa-check"></i> គ្មានដែនកំណត់បង្ហោះ</li>
-                <li><i class="fas fa-check"></i> 10+ បណ្តាញសង្គមទាំងអស់</li>
-                <li><i class="fas fa-check"></i> កំណត់ពេលកម្រិតខ្ពស់</li>
-                <li><i class="fas fa-check"></i> របាយការណ៍វិភាគលម្អិត</li>
-                <li><i class="fas fa-check"></i> គាំទ្រអាទិភាព</li>
-            </ul>
-            <button class="pricing-btn" onclick="showAuth('register')">សាកល្បងឥឡូវ</button>
-        </div>
-
-        <div class="pricing-card">
-            <h3>អាជីវកម្ម</h3>
-            <div class="price">$49<span>/ខែ</span></div>
-            <ul class="features">
-                <li><i class="fas fa-check"></i> មុខងារប្រូទាំងអស់</li>
-                <li><i class="fas fa-check"></i> គ្រប់គ្រងក្រុមគ្មានដែនកំណត់</li>
-                <li><i class="fas fa-check"></i> API សម្រាប់អភិវឌ្ឍន៍</li>
-                <li><i class="fas fa-check"></i> គាំទ្រ 24/7</li>
-            </ul>
-            <button class="pricing-btn" onclick="showAuth('register')">ទាក់ទងពាណិជ្ជកម្ម</button>
-        </div>
-    </div>
-</section>
-
-<section id="dashboardSection" class="dashboard">
-    <div class="dashboard-container">
-        <div class="dashboard-header">
-            <div class="welcome-badge">
-                <i class="fas fa-user-circle"></i> ស្វាគមន៍, <span id="userName">User</span>!
+        <!-- ទំព័រដើម -->
+        <div id="home" class="page active-page">
+            <h1>ស្វាគមន៍មកកាន់គេហទំព័ររបស់ខ្ញុំ!</h1>
+            <p>នេះជាគេហទំព័រដែលអ្នកអាចគ្រប់គ្រងបានយ៉ាងងាយស្រួល។</p>
+            
+            <div class="card">
+                <h3>📊 ស្ថិតិគេហទំព័រ</h3>
+                <p>ចំនួនអ្នកទស្សនា: <span id="visitorCount">0</span></p>
+                <p>ទំព័របច្ចុប្បន្ន: ទំព័រដើម</p>
+                <button onclick="updateVisitorCount()">ធ្វើបច្ចុប្បន្នភាព</button>
             </div>
-            <div class="welcome-badge">
-                <i class="fas fa-tag"></i> កញ្ចប់: <span id="userPlan">ឥតគិតថ្លៃ</span>
-            </div>
-            <button class="create-post-btn" onclick="openPostModal()">
-                <i class="fas fa-plus"></i> បង្កើតការបង្ហោះថ្មី
-            </button>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="totalPosts">0</div>
-                <div class="stat-label">សរុបការបង្ហោះ</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="publishedPosts">0</div>
-                <div class="stat-label">បានបង្ហោះរួច</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="scheduledPosts">0</div>
-                <div class="stat-label">កំពុងរង់ចាំ</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="engagementRate">0</div>
-                <div class="stat-label">ការចូលរួម (%)</div>
+            
+            <div class="card">
+                <h3>🎯 អ្វីដែលអ្នកអាចធ្វើបាន</h3>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✅ បង្កើត និងគ្រប់គ្រងកិច្ចការ</li>
+                    <li>✅ ផ្លាស់ប្តូរពណ៌គេហទំព័រ</li>
+                    <li>✅ រក្សាទុកទិន្នន័យដោយស្វ័យប្រវត្តិ</li>
+                    <li>✅ ប្រើប្រាស់បានគ្រប់ទូរស័ព្ទ កុំព្យូទ័រ</li>
+                </ul>
             </div>
         </div>
 
-        <div class="posts-grid" id="postsGrid"></div>
-    </div>
-</section>
-
-<div id="authSection" class="auth-container" style="display: none;">
-    <div class="auth-box">
-        <h2 id="authTitle">ចូលប្រើប្រាស់</h2>
-        <input type="text" id="authEmail" class="auth-input" placeholder="អ៊ីមែល">
-        <input type="password" id="authPassword" class="auth-input" placeholder="ពាក្យសម្ងាត់">
-        <input type="text" id="authName" class="auth-input" placeholder="ឈ្មោះពេញ" style="display: none;">
-        <button class="auth-btn" id="authSubmitBtn" onclick="handleAuth()">ចូលប្រើ</button>
-        <div class="auth-link">
-            <a href="#" id="toggleAuthLink" onclick="toggleAuthMode()">មិនទាន់មានគណនី? ចុះឈ្មោះ</a>
-        </div>
-    </div>
-</div>
-
-<div id="postModal" class="modal">
-    <div class="modal-content">
-        <h3><i class="fas fa-plus-circle"></i> បង្កើតការបង្ហោះថ្មី</h3>
-        <div class="form-group">
-            <label>ខ្លឹមសារ</label>
-            <textarea id="postContent" rows="4" placeholder="សរសេរអ្វីដែលអ្នកចង់បង្ហោះ..."></textarea>
-        </div>
-        <div class="form-group">
-            <label>ជ្រើសរើសបណ្តាញសង្គម (អាចជ្រើសច្រើន)</label>
-            <div class="platform-checkbox" id="platformCheckboxGroup">
-                <label><input type="checkbox" value="facebook"> <i class="fab fa-facebook"></i> Facebook</label>
-                <label><input type="checkbox" value="instagram"> <i class="fab fa-instagram"></i> Instagram</label>
-                <label><input type="checkbox" value="twitter"> <i class="fab fa-twitter"></i> Twitter/X</label>
-                <label><input type="checkbox" value="linkedin"> <i class="fab fa-linkedin"></i> LinkedIn</label>
-                <label><input type="checkbox" value="tiktok"> <i class="fab fa-tiktok"></i> TikTok</label>
-                <label><input type="checkbox" value="pinterest"> <i class="fab fa-pinterest"></i> Pinterest</label>
-                <label><input type="checkbox" value="youtube"> <i class="fab fa-youtube"></i> YouTube</label>
-                <label><input type="checkbox" value="telegram"> <i class="fab fa-telegram"></i> Telegram</label>
-                <label><input type="checkbox" value="snapchat"> <i class="fab fa-snapchat"></i> Snapchat</label>
-                <label><input type="checkbox" value="reddit"> <i class="fab fa-reddit"></i> Reddit</label>
+        <!-- ទំព័រអំពីយើង -->
+        <div id="about" class="page">
+            <h1>📖 អំពីគេហទំព័រនេះ</h1>
+            <p>គេហទំព័រនេះត្រូវបានបង្កើតឡើងដើម្បីជួយអ្នកគ្រប់គ្រងការងារប្រចាំថ្ងៃបានយ៉ាងងាយស្រួល និងមានប្រសិទ្ធភាព។</p>
+            
+            <div class="card">
+                <h3>✨ លក្ខណៈពិសេស</h3>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✔️ គ្រប់គ្រងកិច្ចការ To-Do List</li>
+                    <li>✔️ ផ្លាស់ប្តូរពណ៌តាមចិត្ត</li>
+                    <li>✔️ រក្សាទុកទិន្នន័យក្នុង Browser</li>
+                    <li>✔️ ប្រើប្រាស់បានគ្រប់ពេលវេលា</li>
+                </ul>
             </div>
         </div>
-        <div class="form-group">
-            <label>កាលបរិច្ឆេទ និងពេលវេលា</label>
-            <input type="datetime-local" id="postScheduleTime">
+
+        <!-- ទំព័រកិច្ចការ -->
+        <div id="todo" class="page">
+            <h1>✅ បញ្ជីកិច្ចការ</h1>
+            <p>បន្ថែមកិច្ចការដែលអ្នកត្រូវធ្វើនៅថ្ងៃនេះ៖</p>
+            
+            <div class="card">
+                <input type="text" id="todoInput" placeholder="បញ្ចូលកិច្ចការ...">
+                <button onclick="addTodo()">+ បន្ថែមកិច្ចការ</button>
+                <div id="todoList"></div>
+            </div>
         </div>
-        <div class="modal-buttons">
-            <button class="btn-cancel" onclick="closePostModal()">បោះបង់</button>
-            <button class="btn-submit" onclick="createPost()">កំណត់ពេលបង្ហោះ</button>
+
+        <!-- ទំព័រទំនាក់ទំនង -->
+        <div id="contact" class="page">
+            <h1>📞 ទំនាក់ទំនងមកកាន់យើង</h1>
+            <p>ទុកសាររបស់អ្នកមកកាន់យើងខ្ញុំ៖</p>
+            
+            <div class="card">
+                <input type="text" id="contactName" placeholder="ឈ្មោះរបស់អ្នក">
+                <input type="email" id="contactEmail" placeholder="អ៊ីមែល">
+                <textarea id="contactMessage" rows="5" placeholder="សាររបស់អ្នក..."></textarea>
+                <button onclick="sendMessage()">📤 ផ្ញើសារ</button>
+                <div id="messageStatus"></div>
+            </div>
         </div>
+
+        <!-- ទំព័រកំណត់ -->
+        <div id="settings" class="page">
+            <h1>⚙️ កំណត់គេហទំព័រ</h1>
+            
+            <div class="card">
+                <h3>🎨 ផ្លាស់ប្តូរពណ៌គេហទំព័រ</h3>
+                <input type="color" id="colorPicker" value="#667eea">
+                <button onclick="changeColor()">អនុវត្ត</button>
+            </div>
+            
+            <div class="card">
+                <h3>💾 គ្រប់គ្រងទិន្នន័យ</h3>
+                <button onclick="exportData()">📥 នាំចេញទិន្នន័យ</button>
+                <button onclick="clearAllData()" style="background: #dc2626;">🗑️ សម្អាតទិន្នន័យទាំងអស់</button>
+            </div>
+            
+            <div class="card">
+                <h3>ℹ️ ព័ត៌មានប្រព័ន្ធ</h3>
+                <p>កំណែ: 1.0.0</p>
+                <p>ទំហំផ្ទុក: <span id="storageSize">0</span> KB</p>
+                <p>បង្កើតដោយ: ប្រព័ន្ធគ្រប់គ្រងគេហទំព័រ</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 គេហទំព័ររបស់ខ្ញុំ | បង្កើតដោយឥតគិតថ្លៃ</p>
+        </footer>
     </div>
-</div>
 
-<footer class="footer">
-    <p>&copy; 2024 SocialScheduler Pro. All rights reserved.</p>
-    <p style="margin-top: 0.5rem; opacity: 0.7;">គ្រប់គ្រងបណ្តាញសង្គមរបស់អ្នកប្រកបដោយវិជ្ជាជីវៈ</p>
-</footer>
-
-<script>
-    let currentUser = null;
-    let allPosts = [];
-
-    function loadData() {
-        const users = JSON.parse(localStorage.getItem('social_users') || '[]');
-        const posts = JSON.parse(localStorage.getItem('social_posts') || '[]');
-        allPosts = posts;
+    <script>
+        // ផ្ទុកទិន្នន័យ
+        let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+        let visitorCount = localStorage.getItem('visitorCount') || 0;
         
-        const savedUser = localStorage.getItem('social_current_user');
-        if (savedUser) {
-            currentUser = JSON.parse(savedUser);
-            updateUIForLoggedInUser();
+        // បង្ហាញទំព័រ
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            document.getElementById(pageId).classList.add('active-page');
+            
+            if (pageId === 'todo') renderTodos();
         }
-    }
-
-    function saveUsers(users) {
-        localStorage.setItem('social_users', JSON.stringify(users));
-    }
-
-    function savePosts() {
-        localStorage.setItem('social_posts', JSON.stringify(allPosts));
-    }
-
-    function checkAndPublishPosts() {
-        const now = new Date();
-        let updated = false;
         
-        allPosts.forEach(post => {
-            if (post.status === 'scheduled' && new Date(post.scheduleTime) <= now) {
-                post.status = 'published';
-                post.publishedAt = now.toISOString();
-                updated = true;
+        // បង្ហាញកិច្ចការ
+        function renderTodos() {
+            const todoList = document.getElementById('todoList');
+            if (todos.length === 0) {
+                todoList.innerHTML = '<p>គ្មានកិច្ចការ។ សូមបន្ថែមកិច្ចការថ្មី!</p>';
+                return;
             }
-        });
-        
-        if (updated) {
-            savePosts();
-            if (currentUser) renderDashboard();
-        }
-    }
-
-    function updateUIForLoggedInUser() {
-        if (currentUser) {
-            document.getElementById('loginNavBtn').style.display = 'none';
-            document.getElementById('registerNavBtn').style.display = 'none';
-            document.getElementById('logoutNavBtn').style.display = 'inline';
-            document.getElementById('dashboardNavLink').style.display = 'inline';
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userPlan').textContent = currentUser.plan || 'ឥតគិតថ្លៃ';
             
-            allPosts = allPosts.filter(p => p.userId === currentUser.id);
-            savePosts();
+            todoList.innerHTML = todos.map((todo, index) => `
+                <div class="todo-item">
+                    <span>${todo}</span>
+                    <button class="delete-btn" onclick="deleteTodo(${index})">លុប</button>
+                </div>
+            `).join('');
+        }
+        
+        // បន្ថែមកិច្ចការ
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const todo = input.value.trim();
+            if (todo) {
+                todos.push(todo);
+                localStorage.setItem('todos', JSON.stringify(todos));
+                renderTodos();
+                input.value = '';
+            }
+        }
+        
+        // លុបកិច្ចការ
+        function deleteTodo(index) {
+            todos.splice(index, 1);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        }
+        
+        // ផ្លាស់ប្តូរពណ៌
+        function changeColor() {
+            const color = document.getElementById('colorPicker').value;
+            document.body.style.background = `linear-gradient(135deg, ${color} 0%, #764ba2 100%)`;
+            localStorage.setItem('themeColor', color);
+        }
+        
+        // ផ្ញើសារ
+        function sendMessage() {
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const message = document.getElementById('contactMessage').value;
             
-            showDashboard();
-        } else {
-            document.getElementById('loginNavBtn').style.display = 'inline';
-            document.getElementById('registerNavBtn').style.display = 'inline';
-            document.getElementById('logoutNavBtn').style.display = 'none';
-            document.getElementById('dashboardNavLink').style.display = 'none';
-        }
-    }
-
-    function showSection(section) {
-        document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
-        document.getElementById('pricingSection').style.display = section === 'pricing' ? 'block' : 'none';
-        document.getElementById('dashboardSection').style.display = 'none';
-        document.getElementById('authSection').style.display = 'none';
-        if (section === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function showDashboard() {
-        if (!currentUser) {
-            showAuth('login');
-            return;
-        }
-        document.getElementById('homeSection').style.display = 'none';
-        document.getElementById('pricingSection').style.display = 'none';
-        document.getElementById('dashboardSection').style.display = 'block';
-        document.getElementById('authSection').style.display = 'none';
-        renderDashboard();
-        checkAndPublishPosts();
-        setInterval(checkAndPublishPosts, 60000);
-    }
-
-    function getPlatformIcon(platform) {
-        const icons = {
-            facebook: 'fab fa-facebook-f',
-            instagram: 'fab fa-instagram',
-            twitter: 'fab fa-twitter',
-            linkedin: 'fab fa-linkedin-in',
-            tiktok: 'fab fa-tiktok',
-            pinterest: 'fab fa-pinterest-p',
-            youtube: 'fab fa-youtube',
-            telegram: 'fab fa-telegram-plane',
-            snapchat: 'fab fa-snapchat-ghost',
-            reddit: 'fab fa-reddit-alien'
-        };
-        return icons[platform] || 'fab fa-share-alt';
-    }
-
-    function getPlatformColor(platform) {
-        const colors = {
-            facebook: '#1877f2',
-            instagram: '#e4405f',
-            twitter: '#1da1f2',
-            linkedin: '#0077b5',
-            tiktok: '#000000',
-            pinterest: '#bd081c',
-            youtube: '#ff0000',
-            telegram: '#0088cc',
-            snapchat: '#fffc00',
-            reddit: '#ff4500'
-        };
-        return colors[platform] || '#718096';
-    }
-
-    function renderDashboard() {
-        const userPosts = allPosts.filter(p => p.userId === currentUser.id);
-        const total = userPosts.length;
-        const published = userPosts.filter(p => p.status === 'published').length;
-        const scheduled = userPosts.filter(p => p.status === 'scheduled').length;
-        const engagement = published > 0 ? Math.floor(Math.random() * 30) + 50 : 0;
-        
-        document.getElementById('totalPosts').textContent = total;
-        document.getElementById('publishedPosts').textContent = published;
-        document.getElementById('scheduledPosts').textContent = scheduled;
-        document.getElementById('engagementRate').textContent = engagement;
-        
-        const postsGrid = document.getElementById('postsGrid');
-        if (userPosts.length === 0) {
-            postsGrid.innerHTML = '<div style="text-align: center; padding: 3rem; color: #718096;">អ្នកមិនទាន់មានការបង្ហោះណាមួយនៅឡើយទេ។ ចុចប៊ូតុង "បង្កើតការបង្ហោះថ្មី" ដើម្បីចាប់ផ្តើម!</div>';
-            return;
-        }
-        
-        postsGrid.innerHTML = userPosts.map(post => `
-            <div class="post-card">
-                <div class="post-platforms">
-                    ${post.platforms.map(p => `
-                        <div class="platform-icon" style="background: ${getPlatformColor(p)}">
-                            <i class="${getPlatformIcon(p)}"></i>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="post-content">${post.content.substring(0, 150)}${post.content.length > 150 ? '...' : ''}</div>
-                <div class="post-schedule">
-                    <span><i class="far fa-clock"></i> ${new Date(post.scheduleTime).toLocaleString()}</span>
-                    <span class="status-badge status-${post.status}">${post.status === 'scheduled' ? 'កំពុងរង់ចាំ' : 'បានបង្ហោះរួច'}</span>
-                    <button class="delete-post" onclick="deletePost(${post.id})"><i class="fas fa-trash"></i></button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function openPostModal() {
-        if (!currentUser) {
-            showAuth('login');
-            return;
-        }
-        document.getElementById('postModal').style.display = 'flex';
-        document.getElementById('postContent').value = '';
-        document.querySelectorAll('.platform-checkbox input').forEach(cb => cb.checked = false);
-        document.getElementById('postScheduleTime').value = '';
-    }
-
-    function closePostModal() {
-        document.getElementById('postModal').style.display = 'none';
-    }
-
-    function createPost() {
-        const content = document.getElementById('postContent').value.trim();
-        const platforms = Array.from(document.querySelectorAll('.platform-checkbox input:checked')).map(cb => cb.value);
-        const scheduleTime = document.getElementById('postScheduleTime').value;
-        
-        if (!content) {
-            alert('សូមបញ្ចូលខ្លឹមសារដែលអ្នកចង់បង្ហោះ');
-            return;
-        }
-        if (platforms.length === 0) {
-            alert('សូមជ្រើសរើសយ៉ាងហោចណាស់មួយបណ្តាញសង្គម');
-            return;
-        }
-        if (!scheduleTime) {
-            alert('សូមជ្រើសរើសកាលបរិច្ឆេទ និងពេលវេលាសម្រាប់ការបង្ហោះ');
-            return;
-        }
-        
-        const userPostsCount = allPosts.filter(p => p.userId === currentUser.id && new Date(p.createdAt).getMonth() === new Date().getMonth()).length;
-        
-        let maxPlatforms = 3;
-        if (currentUser.plan === 'pro') maxPlatforms = 10;
-        if (currentUser.plan === 'business') maxPlatforms = 10;
-        
-        if (platforms.length > maxPlatforms) {
-            alert(`កញ្ចប់ ${currentUser.plan === 'free' ? 'ឥតគិតថ្លៃ' : currentUser.plan} អាចបង្ហោះបានត្រឹមតែ ${maxPlatforms} បណ្តាញសង្គមប៉ុណ្ណោះក្នុងមួយការបង្ហោះ`);
-            return;
-        }
-        
-        if (currentUser.plan === 'free' && userPostsCount >= 5) {
-            alert('កញ្ចប់ឥតគិតថ្លៃអាចបង្ហោះបានត្រឹមតែ 5 ដងប៉ុណ្ណោះក្នុងមួយខែ។ សូមដំឡើងកញ្ចប់ប្រូដើម្បីប្រើប្រាស់គ្មានដែនកំណត់!');
-            return;
-        }
-        
-        const newPost = {
-            id: Date.now(),
-            userId: currentUser.id,
-            content: content,
-            platforms: platforms,
-            scheduleTime: scheduleTime,
-            status: 'scheduled',
-            createdAt: new Date().toISOString()
-        };
-        
-        allPosts.push(newPost);
-        savePosts();
-        closePostModal();
-        renderDashboard();
-        
-        const platformNames = platforms.map(p => {
-            const names = { facebook: 'Facebook', instagram: 'Instagram', twitter: 'Twitter/X', linkedin: 'LinkedIn', tiktok: 'TikTok', pinterest: 'Pinterest', youtube: 'YouTube', telegram: 'Telegram', snapchat: 'Snapchat', reddit: 'Reddit' };
-            return names[p] || p;
-        }).join(', ');
-        
-        alert(`✅ ការបង្ហោះរបស់អ្នកត្រូវបានកំណត់ពេលរួចរាល់!\n\nបណ្តាញសង្គម: ${platformNames}\nពេលវេលា: ${new Date(scheduleTime).toLocaleString()}`);
-    }
-
-    function deletePost(postId) {
-        if (confirm('តើអ្នកពិតជាចង់លុបការបង្ហោះនេះមែនទេ?')) {
-            allPosts = allPosts.filter(p => p.id !== postId);
-            savePosts();
-            renderDashboard();
-        }
-    }
-
-    let authMode = 'login';
-
-    function showAuth(mode) {
-        authMode = mode;
-        document.getElementById('homeSection').style.display = 'none';
-        document.getElementById('pricingSection').style.display = 'none';
-        document.getElementById('dashboardSection').style.display = 'none';
-        document.getElementById('authSection').style.display = 'flex';
-        
-        if (mode === 'login') {
-            document.getElementById('authTitle').textContent = 'ចូលប្រើប្រាស់';
-            document.getElementById('authName').style.display = 'none';
-            document.getElementById('authSubmitBtn').textContent = 'ចូលប្រើ';
-            document.getElementById('toggleAuthLink').innerHTML = 'មិនទាន់មានគណនី? ចុះឈ្មោះ';
-        } else {
-            document.getElementById('authTitle').textContent = 'ចុះឈ្មោះ';
-            document.getElementById('authName').style.display = 'block';
-            document.getElementById('authSubmitBtn').textContent = 'ចុះឈ្មោះ';
-            document.getElementById('toggleAuthLink').innerHTML = 'មានគណនីរួចហើយ? ចូលប្រើ';
-        }
-        
-        document.getElementById('authEmail').value = '';
-        document.getElementById('authPassword').value = '';
-        document.getElementById('authName').value = '';
-    }
-
-    function toggleAuthMode() {
-        if (authMode === 'login') {
-            showAuth('register');
-        } else {
-            showAuth('login');
-        }
-    }
-
-    function handleAuth() {
-        const email = document.getElementById('authEmail').value.trim();
-        const password = document.getElementById('authPassword').value;
-        const name = document.getElementById('authName').value.trim();
-        
-        if (!email || !password) {
-            alert('សូមបំពេញអ៊ីមែល និងពាក្យសម្ងាត់');
-            return;
-        }
-        
-        const users = JSON.parse(localStorage.getItem('social_users') || '[]');
-        
-        if (authMode === 'login') {
-            const user = users.find(u => u.email === email && u.password === password);
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('social_current_user', JSON.stringify(user));
-                updateUIForLoggedInUser();
-                showDashboard();
+            if (name && email && message) {
+                const messages = JSON.parse(localStorage.getItem('messages') || '[]');
+                messages.push({ name, email, message, date: new Date().toISOString() });
+                localStorage.setItem('messages', JSON.stringify(messages));
+                
+                document.getElementById('messageStatus').innerHTML = '<p style="color: green;">✅ សាររបស់អ្នកត្រូវបានផ្ញើរួចរាល់!</p>';
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactEmail').value = '';
+                document.getElementById('contactMessage').value = '';
+                
+                setTimeout(() => {
+                    document.getElementById('messageStatus').innerHTML = '';
+                }, 3000);
             } else {
-                alert('អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ');
+                alert('សូមបំពេញព័ត៌មានទាំងអស់');
             }
-        } else {
-            if (!name) {
-                alert('សូមបញ្ចូលឈ្មោះពេញរបស់អ្នក');
-                return;
-            }
-            if (users.find(u => u.email === email)) {
-                alert('អ៊ីមែលនេះត្រូវបានចុះឈ្មោះរួចហើយ');
-                return;
-            }
-            
-            const newUser = {
-                id: Date.now(),
-                name: name,
-                email: email,
-                password: password,
-                plan: 'free',
-                createdAt: new Date().toISOString()
-            };
-            users.push(newUser);
-            saveUsers(users);
-            currentUser = newUser;
-            localStorage.setItem('social_current_user', JSON.stringify(newUser));
-            updateUIForLoggedInUser();
-            showDashboard();
         }
-    }
-
-    function logout() {
-        currentUser = null;
-        localStorage.removeItem('social_current_user');
-        updateUIForLoggedInUser();
-        showSection('home');
-    }
-
-    loadData();
-    setInterval(checkAndPublishPosts, 60000);
-</script>
+        
+        // ធ្វើបច្ចុប្បន្នភាពចំនួនអ្នកទស្សនា
+        function updateVisitorCount() {
+            visitorCount++;
+            localStorage.setItem('visitorCount', visitorCount);
+            document.getElementById('visitorCount').textContent = visitorCount;
+        }
+        
+        // នាំចេញទិន្នន័យ
+        function exportData() {
+            const data = {
+                todos: todos,
+                messages: JSON.parse(localStorage.getItem('messages') || '[]'),
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // សម្អាតទិន្នន័យ
+        function clearAllData() {
+            if (confirm('តើអ្នកប្រាកដជាចង់លុបទិន្នន័យទាំងអស់មែនទេ?')) {
+                localStorage.clear();
+                todos = [];
+                visitorCount = 0;
+                renderTodos();
+                updateVisitorCount();
+                alert('ទិន្នន័យទាំងអស់ត្រូវបានលុបរួចរាល់');
+            }
+        }
+        
+        // បង្ហាញទំហំផ្ទុក
+        function updateStorageSize() {
+            let total = 0;
+            for (let key in localStorage) {
+                if (localStorage.hasOwnProperty(key)) {
+                    total += localStorage[key].length;
+                }
+            }
+            document.getElementById('storageSize').textContent = Math.round(total / 1024);
+        }
+        
+        // ដំណើរការដំបូង
+        document.getElementById('visitorCount').textContent = visitorCount;
+        updateVisitorCount();
+        updateStorageSize();
+        
+        // ផ្ទុកពណ៌ដែលបានរក្សាទុក
+        const savedColor = localStorage.getItem('themeColor');
+        if (savedColor) {
+            document.body.style.background = `linear-gradient(135deg, ${savedColor} 0%, #764ba2 100%)`;
+            document.getElementById('colorPicker').value = savedColor;
+        }
+        
+        renderTodos();
+    </script>
 </body>
 </html>
