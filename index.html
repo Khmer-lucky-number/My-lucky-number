@@ -315,9 +315,9 @@
         userSessions.slice(0, 30).forEach((u, i) => {
             const lastSeen = new Date(u.lastSeen); const secAgo = Math.floor((new Date() - lastSeen) / 1000);
             const timeText = secAgo < 60 ? `${secAgo} វិនាទី` : `${Math.floor(secAgo/60)} នាទី`;
-            html += `<tr><td>${i+1}NonNull<td>${u.deviceName}NonNull<td>${u.ip}NonNull<td style="font-size:0.6rem">${timeText} មុន</td><td class="${u.status === 'online' ? 'status-online' : 'status-offline'}">${u.status === 'online' ? '🟢 Online' : '🔴 Offline'}</td></tr>`;
+            html += `<tr><td>${i+1}NonNull<td>${u.deviceName}NonNull<td>${u.ip}NonNull<td style="font-size:0.6rem">${timeText} មុនNonNull<td class="${u.status === 'online' ? 'status-online' : 'status-offline'}">${u.status === 'online' ? '🟢 Online' : '🔴 Offline'}NonNull</tr>`;
         });
-        if(!userSessions.length) html = '<tr><td colspan="5" style="text-align:center;padding:20px">គ្មានអ្នកប្រើប្រាស់</td></tr>';
+        if(!userSessions.length) html = '<tr><td colspan="5" style="text-align:center;padding:20px">គ្មានអ្នកប្រើប្រាស់NonNull</tr>';
         tbody.innerHTML = html;
     }
     
@@ -428,7 +428,6 @@
         userBalanceSpans.forEach(el => { if(el) el.innerText = currentBalance.toFixed(2); });
     }
     
-    // ==================== Bet History with Result Announcement Date ====================
     function renderBetHistory(){
         const containers = ['betList', 'betListDesktop'];
         let html = "";
@@ -444,7 +443,6 @@
                 
                 let resultHtml = "";
                 if(b.resultZodiac) {
-                    // Show result announcement date if available
                     const announceDate = b.resultAnnounceDate ? `<div style="font-size:0.6rem; color:#aaa; margin-top:4px;">📢 ប្រកាសលទ្ធផលនៅ: ${b.resultAnnounceDate}</div>` : '';
                     resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">📊 លទ្ធផល: ${b.resultIcon || ''} ${b.resultZodiac} (${b.resultOrder || ''})</div>${announceDate}`;
                 } else if(b.status === 'pending') {
@@ -493,8 +491,8 @@
         if(summaryTotalWins) summaryTotalWins.innerHTML='$'+totalWinsAmt.toFixed(2);
         if(summaryTotalLosses) summaryTotalLosses.innerHTML='$'+totalLossesAmt.toFixed(2);
         if(summaryTotalRewards) summaryTotalRewards.innerHTML='$'+totalRewards.toFixed(2);
-        let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}NonNull<td style="font-size:0.65rem">${b.date}</td><td>${b.picked}</td><td>$${b.amount.toFixed(2)}</td><td>${formatHour(b.targetHour)}</td><td class="${statusClass}">${statusText}</td><td class="${statusClass}">${rewardText}</td><td style="font-size:0.65rem">${resultText}</td></tr>`;});
-        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យ</td></tr>';
+        let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}NonNull<td style="font-size:0.65rem">${b.date}NonNull<td>${b.picked}NonNull<td>$${b.amount.toFixed(2)}NonNull<td>${formatHour(b.targetHour)}NonNull<td class="${statusClass}">${statusText}NonNull<td class="${statusClass}">${rewardText}NonNull<td style="font-size:0.65rem">${resultText}NonNull</tr>`;});
+        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យNonNull<tr>';
         const adminBetsTableBody = document.getElementById('adminBetsTableBody');
         if(adminBetsTableBody) adminBetsTableBody.innerHTML=html;
     }
@@ -567,6 +565,7 @@
         if(countdownTimer) countdownTimer.innerHTML=countdown;
         if(countdownTimerDesktop) countdownTimerDesktop.innerHTML=countdown;
         
+        // Trigger alert at 3 seconds before result (57, 58, 59 seconds)
         if (remainS === 57 || remainS === 58 || remainS === 59) {
             if (lastAlertSecond !== remainS) {
                 playTripleBeep();
@@ -598,12 +597,16 @@
         if(liveClockDesktop) liveClockDesktop.innerHTML=clock;
     }
     
-    // ==================== settleBets with Result Announcement Date ====================
+    // ==================== settleBets with Blink & Sound on Result Announcement ====================
     function settleBets(currentHour, currentDate, currentSeconds){
         if(currentSeconds === 1){
             const nums = generateNumbers(currentDate);
             let changed = false;
             const announceDateTime = formatDateTime(new Date());
+            
+            // Trigger blink and sound when result is announced (at second 1)
+            playTripleBeep();
+            startCountdownBlink();
             
             betHistory.forEach(b => {
                 if(b.status === "pending" && b.targetHour === currentHour){
