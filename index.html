@@ -274,34 +274,16 @@
     let lastAlertSecond = -1;
     let userSessions = [];
     
-    // ==================== LOAD DATA FROM localStorage ====================
-    function loadAllData() {
-        const savedBalance = localStorage.getItem('balance');
-        currentBalance = (savedBalance !== null && !isNaN(parseFloat(savedBalance))) ? parseFloat(savedBalance) : 0;
-        
-        const savedDeposit = localStorage.getItem('depositHistory');
-        depositHistory = savedDeposit ? JSON.parse(savedDeposit) : [];
-        
-        const savedBet = localStorage.getItem('betHistory');
-        betHistory = savedBet ? JSON.parse(savedBet) : [];
-        
-        const savedMultiplier = localStorage.getItem('rewardMultiplier');
-        rewardMultiplier = savedMultiplier ? parseInt(savedMultiplier) : 10;
-        
-        const savedAdminBalance = localStorage.getItem('adminBalance');
-        adminBalance = (savedAdminBalance !== null && !isNaN(parseFloat(savedAdminBalance))) ? parseFloat(savedAdminBalance) : 0;
-        
-        const savedAdminDepositHistory = localStorage.getItem('adminDepositHistory');
-        adminDepositHistory = savedAdminDepositHistory ? JSON.parse(savedAdminDepositHistory) : [];
-        
-        const savedUserSessions = localStorage.getItem('userSessions');
-        userSessions = savedUserSessions ? JSON.parse(savedUserSessions) : [];
-    }
+    // Load data
+    const savedBalance = localStorage.getItem('balance');
+    currentBalance = (savedBalance !== null && !isNaN(parseFloat(savedBalance))) ? parseFloat(savedBalance) : 0;
+    const savedDeposit = localStorage.getItem('depositHistory'); if (savedDeposit) depositHistory = JSON.parse(savedDeposit);
+    const savedBet = localStorage.getItem('betHistory'); if (savedBet) betHistory = JSON.parse(savedBet);
+    const savedMultiplier = localStorage.getItem('rewardMultiplier'); if (savedMultiplier) rewardMultiplier = parseInt(savedMultiplier);
+    const savedAdminBalance = localStorage.getItem('adminBalance'); if (savedAdminBalance) adminBalance = parseFloat(savedAdminBalance);
+    const savedAdminDepositHistory = localStorage.getItem('adminDepositHistory'); if (savedAdminDepositHistory) adminDepositHistory = JSON.parse(savedAdminDepositHistory);
+    const savedUserSessions = localStorage.getItem('userSessions'); if (savedUserSessions) userSessions = JSON.parse(savedUserSessions);
     
-    // Call load immediately
-    loadAllData();
-    
-    // Helper functions
     function getDeviceId() { let id = localStorage.getItem('deviceId'); if (!id) { id = 'dev_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('deviceId', id); } return id; }
     function getDeviceInfo() { const ua = navigator.userAgent; if (ua.includes('Mobile')) return 'ម៉ូប៊ីល'; if (ua.includes('Tablet')) return 'ថេប្លេត'; return 'កុំព្យូទ័រ'; }
     function getSimulatedIP() { return '192.168.' + Math.floor(Math.random() * 255) + '.' + Math.floor(Math.random() * 255); }
@@ -324,12 +306,12 @@
     function renderUsersTable() {
         const tbody = document.getElementById('usersTableBody'); if (!tbody) return;
         let html = ''; const onlineUsers = userSessions.filter(u => u.status === 'online').length;
-        const badge = document.getElementById('adminOnlineBadge');
-        if (badge) badge.innerHTML = `🟢 ${onlineUsers} online`;
+        const onlineBadge = document.getElementById('adminOnlineBadge');
+        if(onlineBadge) onlineBadge.innerHTML = `🟢 ${onlineUsers} online`;
         userSessions.slice(0, 30).forEach((u, i) => {
             const lastSeen = new Date(u.lastSeen); const secAgo = Math.floor((new Date() - lastSeen) / 1000);
             const timeText = secAgo < 60 ? `${secAgo} វិនាទី` : `${Math.floor(secAgo/60)} នាទី`;
-            html += `<tr><td>${i+1}</td><td>${u.deviceName}</td><td>${u.ip}</td><td style="font-size:0.6rem">${timeText} មុន</td><td class="${u.status === 'online' ? 'status-online' : 'status-offline'}">${u.status === 'online' ? '🟢 Online' : '🔴 Offline'}</td></tr>`;
+            html += `<tr><td>${i+1}NotANode<td style="font-size:0.6rem">${timeText} មុន</td><td class="${u.status === 'online' ? 'status-online' : 'status-offline'}">${u.status === 'online' ? '🟢 Online' : '🔴 Offline'}</td></tr>`;
         });
         if(!userSessions.length) html = '<tr><td colspan="5" style="text-align:center;padding:20px">គ្មានអ្នកប្រើប្រាស់</td></tr>';
         tbody.innerHTML = html;
@@ -341,6 +323,7 @@
     function updateOnlineCount() { 
         onlineCount = userSessions.filter(u => u.status === 'online').length;
         if(onlineCount === 0) onlineCount = Math.floor(Math.random() * 15) + 3;
+        document.querySelectorAll('#onlineBadgeMobile, #onlineBadgeDesktop').forEach(el => { if(el) el.innerHTML = `🟢 ${onlineCount} online`; });
     }
     
     function togglePasswordVisibility(inputId, btn) { const inp = document.getElementById(inputId); if (inp.type === "password") { inp.type = "text"; btn.innerHTML = "🙈"; } else { inp.type = "password"; btn.innerHTML = "👁️"; } }
@@ -370,10 +353,8 @@
         const now=new Date(), weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());const monthStart=new Date(now.getFullYear(),now.getMonth(),1);
         let weekly=0,monthly=0;
         betHistory.forEach(b=>{const d=new Date(b.date.split(' ')[0]);if(d>=weekStart){if(b.status==='win')weekly+=b.reward;else if(b.status==='lose')weekly-=b.amount;}if(d>=monthStart){if(b.status==='win')monthly+=b.reward;else if(b.status==='lose')monthly-=b.amount;}});
-        const weeklyEl = document.getElementById('weeklyProfit');
-        const monthlyEl = document.getElementById('monthlyProfit');
-        if(weeklyEl) weeklyEl.innerHTML=(weekly>=0?'+$':'-$')+Math.abs(weekly).toFixed(2);
-        if(monthlyEl) monthlyEl.innerHTML=(monthly>=0?'+$':'-$')+Math.abs(monthly).toFixed(2);
+        document.getElementById('weeklyProfit').innerHTML=(weekly>=0?'+$':'-$')+Math.abs(weekly).toFixed(2);
+        document.getElementById('monthlyProfit').innerHTML=(monthly>=0?'+$':'-$')+Math.abs(monthly).toFixed(2);
     }
     
     function updateChart(){
@@ -388,24 +369,46 @@
         const winRateEl = document.getElementById('winRate');
         const netProfitEl = document.getElementById('netProfit');
         const adminBalanceEl = document.getElementById('adminBalance');
-        const playerBalanceDisplayEl = document.getElementById('playerBalanceDisplay');
-        const currentMultiplierEl = document.getElementById('currentMultiplier');
+        const playerBalanceDisplay = document.getElementById('playerBalanceDisplay');
+        const currentMultiplierSpan = document.getElementById('currentMultiplier');
         if(totalBetsEl) totalBetsEl.innerText=totalBets;
         if(totalWinsEl) totalWinsEl.innerText=totalWins;
         if(winRateEl) winRateEl.innerText=winRate+'%';
         if(netProfitEl) netProfitEl.innerHTML='$'+netProfit.toFixed(2);
         if(adminBalanceEl) adminBalanceEl.innerHTML='$'+adminBalance.toFixed(2);
-        if(playerBalanceDisplayEl) playerBalanceDisplayEl.innerHTML='$'+currentBalance.toFixed(2);
-        if(currentMultiplierEl) currentMultiplierEl.innerHTML=rewardMultiplier+'x';
+        if(playerBalanceDisplay) playerBalanceDisplay.innerHTML='$'+currentBalance.toFixed(2);
+        if(currentMultiplierSpan) currentMultiplierSpan.innerHTML=rewardMultiplier+'x';
         updatePeriodReports();updateChart();renderAdminBetsTable();
     }
     
-    function updateAllBalanceDisplays(){
-        const userBalanceSpans = document.querySelectorAll('#userBalance, #userBalanceDesktop');
-        userBalanceSpans.forEach(el => { if(el) el.innerText = currentBalance.toFixed(2); });
+    function updateAllBalanceDisplays(){document.querySelectorAll('#userBalance,#userBalanceDesktop').forEach(el=>{if(el)el.innerText=currentBalance.toFixed(2);});}
+    
+    function settleBets(currentHour,currentDate,currentSeconds){
+        if(currentSeconds===1){
+            const nums=generateNumbers(currentDate); let changed=false;
+            betHistory.forEach(b=>{
+                if(b.status==="pending" && b.targetHour===currentHour){
+                    const correctNum=nums[b.targetHour],correctZodiac=zodiacMap[correctNum];
+                    if(correctZodiac){
+                        if(b.picked===correctZodiac.name||b.picked===correctZodiac.nameEn){
+                            const winAmt=b.amount*rewardMultiplier;b.status="win";b.reward=winAmt;b.resultZodiac=correctZodiac.name;b.resultIcon=correctZodiac.icon;b.resultOrder=correctZodiac.order;
+                            currentBalance+=winAmt;adminBalance-=winAmt;playSound(true);showToast(`🎉 ឈ្នះ! +$${winAmt.toFixed(2)}`);
+                        }else{
+                            b.status="lose";b.reward=0;b.resultZodiac=correctZodiac.name;b.resultIcon=correctZodiac.icon;b.resultOrder=correctZodiac.order;
+                            adminBalance+=b.amount;playSound(false);showToast(`😢 ចាញ់! -$${b.amount.toFixed(2)}`);
+                        }changed=true;
+                    }
+                }
+            });
+            if(changed){localStorage.setItem('balance',currentBalance);localStorage.setItem('adminBalance',adminBalance);localStorage.setItem('betHistory',JSON.stringify(betHistory));updateAllBalanceDisplays();renderBetHistory();updateAdminStats();}
+        }
     }
     
-    // ==================== FIXED: Bet History Render ====================
+    function checkCountdownAlert(sec){
+        if(sec===3 && lastAlertSecond!==3){playCountdownAlert();startCountdownBlink();lastAlertSecond=3;}
+        else if(sec!==3 && sec!==2 && sec!==1){if(sec<3)lastAlertSecond=-1;}
+    }
+    
     function renderBetHistory(){
         const containers = ['betList', 'betListDesktop'];
         let html = "";
@@ -421,7 +424,7 @@
                 
                 let resultHtml = "";
                 if(b.resultZodiac) {
-                    resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">📊 លទ្ធផល: ${b.resultIcon || ''} ${b.resultZodiac} (${b.resultOrder || ''})</div>`;
+                    resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">📊 លទ្ធផល: ${b.resultIcon} ${b.resultZodiac} (${b.resultOrder})</div>`;
                 } else if(b.status === 'pending') {
                     resultHtml = `<div style="font-size:0.65rem; margin-top:6px;">⏰ កំពុងរង់ចាំលទ្ធផលម៉ោង ${formatHour(b.targetHour)}...</div>`;
                 }
@@ -439,7 +442,6 @@
         containers.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = html; });
     }
     
-    // ==================== FIXED: Deposit History Render ====================
     function renderDepositHistory(){
         const containers = ['depositList', 'depositListDesktop'];
         let html = "";
@@ -453,13 +455,12 @@
         containers.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = html; });
     }
     
-    // ==================== Admin Bet Table ====================
     function renderAdminBetsTable(){
         const filterZodiacInput = document.getElementById('filterZodiac');
         const filterStatusSelect = document.getElementById('filterStatus');
         let filterZodiac = filterZodiacInput ? filterZodiacInput.value.toLowerCase() : '';
         let filterStatus = filterStatusSelect ? filterStatusSelect.value : 'all';
-        let filtered=betHistory.filter(b=>{if(filterZodiac&&!b.picked.toLowerCase().includes(filterZodiac))return false;if(filterStatus!=='all'&&b.status!==filterStatus)return false;return true;});
+        let filtered = betHistory.filter(b=>{if(filterZodiac&&!b.picked.toLowerCase().includes(filterZodiac))return false;if(filterStatus!=='all'&&b.status!==filterStatus)return false;return true;});
         let totalWinsAmt=0,totalLossesAmt=0,totalRewards=0;
         filtered.forEach(b=>{if(b.status==='win'){totalWinsAmt+=b.amount;totalRewards+=b.reward;}else if(b.status==='lose')totalLossesAmt+=b.amount;});
         const summaryTotalBets = document.getElementById('summaryTotalBetsFiltered');
@@ -480,7 +481,7 @@
         let desktopHtml="";zodiacs.forEach(z=>{desktopHtml+=`<div class="zodiac-card" data-name="${currentLang==='km'?z.name:z.nameEn}" data-icon="${z.icon}" data-order="${z.order}"><div class="zodiac-icon">${z.icon}</div><div class="zodiac-name">${currentLang==='km'?z.name:z.nameEn}</div><div class="zodiac-order">${z.order}</div></div>`;});
         const zodiacGridDesktop = document.getElementById('zodiacGridDesktop');
         if(zodiacGridDesktop) zodiacGridDesktop.innerHTML=desktopHtml;
-        document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c=>{c.addEventListener('click',function(){document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');selectedZodiac=this.getAttribute('data-name');const selectedSpan = document.getElementById('selectedZodiacName');if(selectedSpan) selectedSpan.innerHTML=`${this.querySelector('.zodiac-icon').innerHTML} ${selectedZodiac} (${this.getAttribute('data-order')})`;updateDesktopPreview();});});
+        document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c=>{c.addEventListener('click',function(){document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c=>c.classList.remove('selected'));this.classList.add('selected');selectedZodiac=this.getAttribute('data-name');const selectedSpan = document.getElementById('selectedZodiacName'); if(selectedSpan) selectedSpan.innerHTML=`${this.querySelector('.zodiac-icon').innerHTML} ${selectedZodiac} (${this.getAttribute('data-order')})`;updateDesktopPreview();});});
         let mobileHtml="";zodiacs.forEach(z=>{mobileHtml+=`<div class="zodiac-card"><div class="zodiac-icon">${z.icon}</div><div class="zodiac-name">${currentLang==='km'?z.name:z.nameEn}</div><div class="zodiac-order">${z.order}</div></div>`;});
         const zodiacGrid = document.getElementById('zodiacGrid');
         if(zodiacGrid) zodiacGrid.innerHTML=mobileHtml;
@@ -490,27 +491,8 @@
         document.querySelectorAll('.zodiac-option').forEach(opt=>{opt.addEventListener('click',function(){document.querySelectorAll('.zodiac-option').forEach(o=>o.classList.remove('selected'));this.classList.add('selected');selectedZodiac=this.getAttribute('data-name');});});
     }
     
-    function updateDesktopPreview(){
-        const desktopBetAmount = document.getElementById('desktopBetAmount');
-        const amt = desktopBetAmount ? (parseFloat(desktopBetAmount.value) || 0) : 0;
-        const desktopPreCurrent = document.getElementById('desktopPreCurrent');
-        const desktopPreCost = document.getElementById('desktopPreCost');
-        const desktopPreRemain = document.getElementById('desktopPreRemain');
-        if(desktopPreCurrent) desktopPreCurrent.innerHTML='$'+currentBalance.toFixed(2);
-        if(desktopPreCost) desktopPreCost.innerHTML='$'+amt.toFixed(2);
-        if(desktopPreRemain) desktopPreRemain.innerHTML='$'+(currentBalance-amt).toFixed(2);
-    }
-    
-    function updatePreview(){
-        const betAmount = document.getElementById('betAmount');
-        const amt = betAmount ? (parseFloat(betAmount.value) || 0) : 0;
-        const preCurrent = document.getElementById('preCurrent');
-        const preCost = document.getElementById('preCost');
-        const preRemain = document.getElementById('preRemain');
-        if(preCurrent) preCurrent.innerText=currentBalance.toFixed(2);
-        if(preCost) preCost.innerText=amt.toFixed(2);
-        if(preRemain) preRemain.innerText=(currentBalance-amt)>=0?(currentBalance-amt).toFixed(2):'0.00';
-    }
+    function updateDesktopPreview(){const amt=parseFloat(document.getElementById('desktopBetAmount').value)||0;const preCurrent = document.getElementById('desktopPreCurrent'); const preCost = document.getElementById('desktopPreCost'); const preRemain = document.getElementById('desktopPreRemain'); if(preCurrent) preCurrent.innerHTML='$'+currentBalance.toFixed(2); if(preCost) preCost.innerHTML='$'+amt.toFixed(2); if(preRemain) preRemain.innerHTML='$'+(currentBalance-amt).toFixed(2);}
+    function updatePreview(){const amt=parseFloat(document.getElementById('betAmount').value)||0;const preCurrentSpan = document.getElementById('preCurrent'); const preCostSpan = document.getElementById('preCost'); const preRemainSpan = document.getElementById('preRemain'); if(preCurrentSpan) preCurrentSpan.innerText=currentBalance.toFixed(2); if(preCostSpan) preCostSpan.innerText=amt.toFixed(2); if(preRemainSpan) preRemainSpan.innerText=(currentBalance-amt)>=0?(currentBalance-amt).toFixed(2):'0.00';}
     
     function updateScheduleList(){
         const now=new Date(),ch=now.getHours(),today=new Date(now),tomorrow=new Date(now);tomorrow.setDate(tomorrow.getDate()+1);const yesterday=new Date(now);yesterday.setDate(yesterday.getDate()-1);
@@ -528,135 +510,32 @@
         if(scheduleListDesktop) scheduleListDesktop.innerHTML=html;
     }
     
-    function updateCurrentHourText(){
-        const nextHour=getNextHour(new Date().getHours());
-        const text=`${currentLang==='km'?'🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង':'🔮 If you bet now, it will be for hour'} ${formatHour(nextHour)}`;
-        const currentHourText = document.getElementById('currentHourText');
-        const currentHourTextDesktop = document.getElementById('currentHourTextDesktop');
-        if(currentHourText) currentHourText.innerHTML=text;
-        if(currentHourTextDesktop) currentHourTextDesktop.innerHTML=text;
-    }
-    
-    function updateCountdown(){
-        const now=new Date(),remainM=59-now.getMinutes(),remainS=59-now.getSeconds(),countdown=`${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;
-        const countdownTimer = document.getElementById('countdownTimer');
-        const countdownTimerDesktop = document.getElementById('countdownTimerDesktop');
-        if(countdownTimer) countdownTimer.innerHTML=countdown;
-        if(countdownTimerDesktop) countdownTimerDesktop.innerHTML=countdown;
-        checkCountdownAlert(remainS);
-    }
-    
-    function updateLuckyNumber(){
-        const now=new Date(),nums=generateNumbers(now),z=zodiacMap[nums[now.getHours()]];
-        const display=z?getZodiacDisplay(z):"?";
-        const luckyNumber = document.getElementById('luckyNumber');
-        const luckyNumberDesktop = document.getElementById('luckyNumberDesktop');
-        if(luckyNumber) luckyNumber.innerHTML=display;
-        if(luckyNumberDesktop) luckyNumberDesktop.innerHTML=display;
-    }
-    
-    function updateAllLiveClocks(){
-        const now=new Date();
-        const clock=`📅 ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} | ⏰ ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
-        const liveClock = document.getElementById('liveClock');
-        const liveClockDesktop = document.getElementById('liveClockDesktop');
-        if(liveClock) liveClock.innerHTML=clock;
-        if(liveClockDesktop) liveClockDesktop.innerHTML=clock;
-    }
-    
-    function settleBets(currentHour,currentDate,currentSeconds){
-        if(currentSeconds===1){
-            const nums=generateNumbers(currentDate);let changed=false;
-            betHistory.forEach(b=>{
-                if(b.status==="pending" && b.targetHour===currentHour){
-                    const correctNum=nums[b.targetHour],correctZodiac=zodiacMap[correctNum];
-                    if(correctZodiac){
-                        if(b.picked===correctZodiac.name||b.picked===correctZodiac.nameEn){
-                            const winAmt=b.amount*rewardMultiplier;b.status="win";b.reward=winAmt;b.resultZodiac=correctZodiac.name;b.resultIcon=correctZodiac.icon;b.resultOrder=correctZodiac.order;
-                            currentBalance+=winAmt;adminBalance-=winAmt;playSound(true);showToast(`🎉 ឈ្នះ! +$${winAmt.toFixed(2)}`);
-                        }else{
-                            b.status="lose";b.reward=0;b.resultZodiac=correctZodiac.name;b.resultIcon=correctZodiac.icon;b.resultOrder=correctZodiac.order;
-                            adminBalance+=b.amount;playSound(false);showToast(`😢 ចាញ់! -$${b.amount.toFixed(2)}`);
-                        }changed=true;
-                    }
-                }
-            });
-            if(changed){
-                localStorage.setItem('balance',currentBalance);
-                localStorage.setItem('adminBalance',adminBalance);
-                localStorage.setItem('betHistory',JSON.stringify(betHistory));
-                updateAllBalanceDisplays();
-                renderBetHistory();
-                updateAdminStats();
-            }
-        }
-    }
-    
-    function checkCountdownAlert(sec){
-        if(sec===3 && lastAlertSecond!==3){playCountdownAlert();startCountdownBlink();lastAlertSecond=3;}
-        else if(sec!==3 && sec!==2 && sec!==1){if(sec<3)lastAlertSecond=-1;}
-    }
-    
-    function updateDisplay(){
-        const now=new Date();
-        settleBets(now.getHours(),now,now.getSeconds());
-        updateAllLiveClocks();
-        updateCurrentHourText();
-        updateCountdown();
-        updateLuckyNumber();
-        updateScheduleList();
-        updateDesktopPreview();
-    }
+    function updateCurrentHourText(){const nextHour=getNextHour(new Date().getHours());const text=`${currentLang==='km'?'🔮 បើចាក់ឥឡូវ នឹងចាក់សម្រាប់ម៉ោង':'🔮 If you bet now, it will be for hour'} ${formatHour(nextHour)}`;const currentHourText = document.getElementById('currentHourText'); const currentHourTextDesktop = document.getElementById('currentHourTextDesktop'); if(currentHourText) currentHourText.innerHTML=text; if(currentHourTextDesktop) currentHourTextDesktop.innerHTML=text;}
+    function updateCountdown(){const now=new Date(),remainM=59-now.getMinutes(),remainS=59-now.getSeconds(),countdown=`${remainM.toString().padStart(2,'0')}:${remainS.toString().padStart(2,'0')}`;const timer = document.getElementById('countdownTimer'); const timerDesktop = document.getElementById('countdownTimerDesktop'); if(timer) timer.innerHTML=countdown; if(timerDesktop) timerDesktop.innerHTML=countdown;checkCountdownAlert(remainS);}
+    function updateLuckyNumber(){const now=new Date(),nums=generateNumbers(now),z=zodiacMap[nums[now.getHours()]];const display=z?getZodiacDisplay(z):"?";const luckyNum = document.getElementById('luckyNumber'); const luckyNumDesktop = document.getElementById('luckyNumberDesktop'); if(luckyNum) luckyNum.innerHTML=display; if(luckyNumDesktop) luckyNumDesktop.innerHTML=display;}
+    function updateAllLiveClocks(){const now=new Date();const clock=`📅 ${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()} | ⏰ ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;const liveClock = document.getElementById('liveClock'); const liveClockDesktop = document.getElementById('liveClockDesktop'); if(liveClock) liveClock.innerHTML=clock; if(liveClockDesktop) liveClockDesktop.innerHTML=clock;}
+    function updateDisplay(){const now=new Date();settleBets(now.getHours(),now,now.getSeconds());updateAllLiveClocks();updateCurrentHourText();updateCountdown();updateLuckyNumber();updateScheduleList();updateDesktopPreview();}
     
     function executePredictionFromConfirm(){
-        currentBalance-=pendingBetAmount;
-        localStorage.setItem('balance',currentBalance);
-        updateAllBalanceDisplays();
-        updateDesktopPreview();
+        currentBalance-=pendingBetAmount;localStorage.setItem('balance',currentBalance);updateAllBalanceDisplays();updateDesktopPreview();
         const now=new Date(),targetHour=getNextHour(now.getHours());
         betHistory.unshift({id:Date.now(),date:formatDateTime(now),targetHour,picked:pendingZodiac,status:"pending",amount:pendingBetAmount,reward:0,resultZodiac:null});
-        localStorage.setItem('betHistory',JSON.stringify(betHistory));
-        renderBetHistory();
-        updateAdminStats();
-        playSound(null);
+        localStorage.setItem('betHistory',JSON.stringify(betHistory));renderBetHistory();updateAdminStats();playSound(null);
         showToast(`${currentLang==='km'?'បានភ្នាល់':'Bet placed'} ${pendingZodiac} $${pendingBetAmount} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(targetHour)}`);
         const desktopBetAmount = document.getElementById('desktopBetAmount');
         if(desktopBetAmount) desktopBetAmount.value='';
         document.querySelectorAll('#zodiacGridDesktop .zodiac-card').forEach(c=>c.classList.remove('selected'));
         selectedZodiac='';
-        const selectedZodiacName = document.getElementById('selectedZodiacName');
-        if(selectedZodiacName) selectedZodiacName.innerHTML='មិនទាន់ជ្រើសរើស';
+        const selectedSpan = document.getElementById('selectedZodiacName');
+        if(selectedSpan) selectedSpan.innerHTML='មិនទាន់ជ្រើសរើស';
         updateDesktopPreview();
     }
     
     function executeAdminAction(){
-        if(pendingAdminAction==="clear_deposit"){
-            depositHistory=[];
-            localStorage.removeItem('depositHistory');
-            renderDepositHistory();
-            updateAdminStats();
-            showToast('បានលុបប្រវត្តិបញ្ចូលលុយ');
-        }
-        else if(pendingAdminAction==="clear_bet"){
-            betHistory=[];
-            localStorage.removeItem('betHistory');
-            renderBetHistory();
-            updateAdminStats();
-            showToast('បានលុបប្រវត្តិទស្សន៍ទាយ');
-        }
-        else if(pendingAdminAction==="clear_balance"){
-            currentBalance=0;
-            localStorage.setItem('balance',currentBalance);
-            updateAllBalanceDisplays();
-            updateDesktopPreview();
-            showToast('បានលុបទឹកប្រាក់អ្នកលេង');
-        }
-        else if(pendingAdminAction==="clear_admin_deposit"){
-            adminDepositHistory=[];
-            localStorage.setItem('adminDepositHistory',JSON.stringify(adminDepositHistory));
-            showToast('បានលុបប្រវត្តិដាក់លុយ Admin');
-            updateAdminStats();
-        }
+        if(pendingAdminAction==="clear_deposit"){depositHistory=[];localStorage.removeItem('depositHistory');renderDepositHistory();updateAdminStats();showToast('បានលុបប្រវត្តិបញ្ចូលលុយ');}
+        else if(pendingAdminAction==="clear_bet"){betHistory=[];localStorage.removeItem('betHistory');renderBetHistory();updateAdminStats();showToast('បានលុបប្រវត្តិទស្សន៍ទាយ');}
+        else if(pendingAdminAction==="clear_balance"){currentBalance=0;localStorage.setItem('balance',currentBalance);updateAllBalanceDisplays();updateDesktopPreview();showToast('បានលុបទឹកប្រាក់អ្នកលេង');}
+        else if(pendingAdminAction==="clear_admin_deposit"){adminDepositHistory=[];localStorage.setItem('adminDepositHistory',JSON.stringify(adminDepositHistory));showToast('បានលុបប្រវត្តិដាក់លុយ Admin');updateAdminStats();}
         renderAdminBetsTable();
     }
     
@@ -668,211 +547,63 @@
         setTimeout(()=>window.location.reload(),1500);
     }
     
-    function loadData(){
-        updateAllBalanceDisplays();
-        updateAdminStats();
-        updateDesktopPreview();
-        renderAdminBetsTable();
-        renderUsersTable();
-        updateOnlineCount();
-    }
-    
-    function showAdminPanel(){
-        const mainContainer = document.getElementById('mainContainer');
-        const adminContainer = document.getElementById('adminContainer');
-        if(mainContainer) mainContainer.style.display='none';
-        if(adminContainer) adminContainer.classList.add('show');
-        renderAdminBetsTable();
-        renderUsersTable();
-    }
-    
-    function hideAdminPanel(){
-        const mainContainer = document.getElementById('mainContainer');
-        const adminContainer = document.getElementById('adminContainer');
-        if(mainContainer) mainContainer.style.display='block';
-        if(adminContainer) adminContainer.classList.remove('show');
-        window.dispatchEvent(new Event('resize'));
-    }
+    function loadData(){updateAllBalanceDisplays();updateAdminStats();updateDesktopPreview();renderAdminBetsTable();renderUsersTable();updateOnlineCount();}
+    function showAdminPanel(){const mainContainer = document.getElementById('mainContainer'); const adminContainer = document.getElementById('adminContainer'); if(mainContainer) mainContainer.style.display='none'; if(adminContainer) adminContainer.classList.add('show'); renderAdminBetsTable(); renderUsersTable();}
+    function hideAdminPanel(){const mainContainer = document.getElementById('mainContainer'); const adminContainer = document.getElementById('adminContainer'); if(mainContainer) mainContainer.style.display='block'; if(adminContainer) adminContainer.classList.remove('show'); window.dispatchEvent(new Event('resize'));}
     
     const translations={km:{soundOn:"បិទសំឡេង",soundOff:"បើកសំឡេង",langKhmer:"ភាសាខ្មែរ",langEnglish:"English"},en:{soundOn:"Mute",soundOff:"Unmute",langKhmer:"ភាសាខ្មែរ",langEnglish:"English"}};
-    function toggleLanguage(){
-        currentLang=currentLang==='km'?'en':'km';
-        const soundText = document.getElementById('soundText');
-        const soundTextDesktop = document.getElementById('soundTextDesktop');
-        const langText = document.getElementById('langText');
-        const langTextDesktop = document.getElementById('langTextDesktop');
-        if(soundText) soundText.innerText=soundEnabled?translations[currentLang].soundOn:translations[currentLang].soundOff;
-        if(soundTextDesktop) soundTextDesktop.innerText=soundEnabled?translations[currentLang].soundOn:translations[currentLang].soundOff;
-        if(langText) langText.innerText=currentLang==='km'?translations[currentLang].langKhmer:translations[currentLang].langEnglish;
-        if(langTextDesktop) langTextDesktop.innerText=currentLang==='km'?translations[currentLang].langKhmer:translations[currentLang].langEnglish;
-        renderZodiacs();
-        renderDepositHistory();
-        renderBetHistory();
-        updateScheduleList();
-        updateLuckyNumber();
-        renderAdminBetsTable();
-    }
+    function toggleLanguage(){currentLang=currentLang==='km'?'en':'km';const soundText = document.getElementById('soundText'); const soundTextDesktop = document.getElementById('soundTextDesktop'); const langText = document.getElementById('langText'); const langTextDesktop = document.getElementById('langTextDesktop'); if(soundText) soundText.innerText=soundEnabled?translations[currentLang].soundOn:translations[currentLang].soundOff; if(soundTextDesktop) soundTextDesktop.innerText=soundEnabled?translations[currentLang].soundOn:translations[currentLang].soundOff; if(langText) langText.innerText=currentLang==='km'?translations[currentLang].langKhmer:translations[currentLang].langEnglish; if(langTextDesktop) langTextDesktop.innerText=currentLang==='km'?translations[currentLang].langKhmer:translations[currentLang].langEnglish; renderZodiacs();renderDepositHistory();renderBetHistory();updateScheduleList();updateLuckyNumber();renderAdminBetsTable();}
+    function toggleSound(){soundEnabled=!soundEnabled;const text=soundEnabled?translations[currentLang].soundOn:translations[currentLang].soundOff;const soundText = document.getElementById('soundText'); const soundTextDesktop = document.getElementById('soundTextDesktop'); if(soundText) soundText.innerText=text; if(soundTextDesktop) soundTextDesktop.innerText=text; showToast(soundEnabled?(currentLang==='km'?'បើកសំឡេង':'Sound on'):(currentLang==='km'?'បិទសំឡេង':'Sound off'));}
     
-    function toggleSound(){
-        soundEnabled=!soundEnabled;
-        const text=soundEnabled?translations[currentLang].soundOn:translations[currentLang].soundOff;
-        const soundText = document.getElementById('soundText');
-        const soundTextDesktop = document.getElementById('soundTextDesktop');
-        if(soundText) soundText.innerText=text;
-        if(soundTextDesktop) soundTextDesktop.innerText=text;
-        showToast(soundEnabled?(currentLang==='km'?'បើកសំឡេង':'Sound on'):(currentLang==='km'?'បិទសំឡេង':'Sound off'));
-    }
-    
-    // ==================== INITIALIZATION ====================
     function init(){
-        loadData();
-        renderZodiacs();
-        renderDepositHistory();
-        renderBetHistory();
-        updateDisplay();
-        setInterval(updateDisplay,1000);
+        loadData();renderZodiacs();updateDisplay();setInterval(updateDisplay,1000);renderDepositHistory();renderBetHistory();
+        function checkDesktopLayout(){const dg=document.querySelector('.desktop-grid'),mo=document.querySelector('.mobile-only');if(window.innerWidth>=1024){if(dg)dg.style.display='grid';if(mo)mo.style.display='none';}else{if(dg)dg.style.display='none';if(mo)mo.style.display='block';}}
+        window.addEventListener('resize',checkDesktopLayout);checkDesktopLayout();
         
-        function checkDesktopLayout(){
-            const dg = document.querySelector('.desktop-grid');
-            const mo = document.querySelector('.mobile-only');
-            if(window.innerWidth>=1024){
-                if(dg) dg.style.display='grid';
-                if(mo) mo.style.display='none';
-            }else{
-                if(dg) dg.style.display='none';
-                if(mo) mo.style.display='block';
-            }
-        }
-        window.addEventListener('resize',checkDesktopLayout);
-        checkDesktopLayout();
-        
-        // Event Listeners
         const langToggleBtn = document.getElementById('langToggleBtn');
         const langToggleBtnDesktop = document.getElementById('langToggleBtnDesktop');
-        if(langToggleBtn) langToggleBtn.addEventListener('click',toggleLanguage);
-        if(langToggleBtnDesktop) langToggleBtnDesktop.addEventListener('click',toggleLanguage);
-        
         const soundToggleBtn = document.getElementById('soundToggleBtn');
         const soundToggleBtnDesktop = document.getElementById('soundToggleBtnDesktop');
+        if(langToggleBtn) langToggleBtn.addEventListener('click',toggleLanguage);
+        if(langToggleBtnDesktop) langToggleBtnDesktop.addEventListener('click',toggleLanguage);
         if(soundToggleBtn) soundToggleBtn.addEventListener('click',toggleSound);
         if(soundToggleBtnDesktop) soundToggleBtnDesktop.addEventListener('click',toggleSound);
         
         const desktopBetAmount = document.getElementById('desktopBetAmount');
         if(desktopBetAmount) desktopBetAmount.addEventListener('input',updateDesktopPreview);
         
-        document.querySelectorAll('.desktop-bet-shortcut').forEach(btn=>{
-            btn.addEventListener('click',function(){
-                const amt=parseFloat(this.getAttribute('data-amount'));
-                const desktopBetAmountEl = document.getElementById('desktopBetAmount');
-                const cur = desktopBetAmountEl ? (parseFloat(desktopBetAmountEl.value) || 0) : 0;
-                if(desktopBetAmountEl) desktopBetAmountEl.value=cur+amt;
-                updateDesktopPreview();
-            });
-        });
+        document.querySelectorAll('.desktop-bet-shortcut').forEach(btn=>{btn.addEventListener('click',function(){const amt=parseFloat(this.getAttribute('data-amount'));const cur=parseFloat(document.getElementById('desktopBetAmount').value)||0;const betInput = document.getElementById('desktopBetAmount'); if(betInput) betInput.value=cur+amt;updateDesktopPreview();});});
         
-        const desktopConfirmBetBtn = document.getElementById('desktopConfirmBetBtn');
-        if(desktopConfirmBetBtn){
-            desktopConfirmBetBtn.addEventListener('click',()=>{
-                const desktopBetAmountEl = document.getElementById('desktopBetAmount');
-                const amt = desktopBetAmountEl ? (parseFloat(desktopBetAmountEl.value) || 0) : 0;
-                if(isNaN(amt)||amt<=0){showToast('បញ្ចូលទឹកប្រាក់!');return;}
-                if(!selectedZodiac){showToast('សូមចុចជ្រើសរើសឆ្នាំនៅលើតារាងខាងលើ!');return;}
-                if(currentBalance<amt){showToast('សមតុល្យមិនគ្រប់!');return;}
-                pendingBetAmount=amt;
-                pendingZodiac=selectedZodiac;
-                const confirmMsg = document.getElementById('confirmPredictMsg');
-                if(confirmMsg) confirmMsg.innerHTML=`${currentLang==='km'?'តើអ្នកពិតជាចង់ទស្សន៍ទាយ':'Are you sure you want to bet'} ${selectedZodiac} $${amt.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(getNextHour(new Date().getHours()))}?`;
-                const confirmModal = document.getElementById('confirmPredictModal');
-                if(confirmModal) confirmModal.classList.add('show');
-            });
+        const desktopConfirmBtn = document.getElementById('desktopConfirmBetBtn');
+        if(desktopConfirmBtn) {
+            desktopConfirmBtn.addEventListener('click',()=>{const amt=parseFloat(document.getElementById('desktopBetAmount').value);if(isNaN(amt)||amt<=0){showToast('បញ្ចូលទឹកប្រាក់!');return;}if(!selectedZodiac){showToast('សូមចុចជ្រើសរើសឆ្នាំនៅលើតារាងខាងលើ!');return;}if(currentBalance<amt){showToast('សមតុល្យមិនគ្រប់!');return;}pendingBetAmount=amt;pendingZodiac=selectedZodiac;const confirmMsg = document.getElementById('confirmPredictMsg'); if(confirmMsg) confirmMsg.innerHTML=`${currentLang==='km'?'តើអ្នកពិតជាចង់ទស្សន៍ទាយ':'Are you sure you want to bet'} ${selectedZodiac} $${amt.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(getNextHour(new Date().getHours()))}?`;const confirmModal = document.getElementById('confirmPredictModal'); if(confirmModal) confirmModal.classList.add('show');});
         }
         
-        const cancelPredictConfirm = document.getElementById('cancelPredictConfirm');
-        if(cancelPredictConfirm) cancelPredictConfirm.addEventListener('click',()=>{
-            const confirmModal = document.getElementById('confirmPredictModal');
-            if(confirmModal) confirmModal.classList.remove('show');
-        });
-        
-        const yesPredictConfirm = document.getElementById('yesPredictConfirm');
-        if(yesPredictConfirm){
-            yesPredictConfirm.addEventListener('click',()=>{
-                const confirmModal = document.getElementById('confirmPredictModal');
-                if(confirmModal) confirmModal.classList.remove('show');
-                executePredictionFromConfirm();
-            });
-        }
+        const cancelConfirm = document.getElementById('cancelPredictConfirm');
+        const yesConfirm = document.getElementById('yesPredictConfirm');
+        if(cancelConfirm) cancelConfirm.addEventListener('click',()=>{const modal = document.getElementById('confirmPredictModal'); if(modal) modal.classList.remove('show');});
+        if(yesConfirm) yesConfirm.addEventListener('click',()=>{const modal = document.getElementById('confirmPredictModal'); if(modal) modal.classList.remove('show'); executePredictionFromConfirm();});
         
         const openPredictBtn = document.getElementById('openPredictBtn');
-        if(openPredictBtn){
-            openPredictBtn.addEventListener('click',()=>{
-                const betAmountEl = document.getElementById('betAmount');
-                if(betAmountEl) betAmountEl.value='';
-                selectedZodiac='';
-                document.querySelectorAll('.zodiac-option').forEach(o=>o.classList.remove('selected'));
-                updatePreview();
-                const predictModal = document.getElementById('predictModal');
-                if(predictModal) predictModal.classList.add('show');
-            });
+        if(openPredictBtn) {
+            openPredictBtn.addEventListener('click',()=>{const betAmountInput = document.getElementById('betAmount'); if(betAmountInput) betAmountInput.value=''; selectedZodiac=''; document.querySelectorAll('.zodiac-option').forEach(o=>o.classList.remove('selected')); updatePreview(); const predictModal = document.getElementById('predictModal'); if(predictModal) predictModal.classList.add('show');});
         }
         
         const closePredictModal = document.getElementById('closePredictModal');
-        if(closePredictModal) closePredictModal.addEventListener('click',()=>{
-            const predictModal = document.getElementById('predictModal');
-            if(predictModal) predictModal.classList.remove('show');
-        });
+        if(closePredictModal) closePredictModal.addEventListener('click',()=>{const modal = document.getElementById('predictModal'); if(modal) modal.classList.remove('show');});
         
         const betAmountInput = document.getElementById('betAmount');
         if(betAmountInput) betAmountInput.addEventListener('input',updatePreview);
         
-        document.querySelectorAll('.shortcut').forEach(btn=>{
-            btn.addEventListener('click',function(){
-                const amt=parseFloat(this.getAttribute('data-amount'));
-                const betAmountEl = document.getElementById('betAmount');
-                const cur = betAmountEl ? (parseFloat(betAmountEl.value) || 0) : 0;
-                if(betAmountEl) betAmountEl.value=cur+amt;
-                updatePreview();
-            });
-        });
+        document.querySelectorAll('.shortcut').forEach(btn=>{btn.addEventListener('click',function(){const amt=parseFloat(this.getAttribute('data-amount'));const cur=parseFloat(document.getElementById('betAmount').value)||0;const betInput = document.getElementById('betAmount'); if(betInput) betInput.value=cur+amt;updatePreview();});});
         
         const confirmPredictBtn = document.getElementById('confirmPredictBtn');
-        if(confirmPredictBtn){
-            confirmPredictBtn.addEventListener('click',()=>{
-                const betAmountEl = document.getElementById('betAmount');
-                const amt = betAmountEl ? (parseFloat(betAmountEl.value) || 0) : 0;
-                if(isNaN(amt)||amt<=0){showToast('បញ្ចូលទឹកប្រាក់!');return;}
-                if(!selectedZodiac){showToast('ជ្រើសរើសឆ្នាំ!');return;}
-                if(currentBalance<amt){showToast('សមតុល្យមិនគ្រប់!');return;}
-                pendingBetAmount=amt;
-                pendingZodiac=selectedZodiac;
-                const predictModal = document.getElementById('predictModal');
-                if(predictModal) predictModal.classList.remove('show');
-                const confirmMsg = document.getElementById('confirmPredictMsg');
-                if(confirmMsg) confirmMsg.innerHTML=`${currentLang==='km'?'តើអ្នកពិតជាចង់ទស្សន៍ទាយ':'Are you sure you want to bet'} ${selectedZodiac} $${amt.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(getNextHour(new Date().getHours()))}?`;
-                const confirmModal = document.getElementById('confirmPredictModal');
-                if(confirmModal) confirmModal.classList.add('show');
-            });
+        if(confirmPredictBtn) {
+            confirmPredictBtn.addEventListener('click',()=>{const amt=parseFloat(document.getElementById('betAmount').value);if(isNaN(amt)||amt<=0){showToast('បញ្ចូលទឹកប្រាក់!');return;}if(!selectedZodiac){showToast('ជ្រើសរើសឆ្នាំ!');return;}if(currentBalance<amt){showToast('សមតុល្យមិនគ្រប់!');return;}pendingBetAmount=amt;pendingZodiac=selectedZodiac;const predictModal = document.getElementById('predictModal'); if(predictModal) predictModal.classList.remove('show');const confirmMsg = document.getElementById('confirmPredictMsg'); if(confirmMsg) confirmMsg.innerHTML=`${currentLang==='km'?'តើអ្នកពិតជាចង់ទស្សន៍ទាយ':'Are you sure you want to bet'} ${selectedZodiac} $${amt.toFixed(2)} ${currentLang==='km'?'សម្រាប់ម៉ោង':'for hour'} ${formatHour(getNextHour(new Date().getHours()))}?`;const confirmModal = document.getElementById('confirmPredictModal'); if(confirmModal) confirmModal.classList.add('show');});
         }
         
         let lawVisible=false;
-        const toggleLaw=()=>{
-            const lawText = document.getElementById('lawText');
-            const lawTextDesktop = document.getElementById('lawTextDesktop');
-            const playerLawBtn = document.getElementById('playerLawBtn');
-            const playerLawBtnDesktop = document.getElementById('playerLawBtnDesktop');
-            if(lawVisible){
-                if(lawText) lawText.style.display='none';
-                if(lawTextDesktop) lawTextDesktop.style.display='none';
-                if(playerLawBtn) playerLawBtn.innerHTML='📜 អានច្បាប់ និងលក្ខខណ្ឌ';
-                if(playerLawBtnDesktop) playerLawBtnDesktop.innerHTML='📜 អានច្បាប់ និងលក្ខខណ្ឌ';
-            }else{
-                if(lawText) lawText.style.display='block';
-                if(lawTextDesktop) lawTextDesktop.style.display='block';
-                if(playerLawBtn) playerLawBtn.innerHTML='📜 លាក់ច្បាប់';
-                if(playerLawBtnDesktop) playerLawBtnDesktop.innerHTML='📜 លាក់ច្បាប់';
-            }
-            lawVisible=!lawVisible;
-        };
-        
+        const toggleLaw=()=>{const lbM=document.getElementById('lawText'),lbD=document.getElementById('lawTextDesktop');if(lawVisible){if(lbM) lbM.style.display='none'; if(lbD) lbD.style.display='none';const lawBtn = document.getElementById('playerLawBtn'); const lawBtnDesktop = document.getElementById('playerLawBtnDesktop'); if(lawBtn) lawBtn.innerHTML='📜 អានច្បាប់ និងលក្ខខណ្ឌ'; if(lawBtnDesktop) lawBtnDesktop.innerHTML='📜 អានច្បាប់ និងលក្ខខណ្ឌ';}else{if(lbM) lbM.style.display='block'; if(lbD) lbD.style.display='block';const lawBtn = document.getElementById('playerLawBtn'); const lawBtnDesktop = document.getElementById('playerLawBtnDesktop'); if(lawBtn) lawBtn.innerHTML='📜 លាក់ច្បាប់'; if(lawBtnDesktop) lawBtnDesktop.innerHTML='📜 លាក់ច្បាប់';}lawVisible=!lawVisible;};
         const playerLawBtn = document.getElementById('playerLawBtn');
         const playerLawBtnDesktop = document.getElementById('playerLawBtnDesktop');
         if(playerLawBtn) playerLawBtn.addEventListener('click',toggleLaw);
@@ -885,323 +616,163 @@
         
         const adminPanelBtn = document.getElementById('adminPanelBtn');
         const adminPanelBtnDesktop = document.getElementById('adminPanelBtnDesktop');
-        const adminEntryModal = document.getElementById('adminEntryPinModal');
-        if(adminPanelBtn) adminPanelBtn.addEventListener('click',()=>{if(adminEntryModal) adminEntryModal.classList.add('show');});
-        if(adminPanelBtnDesktop) adminPanelBtnDesktop.addEventListener('click',()=>{if(adminEntryModal) adminEntryModal.classList.add('show');});
+        if(adminPanelBtn) adminPanelBtn.addEventListener('click',()=>{const modal = document.getElementById('adminEntryPinModal'); if(modal) modal.classList.add('show');});
+        if(adminPanelBtnDesktop) adminPanelBtnDesktop.addEventListener('click',()=>{const modal = document.getElementById('adminEntryPinModal'); if(modal) modal.classList.add('show');});
         
-        const closeAdminEntryModal = document.getElementById('closeAdminEntryModal');
-        if(closeAdminEntryModal) closeAdminEntryModal.addEventListener('click',()=>{if(adminEntryModal) adminEntryModal.classList.remove('show');});
+        const closeAdminEntry = document.getElementById('closeAdminEntryModal');
+        if(closeAdminEntry) closeAdminEntry.addEventListener('click',()=>{const modal = document.getElementById('adminEntryPinModal'); if(modal) modal.classList.remove('show');});
         
-        const confirmAdminEntryBtn = document.getElementById('confirmAdminEntryBtn');
-        if(confirmAdminEntryBtn){
-            confirmAdminEntryBtn.addEventListener('click',()=>{
-                const adminEntryPinInput = document.getElementById('adminEntryPinInput');
-                if(adminEntryPinInput && adminEntryPinInput.value===ADMIN_PIN){
-                    if(adminEntryModal) adminEntryModal.classList.remove('show');
-                    showAdminPanel();
-                    showToast('បានចូលទៅកាន់ Admin Panel!');
-                }else{
-                    showToast('ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!');
-                    if(adminEntryPinInput) adminEntryPinInput.value='';
-                }
-            });
+        const confirmAdminEntry = document.getElementById('confirmAdminEntryBtn');
+        if(confirmAdminEntry) {
+            confirmAdminEntry.addEventListener('click',()=>{const pinInput = document.getElementById('adminEntryPinInput'); if(pinInput && pinInput.value===ADMIN_PIN){const modal = document.getElementById('adminEntryPinModal'); if(modal) modal.classList.remove('show'); showAdminPanel(); showToast('បានចូលទៅកាន់ Admin Panel!');}else{showToast('ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!'); if(pinInput) pinInput.value='';}});
         }
         
-        const backToMainBtn = document.getElementById('backToMainBtn');
-        if(backToMainBtn) backToMainBtn.addEventListener('click',hideAdminPanel);
+        const backToMain = document.getElementById('backToMainBtn');
+        if(backToMain) backToMain.addEventListener('click',hideAdminPanel);
         
-        const saveMultiplierBtn = document.getElementById('saveMultiplierBtn');
-        if(saveMultiplierBtn){
-            saveMultiplierBtn.addEventListener('click',()=>{
-                const newMultiplier = document.getElementById('newMultiplier');
-                const nm = newMultiplier ? parseInt(newMultiplier.value) : 10;
-                if(nm>=1&&nm<=20){
-                    rewardMultiplier=nm;
-                    localStorage.setItem('rewardMultiplier',rewardMultiplier);
-                    const currentMultiplierEl = document.getElementById('currentMultiplier');
-                    if(currentMultiplierEl) currentMultiplierEl.innerHTML=rewardMultiplier+'x';
-                    showToast(`បានកំណត់មេគុណរង្វាន់ទៅ ${rewardMultiplier}x`);
-                }
-            });
+        const saveMultiplier = document.getElementById('saveMultiplierBtn');
+        if(saveMultiplier) {
+            saveMultiplier.addEventListener('click',()=>{const nm=parseInt(document.getElementById('newMultiplier').value);if(nm>=1&&nm<=20){rewardMultiplier=nm;localStorage.setItem('rewardMultiplier',rewardMultiplier);const currentMultiplierSpan = document.getElementById('currentMultiplier'); if(currentMultiplierSpan) currentMultiplierSpan.innerHTML=rewardMultiplier+'x';showToast(`បានកំណត់មេគុណរង្វាន់ទៅ ${rewardMultiplier}x`);}});
         }
         
         const resetSystemBtn = document.getElementById('resetSystemBtn');
-        if(resetSystemBtn) resetSystemBtn.addEventListener('click',()=>{
-            const confirmResetModal = document.getElementById('confirmResetModal');
-            if(confirmResetModal) confirmResetModal.classList.add('show');
-        });
+        if(resetSystemBtn) resetSystemBtn.addEventListener('click',()=>{const modal = document.getElementById('confirmResetModal'); if(modal) modal.classList.add('show');});
         
-        const cancelResetConfirm = document.getElementById('cancelResetConfirm');
-        if(cancelResetConfirm) cancelResetConfirm.addEventListener('click',()=>{
-            const confirmResetModal = document.getElementById('confirmResetModal');
-            if(confirmResetModal) confirmResetModal.classList.remove('show');
-        });
+        const cancelReset = document.getElementById('cancelResetConfirm');
+        const yesReset = document.getElementById('yesResetConfirm');
+        if(cancelReset) cancelReset.addEventListener('click',()=>{const modal = document.getElementById('confirmResetModal'); if(modal) modal.classList.remove('show');});
+        if(yesReset) yesReset.addEventListener('click',()=>{const modal = document.getElementById('confirmResetModal'); if(modal) modal.classList.remove('show'); resetSystem();});
         
-        const yesResetConfirm = document.getElementById('yesResetConfirm');
-        if(yesResetConfirm) yesResetConfirm.addEventListener('click',()=>{
-            const confirmResetModal = document.getElementById('confirmResetModal');
-            if(confirmResetModal) confirmResetModal.classList.remove('show');
-            resetSystem();
-        });
+        const refreshUsers = document.getElementById('refreshUsersBtn');
+        if(refreshUsers) refreshUsers.addEventListener('click',()=>{renderUsersTable();showToast('បានធ្វើឲ្យតារាងអ្នកប្រើប្រាស់ស្រស់');});
         
-        const refreshUsersBtn = document.getElementById('refreshUsersBtn');
-        if(refreshUsersBtn) refreshUsersBtn.addEventListener('click',()=>{renderUsersTable();showToast('បានធ្វើឲ្យតារាងអ្នកប្រើប្រាស់ស្រស់');});
+        const refreshBets = document.getElementById('refreshBetsBtn');
+        if(refreshBets) refreshBets.addEventListener('click',()=>{renderAdminBetsTable();showToast('បានធ្វើឲ្យតារាងភ្នាល់ស្រស់');});
         
-        const refreshBetsBtn = document.getElementById('refreshBetsBtn');
-        if(refreshBetsBtn) refreshBetsBtn.addEventListener('click',()=>{renderAdminBetsTable();showToast('បានធ្វើឲ្យតារាងភ្នាល់ស្រស់');});
-        
-        // Tab setup
-        const setupTabs = (resultId, depositId, betId) => {
-            const resultTab = document.getElementById(resultId);
-            const depositTab = document.getElementById(depositId);
-            const betTab = document.getElementById(betId);
-            if(resultTab && depositTab && betTab){
+        // Tabs setup
+        const setupTabs = (resultId, depositId, betId, tabPrefix) => {
+            const resultTab = document.getElementById(`${tabPrefix}Result`);
+            const depositTab = document.getElementById(`${tabPrefix}Deposit`);
+            const betTab = document.getElementById(`${tabPrefix}Bet`);
+            if(resultTab) {
                 resultTab.addEventListener('click',function(){
-                    const resultDiv = document.getElementById('resultTab');
-                    const depositDiv = document.getElementById('depositTab');
-                    const betDiv = document.getElementById('betTab');
+                    const resultDiv = document.getElementById(resultId);
+                    const depositDiv = document.getElementById(depositId);
+                    const betDiv = document.getElementById(betId);
                     if(resultDiv) resultDiv.style.display='block';
                     if(depositDiv) depositDiv.style.display='none';
                     if(betDiv) betDiv.style.display='none';
                 });
+            }
+            if(depositTab) {
                 depositTab.addEventListener('click',function(){
-                    const resultDiv = document.getElementById('resultTab');
-                    const depositDiv = document.getElementById('depositTab');
-                    const betDiv = document.getElementById('betTab');
+                    const resultDiv = document.getElementById(resultId);
+                    const depositDiv = document.getElementById(depositId);
+                    const betDiv = document.getElementById(betId);
                     if(resultDiv) resultDiv.style.display='none';
                     if(depositDiv) depositDiv.style.display='block';
                     if(betDiv) betDiv.style.display='none';
                 });
+            }
+            if(betTab) {
                 betTab.addEventListener('click',function(){
-                    const resultDiv = document.getElementById('resultTab');
-                    const depositDiv = document.getElementById('depositTab');
-                    const betDiv = document.getElementById('betTab');
+                    const resultDiv = document.getElementById(resultId);
+                    const depositDiv = document.getElementById(depositId);
+                    const betDiv = document.getElementById(betId);
                     if(resultDiv) resultDiv.style.display='none';
                     if(depositDiv) depositDiv.style.display='none';
                     if(betDiv) betDiv.style.display='block';
                 });
             }
         };
-        setupTabs('tabResult','tabDeposit','tabBet');
-        setupTabs('tabResultDesktop','tabDepositDesktop','tabBetDesktop');
+        setupTabs('resultTab','depositTab','betTab','tab');
+        setupTabs('resultTabDesktop','depositTabDesktop','betTabDesktop','tabDesktop');
         
         let histVisible=true;
-        const toggleHistory=()=>{
-            const historyBox = document.getElementById('historyBox');
-            const historyBoxDesktop = document.getElementById('historyBoxDesktop');
-            const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
-            const toggleHistoryBtnDesktop = document.getElementById('toggleHistoryBtnDesktop');
-            if(histVisible){
-                if(historyBox) historyBox.style.display='none';
-                if(historyBoxDesktop) historyBoxDesktop.style.display='none';
-                if(toggleHistoryBtn) toggleHistoryBtn.innerHTML='👁️ បង្ហាញ';
-                if(toggleHistoryBtnDesktop) toggleHistoryBtnDesktop.innerHTML='👁️ បង្ហាញ';
-            }else{
-                if(historyBox) historyBox.style.display='block';
-                if(historyBoxDesktop) historyBoxDesktop.style.display='block';
-                if(toggleHistoryBtn) toggleHistoryBtn.innerHTML='👁️ លាក់';
-                if(toggleHistoryBtnDesktop) toggleHistoryBtnDesktop.innerHTML='👁️ លាក់';
-            }
-            histVisible=!histVisible;
-        };
-        
+        const toggleHistory=()=>{const boxM=document.getElementById('historyBox'),boxD=document.getElementById('historyBoxDesktop'),btnM=document.getElementById('toggleHistoryBtn'),btnD=document.getElementById('toggleHistoryBtnDesktop');if(histVisible){if(boxM) boxM.style.display='none'; if(boxD) boxD.style.display='none'; if(btnM) btnM.innerHTML='👁️ បង្ហាញ'; if(btnD) btnD.innerHTML='👁️ បង្ហាញ';}else{if(boxM) boxM.style.display='block'; if(boxD) boxD.style.display='block'; if(btnM) btnM.innerHTML='👁️ លាក់'; if(btnD) btnD.innerHTML='👁️ លាក់';}histVisible=!histVisible;};
         const toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
         const toggleHistoryBtnDesktop = document.getElementById('toggleHistoryBtnDesktop');
         if(toggleHistoryBtn) toggleHistoryBtn.addEventListener('click',toggleHistory);
         if(toggleHistoryBtnDesktop) toggleHistoryBtnDesktop.addEventListener('click',toggleHistory);
         
-        // Deposit Modal
         const depositModal = document.getElementById('depositModal');
         const confirmAdminModal = document.getElementById('confirmAdminModal');
         const adminHistoryModal = document.getElementById('adminHistoryModal');
         
-        const adminDepositMoneyBtn = document.getElementById('adminDepositMoneyBtn');
-        if(adminDepositMoneyBtn){
-            adminDepositMoneyBtn.addEventListener('click',()=>{
-                currentAction='admin_deposit';
-                const pinStep = document.getElementById('pinStep');
-                const amountStep = document.getElementById('amountStep');
-                const pinInput = document.getElementById('pinInput');
-                if(pinStep) pinStep.style.display='block';
-                if(amountStep) amountStep.style.display='none';
-                if(pinInput) pinInput.value='';
-                if(depositModal) depositModal.classList.add('show');
-            });
+        const adminDepositBtn = document.getElementById('adminDepositMoneyBtn');
+        if(adminDepositBtn) {
+            adminDepositBtn.addEventListener('click',()=>{currentAction='admin_deposit';const pinStep = document.getElementById('pinStep'); const amountStep = document.getElementById('amountStep'); if(pinStep) pinStep.style.display='block'; if(amountStep) amountStep.style.display='none'; const pinInput = document.getElementById('pinInput'); if(pinInput) pinInput.value=''; if(depositModal) depositModal.classList.add('show');});
         }
         
-        const adminViewDepositHistoryBtn = document.getElementById('adminViewDepositHistoryBtn');
-        if(adminViewDepositHistoryBtn){
-            adminViewDepositHistoryBtn.addEventListener('click',()=>{
-                let html='';
-                adminDepositHistory.forEach(item=>{
-                    html+=`<div class="history-modal-item">📅 ${item.date} | +$${item.amount.toFixed(2)}</div>`;
-                });
-                if(!html) html='<div>គ្មានទិន្នន័យ</div>';
-                const adminHistoryList = document.getElementById('adminHistoryList');
-                if(adminHistoryList) adminHistoryList.innerHTML=html;
-                if(adminHistoryModal) adminHistoryModal.classList.add('show');
-            });
+        const adminViewHistory = document.getElementById('adminViewDepositHistoryBtn');
+        if(adminViewHistory) {
+            adminViewHistory.addEventListener('click',()=>{let html='';adminDepositHistory.forEach(item=>{html+=`<div class="history-modal-item">📅 ${item.date} | +$${item.amount.toFixed(2)}</div>`;});if(!html)html='<div>គ្មានទិន្នន័យ</div>';const historyList = document.getElementById('adminHistoryList'); if(historyList) historyList.innerHTML=html; if(adminHistoryModal) adminHistoryModal.classList.add('show');});
         }
         
-        const closeAdminHistoryModal = document.getElementById('closeAdminHistoryModal');
-        if(closeAdminHistoryModal) closeAdminHistoryModal.addEventListener('click',()=>{if(adminHistoryModal) adminHistoryModal.classList.remove('show');});
+        const closeAdminHistory = document.getElementById('closeAdminHistoryModal');
+        if(closeAdminHistory) closeAdminHistory.addEventListener('click',()=>{if(adminHistoryModal) adminHistoryModal.classList.remove('show');});
         
-        const adminClearDepositHistoryBtn = document.getElementById('adminClearDepositHistoryBtn');
-        if(adminClearDepositHistoryBtn){
-            adminClearDepositHistoryBtn.addEventListener('click',()=>{
-                const confirmAdminTitle = document.getElementById('confirmAdminTitle');
-                const confirmAdminMsg = document.getElementById('confirmAdminMsg');
-                if(confirmAdminTitle) confirmAdminTitle.innerHTML='⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin';
-                if(confirmAdminMsg) confirmAdminMsg.innerHTML='តើអ្នកពិតជាចង់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin ទាំងអស់មែនទេ?';
-                pendingAdminAction="clear_admin_deposit";
-                if(confirmAdminModal) confirmAdminModal.classList.add('show');
-            });
+        const adminClearDeposit = document.getElementById('adminClearDepositHistoryBtn');
+        if(adminClearDeposit) {
+            adminClearDeposit.addEventListener('click',()=>{const confirmTitle = document.getElementById('confirmAdminTitle'); const confirmMsg = document.getElementById('confirmAdminMsg'); if(confirmTitle) confirmTitle.innerHTML='⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin'; if(confirmMsg) confirmMsg.innerHTML='តើអ្នកពិតជាចង់លុបប្រវត្តិបញ្ចូលលុយរបស់ Admin ទាំងអស់មែនទេ?'; pendingAdminAction="clear_admin_deposit"; if(confirmAdminModal) confirmAdminModal.classList.add('show');});
         }
         
-        const playerDepositMoneyBtn = document.getElementById('playerDepositMoneyBtn');
-        if(playerDepositMoneyBtn){
-            playerDepositMoneyBtn.addEventListener('click',()=>{
-                currentAction='deposit';
-                const pinStep = document.getElementById('pinStep');
-                const amountStep = document.getElementById('amountStep');
-                const pinInput = document.getElementById('pinInput');
-                if(pinStep) pinStep.style.display='block';
-                if(amountStep) amountStep.style.display='none';
-                if(pinInput) pinInput.value='';
-                if(depositModal) depositModal.classList.add('show');
-            });
+        const playerDeposit = document.getElementById('playerDepositMoneyBtn');
+        if(playerDeposit) {
+            playerDeposit.addEventListener('click',()=>{currentAction='deposit';const pinStep = document.getElementById('pinStep'); const amountStep = document.getElementById('amountStep'); if(pinStep) pinStep.style.display='block'; if(amountStep) amountStep.style.display='none'; const pinInput = document.getElementById('pinInput'); if(pinInput) pinInput.value=''; if(depositModal) depositModal.classList.add('show');});
         }
         
-        const playerClearBalanceBtn = document.getElementById('playerClearBalanceBtn');
-        if(playerClearBalanceBtn){
-            playerClearBalanceBtn.addEventListener('click',()=>{
-                const confirmAdminTitle = document.getElementById('confirmAdminTitle');
-                const confirmAdminMsg = document.getElementById('confirmAdminMsg');
-                if(confirmAdminTitle) confirmAdminTitle.innerHTML='⚠️ បញ្ជាក់លុបទឹកប្រាក់អ្នកលេង';
-                if(confirmAdminMsg) confirmAdminMsg.innerHTML='តើអ្នកពិតជាចង់លុបទឹកប្រាក់អ្នកលេងមកត្រឹម $0.00 មែនទេ?';
-                pendingAdminAction="clear_balance";
-                if(confirmAdminModal) confirmAdminModal.classList.add('show');
-            });
+        const playerClearBalance = document.getElementById('playerClearBalanceBtn');
+        if(playerClearBalance) {
+            playerClearBalance.addEventListener('click',()=>{const confirmTitle = document.getElementById('confirmAdminTitle'); const confirmMsg = document.getElementById('confirmAdminMsg'); if(confirmTitle) confirmTitle.innerHTML='⚠️ បញ្ជាក់លុបទឹកប្រាក់អ្នកលេង'; if(confirmMsg) confirmMsg.innerHTML='តើអ្នកពិតជាចង់លុបទឹកប្រាក់អ្នកលេងមកត្រឹម $0.00 មែនទេ?'; pendingAdminAction="clear_balance"; if(confirmAdminModal) confirmAdminModal.classList.add('show');});
         }
         
-        const playerClearDepositHistoryBtn = document.getElementById('playerClearDepositHistoryBtn');
-        if(playerClearDepositHistoryBtn){
-            playerClearDepositHistoryBtn.addEventListener('click',()=>{
-                const confirmAdminTitle = document.getElementById('confirmAdminTitle');
-                const confirmAdminMsg = document.getElementById('confirmAdminMsg');
-                if(confirmAdminTitle) confirmAdminTitle.innerHTML='⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេង';
-                if(confirmAdminMsg) confirmAdminMsg.innerHTML='តើអ្នកពិតជាចង់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេងទាំងអស់មែនទេ?';
-                pendingAdminAction="clear_deposit";
-                if(confirmAdminModal) confirmAdminModal.classList.add('show');
-            });
+        const playerClearDeposit = document.getElementById('playerClearDepositHistoryBtn');
+        if(playerClearDeposit) {
+            playerClearDeposit.addEventListener('click',()=>{const confirmTitle = document.getElementById('confirmAdminTitle'); const confirmMsg = document.getElementById('confirmAdminMsg'); if(confirmTitle) confirmTitle.innerHTML='⚠️ បញ្ជាក់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេង'; if(confirmMsg) confirmMsg.innerHTML='តើអ្នកពិតជាចង់លុបប្រវត្តិបញ្ចូលលុយអ្នកលេងទាំងអស់មែនទេ?'; pendingAdminAction="clear_deposit"; if(confirmAdminModal) confirmAdminModal.classList.add('show');});
         }
         
-        const playerClearBetHistoryBtn = document.getElementById('playerClearBetHistoryBtn');
-        if(playerClearBetHistoryBtn){
-            playerClearBetHistoryBtn.addEventListener('click',()=>{
-                const confirmAdminTitle = document.getElementById('confirmAdminTitle');
-                const confirmAdminMsg = document.getElementById('confirmAdminMsg');
-                if(confirmAdminTitle) confirmAdminTitle.innerHTML='⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេង';
-                if(confirmAdminMsg) confirmAdminMsg.innerHTML='តើអ្នកពិតជាចង់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេងទាំងអស់មែនទេ?';
-                pendingAdminAction="clear_bet";
-                if(confirmAdminModal) confirmAdminModal.classList.add('show');
-            });
+        const playerClearBet = document.getElementById('playerClearBetHistoryBtn');
+        if(playerClearBet) {
+            playerClearBet.addEventListener('click',()=>{const confirmTitle = document.getElementById('confirmAdminTitle'); const confirmMsg = document.getElementById('confirmAdminMsg'); if(confirmTitle) confirmTitle.innerHTML='⚠️ បញ្ជាក់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេង'; if(confirmMsg) confirmMsg.innerHTML='តើអ្នកពិតជាចង់លុបប្រវត្តិទស្សន៍ទាយអ្នកលេងទាំងអស់មែនទេ?'; pendingAdminAction="clear_bet"; if(confirmAdminModal) confirmAdminModal.classList.add('show');});
         }
         
         const closeDepositModal = document.getElementById('closeDepositModal');
         if(closeDepositModal) closeDepositModal.addEventListener('click',()=>{if(depositModal) depositModal.classList.remove('show');});
         
-        const confirmPinBtn = document.getElementById('confirmPinBtn');
-        if(confirmPinBtn){
-            confirmPinBtn.addEventListener('click',()=>{
-                const pinInput = document.getElementById('pinInput');
-                if(pinInput && pinInput.value===SECRET_PIN){
-                    const pinStep = document.getElementById('pinStep');
-                    const amountStep = document.getElementById('amountStep');
-                    if(pinStep) pinStep.style.display='none';
-                    if(amountStep) amountStep.style.display='block';
-                    const amountInput = document.getElementById('amountInput');
-                    if(amountInput) amountInput.value='';
-                }else{
-                    showToast('កូដសម្ងាត់មិនត្រឹមត្រូវ!');
-                    if(pinInput) pinInput.value='';
-                }
-            });
+        const confirmPin = document.getElementById('confirmPinBtn');
+        if(confirmPin) {
+            confirmPin.addEventListener('click',()=>{const pinInput = document.getElementById('pinInput'); if(pinInput && pinInput.value===SECRET_PIN){const pinStep = document.getElementById('pinStep'); const amountStep = document.getElementById('amountStep'); if(pinStep) pinStep.style.display='none'; if(amountStep) amountStep.style.display='block'; const amountInput = document.getElementById('amountInput'); if(amountInput) amountInput.value='';}else{showToast('កូដសម្ងាត់មិនត្រឹមត្រូវ!'); if(pinInput) pinInput.value='';}});
         }
         
-        const backToPinBtn = document.getElementById('backToPinBtn');
-        if(backToPinBtn){
-            backToPinBtn.addEventListener('click',()=>{
-                const pinStep = document.getElementById('pinStep');
-                const amountStep = document.getElementById('amountStep');
-                if(pinStep) pinStep.style.display='block';
-                if(amountStep) amountStep.style.display='none';
-                const pinInput = document.getElementById('pinInput');
-                if(pinInput) pinInput.value='';
-            });
+        const backToPin = document.getElementById('backToPinBtn');
+        if(backToPin) {
+            backToPin.addEventListener('click',()=>{const pinStep = document.getElementById('pinStep'); const amountStep = document.getElementById('amountStep'); if(pinStep) pinStep.style.display='block'; if(amountStep) amountStep.style.display='none'; const pinInput = document.getElementById('pinInput'); if(pinInput) pinInput.value='';});
         }
         
-        const submitDepositBtn = document.getElementById('submitDepositBtn');
-        if(submitDepositBtn){
-            submitDepositBtn.addEventListener('click',()=>{
-                const amountInput = document.getElementById('amountInput');
-                const amt = amountInput ? parseFloat(amountInput.value) : 0;
-                if(isNaN(amt)||amt<=0){showToast('បញ្ចូលចំនួនលុយ!');return;}
-                if(currentAction==='deposit'){
-                    currentBalance+=amt;
-                    localStorage.setItem('balance',currentBalance);
-                    depositHistory.unshift({date:formatDateTime(new Date()),amount:amt});
-                    localStorage.setItem('depositHistory',JSON.stringify(depositHistory));
-                    renderDepositHistory();
-                }else if(currentAction==='admin_deposit'){
-                    adminBalance+=amt;
-                    localStorage.setItem('adminBalance',adminBalance);
-                    adminDepositHistory.unshift({date:formatDateTime(new Date()),amount:amt});
-                    localStorage.setItem('adminDepositHistory',JSON.stringify(adminDepositHistory));
-                }
-                updateAllBalanceDisplays();
-                updateAdminStats();
-                showToast(`បញ្ចូលលុយជោគជ័យ $${amt}`);
-                if(depositModal) depositModal.classList.remove('show');
+        const submitDeposit = document.getElementById('submitDepositBtn');
+        if(submitDeposit) {
+            submitDeposit.addEventListener('click',()=>{const amountInput = document.getElementById('amountInput'); const amt=parseFloat(amountInput ? amountInput.value : '0'); if(isNaN(amt)||amt<=0){showToast('បញ្ចូលចំនួនលុយ!');return;}
+                if(currentAction==='deposit'){currentBalance+=amt;localStorage.setItem('balance',currentBalance);depositHistory.unshift({date:formatDateTime(new Date()),amount:amt});localStorage.setItem('depositHistory',JSON.stringify(depositHistory));renderDepositHistory();}
+                else if(currentAction==='admin_deposit'){adminBalance+=amt;localStorage.setItem('adminBalance',adminBalance);adminDepositHistory.unshift({date:formatDateTime(new Date()),amount:amt});localStorage.setItem('adminDepositHistory',JSON.stringify(adminDepositHistory));}
+                updateAllBalanceDisplays();updateAdminStats();showToast(`បញ្ចូលលុយជោគជ័យ $${amt}`);if(depositModal) depositModal.classList.remove('show');
             });
         }
         
         const cancelAdminConfirm = document.getElementById('cancelAdminConfirm');
-        if(cancelAdminConfirm) cancelAdminConfirm.addEventListener('click',()=>{if(confirmAdminModal) confirmAdminModal.classList.remove('show');});
-        
         const yesAdminConfirm = document.getElementById('yesAdminConfirm');
-        if(yesAdminConfirm){
-            yesAdminConfirm.addEventListener('click',()=>{
-                if(confirmAdminModal) confirmAdminModal.classList.remove('show');
-                executeAdminAction();
-            });
-        }
+        if(cancelAdminConfirm) cancelAdminConfirm.addEventListener('click',()=>{if(confirmAdminModal) confirmAdminModal.classList.remove('show');});
+        if(yesAdminConfirm) yesAdminConfirm.addEventListener('click',()=>{if(confirmAdminModal) confirmAdminModal.classList.remove('show'); executeAdminAction();});
         
         const filterZodiac = document.getElementById('filterZodiac');
         const filterStatus = document.getElementById('filterStatus');
-        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+        const clearFilters = document.getElementById('clearFiltersBtn');
         if(filterZodiac) filterZodiac.addEventListener('input',()=>renderAdminBetsTable());
         if(filterStatus) filterStatus.addEventListener('change',()=>renderAdminBetsTable());
-        if(clearFiltersBtn){
-            clearFiltersBtn.addEventListener('click',()=>{
-                if(filterZodiac) filterZodiac.value='';
-                if(filterStatus) filterStatus.value='all';
-                renderAdminBetsTable();
-            });
-        }
+        if(clearFilters) clearFilters.addEventListener('click',()=>{if(filterZodiac) filterZodiac.value=''; if(filterStatus) filterStatus.value='all'; renderAdminBetsTable();});
         
-        window.addEventListener('click',(e)=>{
-            if(e.target===depositModal && depositModal) depositModal.classList.remove('show');
-            if(e.target===adminEntryModal && adminEntryModal) adminEntryModal.classList.remove('show');
-            const confirmPredictModal = document.getElementById('confirmPredictModal');
-            if(e.target===confirmPredictModal && confirmPredictModal) confirmPredictModal.classList.remove('show');
-            if(e.target===confirmAdminModal && confirmAdminModal) confirmAdminModal.classList.remove('show');
-            if(e.target===adminHistoryModal && adminHistoryModal) adminHistoryModal.classList.remove('show');
-            const confirmResetModal = document.getElementById('confirmResetModal');
-            if(e.target===confirmResetModal && confirmResetModal) confirmResetModal.classList.remove('show');
-        });
+        window.addEventListener('click',(e)=>{if(e.target===depositModal && depositModal) depositModal.classList.remove('show');if(e.target===document.getElementById('adminEntryPinModal')) document.getElementById('adminEntryPinModal').classList.remove('show');if(e.target===document.getElementById('confirmPredictModal')) document.getElementById('confirmPredictModal').classList.remove('show');if(e.target===confirmAdminModal && confirmAdminModal) confirmAdminModal.classList.remove('show');if(e.target===adminHistoryModal && adminHistoryModal) adminHistoryModal.classList.remove('show');if(e.target===document.getElementById('confirmResetModal')) document.getElementById('confirmResetModal').classList.remove('show');});
     }
-    
     init();
 </script>
 </body>
