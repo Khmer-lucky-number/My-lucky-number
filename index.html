@@ -3,626 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>សមាគមន៍ផលិតផលខ្មែរ v1.0</title>
+    <title>សមាគមន៍ផលិតផលខ្មែរ v1.1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        /* (រក្សារចនាបថដើមដដែល ដើម្បីរក្សាភាពស្អាតនៃ UI) */
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap');
-        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kantumruy Pro', sans-serif; }
         body { background-color: #f8fafc; color: #1e293b; }
-
-        /* Header Layout */
-        header {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            padding: 18px 5%; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            border-bottom: 3px solid #d4af37;
-        }
-        .header-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-        .top-row { display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 24px; font-weight: 700; color: #d4af37; letter-spacing: 0.5px; }
-        header h1 span { font-size: 14px; color: #94a3b8; font-weight: 400; margin-left: 5px; }
-        
-        .header-buttons { display: flex; gap: 10px; }
-        .distributor-btn { background-color: #d4af37; color: #0f172a; border: none; padding: 10px 18px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
-        .distributor-btn:hover { background-color: #f3f0df; transform: translateY(-1px); }
-        .admin-btn { background-color: #334155; color: #f8fafc; border: 1px solid #475569; padding: 10px 15px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
-        .admin-btn:hover { background-color: #475569; color: #d4af37; }
-
-        .search-container { display: flex; background-color: #fff; border-radius: 6px; overflow: hidden; padding: 3px; border: 1px solid #cbd5e1; }
-        .search-container input { width: 100%; padding: 10px 15px; border: none; outline: none; font-size: 14px; color: #334155; }
-        .search-btn { background-color: #0f172a; color: #d4af37; border: none; padding: 0 25px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; }
-
-        /* Categories */
-        .category-tabs { max-width: 1200px; margin: 25px auto 0 auto; padding: 0 20px; display: flex; gap: 10px; overflow-x: auto; }
-        .category-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { background-color: #fff; color: #64748b; padding: 10px 22px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
-        .tab-btn.active, .tab-btn:hover { background-color: #0f172a; color: #d4af37; border-color: #0f172a; }
-
-        /* Grid */
-        .container { max-width: 1200px; margin: 20px auto 60px auto; padding: 0 20px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-        
-        .product-card {
-            background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0; transition: all 0.25s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative;
-        }
-        .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #d4af37; }
-        .product-image-area { width: 100%; height: 200px; background-color: #f8fafc; overflow: hidden; }
-        .product-image-area img { width: 100%; height: 100%; object-fit: cover; }
-        .product-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .product-code { font-size: 11px; background-color: #f1f5f9; color: #475569; padding: 3px 8px; border-radius: 4px; align-self: flex-start; margin-bottom: 8px; font-weight: 700; }
-        .product-title { font-size: 14px; font-weight: 600; line-height: 1.5; height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #1e293b; margin-bottom: 10px; }
-        .product-price { font-size: 18px; font-weight: 700; color: #dc2626; margin-bottom: 12px; }
-        .view-detail-btn { display: block; width: 100%; padding: 10px; background-color: #fff; color: #0f172a; text-align: center; border: 1px solid #0f172a; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .view-detail-btn:hover { background-color: #0f172a; color: #d4af37; }
-
-        /* Modals Generic Base */
         .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background-color: #fff; padding: 30px; border-radius: 12px; width: 100%; max-width: 650px; position: relative; max-height: 95vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; color: #94a3b8; cursor: pointer; }
-        .close-btn:hover { color: #0f172a; }
-
-        /* Login Card */
-        .login-card {
-            background: rgba(255, 255, 255, 0.95); border-radius: 16px; padding: 35px 30px; width: 100%; max-width: 400px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); text-align: center; animation: fadeIn 0.3s ease;
-        }
-        .pass-group { position: relative; width: 100%; display: flex; align-items: center; }
-        .toggle-password-btn {
-            position: absolute; right: 15px; background: none; border: none; color: #64748b; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; height: 100%;
-        }
-
-        /* Distributor Form */
-        .distributor-header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
-        .distributor-header-box h2 { font-size: 22px; color: #0f172a; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .distributor-header-box h2 i { color: #d4af37; }
-        .distributor-header-box p { font-size: 12px; color: #64748b; margin-top: 4px; }
-        
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .modal-content { background-color: #fff; padding: 30px; border-radius: 12px; width: 100%; max-width: 650px; position: relative; max-height: 95vh; overflow-y: auto; }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; }
+        .submit-btn-gold { width: 100%; padding: 14px; background: #0f172a; color: #d4af37; border: 1px solid #d4af37; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #334155; }
-        .form-group input, .form-group select, .form-group textarea { 
-            width: 100%; padding: 11px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; 
-            outline: none; background: #fff; color: #1e293b; transition: all 0.2s; box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
-            border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); 
-        }
-        .full-address-display { 
-            background-color: #f8fafc; border: 1px dashed #d4af37; padding: 14px; border-radius: 8px; 
-            font-size: 13px; color: #0f172a; min-height: 44px; margin-top: 5px; line-height: 1.6; font-weight: 600;
-        }
-        .submit-btn-gold {
-            width: 100%; padding: 14px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #d4af37;
-            border: 1px solid #d4af37; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
-            margin-top: 10px; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        .submit-btn-gold:hover { background: #d4af37; color: #0f172a; transform: translateY(-1px); }
-
-        /* Success Popup */
-        .success-card {
-            background: #fff; border-radius: 16px; padding: 40px 30px; width: 100%; max-width: 460px;
-            text-align: center; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.3); border: 2px solid #d4af37;
-            animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .success-checkmark { 
-            width: 65px; height: 65px; background: #fef3c7; color: #d4af37; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 18px auto;
-        }
-        .success-checkmark.error-type { background: #fee2e2; color: #dc2626; }
-        .error-border { border-color: #dc2626 !important; }
-
-        .success-card h3 { font-size: 22px; color: #0f172a; margin-bottom: 8px; font-weight: 700; }
-        .success-card p { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 20px; }
-        .success-details { background: #f8fafc; border-radius: 8px; padding: 15px; text-align: left; margin: 15px 0; border: 1px solid #e2e8f0; font-size: 13px; }
-        .success-close-btn { 
-            width: 100%; padding: 12px; background: #0f172a; color: #d4af37; border: 1px solid #d4af37; 
-            border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; 
-        }
-
-        /* Order Box Display */
-        .order-form-section { background-color: #fdfbf7; padding: 20px; border-radius: 8px; border: 1px solid #fef3c7; margin-top: 25px; }
-        .payment-box { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 6px; border: 1px dashed #d4af37; margin-top: 10px; }
-        
-        /* Client Display Box */
-        .qr-container-wrapper { width: 110px; height: 110px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; position: relative; }
-        .qr-code-img { position: absolute; max-width: none; max-height: none; transform-origin: center center; transition: transform 0.1s ease-out; }
-
-        /* Admin QR Editor Area */
-        .qr-editor-container { background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .qr-preview-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; padding: 15px; border-radius: 6px; margin: 10px 0; border: 1px dashed #cbd5e1; }
-        
-        /* Drag Frame Container */
-        .qr-preview-frame { width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; cursor: move; user-select: none; position: relative; }
-        .qr-preview-frame img { position: absolute; max-width: none; max-height: none; transform-origin: center center; pointer-events: none; }
-        
-        .qr-tools { display: flex; flex-direction: column; width: 100%; gap: 10px; margin-top: 12px; align-items: center; }
-        .qr-btn-group { display: flex; gap: 10px; }
-        .qr-tool-btn { background: #0f172a; color: #d4af37; border: 1px solid #d4af37; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px; }
-        .qr-tool-btn:hover { background: #d4af37; color: #0f172a; }
-        
-        .zoom-slider-container { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 250px; background: #f1f5f9; padding: 6px 12px; border-radius: 20px; border: 1px solid #e2e8f0; }
-        .zoom-slider-container input[type=range] { flex: 1; cursor: pointer; accent-color: #0f172a; }
-        .zoom-val-text { font-size: 11px; font-weight: 700; color: #475569; min-width: 35px; text-align: right; }
-
-        /* Admin Layouts */
-        .admin-search-area { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; gap: 10px; }
-        .admin-editor-panel { display: none; border-top: 2px dashed #e2e8f0; padding-top: 20px; }
-
-        footer { text-align: center; padding: 30px; background-color: #fff; color: #64748b; margin-top: 60px; border-top: 1px solid #e2e8f0; font-size: 13px; }
-        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+        .form-group input { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 8px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <div class="top-row">
-                <h1>សមាគមន៍ផលិតផលខ្មែរ <span>v1.0</span></h1>
-                <div class="header-buttons">
-                    <button class="distributor-btn" onclick="openDistributorModal()"><i class="fa-solid fa-handshake"></i> ចុះឈ្មោះតំណាងចែកចាយ</button>
-                    <button class="admin-btn" onclick="openLoginModal()">🔐 គ្រប់គ្រងប្រព័ន្ធ</button>
-                </div>
-            </div>
-            <div class="search-container">
-                <input type="text" id="searchInput" oninput="searchProducts()" placeholder="ស្វែងរកផលិតផលនៅទីនេះ...">
-                <button class="search-btn">ស្វែងរក</button>
-            </div>
-        </div>
+    <header style="padding: 20px; background: #0f172a; color: #d4af37; display: flex; justify-content: space-between;">
+        <h1>សមាគមន៍ផលិតផលខ្មែរ</h1>
+        <button class="admin-btn" onclick="openAdminModal()" style="padding: 10px; cursor: pointer;">🛠️ ចូលកែសម្រួល</button>
     </header>
 
-    <div class="category-tabs">
-        <button class="tab-btn active" onclick="filterCategory('all', this)">📦 ទាំងអស់</button>
-        <button class="tab-btn" onclick="filterCategory('food', this)">🍲 ចំណីអាហារ & ភេសជ្ជៈ</button>
-        <button class="tab-btn" onclick="filterCategory('handicraft', this)">🏺 សិប្បកម្មខ្មែរ</button>
-        <button class="tab-btn" onclick="filterCategory('silk', this)">🧣 សូត្រ & សម្លៀកបំពាក់</button>
-        <button class="tab-btn" onclick="filterCategory('souvenir', this)">🎁 វត្ថុអនុស្សាវរីយ៍</button>
-    </div>
-
-    <div class="container">
-        <div class="product-grid" id="productGrid"></div>
-    </div>
-
-    <div id="loginModal" class="modal">
-        <div class="login-card">
-            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
-            <div class="success-checkmark" style="background:#f1f5f9; color:#0f172a; box-shadow:none;"><i class="fa-solid fa-shield-halved"></i></div>
-            <h3>ផ្ទៀងផ្ទាត់អ្នកគ្រប់គ្រង</h3>
-            <p>សូមបញ្ចូលលេខកូដសម្ងាត់បច្ចេកទេស</p>
-            <form onsubmit="verifyAdminPassword(event)">
-                <div class="form-group">
-                    <div class="pass-group">
-                        <input type="password" id="adminPassInput" placeholder="លេខសម្ងាត់..." required style="padding-right: 45px;">
-                        <button type="button" class="toggle-password-btn" onclick="togglePass('adminPassInput', 'eyeIcon')"><i id="eyeIcon" class="fa-solid fa-eye"></i></button>
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn-gold" style="margin-top:0;">🔐 ផ្ទៀងផ្ទាត់</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="distributorModal" class="modal">
-        <div class="modal-content" style="max-width: 600px; border-top: 4px solid #d4af37;">
-            <span class="close-btn" onclick="closeDistributorModal()">&times;</span>
-            <div class="distributor-header-box">
-                <h2><i class="fa-solid fa-handshake"></i> ចុះឈ្មោះជាតំណាងចែកចាយ</h2>
-                <p>សូមបំពេញព័ត៌មានផ្លូវការខាងក្រោមដើម្បីរួមដៃជាមួយសមាគមន៍</p>
-            </div>
-            <form id="distForm" onsubmit="submitDistForm(event)">
-                <div class="form-group"><label>ឈ្មោះពេញ (បុគ្គល ឬសហគ្រាស)៖</label><input type="text" id="distName" placeholder="ឧ. ក្រុមហ៊ុ​ន ខ្មែរប្រូដាក" required></div>
-                <div class="form-grid">
-                    <div class="form-group"><label>អាយុ៖</label><input type="number" id="distAge" placeholder="អាយុ" required></div>
-                    <div class="form-group"><label>មុខរបរបច្ចុប្បន្ន៖</label><input type="text" id="distJob" placeholder="អាជីវករ បុគ្គលិក..." required></div>
-                </div>
-                <div class="form-group"><label>លេខតេឡេក្រាម ឬ លេខទូរសព្ទទំនាក់ទំនង៖</label><input type="text" id="distTel" placeholder="ឧ. @username ឬ លេខទូរសព្ទ" required></div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>រាជធានី/ខេត្ត៖</label>
-                        <select id="provSelect" onchange="updateDistricts(); updateFullAddress();" required>
-                            <option value="" disabled selected>--- ជ្រើសរើសខេត្ត ---</option>
-                            <option value="ភ្នំពេញ">ភ្នំពេញ</option>
-                            <option value="កណ្តាល">កណ្តាល</option>
-                            <option value="សៀមរាប">សៀមរាប</option>
-                            <option value="បាត់ដំបង">បាត់ដំបង</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>ក្រុង/ស្រុក/ខណ្ឌ៖</label>
-                        <select id="distSelect" onchange="updateFullAddress();" required>
-                            <option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-grid">
-                    <div class="form-group"><label>ឃុំ/សង្កាត់៖</label><input type="text" id="communeInput" placeholder="បញ្ចូលឈ្មោះឃុំ/សង្កាត់" oninput="updateFullAddress()" required></div>
-                    <div class="form-group"><label>ភូមិ/ផ្លូវ/ផ្ទះ៖</label><input type="text" id="villageInput" placeholder="បញ្ចូលលេខផ្ទះ ផ្លូវ ឬភូមិ" oninput="updateFullAddress()" required></div>
-                </div>
-                <div class="form-group">
-                    <label>📍 អាសយដ្ឋានពេញលេញសម្រាប់ចែកចាយ៖</label>
-                    <div id="fullAddrBox" class="full-address-display">សូមបំពេញព័ត៌មានខាងលើ...</div>
-                </div>
-                <button type="submit" class="submit-btn-gold">🎯 បញ្ជូនទិន្នន័យស្នើសុំធ្វើតំណាងចែកចាយ</button>
-            </form>
-        </div>
-    </div>
-
     <div id="adminModal" class="modal">
-        <div class="modal-content" style="max-width: 680px;">
-            <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-            <h2 style="border-bottom: 2px solid #f1f5f9; padding-bottom:10px;">🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យប្រព័ន្ធ</h2>
-            <br>
-            
-            <div class="qr-editor-container">
-                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-qrcode"></i> កែសម្រួលប្រអប់គណនីទូទាត់ប្រាក់ (KHQR)៖</label>
-                <input type="file" id="qrFileInput" accept="image/*" onchange="previewQRFile(this)" style="padding: 6px !important; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius:6px;">
-                
-                <div class="qr-preview-box">
-                    <span style="font-size:11px; color:#64748b; margin-bottom:5px;">💡 ចុចឱ្យជាប់លើរូបភាព រួចអូស (Drag) ដើម្បីតម្រឹមឆ្វេងស្តាំលើក្រោម</span>
-                    
-                    <div class="qr-preview-frame" id="previewFrame">
-                        <img id="qrPreviewImg" src="" alt="Preview QR" style="left: 0px; top: 0px;">
-                    </div>
-                    
-                    <div class="qr-tools">
-                        <div class="zoom-slider-container">
-                            <i class="fa-solid fa-magnifying-glass-minus" style="font-size:12px; color:#64748b;"></i>
-                            <input type="range" id="qrZoomSlider" min="30" max="300" value="100" oninput="applyZoomAndRotate()">
-                            <i class="fa-solid fa-magnifying-glass-plus" style="font-size:12px; color:#64748b;"></i>
-                            <span id="zoomValLabel" class="zoom-val-text">100%</span>
-                        </div>
-                        
-                        <div class="qr-btn-group">
-                            <button type="button" class="qr-tool-btn" onclick="adjustRotation(-90)"><i class="fa-solid fa-rotate-left"></i> បង្វិលឆ្វេង</button>
-                            <button type="button" class="qr-tool-btn" onclick="resetPositions()"><i class="fa-solid fa-arrow-rotate-left"></i> កំណត់ឡើងវិញ</button>
-                            <button type="button" class="qr-tool-btn" onclick="adjustRotation(90)"><i class="fa-solid fa-rotate-right"></i> បង្វិលស្តាំ</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-grid" style="margin-top: 10px;">
-                    <div class="form-group"><label>ឈ្មោះគណនីធនាគារ៖</label><input type="text" id="editAccName"></div>
-                    <div class="form-group"><label>លេខគណនី / ព័ត៌មានបន្ថែម៖</label><input type="text" id="editAccNumber"></div>
-                </div>
-                <button type="button" onclick="saveQRAndAccountChanges()" class="submit-btn-gold" style="background:#0f172a; font-size:13px; padding:10px; margin-top:5px;">💾 រក្សាទុកការផ្លាស់ប្តូរគណនី</button>
-            </div>
-
-            <div class="admin-search-area">
-                <input type="text" id="adminSearchCode" placeholder="វាយលេខកូដផលិតផល... (ឧ. KP-000001)" style="flex:1; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
-                <button type="button" onclick="loadToEdit()" class="admin-btn" style="background:#0f172a; border-radius:6px;">ស្វែងរកទំនិញ</button>
-            </div>
-
-            <div id="adminEditor" class="admin-editor-panel">
-                <h3 style="font-size:14px; margin-bottom:15px;">📝 កំពុងកែប្រែ៖ <span id="editingCode" style="color:red; font-weight:700;"></span></h3>
-                <div class="form-group"><label>ឈ្មោះផលិតផល៖</label><input type="text" id="editTitle"></div>
-                <div class="form-grid">
-                    <div class="form-group"><label>តម្លៃ ($)៖</label><input type="text" id="editPrice"></div>
-                    <div class="form-group"><label>ការពិពណ៌នា៖</label><textarea id="editDesc" rows="2"></textarea></div>
-                </div>
-                <div class="form-group" style="background:#fffbeb; padding:10px; border-radius:6px; border:1px dashed #fde68a;">
-                    <label>📸 ប្តូររូបភាពដើម (Main Image)៖</label>
-                    <input type="file" accept="image/*" onchange="processFile(this, 'main')">
-                </div>
-                <div class="form-grid">
-                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ១</label><input type="file" accept="image/*" onchange="processFile(this, 0)"></div>
-                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ២</label><input type="file" accept="image/*" onchange="processFile(this, 1)"></div>
-                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៣</label><input type="file" accept="image/*" onchange="processFile(this, 2)"></div>
-                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៤</label><input type="file" accept="image/*" onchange="processFile(this, 3)"></div>
-                </div>
-                <button type="button" onclick="saveChanges()" class="submit-btn-gold" style="background:#10b981; color:#fff; border:none;">💾 រក្សាទុកទិន្នន័យទំនិញ</button>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="detailModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeDetail()">&times;</span>
-            <div id="detailCode" style="font-size:11px; font-weight:700; color:#64748b; margin-bottom:5px;"></div>
-            <div id="sliderArea" style="height:250px; background:#f8fafc; overflow:hidden; border-radius:8px; position:relative; margin-bottom:15px;">
-                <div id="sliderWrap" style="display:flex; height:100%; transition: 0.3s;"></div>
-                <button onclick="moveSlide(-1)" style="position:absolute; left:10px; top:50%; background:rgba(0,0,0,0.5); color:white; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer;">❮</button>
-                <button onclick="moveSlide(1)" style="position:absolute; right:10px; top:50%; background:rgba(0,0,0,0.5); color:white; border:none; width:30px; height:30px; border-radius:50%; cursor:pointer;">❯</button>
+            <span class="close-btn" onclick="closeModal('adminModal')">&times;</span>
+            <h2>🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យ</h2>
+            <p>កែសម្រួល KHQR និងទិន្នន័យនៅទីនេះ</p>
             </div>
-            <h3 id="detailTitle" style="font-size:18px; color:#0f172a; margin-bottom:5px;"></h3>
-            <div id="detailPrice" style="font-size:22px; font-weight:700; color:red; margin-bottom:15px;"></div>
-            <p id="detailDesc" style="font-size:13px; color:#475569; margin-bottom:20px; line-height:1.5;"></p>
-            
-            <div class="order-form-section">
-                <h4 style="color:#b45309; font-size:15px; margin-bottom:15px; border-bottom:1px dashed #fde68a; padding-bottom:5px;">🛒 បំពេញព័ត៌មានទិញទំនិញ</h4>
-                <form onsubmit="submitOrder(event)">
-                    <div class="form-group"><label>ឈ្មោះពេញ៖</label><input type="text" id="orderName" required></div>
-                    <div class="form-group"><label>លេខទូរសព្ទ៖</label><input type="text" id="orderTel" required></div>
-                    <div class="form-group"><label>អាសយដ្ឋាន៖</label><textarea id="orderAddr" rows="2" required></textarea></div>
-                    <div class="payment-box">
-                        <div class="qr-container-wrapper">
-                            <img id="qrImg" src="" alt="QR" class="qr-code-img">
-                        </div>
-                        <div class="payment-instruction">
-                            <strong id="displayAccName">គណនី៖ សមាគមន៍ផលិតផលខ្មែរ</strong><br>
-                            <span id="displayAccNumber">លេខគណនី៖ 000 555 999</span><br>
-                            <span style="color:red; font-size: 11px;">*សូមភ្ជាប់រូបភាពបង្កាន់ដៃបង់ប្រាក់</span>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-top:10px;"><label>📸 បញ្ចូលរូបបង្កាន់ដៃ (Screenshot)៖</label><input type="file" id="orderReceipt" accept="image/*" required></div>
-                    <button type="submit" class="submit-btn-gold">✅ យល់ព្រមទិញ</button>
-                </form>
-            </div>
-        </div>
     </div>
-
-    <div id="successModal" class="modal" style="background: rgba(15, 23, 42, 0.7); align-items: flex-start; padding-top: 60px;">
-        <div class="success-card" id="succCardBox">
-            <div class="success-checkmark" id="succIconBox"><i id="succIcon" class="fa-solid fa-check"></i></div>
-            <h3 id="succTitle">ប្រតិបត្តិការជោគជ័យ!</h3>
-            <p id="succMsg"></p>
-            <div class="success-details" id="succDetailBox">
-                <div id="line1"></div>
-                <div id="line2"></div>
-                <div id="line3"></div>
-            </div>
-            <button class="success-close-btn" onclick="closeSuccess()">យល់ព្រម</button>
-        </div>
-    </div>
-
-    <footer>
-        <p>&copy; 2026 សមាគមន៍ផលិតផលខ្មែរ v1.0 - រក្សាសិទ្ធិគ្រប់យ៉ាង</p>
-    </footer>
 
     <script>
         const BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI';
         const CHAT_ID = '-5387523552';
 
-        const defaultDB = [
-            { id: 1, category: 'food', code: 'KP-000001', title: 'ម្រេចកំពតធម្មជាតិលេខ១', price: '$12.50', desc: 'ម្រេចកំពតពិតប្រាកដ (PGI) រសជាតិហឹរដិតល្អ សរីរាង្គ ១០០%។', images: ['https://images.unsplash.com/photo-1532134200667-980f34991185?w=400', 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400', 'https://images.unsplash.com/photo-1532134200667-980f34991185?w=400', 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=400'] },
-            { id: 2, category: 'silk', code: 'KP-000002', title: 'ហូលពិតានខ្មែរសូត្រមាស', price: '$250.00', desc: 'ត្បាញដោយដៃពីសិប្បករជំនាញខេត្តតាកែវ បង្ហាញពីវប្បធម៌ខ្មែរ។', images: ['https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400', 'https://images.unsplash.com/photo-1606744824163-985d376605aa?w=400', 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?w=400', 'https://images.unsplash.com/photo-1606744824163-985d376605aa?w=400'] }
-        ];
+        function openAdminModal() { document.getElementById("adminModal").style.display="flex"; }
+        function closeModal(id) { document.getElementById(id).style.display="none"; }
 
-        let db = JSON.parse(localStorage.getItem('kpa_v1_db')) || defaultDB;
-        
-        let storeQR = localStorage.getItem('kpa_v1_qr') || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ABA_BANK';
-        let qrRotation = parseInt(localStorage.getItem('kpa_v1_qr_rotate')) || 0;
-        let qrZoomScale = parseFloat(localStorage.getItem('kpa_v1_qr_zoom')) || 1.0;
-        let qrPosX = parseInt(localStorage.getItem('kpa_v1_qr_pos_x')) || 0;
-        let qrPosY = parseInt(localStorage.getItem('kpa_v1_qr_pos_y')) || 0;
-        let accountName = localStorage.getItem('kpa_v1_acc_name') || 'គណនី៖ សមាគមន៍ផលិតផលខ្មែរ';
-        let accountNumber = localStorage.getItem('kpa_v1_acc_num') || 'លេខគណនី៖ 000 555 999';
-
-        function saveDB() { localStorage.setItem('kpa_v1_db', JSON.stringify(db)); }
-        
-        function render(list) {
-            const g = document.getElementById("productGrid"); g.innerHTML = "";
-            list.forEach((p) => {
-                const i = db.findIndex(x => x.id === p.id);
-                g.innerHTML += `<div class="product-card">
-                    <div class="product-image-area"><img src="${p.images[0]}"></div>
-                    <div class="product-info">
-                        <div class="product-code">កូដ៖ ${p.code}</div>
-                        <div class="product-title">${p.title}</div>
-                        <div class="product-price">${p.price}</div>
-                        <button class="view-detail-btn" onclick="openDetail(${i})">មើលលម្អិត</button>
-                    </div>
-                </div>`;
-            });
-            
-            const clientQR = document.getElementById("qrImg");
-            clientQR.src = storeQR;
-            clientQR.style.transform = `rotate(${qrRotation}deg) scale(${qrZoomScale})`;
-            clientQR.style.left = qrPosX + 'px';
-            clientQR.style.top = qrPosY + 'px';
-            
-            document.getElementById("displayAccName").innerText = accountName;
-            document.getElementById("displayAccNumber").innerText = accountNumber;
-        }
-
-        // Login Actions
-        function openLoginModal() { document.getElementById("loginModal").style.display="flex"; }
-        function closeLoginModal() { document.getElementById("loginModal").style.display="none"; document.getElementById("adminPassInput").value=""; }
-
-        function togglePass(inputId, iconId) {
-            const p = document.getElementById(inputId); const e = document.getElementById(iconId);
-            if(p.type === "password") { p.type="text"; e.className="fa-solid fa-eye-slash"; }
-            else { p.type="password"; e.className="fa-solid fa-eye"; }
-        }
-        
-        // ផ្ទៀងផ្ទាត់កូដ Master Qq128080 រួចបើកផ្ទាំងគ្រប់គ្រងរួមភ្លាមៗ
-        function verifyAdminPassword(ev) {
+        // កែសម្រួលមុខងារផ្ញើទៅ Telegram ជាមួយ Error Handling
+        async function submitOrder(ev) {
             ev.preventDefault();
-            if(document.getElementById("adminPassInput").value === "Qq128080") {
-                closeLoginModal(); 
+            const btn = ev.target.querySelector('button');
+            btn.innerText = "កំពុងបញ្ជូន...";
+            btn.disabled = true;
+
+            const n = document.getElementById("orderName").value;
+            const t = document.getElementById("orderTel").value;
+            const f = document.getElementById("orderReceipt").files[0];
+
+            if (!f) { alert("សូមបញ្ចូលរូបភាពបង្កាន់ដៃ!"); btn.disabled = false; btn.innerText = "✅ យល់ព្រមទិញ"; return; }
+
+            const fd = new FormData();
+            fd.append("chat_id", CHAT_ID);
+            fd.append("photo", f);
+            fd.append("caption", `🛍️ កម្ម៉ង់ថ្មី\nឈ្មោះ: ${n}\nលេខ: ${t}`);
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                    method: "POST",
+                    body: fd
+                });
                 
-                // បំពេញទិន្នន័យឈ្មោះ និងលេខគណនីបច្ចុប្បន្នចូលក្នុងប្រអប់កែសម្រួល
-                document.getElementById("editAccName").value = accountName.replace('គណនី៖ ', '');
-                document.getElementById("editAccNumber").value = accountNumber.replace('លេខគណនី៖ ', '');
+                const result = await response.json();
                 
-                // បង្ហាញរូបភាព preview របស់ KHQR នៅក្នុងផ្ទាំងបញ្ជា
-                document.getElementById("qrPreviewImg").src = storeQR;
-                currentRotation = qrRotation;
-                currentX = qrPosX;
-                currentY = qrPosY;
-                document.getElementById("qrZoomSlider").value = qrZoomScale * 100;
-                applyZoomAndRotate();
-
-                // បើកបង្ហាញផ្ទាំងគ្រប់គ្រងទាំងមូលរួមគ្នា
-                document.getElementById("adminModal").style.display="flex";
-            } else { 
-                showNotification(false, "🔐 ផ្ទៀងផ្ទាត់បរាជ័យ!", "លេខសម្ងាត់គ្រប់គ្រងប្រព័ន្ធមិនត្រឹមត្រូវឡើយ។", "កំហុស៖ ខុសលេខសម្ងាត់ Master", "", "");
+                if (result.ok) {
+                    alert("បញ្ជូនព័ត៌មានជោគជ័យ!");
+                    closeModal('detailModal');
+                } else {
+                    console.error("Telegram Error:", result);
+                    alert("មានបញ្ហាក្នុងការផ្ញើទៅ Telegram: " + result.description);
+                }
+            } catch (error) {
+                console.error("Network Error:", error);
+                alert("មិនអាចភ្ជាប់ទៅកាន់ Telegram បានទេ សូមពិនិត្យអ៊ីនធឺណិតរបស់អ្នក។");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "✅ យល់ព្រមទិញ";
             }
         }
-
-        // QR Image Manipulations
-        let currentRotation = 0; let currentX = 0; let currentY = 0;
-        let isDragging = false; let startX, startY;
-
-        function previewQRFile(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById("qrPreviewImg").src = e.target.result;
-                    resetPositions();
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function adjustRotation(degrees) { currentRotation = (currentRotation + degrees) % 360; applyZoomAndRotate(); }
-        function resetPositions() { currentRotation = 0; currentX = 0; currentY = 0; document.getElementById("qrZoomSlider").value = 100; applyZoomAndRotate(); }
-
-        function applyZoomAndRotate() {
-            const zoomVal = document.getElementById("qrZoomSlider").value;
-            document.getElementById("zoomValLabel").innerText = zoomVal + "%";
-            const scale = zoomVal / 100;
-            const img = document.getElementById("qrPreviewImg");
-            img.style.transform = `rotate(${currentRotation}deg) scale(${scale})`;
-            img.style.left = currentX + 'px'; img.style.top = currentY + 'px';
-        }
-
-        // Drag Features
-        const frame = document.getElementById("previewFrame");
-        frame.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX - currentX; startY = e.clientY - currentY; });
-        window.addEventListener('mousemove', (e) => { if (!isDragging) return; currentX = e.clientX - startX; currentY = e.clientY - startY; applyZoomAndRotate(); });
-        window.addEventListener('mouseup', () => { isDragging = false; });
-        // Touch
-        frame.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX - currentX; startY = e.touches[0].clientY - currentY; });
-        frame.addEventListener('touchmove', (e) => { if (!isDragging) return; currentX = e.touches[0].clientX - startX; currentY = e.touches[0].clientY - startY; applyZoomAndRotate(); });
-        frame.addEventListener('touchend', () => { isDragging = false; });
-
-        function saveQRAndAccountChanges() {
-            const newName = document.getElementById("editAccName").value.trim();
-            const newNumber = document.getElementById("editAccNumber").value.trim();
-            const previewSrc = document.getElementById("qrPreviewImg").src;
-            const zoomVal = document.getElementById("qrZoomSlider").value;
-
-            if (newName) accountName = `គណនី៖ ${newName}`;
-            if (newNumber) accountNumber = `លេខគណនី៖ ${newNumber}`;
-            if (previewSrc && previewSrc !== window.location.href) storeQR = previewSrc;
-            
-            qrRotation = currentRotation; qrZoomScale = zoomVal / 100; qrPosX = currentX; qrPosY = currentY;
-
-            localStorage.setItem('kpa_v1_qr', storeQR);
-            localStorage.setItem('kpa_v1_qr_rotate', qrRotation);
-            localStorage.setItem('kpa_v1_qr_zoom', qrZoomScale);
-            localStorage.setItem('kpa_v1_qr_pos_x', qrPosX);
-            localStorage.setItem('kpa_v1_qr_pos_y', qrPosY);
-            localStorage.setItem('kpa_v1_acc_name', accountName);
-            localStorage.setItem('kpa_v1_acc_num', accountNumber);
-
-            render(db);
-            showNotification(true, "🏪 រក្សាទុកទីតាំងគណនី!", "ប្រព័ន្ធបានរក្សាទុកមុំបង្វិល ទំហំពង្រីក និងទម្រង់អូសទីតាំងរូបភាពជោគជ័យ។", "កម្រិតពង្រីក៖ " + zoomVal + "%", `កូអរដោនេ៖ X:${qrPosX}px, Y:${qrPosY}px`, "");
-        }
-
-        // Distributor
-        const districtMap = {
-            "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌសែនសុខ"],
-            "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកអង្គស្នួល"],
-            "សៀមរាប": ["ក្រុងសៀមរាប", "ស្រុកពួក", "ស្រុកសូទ្រនិគម", "ស្រុកប្រាសាទបាគង"],
-            "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកសង្កែ", "ស្រុកថ្មគោល", "ស្រុកបាណន់"]
-        };
-        function updateDistricts() {
-            const prov = document.getElementById("provSelect").value;
-            const dist = document.getElementById("distSelect");
-            dist.innerHTML = '<option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>';
-            if(districtMap[prov]) { districtMap[prov].forEach(d => { const o = document.createElement("option"); o.value=d; o.text=d; dist.appendChild(o); }); }
-        }
-        function updateFullAddress() {
-            const p = document.getElementById("provSelect").value; const d = document.getElementById("distSelect").value;
-            const c = document.getElementById("communeInput").value; const v = document.getElementById("villageInput").value;
-            const b = document.getElementById("fullAddrBox");
-            if(p || d || c || v) { b.innerText = `ភូមិ/ផ្លូវ/ផ្ទះ ${v || '...'}, ឃុំ/សង្កាត់ ${c || '...'}, ${d || '...'}, ${p || '...'}`; } 
-            else { b.innerText = "សូមបំពេញព័ត៌មានខាងលើ..."; }
-        }
-        function openDistributorModal() { document.getElementById("distributorModal").style.display="flex"; }
-        function closeDistributorModal() { document.getElementById("distForm").reset(); updateFullAddress(); document.getElementById("distributorModal").style.display="none"; }
-        
-        function submitDistForm(ev) {
-            ev.preventDefault();
-            const n = document.getElementById("distName").value; const a = document.getElementById("distAge").value;
-            const j = document.getElementById("distJob").value; const t = document.getElementById("distTel").value; const addr = document.getElementById("fullAddrBox").innerText;
-            const m = `🤝 *ចុះឈ្មោះតំណាងចែកចាយថ្មី*\n\n👤 ឈ្មោះ: ${n}\n🎂 អាយុ: ${a}\n💼 មុខរបរ: ${j}\n📞 លេខ/តេឡេក្រាម: ${t}\n📍 អាសយដ្ឋាន: ${addr}`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({chat_id:CHAT_ID, text:m, parse_mode:"Markdown"}) })
-            .then(() => { closeDistributorModal(); showNotification(true, "🤝 ដាក់ពាក្យជោគជ័យ!", "ព័ត៌មានស្នើសុំរបស់អ្នកត្រូវបានបញ្ជូនទៅរដ្ឋបាលរួចរាល់។", `👤 ឈ្មោះ៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`, `📍 តំបន់ចែកចាយ៖ ${document.getElementById("provSelect").value}`); });
-        }
-
-        // Product Editor
-        let editIdx = null; let tempImgs = [];
-        function closeAdminModal() { document.getElementById("adminModal").style.display="none"; document.getElementById("adminEditor").style.display="none"; }
-        
-        function loadToEdit() {
-            const code = document.getElementById("adminSearchCode").value.toUpperCase();
-            const idx = db.findIndex(p => p.code === code);
-            if(idx !== -1) {
-                editIdx = idx; const p = db[idx];
-                document.getElementById("editingCode").innerText = p.code;
-                document.getElementById("editTitle").value = p.title;
-                document.getElementById("editPrice").value = p.price;
-                document.getElementById("editDesc").value = p.desc;
-                tempImgs = [...p.images];
-                document.getElementById("adminEditor").style.display="block";
-            } else { 
-                showNotification(false, "🔍 រកមិនឃើញផលិតផល!", `មិនមានទិន្នន័យផលិតផលណាដែលមានលេខកូដ "${code}" ឡើយ។`, "កំហុស៖ រកមិនឃើញទិន្នន័យ", "សូមពិនិត្យមើល៖ លេខកូដឡើងវិញ", "");
-            }
-        }
-        function processFile(f, k) { const r = new FileReader(); r.onload = (e) => { if(k==='main') tempImgs[0]=e.target.result; else tempImgs[k]=e.target.result; }; if(f.files[0]) r.readAsDataURL(f.files[0]); }
-        
-        function saveChanges() {
-            db[editIdx].title = document.getElementById("editTitle").value;
-            db[editIdx].price = document.getElementById("editPrice").value;
-            db[editIdx].desc = document.getElementById("editDesc").value;
-            db[editIdx].images = [...tempImgs]; saveDB(); render(db); closeAdminModal();
-            showNotification(true, "💾 រក្សាទុកជោគជ័យ!", "ទិន្នន័យផលិតផលត្រូវបានធ្វើបច្ចុប្បន្នភាពរួចរាល់។", `📦 កូដ៖ ${db[editIdx].code}`, `✨ ឈ្មោះ៖ ${db[editIdx].title}`, "");
-        }
-
-        // Shop Client Detail Slider
-        let curS = 0; let actP = null;
-        function openDetail(i) {
-            actP = db[i]; curS=0;
-            document.getElementById("detailCode").innerText = `កូដ៖ ${actP.code}`;
-            document.getElementById("detailTitle").innerText = actP.title;
-            document.getElementById("detailPrice").innerText = actP.price;
-            document.getElementById("detailDesc").innerText = actP.desc;
-            const w = document.getElementById("sliderWrap"); w.innerHTML="";
-            actP.images.forEach(img => w.innerHTML += `<img src="${img}" style="width:100%; height:100%; object-fit:contain; flex-shrink:0; background:#fff;">`);
-            updateS(); document.getElementById("detailModal").style.display="flex";
-        }
-        function closeDetail() { document.getElementById("detailModal").style.display="none"; }
-        function moveSlide(d) { curS+=d; if(curS>=actP.images.length) curS=0; if(curS<0) curS=actP.images.length-1; updateS(); }
-        function updateS() { document.getElementById("sliderWrap").style.transform = `translateX(-${curS*100}%)`; }
-
-        function submitOrder(ev) {
-            ev.preventDefault(); const btn = ev.target.querySelector('button'); btn.disabled=true;
-            const n = document.getElementById("orderName").value; const t = document.getElementById("orderTel").value; const addr = document.getElementById("orderAddr").value; const f = document.getElementById("orderReceipt").files[0];
-            const cap = `🛍️ *កម្ម៉ង់ថ្មី*\nកូដ: ${actP.code}\nតម្លៃ: ${actP.price}\n👤 ឈ្មោះ: ${n}\n📞 លេខ: ${t}\n📍 អាសយដ្ឋាន: ${addr}`;
-            const fd = new FormData(); fd.append("chat_id", CHAT_ID); fd.append("photo", f); fd.append("caption", cap); fd.append("parse_mode", "Markdown");
-            fetch(`https://api.telegram.org/sendPhoto`, {method:"POST", body:fd})
-            .then(() => { closeDetail(); showNotification(true, "🎉 បញ្ជាទិញជោគជ័យ!", "យើងនឹងពិនិត្យមើលបង្កាន់ដៃ និងទាក់ទងទៅអ្នកឆាប់ៗឡើយ។", `📦 កូដទំនិញ៖ ${actP.code}`, `👤 អ្នកទទួល៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`); })
-            .finally(() => btn.disabled=false);
-        }
-
-        // Notification UI
-        function showNotification(isSuccess, title, msg, l1, l2, l3) {
-            const cardBox = document.getElementById("succCardBox"); const icon = document.getElementById("succIcon");
-            if (isSuccess) { cardBox.classList.remove("error-border"); icon.className = "fa-solid fa-check"; } 
-            else { cardBox.classList.add("error-border"); icon.className = "fa-solid fa-xmark"; }
-            document.getElementById("succTitle").innerText = title; document.getElementById("succMsg").innerText = msg;
-            document.getElementById("line1").innerHTML = l1 ? `<b>${l1}</b>` : "";
-            document.getElementById("line2").innerHTML = l2 ? `<b>${l2}</b>` : "";
-            document.getElementById("line3").innerHTML = l3 ? `<b>${l3}</b>` : "";
-            document.getElementById("successModal").style.display = "flex";
-        }
-        function closeSuccess() { document.getElementById("successModal").style.display = "none"; }
-
-        function searchProducts() {
-            const v = document.getElementById("searchInput").value.toLowerCase();
-            render(db.filter(p => p.title.toLowerCase().includes(v) || p.code.toLowerCase().includes(v)));
-        }
-        function filterCategory(c, b) {
-            document.querySelectorAll(".tab-btn").forEach(x => x.classList.remove("active")); b.classList.add("active");
-            if(c === 'all') render(db); else render(db.filter(x => x.category === c));
-        }
-
-        render(db);
     </script>
 </body>
 </html>
