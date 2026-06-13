@@ -7,9 +7,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap');
         
-        /* ------------------------------------------
-           ការកំណត់ទូទៅ (Global Reset & Themes)
-        ------------------------------------------ */
         * {
             margin: 0;
             padding: 0;
@@ -18,16 +15,13 @@
         }
 
         body {
-            background-color: #f5f5f5; /* ពណ៌សាច់ប្រផេះស្រាលតាមបែប Shopee */
+            background-color: #f5f5f5;
             color: #222;
             overflow-x: hidden;
         }
 
-        /* ------------------------------------------
-           រចនា Top Header & Search Bar (រចនាបថ Shopee)
-        ------------------------------------------ */
         header {
-            background: linear-gradient(-180deg, #f53d2d, #f63); /* ពណ៌ទឹកក្រូចលក្ខណៈសម្គាល់ Shopee */
+            background: linear-gradient(-180deg, #f53d2d, #f63);
             padding: 15px 5%;
             position: sticky;
             top: 0;
@@ -53,7 +47,6 @@
             font-size: 28px;
             font-weight: 700;
             color: #fff;
-            letter-spacing: 1px;
         }
 
         .distributor-btn {
@@ -66,21 +59,14 @@
             border-radius: 4px;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.2s;
         }
 
-        .distributor-btn:hover {
-            background-color: #ffeae6;
-        }
-
-        /* ប្រអប់ស្វែងរកទំនិញ */
         .search-container {
             display: flex;
             background-color: #fff;
             border-radius: 4px;
             overflow: hidden;
             padding: 3px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .search-container input {
@@ -99,16 +85,8 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            border-radius: 2px;
         }
 
-        .search-btn:hover {
-            background-color: #e33626;
-        }
-
-        /* ------------------------------------------
-           របារជ្រើសរើសប្រភេទ (Category Filter Tabs)
-        ------------------------------------------ */
         .category-tabs {
             max-width: 1200px;
             margin: 20px auto 0 auto;
@@ -116,13 +94,9 @@
             display: flex;
             gap: 10px;
             overflow-x: auto;
-            white-space: nowrap;
         }
 
-        /* លាក់ Scrollbar សម្រាប់ទូរសព្ទ */
-        .category-tabs::-webkit-scrollbar {
-            display: none;
-        }
+        .category-tabs::-webkit-scrollbar { display: none; }
 
         .tab-btn {
             background-color: #fff;
@@ -133,7 +107,7 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .tab-btn.active, .tab-btn:hover {
@@ -142,9 +116,6 @@
             border-color: #f53d2d;
         }
 
-        /* ------------------------------------------
-           ការបង្ហាញទំនិញច្រើនមុខ (Product Grid Shopee Style)
-        ------------------------------------------ */
         .container {
             max-width: 1200px;
             margin: 20px auto 60px auto;
@@ -153,7 +124,7 @@
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); /* កម្រិតទំហំកាតតូចៗល្មមដូច Shopee */
+            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
             gap: 12px;
         }
 
@@ -176,7 +147,6 @@
             border-color: #f53d2d;
         }
 
-        /* ស្លាកសញ្ញាបញ្ចុះតម្លៃលោតលើរូប */
         .discount-badge {
             position: absolute;
             top: 0;
@@ -210,11 +180,23 @@
             justify-content: space-between;
         }
 
+        /* រចនាបង្ហាញលេខកូដទំនិញ */
+        .product-code {
+            font-size: 11px;
+            background-color: #f1f5f9;
+            color: #475569;
+            padding: 2px 6px;
+            border-radius: 3px;
+            align-self: flex-start;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
         .product-title {
             font-size: 13px;
             font-weight: 400;
             line-height: 1.4;
-            height: 36px; /* កំណត់ឱ្យបង្ហាញតែ ២ បន្ទាត់ទោះឈ្មោះវែង */
+            height: 36px;
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -253,7 +235,6 @@
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .buy-btn:hover {
@@ -261,9 +242,7 @@
             color: #fff;
         }
 
-        /* ------------------------------------------
-           រចនាផ្ទាំងទម្រង់ចុះឈ្មោះ (Modal Popup)
-        ------------------------------------------ */
+        /* Modal Popup */
         .modal {
             display: none;
             position: fixed;
@@ -288,7 +267,6 @@
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
 
         .close-btn {
@@ -300,8 +278,6 @@
             color: #bbb;
             cursor: pointer;
         }
-
-        .close-btn:hover { color: #333; }
 
         .modal h2 {
             font-size: 22px;
@@ -317,7 +293,6 @@
         .form-group input, .form-group select {
             width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; background-color: #fafafa;
         }
-        .form-group input:focus, .form-group select:focus { border-color: #f53d2d; background-color: #fff; }
 
         .address-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-address-box {
@@ -325,11 +300,8 @@
         }
 
         .submit-btn {
-            width: 100%; padding: 13px; background: linear-gradient(180deg, #ff5722, #f44336); color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 2px 5px rgba(244,67,54,0.3);
+            width: 100%; padding: 13px; background: linear-gradient(180deg, #ff5722, #f44336); color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px;
         }
-
-        .submit-btn:hover { background: #e64a19; }
-        .submit-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
 
         footer {
             text-align: center;
@@ -357,7 +329,7 @@
                 <button class="distributor-btn" onclick="openModal()">ចុះឈ្មោះតំណាងចែកចាយ</button>
             </div>
             <div class="search-container">
-                <input type="text" id="searchInput" oninput="searchProducts()" placeholder="ស្វែងរកផលិតផលគ្រប់មុខនៅទីនេះ... (ឧទាហរណ៍៖ អាវ, កាស, ទូរសព្ទ)">
+                <input type="text" id="searchInput" oninput="searchProducts()" placeholder="ស្វែងរកផលិតផលគ្រប់មុខនៅទីនេះ... (វាយលេខកូដទំនិញក៏បាន)">
                 <button class="search-btn">ស្វែងរក</button>
             </div>
         </div>
@@ -439,7 +411,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>អាសយដ្ឋានពេញលេញ (ប្រព័ន្ធផ្គុំជូនស្វ័យប្រវត្ត)៖</label>
+                    <label>អាសយដ្ឋានពេញលេញ៖</label>
                     <div id="fullAddressBox" class="full-address-box">សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...</div>
                 </div>
 
@@ -457,48 +429,46 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Shopee Clone Study Project. រក្សាសិទ្ធិគ្រប់យ៉ាងដោយនិស្សិតអភិវឌ្ឍន៍វេបសាយ</p>
+        <p>&copy; 2026 Shopee Clone Study Project. រក្សាសិទ្ធិគ្រប់យ៉ាង</p>
     </footer>
 
     <script>
-        // គ្រប់គ្រង Popup Form
         const modal = document.getElementById("registerModal");
         function openModal() { modal.style.display = "flex"; }
         function closeModal() { modal.style.display = "none"; }
-        window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
 
-        // --------------------------------------------------------
-        // ឃ្លាំងទិន្នន័យផលិតផលគំរូគ្រប់មុខ (Array of Products Dataset)
-        // --------------------------------------------------------
+        // =========================================================================
+        // 🎯 ផ្នែកសំខាន់៖ ឃ្លាំងទិន្នន័យផលិតផល (អ្នកអាចកែប្រែ ចំណងជើង លេខកូដ និងរូបភាពនៅទីនេះ)
+        // =========================================================================
         const productsDatabase = [
             // គ្រឿងអេឡិចត្រូនិច (electronics)
-            { id: 1, category: 'electronics', title: 'ទូរសព្ទដៃឆ្លាតវៃ Smartphone Pro Max ស៊េរីចុងក្រោយ', price: '$899.00', sold: 'លក់ដាច់ 1.2k', discount: '10%', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80' },
-            { id: 2, category: 'electronics', title: 'កាសស្តាប់ត្រចៀកប្ល៊ូធូស Wireless Bluetooth Headphones Bass ធ្ងន់', price: '$24.50', sold: 'លក់ដាច់ 5.8k', discount: '45%', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80' },
-            { id: 3, category: 'electronics', title: 'នាឡិកាដៃឆ្លាតវៃ Smartwatch Series 8 ការពារជម្រាបទឹក', price: '$39.00', sold: 'លក់ដាច់ 920', discount: '20%', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80' },
+            { id: 1, category: 'electronics', code: 'SKU-ELE-001', title: 'ទូរសព្ទដៃឆ្លាតវៃ Smartphone Pro Max ស៊េរីចុងក្រោយ', price: '$899.00', sold: 'លក់ដាច់ 1.2k', discount: '10%', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, category: 'electronics', code: 'SKU-ELE-002', title: 'កាសស្តាប់ត្រចៀកប្ល៊ូធូស Wireless Bluetooth Headphones Bass ធ្ងន់', price: '$24.50', sold: 'លក់ដាច់ 5.8k', discount: '45%', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, category: 'electronics', code: 'SKU-ELE-003', title: 'នាឡិកាដៃឆ្លាតវៃ Smartwatch Series 8 ការពារជម្រាបទឹក', price: '$39.00', sold: 'លក់ដាច់ 920', discount: '20%', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80' },
             
             // សម្លៀកបំពាក់ & ម៉ូដ (fashion)
-            { id: 4, category: 'fashion', title: 'អាវយឺតដៃខ្លីបុរសសាច់ទន់ត្រជាក់ បែបយុវវ័យកូរ៉េ ទាន់សម័យ', price: '$7.99', sold: 'លក់ដាច់ 12k', discount: '30%', img: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80' },
-            { id: 5, category: 'fashion', title: 'រ៉ូបនារីសាច់ក្រណាត់ផ្កាជលផល សម្រាប់ដើរលេងឆ្នេរសមុទ្រ', price: '$14.50', sold: 'លក់ដាច់ 3.4k', discount: '15%', img: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=400&q=80' },
-            { id: 6, category: 'fashion', title: 'កាបូបស្ពាយក្រោយតូចគួរឱ្យស្រឡាញ់ Mini Fashion Backpack', price: '$11.00', sold: 'លក់ដាច់ 4.7k', discount: '50%', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=400&q=80' },
+            { id: 4, category: 'fashion', code: 'SKU-FAS-001', title: 'អាវយឺតដៃខ្លីបុរសសាច់ទន់ត្រជាក់ បែបយុវវ័យកូរ៉េ ទាន់សម័យ', price: '$7.99', sold: 'លក់ដាច់ 12k', discount: '30%', img: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80' },
+            { id: 5, category: 'fashion', code: 'SKU-FAS-002', title: 'រ៉ូបនារីសាច់ក្រណាត់ផ្កាជលផល សម្រាប់ដើរលេងឆ្នេរសមុទ្រ', price: '$14.50', sold: 'លក់ដាច់ 3.4k', discount: '15%', img: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=400&q=80' },
+            { id: 6, category: 'fashion', code: 'SKU-FAS-003', title: 'កាបូបស្ពាយក្រោយតូចគួរឱ្យស្រឡាញ់ Mini Fashion Backpack', price: '$11.00', sold: 'លក់ដាច់ 4.7k', discount: '50%', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=400&q=80' },
             
             // គ្រឿងសម្អាង & សម្រស់ (beauty)
-            { id: 7, category: 'beauty', title: 'ក្រែមលាបមាត់ Matte Lipstick ពណ៌ធម្មជាតិជាប់បានយូរ', price: '$6.50', sold: 'លក់ដាច់ 8.1k', discount: '25%', img: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&q=80' },
-            { id: 8, category: 'beauty', title: 'ឡេការពារកម្តៅថ្ងៃ Sunscreen SPF50+ មិនកកមិនស្អិត', price: '$12.00', sold: 'លក់ដាច់ 2.9k', discount: '5%', img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80' },
-            { id: 9, category: 'beauty', title: 'ឈុតសេរ៉ូមថែរក្សាស្បែកមុខឱ្យភ្លឺថ្លា លាបមុនចូលគេង', price: '$28.00', sold: 'លក់ដាច់ 950', discount: '40%', img: 'https://images.unsplash.com/photo-1608248597481-496100c80836?auto=format&fit=crop&w=400&q=80' },
+            { id: 7, category: 'beauty', code: 'SKU-BEA-001', title: 'ក្រែមលាបមាត់ Matte Lipstick ពណ៌ធម្មជាតិជាប់បានយូរ', price: '$6.50', sold: 'លក់ដាច់ 8.1k', discount: '25%', img: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&q=80' },
+            { id: 8, category: 'beauty', code: 'SKU-BEA-002', title: 'ឡេការពារកម្តៅថ្ងៃ Sunscreen SPF50+ មិនកកមិនស្អិត', price: '$12.00', sold: 'លក់ដាច់ 2.9k', discount: '5%', img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80' },
+            { id: 9, category: 'beauty', code: 'SKU-BEA-003', title: 'ឈុតសេរ៉ូមថែរក្សាស្បែកមុខឱ្យភ្លឺថ្លា លាបមុនចូលគេង', price: '$28.00', sold: 'លក់ដាច់ 950', discount: '40%', img: 'https://images.unsplash.com/photo-1608248597481-496100c80836?auto=format&fit=crop&w=400&q=80' },
             
             // របស់ប្រើប្រាស់ក្នុងផ្ទះ (home)
-            { id: 10, category: 'home', title: 'ដបទឹករក្សាកម្តៅ និងត្រជាក់ Vacuum Thermos Bottle 1L', price: '$8.50', sold: 'លក់ដាច់ 6.2k', discount: '35%', img: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=400&q=80' },
-            { id: 11, category: 'home', title: 'អំពូលភ្លើង LED ដេគ័របន្ទប់គេង ប្តូរពណ៌បានតាមទូរសព្ទ', price: '$5.20', sold: 'លក់ដាច់ 10k', discount: '50%', img: 'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?auto=format&fit=crop&w=400&q=80' },
-            { id: 12, category: 'home', title: 'ម៉ាស៊ីនក្រឡុកផ្លែឈើខ្នាតតូច Portable Blender ប្រើថ្មសាក', price: '$15.90', sold: 'លក់ដាច់ 1.8k', discount: '18%', img: 'https://images.unsplash.com/photo-1578643463396-0997cb5328c1?auto=format&fit=crop&w=400&q=80' }
+            { id: 10, category: 'home', code: 'SKU-HOM-001', title: 'ដបទឹករក្សាកម្តៅ និងត្រជាក់ Vacuum Thermos Bottle 1L', price: '$8.50', sold: 'លក់ដាច់ 6.2k', discount: '35%', img: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=400&q=80' },
+            { id: 11, category: 'home', code: 'SKU-HOM-002', title: 'អំពូលភ្លើង LED ដេគ័របន្ទប់គេង ប្តូរពណ៌បានតាមទូរសព្ទ', price: '$5.20', sold: 'លក់ដាច់ 10k', discount: '50%', img: 'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?auto=format&fit=crop&w=400&q=80' },
+            { id: 12, category: 'home', code: 'SKU-HOM-003', title: 'ម៉ាស៊ីនក្រឡុកផ្លែឈើខ្នាតតូច Portable Blender ប្រើថ្មសាក', price: '$15.90', sold: 'លក់ដាច់ 1.8k', discount: '18%', img: 'https://images.unsplash.com/photo-1578643463396-0997cb5328c1?auto=format&fit=crop&w=400&q=80' }
         ];
 
-        // មុខងារបង្ហាញទិន្នន័យទៅលើអេក្រង់សិប្បនិម្មិត
+        // មុខងារបង្ហាញទិន្នន័យលើអេក្រង់
         function renderProducts(productsList) {
             const grid = document.getElementById("productGrid");
-            grid.innerHTML = ""; // លុបទិន្នន័យចាស់ចេញ
+            grid.innerHTML = "";
 
             if(productsList.length === 0) {
-                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">អាភ័យទោស! មិនមានផលិតផលដែលអ្នកស្វែងរកឡើយ។</div>`;
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">មិនមានផលិតផលដែលអ្នកស្វែងរកឡើយ។</div>`;
                 return;
             }
 
@@ -510,12 +480,13 @@
                             <img src="${product.img}" alt="${product.title}">
                         </div>
                         <div class="product-info">
+                            <div class="product-code">កូដ៖ ${product.code}</div>
                             <div class="product-title">${product.title}</div>
                             <div class="price-row">
                                 <div class="product-price">${product.price}</div>
                                 <div class="product-sold">${product.sold}</div>
                             </div>
-                            <button class="buy-btn" onclick="alert('សាកល្បងចុច៖ ចាប់ផ្តើមបញ្ជាទិញ ${product.title}')">មើលលម្អិត</button>
+                            <button class="buy-btn" onclick="alert('ផលិតផល៖ ${product.code}')">មើលលម្អិត</button>
                         </div>
                     </div>
                 `;
@@ -523,15 +494,11 @@
             });
         }
 
-        // ចាប់ផ្តើមដំណើរការទំព័រដំបូង បង្ហាញផលិតផលទាំងអស់
         renderProducts(productsDatabase);
 
-        // មុខងារចុចប្តូរ Tab ប្រភេទ (Category Filter)
         function filterCategory(category, buttonElement) {
-            // ដក Class active ពីប៊ូតុងទាំងអស់
             const buttons = document.querySelectorAll(".tab-btn");
             buttons.forEach(btn => btn.classList.remove("active"));
-            // បន្ថែម Class active លើប៊ូតុងដែលកំពុងចុច
             buttonElement.classList.add("active");
 
             if(category === 'all') {
@@ -542,22 +509,21 @@
             }
         }
 
-        // មុខងារវាយអក្សរស្វែងរកទំនិញ (Real-time Search Bar)
+        // មុខងារស្វែងរក (Search ស្វែងរកបានទាំងចំណងជើង និងលេខកូដទំនិញ)
         function searchProducts() {
             const searchText = document.getElementById("searchInput").value.toLowerCase();
-            const filtered = productsDatabase.filter(p => p.title.toLowerCase().includes(searchText));
+            const filtered = productsDatabase.filter(p => 
+                p.title.toLowerCase().includes(searchText) || 
+                p.code.toLowerCase().includes(searchText)
+            );
             renderProducts(filtered);
         }
 
-        // --------------------------------------------------------
-        // ប្រព័ន្ធគ្រប់គ្រងការជ្រើសរើសខេត្ត-ស្រុក និងបញ្ជូនទៅ Telegram
-        // --------------------------------------------------------
+        // --- ប្រព័ន្ធ Telegram និង អាសយដ្ឋាន (រក្សាទុកដដែលកុំឱ្យមានកំហុស) ---
         const districtsByProvince = {
             "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌឫស្សីកែវ", "ខណ្ឌសែនសុខ", "ខណ្ឌពោធិ៍សែនជ័យ", "ខណ្ឌជ្រោយចង្វារ", "ខណ្ឌព្រែកព្នៅ", "ខណ្ឌច្បារអំពៅ", "ខណ្ឌដង្កោ", "ខណ្ឌកំបូល", "ខណ្ឌបឹងកេងកង"],
             "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកខ្សាច់កណ្តាល", "ស្រុកកោះធំ", "ស្រុកពញាឮ", "ស្រុកល្វាឯម", "ស្រុកមុខកំពូល", "ស្រុកអង្គស្នួល", "ស្រុកស្អាង"],
-            "សៀមរាប": ["ក្រុងសៀមរាប", "ស្រុកពួក", "ស្រុកសូទ្រនិគម", "ស្រុកប្រាសាទបាគង", "ស្រុកស្រឡាញ់", "ស្រុកបន្ទាយស្រី", "ស្រុកស្វាយលើ", "ស្រុកវ៉ារិន", "ស្រុកអង្គរធំ", "ស្រុកអង្គរជុំ", "ស្រុកជីក្រែង", "ស្រុកក្រឡាញ់"],
-            "ព្រះសីហនុ": ["ក្រុងព្រះសីហនុ", "ស្រុកព្រៃនប់", "ស្រុកស្ទឹងហាវ", "ស្រុកកំពង់សីលា", "ក្រុងកោះរុង"],
-            "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកបាណន់", "ស្រុកថ្មគោល", "ស្រុកបវេល", "ស្រុកឯកភ្នំ", "ស្រុកសង្កែ", "ស្រុកគាស់ក្រឡ", "ស្រុកសំឡូត", "ស្រុកសំពៅលូន", "ស្រុកភ្នំព្រឹក", "ស្រុកកំរៀង", "ស្រុកមោងឫស្សី", "ស្រុក រតនមណ្ឌល"]
+            "សៀមរាប": ["ក្រុងសៀមរាប", "ស្រុកពួក", "ស្រុកសូទ្រនិគម", "ស្រុកប្រាសាទបាគង", "ស្រុកស្រឡាញ់", "ស្រុកបន្ទាយស្រី", "ស្រុកស្វាយលើ", "ស្រុកវ៉ារិន", "ស្រុកអង្គរធំ", "ស្រុកអង្គរជុំ", "ស្រុកជីក្រែង", "ស្រុកក្រឡាញ់"]
         };
 
         function updateDistricts() {
