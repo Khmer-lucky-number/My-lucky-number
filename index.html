@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ហាងលក់ទំនិញអនឡាញរបស់ខ្ញុំ</title>
     <style>
-        /* កំណត់ Font និងស្ទីលទូទៅ */
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap');
         
         * {
@@ -20,24 +19,41 @@
             color: #333;
         }
 
-        /* ផ្នែកខាងលើ (Header) */
         header {
             background-color: #1a1a1a;
             color: #fff;
-            padding: 20px;
+            padding: 15px 20px;
             text-align: center;
             position: sticky;
             top: 0;
             z-index: 100;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         header h1 {
-            font-size: 24px;
-            letter-spacing: 1px;
+            font-size: 22px;
         }
 
-        /* តំបន់បង្ហាញផលិតផល */
+        .distributor-btn {
+            background-color: #ff9900;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .distributor-btn:hover {
+            background-color: #e68a00;
+            transform: scale(1.05);
+        }
+
         .container {
             max-width: 1200px;
             margin: 40px auto;
@@ -50,21 +66,13 @@
             gap: 30px;
         }
 
-        /* ប្រអប់ផលិតផលនីមួយៗ (Product Card) */
         .product-card {
             background-color: #fff;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        /* រូបភាពផលិតផល */
         .product-image {
             width: 100%;
             height: 250px;
@@ -72,16 +80,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
         }
 
         .product-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* ធ្វើឱ្យរូបភាពពេញប្រអប់ស្អាត */
+            object-fit: cover;
         }
 
-        /* ព័ត៌មានលម្អិតពីផលិតផល */
         .product-info {
             padding: 20px;
         }
@@ -90,19 +96,6 @@
             font-size: 18px;
             font-weight: 700;
             margin-bottom: 10px;
-            color: #222;
-        }
-
-        .product-description {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            height: 45px;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
         }
 
         .product-price {
@@ -112,7 +105,6 @@
             margin-bottom: 15px;
         }
 
-        /* ប៊ូតុងទិញ */
         .buy-btn {
             display: block;
             width: 100%;
@@ -125,95 +117,224 @@
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.2s;
         }
 
-        .buy-btn:hover {
-            background-color: #0056b3;
+        /* Modal Popup */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        /* ផ្នែកខាងក្រោម (Footer) */
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .modal h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #ff9900;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .submit-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
         footer {
             text-align: center;
             padding: 30px;
             background-color: #1a1a1a;
             color: #888;
             margin-top: 50px;
-            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <!-- ផ្នែកក្បាលទំព័រ -->
     <header>
-        <h1>ហាងលក់ទំនិញអនឡាញរបស់ខ្ញុំ</h1>
+        <h1>ហាងលក់ទំនិញអនឡាញ</h1>
+        <button class="distributor-btn" onclick="openModal()">ចុះឈ្មោះជាតំណាងចែកចាយ</button>
     </header>
 
-    <!-- ផ្នែកបង្ហាញផលិតផល -->
     <div class="container">
         <div class="product-grid">
-
-            <!-- ផលិតផលទី ១ -->
             <div class="product-card">
                 <div class="product-image">
-                    <!-- ប្តូរ "ទម្រង់រូបភាព.jpg" ទៅជាលីងរូបភាព ឬឈ្មោះរូបភាពពិតប្រាកដរបស់អ្នក -->
-                    <img src="https://via.placeholder.com/300x250?text=Product+1" alt="ផលិតផលទី ១">
+                    <img src="https://via.placeholder.com/300x250?text=Product+1" alt="ផលិតផល">
                 </div>
                 <div class="product-info">
-                    <div class="product-title">ឈ្មោះផលិតផលទី ១</div>
-                    <div class="product-description">នេះជាការពិពណ៌នាសង្ខេបអំពីផលិតផលទី ១ គុណភាពល្អ និងតម្លៃសមរម្យ។</div>
+                    <div class="product-title">ឈ្មោះផលិតផលគំរូ</div>
                     <div class="product-price">$25.00</div>
                     <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
                 </div>
             </div>
-
-            <!-- ផលិតផលទី ២ -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/300x250?text=Product+2" alt="ផលិតផលទី ២">
-                </div>
-                <div class="product-info">
-                    <div class="product-title">ឈ្មោះផលិតផលទី ២</div>
-                    <div class="product-description">នេះជាការពិពណ៌នាសង្ខេបអំពីផលិតផលទី ២ ពេញនិយមបំផុតសម្រាប់ខែនេះ។</div>
-                    <div class="product-price">$45.00</div>
-                    <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
-                </div>
-            </div>
-
-            <!-- ផលិតផលទី ៣ -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/300x250?text=Product+3" alt="ផលិតផលទី ៣">
-                </div>
-                <div class="product-info">
-                    <div class="product-title">ឈ្មោះផលិតផលទី ៣</div>
-                    <div class="product-description">ផលិតផលនាំចូលពីបរទេស ធានាគុណភាពចង់បានអាចកក់មុនបាន។</div>
-                    <div class="product-price">$12.50</div>
-                    <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
-                </div>
-            </div>
-
-            <!-- ផលិតផលទី ៤ -->
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://via.placeholder.com/300x250?text=Product+4" alt="ផលិតផលទី ៤">
-                </div>
-                <div class="product-info">
-                    <div class="product-title">ឈ្មោះផលិតផលទី ៤</div>
-                    <div class="product-description">ម៉ូដថ្មីទើបតែមកដល់ ស្តុកមានកំណត់ រួសរាន់ឡើងទាន់មានប្រូម៉ូសិន។</div>
-                    <div class="product-price">$89.00</div>
-                    <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
-                </div>
-            </div>
-
         </div>
     </div>
 
-    <!-- ផ្នែកជើងទំព័រ -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>ចុះឈ្មោះជាតំណាងចែកចាយ</h2>
+            
+            <form id="regForm" onsubmit="submitToTelegram(event)">
+                <div class="form-group">
+                    <label for="fullName">ឈ្មោះពេញ៖</label>
+                    <input type="text" id="fullName" placeholder="ឧទាហរណ៍៖ សុខ ជា" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">លេខទូរសព្ទ៖</label>
+                    <input type="tel" id="phone" placeholder="ឧទាហរណ៍៖ 012 345 678" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">ខេត្ត/ក្រុង ដែលអ្នករស់នៅ៖</label>
+                    <input type="text" id="location" placeholder="ឧទាហរណ៍៖ ភ្នំពេញ" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">ធ្លាប់មានបទពិសោធន៍លក់ដែរឬទេ?៖</label>
+                    <select id="experience">
+                        <option value="មិនធ្លាប់មាន">មិនធ្លាប់មានបទពិសោធន៍</option>
+                        <option value="ធ្លាប់មាន">ធ្លាប់មានបទពិសោធន៍លក់អនឡាញ</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="btnSubmit" class="submit-btn">បញ្ជូនព័ត៌មាន</button>
+            </form>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2026 រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ ហាងអនឡាញរបស់ខ្ញុំ</p>
     </footer>
+
+    <script>
+        const modal = document.getElementById("registerModal");
+
+        function openModal() { modal.style.display = "flex"; }
+        function closeModal() { modal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
+
+        // ========================================================
+        // មុខងារផ្ញើទិន្នន័យទៅកាន់ Telegram Group ផ្ទាល់ខ្លួនរបស់អ្នក
+        // ========================================================
+        function submitToTelegram(event) {
+            event.preventDefault();
+
+            // ប៊ូតុងផ្ញើទិន្នន័យ (ដើម្បីការពារកុំឱ្យគេចុចទ្វេដងពេលកំពុងផ្ញើ)
+            const btnSubmit = document.getElementById("btnSubmit");
+            btnSubmit.disabled = true;
+            btnSubmit.innerText = "កំពុងផ្ញើ...";
+
+            // ១. ដាក់ព័ត៌មាន Bot របស់អ្នកនៅទីនេះ
+            const TELEGRAM_BOT_TOKEN = 'សូមដាក់_BOT_TOKEN_របស់អ្នកនៅទីនេះ'; 
+            const TELEGRAM_CHAT_ID = 'សូមដាក់_CHAT_ID_របស់អ្នកនៅទីនេះ'; 
+
+            // ២. ទាញយកតម្លៃពី Form មកបញ្ចូលគ្នាជាអត្ថបទសម្រាប់ផ្ញើ
+            const name = document.getElementById("fullName").value;
+            const phone = document.getElementById("phone").value;
+            const location = document.getElementById("location").value;
+            const experience = document.getElementById("experience").value;
+
+            // រៀបចំទម្រង់សារឱ្យមើលទៅស្អាតក្នុង Telegram
+            const message = `🔔 *មានសមាជិកចុះឈ្មោះថ្មី!*\n\n` +
+                            `👤 *ឈ្មោះ៖* ${name}\n` +
+                            `📞 *លេខទូរសព្ទ៖* ${phone}\n` +
+                            `📍 *ទីតាំង៖* ${location}\n` +
+                            `💼 *បទពិសោធន៍៖* ${experience}`;
+
+            // ៣. ប្រើប្រាស់ API Fetch របស់ JavaScript ដើម្បីបាញ់ចូល Telegram
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown' // ធ្វើឱ្យអក្សរដិតស្អាត
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("🎉 ការចុះឈ្មោះបានជោគជ័យ! យើងខ្ញុំនឹងទាក់ទងទៅលោកអ្នកក្នុងពេលឆាប់ៗ។");
+                    document.getElementById("regForm").reset(); // លាងទិន្នន័យចាស់ចោល
+                    closeModal(); // បិទ Popup
+                } else {
+                    alert("❌ មានបញ្ហា! សូមពិនិត្យមើលការកំណត់ Bot Token ឬ Chat ID ម្តងទៀត។");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("❌ មិនអាចភ្ជាប់ទៅកាន់ប្រព័ន្ធបានទេ! សូមពិនិត្យអ៊ីនធឺណិតរបស់អ្នក។");
+            })
+            .finally(() => {
+                // បើកប៊ូតុងឱ្យដំណើរការធម្មតាវិញ
+                btnSubmit.disabled = false;
+                btnSubmit.innerText = "បញ្ជូនព័ត៌មាន";
+            });
+        }
+    </script>
 
 </body>
 </html>
