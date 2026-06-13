@@ -32,7 +32,7 @@
         .search-container input { width: 100%; padding: 10px 15px; border: none; outline: none; font-size: 14px; color: #334155; }
         .search-btn { background-color: #0f172a; color: #d4af37; border: none; padding: 0 25px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; }
 
-        /* Categories (5 Albums) */
+        /* Categories */
         .category-tabs { max-width: 1200px; margin: 25px auto 0 auto; padding: 0 20px; display: flex; gap: 10px; overflow-x: auto; }
         .category-tabs::-webkit-scrollbar { display: none; }
         .tab-btn { background-color: #fff; color: #64748b; padding: 10px 22px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
@@ -128,17 +128,26 @@
         /* Order form area inside detail */
         .order-form-section { background-color: #fdfbf7; padding: 20px; border-radius: 8px; border: 1px solid #fef3c7; margin-top: 25px; }
         .payment-box { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 6px; border: 1px dashed #d4af37; margin-top: 10px; }
-        .qr-container-wrapper { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; }
+        
+        /* 📱 Fixed Display Box for QR with specific frame scale bounds */
+        .qr-container-wrapper { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #e2e8f0; border-radius: 4px; }
         .qr-code-img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s; }
 
-        /* 🛠️ New QR Editor Styling Box */
+        /* 🛠️ QR Editor Box with Scale Features */
         .qr-editor-container { background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
         .qr-preview-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; padding: 15px; border-radius: 6px; margin: 10px 0; border: 1px dashed #cbd5e1; }
-        .qr-preview-frame { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #e2e8f0; }
-        .qr-preview-frame img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s; }
-        .qr-tools { display: flex; gap: 10px; margin-top: 10px; }
+        .qr-preview-frame { width: 130px; height: 130px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; }
+        .qr-preview-frame img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.1s ease-out; }
+        
+        .qr-tools { display: flex; flex-direction: column; width: 100%; gap: 10px; margin-top: 12px; align-items: center; }
+        .qr-btn-group { display: flex; gap: 10px; }
         .qr-tool-btn { background: #0f172a; color: #d4af37; border: 1px solid #d4af37; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px; }
         .qr-tool-btn:hover { background: #d4af37; color: #0f172a; }
+        
+        /* Zoom Control Slider Layout */
+        .zoom-slider-container { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 250px; background: #f1f5f9; padding: 6px 12px; border-radius: 20px; border: 1px solid #e2e8f0; }
+        .zoom-slider-container input[type=range] { flex: 1; cursor: pointer; accent-color: #0f172a; }
+        .zoom-val-text { font-size: 11px; font-weight: 700; color: #475569; min-width: 35px; text-align: right; }
 
         /* Admin Control Panel */
         .admin-search-area { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; gap: 10px; }
@@ -261,9 +270,19 @@
                     <div class="qr-preview-frame">
                         <img id="qrPreviewImg" src="" alt="Preview QR">
                     </div>
+                    
                     <div class="qr-tools">
-                        <button type="button" class="qr-tool-btn" onclick="rotateQR(-90)"><i class="fa-solid fa-rotate-left"></i> បង្វិលឆ្វេង</button>
-                        <button type="button" class="qr-tool-btn" onclick="rotateQR(90)"><i class="fa-solid fa-rotate-right"></i> បង្វិលស្តាំ</button>
+                        <div class="zoom-slider-container">
+                            <i class="fa-solid fa-magnifying-glass-minus" style="font-size:12px; color:#64748b;"></i>
+                            <input type="range" id="qrZoomSlider" min="50" max="200" value="100" oninput="applyZoomAndRotate()">
+                            <i class="fa-solid fa-magnifying-glass-plus" style="font-size:12px; color:#64748b;"></i>
+                            <span id="zoomValLabel" class="zoom-val-text">100%</span>
+                        </div>
+                        
+                        <div class="qr-btn-group">
+                            <button type="button" class="qr-tool-btn" onclick="adjustRotation(-90)"><i class="fa-solid fa-rotate-left"></i> បង្វិលឆ្វេង</button>
+                            <button type="button" class="qr-tool-btn" onclick="adjustRotation(90)"><i class="fa-solid fa-rotate-right"></i> បង្វិលស្តាំ</button>
+                        </div>
                     </div>
                 </div>
 
@@ -372,9 +391,10 @@
 
         let db = JSON.parse(localStorage.getItem('kpa_v1_db')) || defaultDB;
         
-        // ទាញយកព័ត៌មានគណនីពី LocalStorage
+        // ទាញយកព័ត៌មានគណនី និងកម្រិត Scale/Rotate ពី LocalStorage
         let storeQR = localStorage.getItem('kpa_v1_qr') || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ABA_BANK';
         let qrRotation = parseInt(localStorage.getItem('kpa_v1_qr_rotate')) || 0;
+        let qrZoomScale = parseFloat(localStorage.getItem('kpa_v1_qr_zoom')) || 1.0;
         let accountName = localStorage.getItem('kpa_v1_acc_name') || 'គណនី៖ សមាគមន៍ផលិតផលខ្មែរ';
         let accountNumber = localStorage.getItem('kpa_v1_acc_num') || 'លេខគណនី៖ 000 555 999';
 
@@ -395,9 +415,9 @@
                 </div>`;
             });
             
-            // ដាក់ទិន្នន័យគណនីចូលប្រអប់ទូទាត់ប្រាក់
+            // បង្ហាញរូបភាពគណនីទូទាត់ប្រាក់នៅផ្ទាំងអតិថិជន
             document.getElementById("qrImg").src = storeQR;
-            document.getElementById("qrImg").style.transform = `rotate(${qrRotation}deg)`;
+            document.getElementById("qrImg").style.transform = `rotate(${qrRotation}deg) scale(${qrZoomScale})`;
             document.getElementById("displayAccName").innerText = accountName;
             document.getElementById("displayAccNumber").innerText = accountNumber;
         }
@@ -417,9 +437,13 @@
             ev.preventDefault();
             if(document.getElementById("adminPassInput").value === "Qq128080") {
                 closeLoginModal(); 
-                // ដាក់តម្លៃបច្ចុប្បន្នចូលទៅក្នុងប្រអប់ Input របស់ Admin
+                
+                // បំពេញទិន្នន័យបច្ចុប្បន្នចូលទៅក្នុងផ្ទាំងកែសម្រួលរបស់ Admin
                 document.getElementById("qrPreviewImg").src = storeQR;
-                document.getElementById("qrPreviewImg").style.transform = `rotate(${qrRotation}deg)`;
+                currentRotation = qrRotation;
+                document.getElementById("qrZoomSlider").value = qrZoomScale * 100;
+                applyZoomAndRotate();
+                
                 document.getElementById("editAccName").value = accountName.replace('គណនី៖ ', '');
                 document.getElementById("editAccNumber").value = accountNumber.replace('លេខគណនី៖ ', '');
                 
@@ -429,45 +453,59 @@
             }
         }
 
-        // 🛠️ អនុគមន៍គ្រប់គ្រងការរៀបចំ និងបង្វិលរូបភាព QR Code
-        let currentPreviewRotation = 0;
+        // 🛠️ អនុគមន៍គ្រប់គ្រងការ Rotate និង Zoom រូបភាពរួមគ្នា
+        let currentRotation = 0;
+        
         function previewQRFile(input) {
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById("qrPreviewImg").src = e.target.result;
-                    currentPreviewRotation = 0; // កំណត់មុំបង្វិលមកដើមវិញពេលប្តូររូបថ្មី
-                    document.getElementById("qrPreviewImg").style.transform = `rotate(0deg)`;
+                    currentRotation = 0;
+                    document.getElementById("qrZoomSlider").value = 100;
+                    applyZoomAndRotate();
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function rotateQR(degrees) {
-            currentPreviewRotation = (currentPreviewRotation + degrees) % 360;
-            document.getElementById("qrPreviewImg").style.transform = `rotate(${currentPreviewRotation}deg)`;
+        function adjustRotation(degrees) {
+            currentRotation = (currentRotation + degrees) % 360;
+            applyZoomAndRotate();
+        }
+
+        function applyZoomAndRotate() {
+            const zoomVal = document.getElementById("qrZoomSlider").value;
+            document.getElementById("zoomValLabel").innerText = zoomVal + "%";
+            
+            const scale = zoomVal / 100;
+            // អនុវត្តទាំងមុំបង្វិល និងទំហំពង្រីកក្នុងពេលតែមួយលើ Style Property
+            document.getElementById("qrPreviewImg").style.transform = `rotate(${currentRotation}deg) scale(${scale})`;
         }
 
         function saveQRAndAccountChanges() {
             const newName = document.getElementById("editAccName").value.trim();
             const newNumber = document.getElementById("editAccNumber").value.trim();
             const previewSrc = document.getElementById("qrPreviewImg").src;
+            const zoomVal = document.getElementById("qrZoomSlider").value;
 
             if (newName) accountName = `គណនី៖ ${newName}`;
             if (newNumber) accountNumber = `លេខគណនី៖ ${newNumber}`;
             if (previewSrc && previewSrc !== window.location.href) storeQR = previewSrc;
             
-            qrRotation = currentPreviewRotation;
+            qrRotation = currentRotation;
+            qrZoomScale = zoomVal / 100;
 
-            // រក្សាទុកចូល LocalStorage
+            // រក្សាទុកចូលក្នុង LocalStorage ទាំងអស់
             localStorage.setItem('kpa_v1_qr', storeQR);
             localStorage.setItem('kpa_v1_qr_rotate', qrRotation);
+            localStorage.setItem('kpa_v1_qr_zoom', qrZoomScale);
             localStorage.setItem('kpa_v1_acc_name', accountName);
             localStorage.setItem('kpa_v1_acc_num', accountNumber);
 
-            render(db); // បំពេញទិន្នន័យថ្មីទៅលើទំព័រហាង
-            showNotification(true, "🏪 ធ្វើបច្ចុប្បន្នភាពគណនី!", "ព័ត៌មានអត្ថបទប្រអប់គណនី និងរូបភាព KHQR ត្រូវបានរៀបចំ និងរក្សាទុកជោគជ័យ។", "ស្ថានភាព៖ រក្សាទុកជោគជ័យ", "ការបង្វិលរូបភាព៖ " + qrRotation + "°", "");
+            render(db); // Update ទិន្នន័យទៅកាន់ផ្ទាំងហាងភ្លាមៗ
+            showNotification(true, "🏪 ធ្វើបច្ចុប្បន្នភាពគណនី!", "ប្រព័ន្ធបានរក្សាទុកទំហំពង្រីក/បង្រួម មុំបង្វិល និងព័ត៌មានអត្ថបទដោយជោគជ័យ។", "កម្រិតពង្រីក៖ " + zoomVal + "%", "មុំបង្វិល៖ " + qrRotation + "°", "");
         }
 
         // Distributor Logic
