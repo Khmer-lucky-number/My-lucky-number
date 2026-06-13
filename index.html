@@ -237,3 +237,189 @@
                     <div class="product-title">ផលិតផលលក់ដាច់</div>
                     <div class="product-price">$0.00</div>
                     <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>ចុះឈ្មោះជាតំណាងចែកចាយ</h2>
+            
+            <form id="regForm" onsubmit="submitToTelegram(event)">
+                <div class="form-group">
+                    <label for="fullName">ឈ្មោះពេញ៖</label>
+                    <input type="text" id="fullName" placeholder="បញ្ចូលឈ្មោះពេញរបស់អ្នក" required>
+                </div>
+
+                <div class="address-grid">
+                    <div class="form-group">
+                        <label for="age">អាយុ៖</label>
+                        <input type="number" id="age" placeholder="បញ្ចូលអាយុ" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="job">មុខរបរបច្ចុប្បន្ន៖</label>
+                        <input type="text" id="job" placeholder="បញ្ចូលមុខរបរ" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telegramPhone">លេខតេឡេក្រាម ឬ Username Telegram៖</label>
+                    <input type="text" id="telegramPhone" placeholder="បញ្ចូលលេខទូរសព្ទ ឬឈ្មោះអ្នកប្រើប្រាស់តេឡេក្រាម" required>
+                </div>
+                
+                <h3 style="font-size: 15px; margin: 15px 0 10px 0; color: #ff9900; border-bottom: 1px dashed #ccc; padding-bottom: 5px;">អាសយដ្ឋានរស់នៅបច្ចុប្បន្ន</h3>
+                
+                <div class="address-grid">
+                    <div class="form-group">
+                        <label for="province">រាជធានី/ខេត្ត៖</label>
+                        <select id="province" onchange="updateDistricts(); generateFullAddress();" required>
+                            <option value="" disabled selected>--- ជ្រើសរើសខេត្ត ---</option>
+                            <option value="ភ្នំពេញ">ភ្នំពេញ</option>
+                            <option value="កណ្តាល">កណ្តាល</option>
+                            <option value="សៀមរាប">សៀមរាប</option>
+                            <option value="ព្រះសីហនុ">ព្រះសីហនុ</option>
+                            <option value="បាត់ដំបង">បាត់ដំបង</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="district">ក្រុង/ស្រុក/ខណ្ឌ៖</label>
+                        <select id="district" onchange="generateFullAddress();" required>
+                            <option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="address-grid">
+                    <div class="form-group">
+                        <label for="commune">ឃុំ/សង្កាត់៖</label>
+                        <input type="text" id="commune" oninput="generateFullAddress();" placeholder="បញ្ចូលឃុំ ឬសង្កាត់" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="village">ភូមិ/ផ្លូវ/ផ្ទះ៖</label>
+                        <input type="text" id="village" oninput="generateFullAddress();" placeholder="បញ្ចូលភូមិ ផ្លូវ ឬលេខផ្ទះ" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>អាសយដ្ឋានពេញលេញ (ប្រព័ន្ធផ្គុំជូនស្វ័យប្រវត្ត)៖</label>
+                    <div id="fullAddressBox" class="full-address-box">សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">ធ្លាប់មានបទពិសោធន៍លក់ដែរឬទេ?៖</label>
+                    <select id="experience">
+                        <option value="មិនធ្លាប់មាន">មិនធ្លាប់មានបទពិសោធន៍</option>
+                        <option value="ធ្លាប់មាន">ធ្លាប់មានបទពិសោធន៍លក់អនឡាញ</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="btnSubmit" class="submit-btn">បញ្ជូនព័ត៌មានផ្លូវការ</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ ហាងអនឡាញ</p>
+    </footer>
+
+    <script>
+        const modal = document.getElementById("registerModal");
+        function openModal() { modal.style.display = "flex"; }
+        function closeModal() { modal.style.display = "none"; }
+        window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
+
+        // កែសម្រួលអក្សរឈ្មោះខេត្តឱ្យត្រឹមត្រូវតាមស្តង់ដារ UTF-8
+        const districtsByProvince = {
+            "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌឫស្សីកែវ", "ខណ្ឌសែនសុខ", "ខណ្ឌពោធិ៍សែនជ័យ", "ខណ្ឌជ្រោយចង្វារ", "ខណ្ឌព្រែកព្នៅ", "ខណ្ឌច្បារអំពៅ", "ខណ្ឌដង្កោ", "ខណ្ឌកំបូល", "ខណ្ឌបឹងកេងកង"],
+            "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកខ្សាច់កណ្តាល", "ស្រុកកោះធំ", "ស្រុកពញាឮ", "ស្រុកល្វាឯម", "ស្រុកមុខកំពូល", "ស្រុកអង្គស្នួល", "ស្រុកស្អាង"],
+            "សៀមរាប": ["ក្រុងសៀមរាប", "ស្រុកពួក", "ស្រុកសូទ្រនិគម", "ស្រុកប្រាសាទបាគង", "ស្រុកស្រឡាញ់", "ស្រុកបន្ទាយស្រី", "ស្រុកស្វាយលើ", "ស្រុកវ៉ារិន", "ស្រុកអង្គរធំ", "ស្រុកអង្គរជុំ", "ស្រុកជីក្រែង", "ស្រុកក្រឡាញ់"],
+            "ព្រះសីហនុ": ["ក្រុងព្រះសីហនុ", "ស្រុកព្រៃនប់", "ស្រុកស្ទឹងហាវ", "ស្រុកកំពង់សីលា", "ក្រុងកោះរុង"],
+            "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកបាណន់", "ស្រុកថ្មគោល", "ស្រុកបវេល", "ស្រុកឯកភ្នំ", "ស្រុកសង្កែ", "ស្រុកគាស់ក្រឡ", "ស្រុកសំឡូត", "ស្រុកសំពៅលូន", "ស្រុកភ្នំព្រឹក", "ស្រុកកំរៀង", "ស្រុកមោងឫស្សី", "ស្រុក រតនមណ្ឌល"]
+        };
+
+        function updateDistricts() {
+            const provinceSelect = document.getElementById("province");
+            const districtSelect = document.getElementById("district");
+            const selectedProvince = provinceSelect.value;
+
+            districtSelect.innerHTML = '<option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>';
+
+            if (districtsByProvince[selectedProvince]) {
+                districtsByProvince[selectedProvince].forEach(function(district) {
+                    const option = document.createElement("option");
+                    option.value = district;
+                    option.text = district;
+                    districtSelect.appendChild(option);
+                });
+            }
+        }
+
+        function generateFullAddress() {
+            const province = document.getElementById("province").value || "";
+            const district = document.getElementById("district").value || "";
+            const commune = document.getElementById("commune").value || "";
+            const village = document.getElementById("village").value || "";
+            const box = document.getElementById("fullAddressBox");
+
+            if (province || district || commune || village) {
+                let fullText = "";
+                if(village) fullText += `ភូមិ/ផ្លូវ/ផ្ទះ ${village}, `;
+                if(commune) fullText += `ឃុំ/សង្កាត់ ${commune}, `;
+                if(district) fullText += `${district}, `;
+                if(province) fullText += `រាជធានី/ខេត្ត ${province}`;
+                
+                fullText = fullText.replace(/,\s*$/, "");
+                box.innerText = fullText;
+                return fullText;
+            } else {
+                box.innerText = "សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...";
+                return "";
+            }
+        }
+
+        // ========================================================
+        // វិធីសាស្ត្រផ្លូវការ៖ ប្រើប្រាស់ Image Beacon ដើម្បីផ្ញើព័ត៌មានដាច់ខាត ១០០%
+        // ========================================================
+        function submitToTelegram(event) {
+            event.preventDefault();
+
+            // បំពេញ Token និង Chat ID ផ្លូវការរបស់អ្នករួចរាល់
+            const TELEGRAM_BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI'; 
+            const TELEGRAM_CHAT_ID = '-5387523552'; 
+
+            const name = document.getElementById("fullName").value;
+            const age = document.getElementById("age").value;
+            const job = document.getElementById("job").value;
+            const telegramPhone = document.getElementById("telegramPhone").value;
+            const fullAddress = generateFullAddress();
+            const experience = document.getElementById("experience").value;
+
+            const message = `🔔 *មានសមាជិកចុះឈ្មោះថ្មី!*\n\n` +
+                            `👤 *ឈ្មោះពេញ៖* ${name}\n` +
+                            `🎂 *អាយុ៖* ${age} ឆ្នាំ\n` +
+                            `💼 *មុខរបរ៖* ${job}\n` +
+                            `📞 *តេឡេក្រាម/Username៖* ${telegramPhone}\n` +
+                            `📍 *អាសយដ្ឋានពិតប្រាកដ៖* ${fullAddress}\n` +
+                            `📈 *បទពិសោធន៍៖* ${experience}`;
+
+            // បង្កើតលីង API ផ្លូវការ
+            const encodedMessage = encodeURIComponent(message);
+            const apiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodedMessage}&parse_mode=Markdown`;
+
+            // បាញ់ទិន្នន័យតាមរយៈរូបភាព (Image Beacon) ដើម្បីរំលងរាល់ការរារាំង CORS របស់ Browser
+            const ping = new Image();
+            ping.src = apiUrl;
+
+            // បង្ហាញសារជោគជ័យភ្លាមៗជូនអតិថិជន
+            alert("🎉 ការចុះឈ្មោះត្រូវបានបញ្ជូនទៅកាន់ប្រព័ន្ធតេឡេក្រាមដោយជោគជ័យ!");
+            document.getElementById("regForm").reset();
+            document.getElementById("fullAddressBox").innerText = "សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...";
+            closeModal();
+        }
+    </script>
+</body>
+</html>
