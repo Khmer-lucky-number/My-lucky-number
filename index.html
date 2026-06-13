@@ -62,7 +62,7 @@
         .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; color: #94a3b8; cursor: pointer; }
         .close-btn:hover { color: #0f172a; }
 
-        /* Login Card & Eye Icon Fix */
+        /* Login Card */
         .login-card {
             background: rgba(255, 255, 255, 0.95); border-radius: 16px; padding: 35px 30px; width: 100%; max-width: 400px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); text-align: center; animation: fadeIn 0.3s ease;
@@ -72,7 +72,7 @@
             position: absolute; right: 15px; background: none; border: none; color: #64748b; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; height: 100%;
         }
 
-        /* 🤝 ផ្ទាំងទម្រង់ចុះឈ្មោះតំណាងចែកចាយ */
+        /* Distributor Form */
         .distributor-header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
         .distributor-header-box h2 { font-size: 22px; color: #0f172a; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .distributor-header-box h2 i { color: #d4af37; }
@@ -99,7 +99,7 @@
         }
         .submit-btn-gold:hover { background: #d4af37; color: #0f172a; transform: translateY(-1px); }
 
-        /* 🌟 ផ្ទាំងបញ្ជាក់ជោគជ័យ/បរាជ័យ ពណ៌មាសប្រណិតលោតចុះពីលើ */
+        /* Success/Error Popup Modal */
         .success-card {
             background: #fff; border-radius: 16px; padding: 40px 30px; width: 100%; max-width: 460px;
             text-align: center; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.3); border: 2px solid #d4af37;
@@ -112,7 +112,6 @@
             display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 18px auto;
             box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
         }
-        /* Style សម្រាប់ស្ថានភាព Error / បរាជ័យ */
         .success-checkmark.error-type { background: #fee2e2; color: #dc2626; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.2); }
         .error-border { border-color: #dc2626 !important; }
 
@@ -129,7 +128,17 @@
         /* Order form area inside detail */
         .order-form-section { background-color: #fdfbf7; padding: 20px; border-radius: 8px; border: 1px solid #fef3c7; margin-top: 25px; }
         .payment-box { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 6px; border: 1px dashed #d4af37; margin-top: 10px; }
-        .qr-code-img { width: 100px; height: 100px; object-fit: contain; }
+        .qr-container-wrapper { width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; }
+        .qr-code-img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s; }
+
+        /* 🛠️ New QR Editor Styling Box */
+        .qr-editor-container { background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .qr-preview-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; padding: 15px; border-radius: 6px; margin: 10px 0; border: 1px dashed #cbd5e1; }
+        .qr-preview-frame { width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #e2e8f0; }
+        .qr-preview-frame img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.2s; }
+        .qr-tools { display: flex; gap: 10px; margin-top: 10px; }
+        .qr-tool-btn { background: #0f172a; color: #d4af37; border: 1px solid #d4af37; padding: 6px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .qr-tool-btn:hover { background: #d4af37; color: #0f172a; }
 
         /* Admin Control Panel */
         .admin-search-area { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; gap: 10px; }
@@ -241,16 +250,39 @@
     <div id="adminModal" class="modal">
         <div class="modal-content" style="max-width: 680px;">
             <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-            <h2>🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យផលិតផល</h2>
+            <h2>🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យប្រព័ន្ធ</h2>
             
-            <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                <label style="font-weight: 700; font-size: 12px; color: #1e40af; display: block; margin-bottom: 6px;">🏪 ប្តូររូបភាព KHQR ហាង៖</label>
-                <input type="file" accept="image/*" onchange="uploadStoreQR(this)" style="padding: 6px !important; background: #fff; width: 100%;">
+            <div class="qr-editor-container">
+                <label style="font-weight: 700; font-size: 13px; color: #0f172a; display: block; margin-bottom: 6px;"><i class="fa-solid fa-qrcode"></i> កែសម្រួលប្រអប់គណនីទូទាត់ប្រាក់ (KHQR)៖</label>
+                <input type="file" id="qrFileInput" accept="image/*" onchange="previewQRFile(this)" style="padding: 6px !important; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius:6px;">
+                
+                <div class="qr-preview-box">
+                    <span style="font-size:11px; color:#64748b; margin-bottom:5px;">ទិដ្ឋភាពបង្ហាញជាមុន (Preview)</span>
+                    <div class="qr-preview-frame">
+                        <img id="qrPreviewImg" src="" alt="Preview QR">
+                    </div>
+                    <div class="qr-tools">
+                        <button type="button" class="qr-tool-btn" onclick="rotateQR(-90)"><i class="fa-solid fa-rotate-left"></i> បង្វិលឆ្វេង</button>
+                        <button type="button" class="qr-tool-btn" onclick="rotateQR(90)"><i class="fa-solid fa-rotate-right"></i> បង្វិលស្តាំ</button>
+                    </div>
+                </div>
+
+                <div class="form-grid" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <label>ឈ្មោះគណនីធនាគារ៖</label>
+                        <input type="text" id="editAccName" placeholder="ឧ. សមាគមន៍ផលិតផលខ្មែរ">
+                    </div>
+                    <div class="form-group">
+                        <label>លេខគណនី / ព័ត៌មានបន្ថែម៖</label>
+                        <input type="text" id="editAccNumber" placeholder="ឧ. 000 555 999">
+                    </div>
+                </div>
+                <button type="button" onclick="saveQRAndAccountChanges()" class="submit-btn-gold" style="background:#0f172a; font-size:13px; padding:10px; margin-top:5px;">💾 រក្សាទុកការផ្លាស់ប្តូរគណនី</button>
             </div>
 
             <div class="admin-search-area">
                 <input type="text" id="adminSearchCode" placeholder="វាយលេខកូដផលិតផល... (ឧ. KP-000001)" style="flex:1; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
-                <button type="button" onclick="loadToEdit()" class="admin-btn" style="background:#0f172a; border-radius:6px;">ស្វែងរក</button>
+                <button type="button" onclick="loadToEdit()" class="admin-btn" style="background:#0f172a; border-radius:6px;">ស្វែងរកទំនិញ</button>
             </div>
 
             <div id="adminEditor" class="admin-editor-panel">
@@ -270,7 +302,7 @@
                     <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៣</label><input type="file" accept="image/*" onchange="processFile(this, 2)"></div>
                     <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៤</label><input type="file" accept="image/*" onchange="processFile(this, 3)"></div>
                 </div>
-                <button type="button" onclick="saveChanges()" class="submit-btn-gold" style="background:#10b981; color:#fff; border:none;">💾 រក្សាទុក</button>
+                <button type="button" onclick="saveChanges()" class="submit-btn-gold" style="background:#10b981; color:#fff; border:none;">💾 រក្សាទុកទិន្នន័យទំនិញ</button>
             </div>
         </div>
     </div>
@@ -295,8 +327,14 @@
                     <div class="form-group"><label>លេខទូរសព្ទ៖</label><input type="text" id="orderTel" required></div>
                     <div class="form-group"><label>អាសយដ្ឋាន៖</label><textarea id="orderAddr" rows="2" required></textarea></div>
                     <div class="payment-box">
-                        <img id="qrImg" src="" alt="QR" class="qr-code-img">
-                        <div class="payment-instruction"><strong>គណនី៖ សមាគមន៍ផលិតផលខ្មែរ</strong><br>លេខគណនី៖ 000 555 999<br><span style="color:red;">*សូមភ្ជាប់រូបភាពបង្កាន់ដៃបង់ប្រាក់</span></div>
+                        <div class="qr-container-wrapper">
+                            <img id="qrImg" src="" alt="QR" class="qr-code-img">
+                        </div>
+                        <div class="payment-instruction">
+                            <strong id="displayAccName">គណនី៖ សមាគមន៍ផលិតផលខ្មែរ</strong><br>
+                            <span id="displayAccNumber">លេខគណនី៖ 000 555 999</span><br>
+                            <span style="color:red; font-size: 11px;">*សូមភ្ជាប់រូបភាពបង្កាន់ដៃបង់ប្រាក់</span>
+                        </div>
                     </div>
                     <div class="form-group" style="margin-top:10px;"><label>📸 បញ្ចូលរូបបង្កាន់ដៃ (Screenshot)៖</label><input type="file" id="orderReceipt" accept="image/*" required></div>
                     <button type="submit" class="submit-btn-gold">✅ យល់ព្រមទិញ</button>
@@ -333,9 +371,15 @@
         ];
 
         let db = JSON.parse(localStorage.getItem('kpa_v1_db')) || defaultDB;
+        
+        // ទាញយកព័ត៌មានគណនីពី LocalStorage
         let storeQR = localStorage.getItem('kpa_v1_qr') || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ABA_BANK';
+        let qrRotation = parseInt(localStorage.getItem('kpa_v1_qr_rotate')) || 0;
+        let accountName = localStorage.getItem('kpa_v1_acc_name') || 'គណនី៖ សមាគមន៍ផលិតផលខ្មែរ';
+        let accountNumber = localStorage.getItem('kpa_v1_acc_num') || 'លេខគណនី៖ 000 555 999';
 
         function saveDB() { localStorage.setItem('kpa_v1_db', JSON.stringify(db)); }
+        
         function render(list) {
             const g = document.getElementById("productGrid"); g.innerHTML = "";
             list.forEach((p) => {
@@ -350,7 +394,12 @@
                     </div>
                 </div>`;
             });
+            
+            // ដាក់ទិន្នន័យគណនីចូលប្រអប់ទូទាត់ប្រាក់
             document.getElementById("qrImg").src = storeQR;
+            document.getElementById("qrImg").style.transform = `rotate(${qrRotation}deg)`;
+            document.getElementById("displayAccName").innerText = accountName;
+            document.getElementById("displayAccNumber").innerText = accountNumber;
         }
         render(db);
 
@@ -368,14 +417,60 @@
             ev.preventDefault();
             if(document.getElementById("adminPassInput").value === "Qq128080") {
                 closeLoginModal(); 
+                // ដាក់តម្លៃបច្ចុប្បន្នចូលទៅក្នុងប្រអប់ Input របស់ Admin
+                document.getElementById("qrPreviewImg").src = storeQR;
+                document.getElementById("qrPreviewImg").style.transform = `rotate(${qrRotation}deg)`;
+                document.getElementById("editAccName").value = accountName.replace('គណនី៖ ', '');
+                document.getElementById("editAccNumber").value = accountNumber.replace('លេខគណនី៖ ', '');
+                
                 document.getElementById("adminModal").style.display="flex";
             } else { 
-                // ជំនួស alert() ដោយ ផ្ទាំង Error មាស-ក្រហម ប្រណិត
-                showNotification(false, "🔐 ផ្ទៀងផ្ទាត់បរាជ័យ!", "លេខសម្ងាត់គ្រប់គ្រងប្រព័ន្ធបច្ចេកទេសមិនត្រឹមត្រូវឡើយ។ សូមព្យាយាមម្តងទៀត!", "កំហុស៖ ខុសលេខសម្ងាត់", "សិទ្ធិចូលប្រើប្រាស់៖ ត្រូវបានបដិសេធ", "");
+                showNotification(false, "🔐 ផ្ទៀងផ្ទាត់បរាជ័យ!", "លេខសម្ងាត់គ្រប់គ្រងប្រព័ន្ធមិនត្រឹមត្រូវឡើយ។", "កំហុស៖ ខុសលេខសម្ងាត់", "សិទ្ធិចូលប្រើប្រាស់៖ ត្រូវបានបដិសេធ", "");
             }
         }
 
-        // Distributor Logic & Dynamic Address Mapping
+        // 🛠️ អនុគមន៍គ្រប់គ្រងការរៀបចំ និងបង្វិលរូបភាព QR Code
+        let currentPreviewRotation = 0;
+        function previewQRFile(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("qrPreviewImg").src = e.target.result;
+                    currentPreviewRotation = 0; // កំណត់មុំបង្វិលមកដើមវិញពេលប្តូររូបថ្មី
+                    document.getElementById("qrPreviewImg").style.transform = `rotate(0deg)`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function rotateQR(degrees) {
+            currentPreviewRotation = (currentPreviewRotation + degrees) % 360;
+            document.getElementById("qrPreviewImg").style.transform = `rotate(${currentPreviewRotation}deg)`;
+        }
+
+        function saveQRAndAccountChanges() {
+            const newName = document.getElementById("editAccName").value.trim();
+            const newNumber = document.getElementById("editAccNumber").value.trim();
+            const previewSrc = document.getElementById("qrPreviewImg").src;
+
+            if (newName) accountName = `គណនី៖ ${newName}`;
+            if (newNumber) accountNumber = `លេខគណនី៖ ${newNumber}`;
+            if (previewSrc && previewSrc !== window.location.href) storeQR = previewSrc;
+            
+            qrRotation = currentPreviewRotation;
+
+            // រក្សាទុកចូល LocalStorage
+            localStorage.setItem('kpa_v1_qr', storeQR);
+            localStorage.setItem('kpa_v1_qr_rotate', qrRotation);
+            localStorage.setItem('kpa_v1_acc_name', accountName);
+            localStorage.setItem('kpa_v1_acc_num', accountNumber);
+
+            render(db); // បំពេញទិន្នន័យថ្មីទៅលើទំព័រហាង
+            showNotification(true, "🏪 ធ្វើបច្ចុប្បន្នភាពគណនី!", "ព័ត៌មានអត្ថបទប្រអប់គណនី និងរូបភាព KHQR ត្រូវបានរៀបចំ និងរក្សាទុកជោគជ័យ។", "ស្ថានភាព៖ រក្សាទុកជោគជ័យ", "ការបង្វិលរូបភាព៖ " + qrRotation + "°", "");
+        }
+
+        // Distributor Logic
         const districtMap = {
             "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌសែនសុខ"],
             "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកអង្គស្នួល"],
@@ -418,7 +513,7 @@
                 body: JSON.stringify({chat_id:CHAT_ID, text:m, parse_mode:"Markdown"})
             }).then(() => {
                 closeDistributorModal();
-                showNotification(true, "🤝 ដាក់ពាក្យជោគជ័យ!", "ព័ត៌មានស្នើសុំធ្វើតំណាងចែកចាយរបស់អ្នកត្រូវបានបញ្ជូនទៅរដ្ឋបាលរួចរាល់។", `👤 ឈ្មោះ៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`, `📍 តំបន់ចែកចាយ៖ ${document.getElementById("provSelect").value}`);
+                showNotification(true, "🤝 ដាក់ពាក្យជោគជ័យ!", "ព័ត៌មានស្នើសុំរបស់អ្នកត្រូវបានបញ្ជូនទៅរដ្ឋបាលរួចរាល់។", `👤 ឈ្មោះ៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`, `📍 តំបន់ចែកចាយ៖ ${document.getElementById("provSelect").value}`);
             });
         }
 
@@ -438,20 +533,8 @@
                 tempImgs = [...p.images];
                 document.getElementById("adminEditor").style.display="block";
             } else { 
-                // ជំនួស alert() ដោយ ផ្ទាំង Error ម៉ូដប្រណិត
-                showNotification(false, "🔍 រកមិនឃើញផលិតផល!", `មិនមានទិន្នន័យផលិតផលណាដែលមានលេខកូដ "${code}" នៅក្នុងប្រព័ន្ធឡើយ។`, "កំហុស៖ រកមិនឃើញទិន្នន័យ", "សូមពិនិត្យមើល៖ លេខកូដឡើងវិញ", "");
+                showNotification(false, "🔍 រកមិនឃើញផលិតផល!", `មិនមានទិន្នន័យផលិតផលណាដែលមានលេខកូដ "${code}" ឡើយ។`, "កំហុស៖ រកមិនឃើញទិន្នន័យ", "សូមពិនិត្យមើល៖ លេខកូដឡើងវិញ", "");
             }
-        }
-        
-        function uploadStoreQR(f) {
-            const r = new FileReader(); r.onload = (e) => { 
-                storeQR = e.target.result; 
-                localStorage.setItem('kpa_v1_qr', storeQR); 
-                render(db); 
-                // ជំនួស alert() ដោយផ្ទាំងម៉ូដប្រណិត
-                showNotification(true, "🏪 ធ្វើបច្ចុប្បន្នភាព KHQR!", "រូបភាពគណនីបង់ប្រាក់ KHQR របស់ហាង ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ។", "ប្រព័ន្ធ៖ រក្សាទុកជោគជ័យ", "ស្ថានភាព៖ ដំណើរការធម្មតា", "");
-            };
-            if(f.files[0]) r.readAsDataURL(f.files[0]);
         }
         
         function processFile(f, k) {
@@ -465,7 +548,7 @@
             db[editIdx].desc = document.getElementById("editDesc").value;
             db[editIdx].images = [...tempImgs];
             saveDB(); render(db); closeAdminModal();
-            showNotification(true, "💾 រក្សាទុកជោគជ័យ!", "ទិន្នន័យផលិតផលត្រូវបានធ្វើបច្ចុប្បន្នភាពទៅក្នុងប្រព័ន្ធផ្ទុកទិន្នន័យរួចរាល់។", `📦 កូដ៖ ${db[editIdx].code}`, `✨ ឈ្មោះ៖ ${db[editIdx].title}`, "");
+            showNotification(true, "💾 រក្សាទុកជោគជ័យ!", "ទិន្នន័យផលិតផលត្រូវបានធ្វើបច្ចុប្បន្នភាពរួចរាល់។", `📦 កូដ៖ ${db[editIdx].code}`, `✨ ឈ្មោះ៖ ${db[editIdx].title}`, "");
         }
 
         // Shop Detail Slider & Ordering
@@ -500,7 +583,7 @@
             }).finally(() => btn.disabled=false);
         }
 
-        // 🌟 Unified Success/Error Popup Controller (ជំនួស alert ចាស់ចោលទាំងស្រុង)
+        // Unified Notification Popup Controller
         function showNotification(isSuccess, title, msg, l1, l2, l3) {
             const cardBox = document.getElementById("succCardBox");
             const iconBox = document.getElementById("succIconBox");
