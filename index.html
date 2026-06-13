@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ហាងលក់ទំនិញអនឡាញទំនើប</title>
+    <title>ផ្សារអនឡាញ Shopee Style Clone</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap');
         
@@ -18,233 +18,182 @@
         }
 
         body {
-            background-color: #f8fafc;
-            color: #1e293b;
+            background-color: #f5f5f5; /* ពណ៌សាច់ប្រផេះស្រាលតាមបែប Shopee */
+            color: #222;
             overflow-x: hidden;
         }
 
         /* ------------------------------------------
-           រចនា Navigation Bar (ខាងលើបង្អស់)
+           រចនា Top Header & Search Bar (រចនាបថ Shopee)
         ------------------------------------------ */
         header {
-            background-color: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            color: #fff;
-            padding: 18px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: linear-gradient(-180deg, #f53d2d, #f63); /* ពណ៌ទឹកក្រូចលក្ខណៈសម្គាល់ Shopee */
+            padding: 15px 5%;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         header h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(45deg, #ff9900, #ff5500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #fff;
+            letter-spacing: 1px;
         }
 
         .distributor-btn {
-            background: linear-gradient(135deg, #ff9900 0%, #e68a00 100%);
-            color: #fff;
+            background-color: #fff;
+            color: #f53d2d;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 22px;
             font-size: 14px;
-            font-weight: 600;
-            border-radius: 50px;
+            font-weight: 700;
+            border-radius: 4px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
         }
 
         .distributor-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 153, 0, 0.5);
+            background-color: #ffeae6;
         }
 
-        /* ------------------------------------------
-           រចនាផ្ទាំង Hero Banner (ចំណងជើងមានរូបភាព និងចលនា)
-        ------------------------------------------ */
-        .hero-section {
-            position: relative;
-            width: 100%;
-            height: 520px;
+        /* ប្រអប់ស្វែងរកទំនិញ */
+        .search-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #fff;
+            background-color: #fff;
+            border-radius: 4px;
             overflow: hidden;
-            background-color: #0b0f19;
+            padding: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        /* រូបភាព Background មានចលនា Zoom និងរ៉េចុះឡើង */
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .search-container input {
             width: 100%;
-            height: 100%;
-            background-image: linear-gradient(rgba(11, 15, 25, 0.65), rgba(11, 15, 25, 0.85)), 
-                              url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            z-index: 1;
-            animation: heroMoveEffect 20s infinite ease-in-out;
-        }
-
-        /* ធាតុផ្សំរូបថតអណ្តែត (Floating Products) ខាងក្រោយអក្សរ */
-        .floating-product {
-            position: absolute;
-            z-index: 2;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border: 2px solid rgba(255,255,255,0.1);
-            opacity: 0.85;
-            pointer-events: none;
-        }
-
-        /* រូបតំណាងសម្លៀកបំពាក់ (ឆ្វេង) */
-        .prod-left {
-            width: 160px;
-            height: 200px;
-            left: 8%;
-            top: 25%;
-            background-image: url('https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=400&q=80');
-            background-size: cover;
-            animation: floatLeftRight 7s infinite ease-in-out;
-        }
-
-        /* រូបតំណាងគ្រឿងអេឡិចត្រូនិច (ស្តាំ) */
-        .prod-right {
-            width: 180px;
-            height: 180px;
-            right: 8%;
-            top: 30%;
-            background-image: url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80');
-            background-size: cover;
-            animation: floatUpDown 6s infinite ease-in-out;
-        }
-
-        /* អក្សរចំណងជើងកណ្តាល Hero */
-        .hero-content {
-            position: relative;
-            z-index: 3;
-            max-width: 800px;
-            padding: 0 20px;
-        }
-
-        .hero-content h2 {
-            font-size: 42px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            line-height: 1.4;
-        }
-
-        .hero-content p {
-            font-size: 18px;
-            color: #cbd5e1;
-            margin-bottom: 30px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-        }
-
-        .hero-btn {
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-            color: #fff;
-            padding: 14px 35px;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 10px 15px;
             border: none;
-            border-radius: 50px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-btn {
+            background-color: #f53d2d;
+            color: #fff;
+            border: none;
+            padding: 0 25px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-            transition: all 0.3s ease;
+            border-radius: 2px;
         }
 
-        .hero-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+        .search-btn:hover {
+            background-color: #e33626;
         }
 
         /* ------------------------------------------
-           ចលនា Keyframes (Animations)
+           របារជ្រើសរើសប្រភេទ (Category Filter Tabs)
         ------------------------------------------ */
-        @keyframes heroMoveEffect {
-            0% { transform: scale(1) translate(0px, 0px); }
-            50% { transform: scale(1.08) translate(10px, -15px); }
-            100% { transform: scale(1) translate(0px, 0px); }
+        .category-tabs {
+            max-width: 1200px;
+            margin: 20px auto 0 auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
-        @keyframes floatLeftRight {
-            0% { transform: translate(0px, 0px) rotate(0deg); }
-            50% { transform: translate(15px, -20px) rotate(3deg); }
-            100% { transform: translate(0px, 0px) rotate(0deg); }
+        /* លាក់ Scrollbar សម្រាប់ទូរសព្ទ */
+        .category-tabs::-webkit-scrollbar {
+            display: none;
         }
 
-        @keyframes floatUpDown {
-            0% { transform: translate(0px, 0px) rotate(0deg); }
-            50% { transform: translate(-15px, 20px) rotate(-3deg); }
-            100% { transform: translate(0px, 0px) rotate(0deg); }
+        .tab-btn {
+            background-color: #fff;
+            color: #555;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #e8e8e8;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: #f53d2d;
+            color: #fff;
+            border-color: #f53d2d;
         }
 
         /* ------------------------------------------
-           ការបង្ហាញទំនិញ (Product Grid)
+           ការបង្ហាញទំនិញច្រើនមុខ (Product Grid Shopee Style)
         ------------------------------------------ */
         .container {
             max-width: 1200px;
-            margin: 60px auto;
+            margin: 20px auto 60px auto;
             padding: 0 20px;
-        }
-
-        .section-title {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        .section-title::after {
-            content: '';
-            width: 60px;
-            height: 4px;
-            background-color: #ff9900;
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
         }
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); /* កម្រិតទំហំកាតតូចៗល្មមដូច Shopee */
+            gap: 12px;
         }
 
         .product-card {
             background-color: #fff;
-            border-radius: 16px;
+            border-radius: 4px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            border: 1px solid #edf2f7;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
         }
 
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #f53d2d;
+        }
+
+        /* ស្លាកសញ្ញាបញ្ចុះតម្លៃលោតលើរូប */
+        .discount-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #ffd839;
+            color: #f53d2d;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 6px;
+            border-bottom-left-radius: 4px;
+            z-index: 5;
         }
 
         .product-image {
             width: 100%;
-            height: 260px;
-            background-color: #e2e8f0;
+            height: 185px;
+            background-color: #fafafa;
         }
 
         .product-image img {
@@ -254,39 +203,62 @@
         }
 
         .product-info {
-            padding: 22px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
         }
 
         .product-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 400;
+            line-height: 1.4;
+            height: 36px; /* កំណត់ឱ្យបង្ហាញតែ ២ បន្ទាត់ទោះឈ្មោះវែង */
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: #333;
             margin-bottom: 8px;
         }
 
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
         .product-price {
-            font-size: 22px;
-            font-weight: 700;
-            color: #ef4444;
-            margin-bottom: 18px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #f53d2d;
+        }
+
+        .product-sold {
+            font-size: 11px;
+            color: #757575;
         }
 
         .buy-btn {
             display: block;
             width: 100%;
-            padding: 12px;
-            background-color: #3b82f6;
-            color: #fff;
+            padding: 8px;
+            background-color: #fff;
+            color: #f53d2d;
             text-align: center;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border: 1px solid #f53d2d;
+            border-radius: 3px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
         }
 
         .buy-btn:hover {
-            background-color: #2563eb;
+            background-color: #f53d2d;
+            color: #fff;
         }
 
         /* ------------------------------------------
@@ -300,8 +272,8 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
             justify-content: center;
             align-items: center;
             padding: 20px;
@@ -309,189 +281,99 @@
 
         .modal-content {
             background-color: #fff;
-            padding: 30px;
-            border-radius: 24px;
+            padding: 25px 30px;
+            border-radius: 8px;
             width: 100%;
             max-width: 550px;
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
         }
 
         .close-btn {
             position: absolute;
-            right: 22px;
-            top: 18px;
+            right: 20px;
+            top: 15px;
             font-size: 28px;
             font-weight: bold;
-            color: #94a3b8;
+            color: #bbb;
             cursor: pointer;
-            transition: color 0.2s;
         }
 
-        .close-btn:hover {
-            color: #1e293b;
-        }
+        .close-btn:hover { color: #333; }
 
         .modal h2 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 25px;
+            font-size: 22px;
+            margin-bottom: 20px;
             text-align: center;
-            color: #0f172a;
-            border-bottom: 3px solid #ff9900;
-            padding-bottom: 12px;
+            color: #f53d2d;
+            border-bottom: 2px solid #f53d2d;
+            padding-bottom: 10px;
         }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #475569;
-        }
-
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #555; }
         .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: 14px;
-            outline: none;
-            background-color: #f8fafc;
-            transition: all 0.2s;
+            width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; background-color: #fafafa;
         }
+        .form-group input:focus, .form-group select:focus { border-color: #f53d2d; background-color: #fff; }
 
-        .form-group input:focus, .form-group select:focus {
-            border-color: #ff9900;
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.15);
-        }
-
-        .address-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
+        .address-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-address-box {
-            background-color: #f1f5f9;
-            border: 1px dashed #ff9900;
-            padding: 14px;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #334155;
-            min-height: 48px;
-            word-break: break-word;
-            line-height: 1.5;
+            background-color: #f9f9f9; border: 1px dashed #f53d2d; padding: 12px; border-radius: 4px; font-size: 14px; color: #444; min-height: 44px; word-break: break-word;
         }
 
         .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 15px;
-            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-            transition: all 0.2s;
+            width: 100%; padding: 13px; background: linear-gradient(180deg, #ff5722, #f44336); color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 2px 5px rgba(244,67,54,0.3);
         }
 
-        .submit-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(34, 197, 94, 0.4);
-        }
-
-        .submit-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+        .submit-btn:hover { background: #e64a19; }
+        .submit-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
 
         footer {
             text-align: center;
-            padding: 40px;
-            background-color: #1a1a1a;
-            color: #64748b;
-            margin-top: 80px;
-            font-size: 14px;
+            padding: 30px;
+            background-color: #fff;
+            color: #888;
+            margin-top: 60px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 13px;
         }
 
-        /* Responsive សម្រាប់ទូរសព្ទដៃ */
         @media (max-width: 768px) {
-            .hero-section { height: 420px; }
-            .hero-content h2 { font-size: 28px; }
-            .hero-content p { font-size: 15px; }
-            .floating-product { display: none; }
             .address-grid { grid-template-columns: 1fr; gap: 0; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+            .product-image { height: 140px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>ហាងលក់ទំនិញអនឡាញ</h1>
-        <button class="distributor-btn" onclick="openModal()">ចុះឈ្មោះជាតំណាងចែកចាយ</button>
+        <div class="header-container">
+            <div class="top-row">
+                <h1>shopee <span style="font-size: 14px; font-weight: 400; opacity: 0.9;">Clone Shop</span></h1>
+                <button class="distributor-btn" onclick="openModal()">ចុះឈ្មោះតំណាងចែកចាយ</button>
+            </div>
+            <div class="search-container">
+                <input type="text" id="searchInput" oninput="searchProducts()" placeholder="ស្វែងរកផលិតផលគ្រប់មុខនៅទីនេះ... (ឧទាហរណ៍៖ អាវ, កាស, ទូរសព្ទ)">
+                <button class="search-btn">ស្វែងរក</button>
+            </div>
+        </div>
     </header>
 
-    <section class="hero-section">
-        <div class="hero-bg"></div>
-        <div class="floating-product prod-left"></div>
-        <div class="floating-product prod-right"></div>
-        
-        <div class="hero-content">
-            <h2>ស្វាគមន៍មកកាន់មជ្ឈមណ្ឌលទិញទំនិញឈានមុខ</h2>
-            <p>ប្រភពបោះដុំសម្លៀកបំពាក់ទាន់សម័យ និងគ្រឿងអេឡិចត្រូនិចទំនើបៗ គុណភាពខ្ពស់ តម្លៃសមរម្យបំផុត។</p>
-            <button class="hero-btn" onclick="openModal()">រួមការងារជាមួយយើងឥឡូវនេះ</button>
-        </div>
-    </section>
+    <div class="category-tabs">
+        <button class="tab-btn active" onclick="filterCategory('all', this)">ផលិតផលទាំងអស់</button>
+        <button class="tab-btn" onclick="filterCategory('electronics', this)">គ្រឿងអេឡិចត្រូនិច</button>
+        <button class="tab-btn" onclick="filterCategory('fashion', this)">សម្លៀកបំពាក់ & ម៉ូដ</button>
+        <button class="tab-btn" onclick="filterCategory('beauty', this)">គ្រឿងសម្អាង & សម្រស់</button>
+        <button class="tab-btn" onclick="filterCategory('home', this)">របស់ប្រើប្រាស់ក្នុងផ្ទះ</button>
+    </div>
 
     <div class="container">
-        <h3 class="section-title">ផលិតផលពេញនិយម</h3>
-        <div class="product-grid" style="margin-top: 40px;">
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80" alt="ស្បែកជើងកីឡា">
-                </div>
-                <div class="product-info">
-                    <div class="product-title">ស្បែកជើងកីឡាទំនើប ស៊េរីឆ្នាំ២០២៦</div>
-                    <div class="product-price">$25.00</div>
-                    <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
-                </div>
+        <div class="product-grid" id="productGrid">
             </div>
-            
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" alt="នាឡិកាដៃ">
-                </div>
-                <div class="product-info">
-                    <div class="product-title">នាឡិកាដៃឆ្លាតវៃ (Smart Watch)</div>
-                    <div class="product-price">$45.00</div>
-                    <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=400&q=80" alt="កាសស្តាប់ត្រចៀក">
-                </div>
-                <div class="product-info">
-                    <div class="product-title">កាសស្តាប់ត្រចៀក Wireless Pro</div>
-                    <div class="product-price">$19.99</div>
-                    <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div id="registerModal" class="modal">
@@ -518,10 +400,10 @@
                 
                 <div class="form-group">
                     <label for="telegramPhone">លេខតេឡេក្រាម ឬ Username Telegram៖</label>
-                    <input type="text" id="telegramPhone" placeholder="បញ្ចូលលេខទូរសព្ទ ឬឈ្មោះអ្នកប្រើប្រាស់តេឡេក្រាម" required>
+                    <input type="text" id="telegramPhone" placeholder="បញ្ចូលលេខទូរសព្ទ" required>
                 </div>
                 
-                <h3 style="font-size: 15px; margin: 15px 0 10px 0; color: #ff9900; border-bottom: 1px dashed #ccc; padding-bottom: 5px;">អាសយដ្ឋានរស់នៅបច្ចុប្បន្ន</h3>
+                <h3 style="font-size: 14px; margin: 15px 0 10px 0; color: #f53d2d; border-bottom: 1px dashed #ccc; padding-bottom: 5px;">អាសយដ្ឋានរស់នៅបច្ចុប្បន្ន</h3>
                 
                 <div class="address-grid">
                     <div class="form-group">
@@ -575,17 +457,101 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ ហាងលក់ទំនិញអនឡាញទំនើប</p>
+        <p>&copy; 2026 Shopee Clone Study Project. រក្សាសិទ្ធិគ្រប់យ៉ាងដោយនិស្សិតអភិវឌ្ឍន៍វេបសាយ</p>
     </footer>
 
     <script>
-        // គ្រប់គ្រង Popup
+        // គ្រប់គ្រង Popup Form
         const modal = document.getElementById("registerModal");
         function openModal() { modal.style.display = "flex"; }
         function closeModal() { modal.style.display = "none"; }
         window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
 
-        // ទិន្នន័យខេត្ត-ស្រុក
+        // --------------------------------------------------------
+        // ឃ្លាំងទិន្នន័យផលិតផលគំរូគ្រប់មុខ (Array of Products Dataset)
+        // --------------------------------------------------------
+        const productsDatabase = [
+            // គ្រឿងអេឡិចត្រូនិច (electronics)
+            { id: 1, category: 'electronics', title: 'ទូរសព្ទដៃឆ្លាតវៃ Smartphone Pro Max ស៊េរីចុងក្រោយ', price: '$899.00', sold: 'លក់ដាច់ 1.2k', discount: '10%', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80' },
+            { id: 2, category: 'electronics', title: 'កាសស្តាប់ត្រចៀកប្ល៊ូធូស Wireless Bluetooth Headphones Bass ធ្ងន់', price: '$24.50', sold: 'លក់ដាច់ 5.8k', discount: '45%', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80' },
+            { id: 3, category: 'electronics', title: 'នាឡិកាដៃឆ្លាតវៃ Smartwatch Series 8 ការពារជម្រាបទឹក', price: '$39.00', sold: 'លក់ដាច់ 920', discount: '20%', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80' },
+            
+            // សម្លៀកបំពាក់ & ម៉ូដ (fashion)
+            { id: 4, category: 'fashion', title: 'អាវយឺតដៃខ្លីបុរសសាច់ទន់ត្រជាក់ បែបយុវវ័យកូរ៉េ ទាន់សម័យ', price: '$7.99', sold: 'លក់ដាច់ 12k', discount: '30%', img: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80' },
+            { id: 5, category: 'fashion', title: 'រ៉ូបនារីសាច់ក្រណាត់ផ្កាជលផល សម្រាប់ដើរលេងឆ្នេរសមុទ្រ', price: '$14.50', sold: 'លក់ដាច់ 3.4k', discount: '15%', img: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=400&q=80' },
+            { id: 6, category: 'fashion', title: 'កាបូបស្ពាយក្រោយតូចគួរឱ្យស្រឡាញ់ Mini Fashion Backpack', price: '$11.00', sold: 'លក់ដាច់ 4.7k', discount: '50%', img: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=400&q=80' },
+            
+            // គ្រឿងសម្អាង & សម្រស់ (beauty)
+            { id: 7, category: 'beauty', title: 'ក្រែមលាបមាត់ Matte Lipstick ពណ៌ធម្មជាតិជាប់បានយូរ', price: '$6.50', sold: 'លក់ដាច់ 8.1k', discount: '25%', img: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=400&q=80' },
+            { id: 8, category: 'beauty', title: 'ឡេការពារកម្តៅថ្ងៃ Sunscreen SPF50+ មិនកកមិនស្អិត', price: '$12.00', sold: 'លក់ដាច់ 2.9k', discount: '5%', img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80' },
+            { id: 9, category: 'beauty', title: 'ឈុតសេរ៉ូមថែរក្សាស្បែកមុខឱ្យភ្លឺថ្លា លាបមុនចូលគេង', price: '$28.00', sold: 'លក់ដាច់ 950', discount: '40%', img: 'https://images.unsplash.com/photo-1608248597481-496100c80836?auto=format&fit=crop&w=400&q=80' },
+            
+            // របស់ប្រើប្រាស់ក្នុងផ្ទះ (home)
+            { id: 10, category: 'home', title: 'ដបទឹករក្សាកម្តៅ និងត្រជាក់ Vacuum Thermos Bottle 1L', price: '$8.50', sold: 'លក់ដាច់ 6.2k', discount: '35%', img: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=400&q=80' },
+            { id: 11, category: 'home', title: 'អំពូលភ្លើង LED ដេគ័របន្ទប់គេង ប្តូរពណ៌បានតាមទូរសព្ទ', price: '$5.20', sold: 'លក់ដាច់ 10k', discount: '50%', img: 'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?auto=format&fit=crop&w=400&q=80' },
+            { id: 12, category: 'home', title: 'ម៉ាស៊ីនក្រឡុកផ្លែឈើខ្នាតតូច Portable Blender ប្រើថ្មសាក', price: '$15.90', sold: 'លក់ដាច់ 1.8k', discount: '18%', img: 'https://images.unsplash.com/photo-1578643463396-0997cb5328c1?auto=format&fit=crop&w=400&q=80' }
+        ];
+
+        // មុខងារបង្ហាញទិន្នន័យទៅលើអេក្រង់សិប្បនិម្មិត
+        function renderProducts(productsList) {
+            const grid = document.getElementById("productGrid");
+            grid.innerHTML = ""; // លុបទិន្នន័យចាស់ចេញ
+
+            if(productsList.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #888;">អាភ័យទោស! មិនមានផលិតផលដែលអ្នកស្វែងរកឡើយ។</div>`;
+                return;
+            }
+
+            productsList.forEach(product => {
+                const cardHTML = `
+                    <div class="product-card">
+                        <div class="discount-badge">-${product.discount}</div>
+                        <div class="product-image">
+                            <img src="${product.img}" alt="${product.title}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">${product.title}</div>
+                            <div class="price-row">
+                                <div class="product-price">${product.price}</div>
+                                <div class="product-sold">${product.sold}</div>
+                            </div>
+                            <button class="buy-btn" onclick="alert('សាកល្បងចុច៖ ចាប់ផ្តើមបញ្ជាទិញ ${product.title}')">មើលលម្អិត</button>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += cardHTML;
+            });
+        }
+
+        // ចាប់ផ្តើមដំណើរការទំព័រដំបូង បង្ហាញផលិតផលទាំងអស់
+        renderProducts(productsDatabase);
+
+        // មុខងារចុចប្តូរ Tab ប្រភេទ (Category Filter)
+        function filterCategory(category, buttonElement) {
+            // ដក Class active ពីប៊ូតុងទាំងអស់
+            const buttons = document.querySelectorAll(".tab-btn");
+            buttons.forEach(btn => btn.classList.remove("active"));
+            // បន្ថែម Class active លើប៊ូតុងដែលកំពុងចុច
+            buttonElement.classList.add("active");
+
+            if(category === 'all') {
+                renderProducts(productsDatabase);
+            } else {
+                const filtered = productsDatabase.filter(p => p.category === category);
+                renderProducts(filtered);
+            }
+        }
+
+        // មុខងារវាយអក្សរស្វែងរកទំនិញ (Real-time Search Bar)
+        function searchProducts() {
+            const searchText = document.getElementById("searchInput").value.toLowerCase();
+            const filtered = productsDatabase.filter(p => p.title.toLowerCase().includes(searchText));
+            renderProducts(filtered);
+        }
+
+        // --------------------------------------------------------
+        // ប្រព័ន្ធគ្រប់គ្រងការជ្រើសរើសខេត្ត-ស្រុក និងបញ្ជូនទៅ Telegram
+        // --------------------------------------------------------
         const districtsByProvince = {
             "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌឫស្សីកែវ", "ខណ្ឌសែនសុខ", "ខណ្ឌពោធិ៍សែនជ័យ", "ខណ្ឌជ្រោយចង្វារ", "ខណ្ឌព្រែកព្នៅ", "ខណ្ឌច្បារអំពៅ", "ខណ្ឌដង្កោ", "ខណ្ឌកំបូល", "ខណ្ឌបឹងកេងកង"],
             "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកខ្សាច់កណ្តាល", "ស្រុកកោះធំ", "ស្រុកពញាឮ", "ស្រុកល្វាឯម", "ស្រុកមុខកំពូល", "ស្រុកអង្គស្នួល", "ស្រុកស្អាង"],
@@ -598,14 +564,11 @@
             const provinceSelect = document.getElementById("province");
             const districtSelect = document.getElementById("district");
             const selectedProvince = provinceSelect.value;
-
             districtSelect.innerHTML = '<option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>';
-
             if (districtsByProvince[selectedProvince]) {
                 districtsByProvince[selectedProvince].forEach(function(district) {
                     const option = document.createElement("option");
-                    option.value = district;
-                    option.text = district;
+                    option.value = district; option.text = district;
                     districtSelect.appendChild(option);
                 });
             }
@@ -624,7 +587,6 @@
                 if(commune) fullText += `ឃុំ/សង្កាត់ ${commune}, `;
                 if(district) fullText += `${district}, `;
                 if(province) fullText += `រាជធានី/ខេត្ត ${province}`;
-                
                 fullText = fullText.replace(/,\s*$/, "");
                 box.innerText = fullText;
                 return fullText;
@@ -634,17 +596,12 @@
             }
         }
 
-        // ========================================================
-        // ប្រព័ន្ធសុវត្ថិភាពខ្ពស់៖ រក្សាទុកទម្រង់ Form Submit ដើមដែលដំណើរការបានល្អ
-        // ========================================================
         function submitToTelegram(event) {
             event.preventDefault();
-            
             const btnSubmit = document.getElementById("btnSubmit");
             btnSubmit.disabled = true;
             btnSubmit.innerText = "កំពុងបញ្ជូន...";
 
-            // បំពេញលេខសម្ងាត់របស់អ្នករួចរាល់ជាស្ថាពរ
             const TELEGRAM_BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI'; 
             const TELEGRAM_CHAT_ID = '-5387523552'; 
 
@@ -670,25 +627,16 @@
             let iframe = document.getElementById('hidden_iframe');
             if (!iframe) {
                 iframe = document.createElement('iframe');
-                iframe.id = 'hidden_iframe';
-                iframe.name = 'hidden_iframe';
-                iframe.style.display = 'none';
+                iframe.id = 'hidden_iframe'; iframe.name = 'hidden_iframe'; iframe.style.display = 'none';
                 document.body.appendChild(iframe);
             }
             form.target = 'hidden_iframe';
 
-            const inputs = {
-                'chat_id': TELEGRAM_CHAT_ID,
-                'text': message,
-                'parse_mode': 'Markdown'
-            };
-
+            const inputs = { 'chat_id': TELEGRAM_CHAT_ID, 'text': message, 'parse_mode': 'Markdown' };
             for (const key in inputs) {
                 if (inputs.hasOwnProperty(key)) {
                     const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = inputs[key];
+                    input.type = 'hidden'; input.name = key; input.value = inputs[key];
                     form.appendChild(input);
                 }
             }
