@@ -136,11 +136,13 @@
 
         .modal-content {
             background-color: #fff;
-            padding: 30px;
+            padding: 25px 30px;
             border-radius: 16px;
             width: 100%;
             max-width: 500px;
             position: relative;
+            max-height: 90vh;
+            overflow-y: auto; /* អនុញ្ញាតឱ្យអូសចុះក្រោមបើអេក្រង់ទូរសព្ទតូច */
         }
 
         .close-btn {
@@ -178,6 +180,11 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #ff9900;
         }
 
         .submit-btn {
@@ -190,6 +197,7 @@
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         .submit-btn:disabled {
@@ -238,15 +246,52 @@
                     <label for="fullName">ឈ្មោះពេញ៖</label>
                     <input type="text" id="fullName" placeholder="ឧទាហរណ៍៖ សុខ ជា" required>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="phone">លេខទូរសព្ទ៖</label>
-                    <input type="tel" id="phone" placeholder="ឧទាហរណ៍៖ 012 345 678" required>
+                    <label for="age">អាយុ៖</label>
+                    <input type="number" id="age" placeholder="ឧទាហរណ៍៖ 25" min="15" max="80" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="job">មុខរបរបច្ចុប្បន្ន៖</label>
+                    <input type="text" id="job" placeholder="ឧទាហរណ៍៖ បុគ្គលិកក្រុមហ៊ុន, និស្សិត" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="location">ខេត្ត/ក្រុង ដែលអ្នករស់នៅ៖</label>
-                    <input type="text" id="location" placeholder="ឧទាហរណ៍៖ ភ្នំពេញ" required>
+                    <label for="telegramPhone">លេខតេឡេក្រាម (Telegram)៖</label>
+                    <input type="tel" id="telegramPhone" placeholder="ឧទាហរណ៍៖ 012345678" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">រាជធានី/ខេត្ត ដែលអ្នករស់នៅ៖</label>
+                    <select id="location" required>
+                        <option value="" disabled selected>--- សូមជ្រើសរើសរាជធានី/ខេត្ត ---</option>
+                        <option value="ភ្នំពេញ">ភ្នំពេញ</option>
+                        <option value="កណ្តាល">កណ្តាល</option>
+                        <option value="សៀមរាប">សៀមរាប</option>
+                        <option value="ព្រះសីហនុ">ព្រះសីហនុ</option>
+                        <option value="បាត់ដំបង">បាត់ដំបង</option>
+                        <option value="កំពង់ចាម">កំពង់ចាម</option>
+                        <option value="កំពង់ស្ពឺ">កំពង់ស្ពឺ</option>
+                        <option value="កំពង់ធំ">កំពង់ធំ</option>
+                        <option value="កំពត">កំពត</option>
+                        <option value="កែប">កែប</option>
+                        <option value="កោះកុង">កោះកុង</option>
+                        <option value="ក្រចេះ">ក្រចេះ</option>
+                        <option value="តាកែវ">តាកែវ</option>
+                        <option value="ត្បូងឃ្មុំ">ត្បូងឃ្មុំ</option>
+                        <option value="បន្ទាយមានជ័យ">បន្ទាយមានជ័យ</option>
+                        <option value="ប៉ៃលិន">ប៉ៃលិន</option>
+                        <option value="ពោធិ៍សាត់">ពោធិ៍សាត់</option>
+                        <option value="ព្រះវិហារ">ព្រះវិហារ</option>
+                        <option value="ព្រៃវែង">ព្រៃវែង</option>
+                        <option value="មណ្ឌលគិរី">មណ្ឌលគិរី</option>
+                        <option value="រតនគិរី">រតនគិរី</option>
+                        <option value="ស្ទឹងត្រែង">ស្ទឹងត្រែង</option>
+                        <option value="ស្វាយរៀង">ស្វាយរៀង</option>
+                        <option value="ឧត្តរមានជ័យ">ឧត្តរមានជ័យ</option>
+                        <option value="ប៉ៃលិន">ប៉ៃលិន</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -280,28 +325,31 @@
             btnSubmit.disabled = true;
             btnSubmit.innerText = "កំពុងផ្ញើ...";
 
-            // ព័ត៌មានគណនី Telegram របស់អ្នកដែលបានបំពេញរួចរាល់
-            const TELEGRAM_BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI'; 
-            const TELEGRAM_CHAT_ID = '-5387523552'; 
+            // កន្លែងប្តូរ Bot Token និង Chat ID របស់អ្នក
+            const TELEGRAM_BOT_TOKEN = 'សូមដាក់_BOT_TOKEN_របស់អ្នកនៅទីនេះ'; 
+            const TELEGRAM_CHAT_ID = 'សូមដាក់_CHAT_ID_របស់អ្នកនៅទីនេះ'; 
 
             const name = document.getElementById("fullName").value;
-            const phone = document.getElementById("phone").value;
+            const age = document.getElementById("age").value;
+            const job = document.getElementById("job").value;
+            const telegramPhone = document.getElementById("telegramPhone").value;
             const location = document.getElementById("location").value;
             const experience = document.getElementById("experience").value;
 
+            // រៀបចំទម្រង់សារថ្មីសម្រាប់ផ្ញើទៅ Telegram
             const message = `🔔 *មានសមាជិកចុះឈ្មោះថ្មី!*\n\n` +
-                            `👤 *ឈ្មោះ៖* ${name}\n` +
-                            `📞 *លេខទូរសព្ទ៖* ${phone}\n` +
-                            `📍 *ទីតាំង៖* ${location}\n` +
-                            `💼 *បទពិសោធន៍៖* ${experience}`;
+                            `👤 *ឈ្មោះពេញ៖* ${name}\n` +
+                            `🎂 *អាយុ៖* ${age} ឆ្នាំ\n` +
+                            `💼 *មុខរបរ៖* ${job}\n` +
+                            `📞 *លេខតេឡេក្រាម៖* ${telegramPhone}\n` +
+                            `📍 *ទីតាំង៖* ខេត្ត ${location}\n` +
+                            `📈 *បទពិសោធន៍៖* ${experience}`;
 
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
             fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: TELEGRAM_CHAT_ID,
                     text: message,
@@ -310,11 +358,11 @@
             })
             .then(response => {
                 if (response.ok) {
-                    alert("🎉 ការចុះឈ្មោះបានជោគជ័យ! យើងខ្ញុំនឹងទាក់ទងទៅលោកអ្នកក្នុងពេលឆាប់ៗ។");
+                    alert("🎉 ការចុះឈ្មោះបានជោគជ័យ! យើងខ្ញុំនឹងទាក់ទងទៅលោកអ្នកតាមតេឡេក្រាមក្នុងពេលឆាប់ៗ។");
                     document.getElementById("regForm").reset();
                     closeModal();
                 } else {
-                    alert("❌ មានបញ្ហា! សូមពិនិត្យមើលការកំណត់ Bot ក្នុង Group របស់អ្នកម្តងទៀត។");
+                    alert("❌ មានបញ្ហា! សូមពិនិត្យមើលការកំណត់ Bot Token ឬ Chat ID ម្តងទៀត។");
                 }
             })
             .catch(error => {
