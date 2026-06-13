@@ -135,7 +135,7 @@
         .qr-preview-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; padding: 15px; border-radius: 6px; margin: 10px 0; border: 1px dashed #cbd5e1; }
         
         /* Drag Frame Container */
-        .qr-preview-frame { width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; position: relative; cursor: move; user-select: none; }
+        .qr-preview-frame { width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; cursor: move; user-select: none; position: relative; }
         .qr-preview-frame img { position: absolute; max-width: none; max-height: none; transform-origin: center center; pointer-events: none; }
         
         .qr-tools { display: flex; flex-direction: column; width: 100%; gap: 10px; margin-top: 12px; align-items: center; }
@@ -148,7 +148,9 @@
         .zoom-val-text { font-size: 11px; font-weight: 700; color: #475569; min-width: 35px; text-align: right; }
 
         /* Security Unlock Button Styling */
-        .unlock-qr-section { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; }
+        .unlock-qr-section { background: #fdfbf7; border: 1px dashed #d4af37; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; }
+        .btn-orange-lock { background: linear-gradient(135deg, #d97706, #b45309); color: white; border: none; padding: 12px 20px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s; }
+        .btn-orange-lock:hover { transform: translateY(-1px); background: #b45309; }
 
         /* Admin Layouts */
         .admin-search-area { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; gap: 10px; }
@@ -279,14 +281,17 @@
         <div class="modal-content" style="max-width: 680px;">
             <span class="close-btn" onclick="closeAdminModal()">&times;</span>
             <h2>🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យប្រព័ន្ធ</h2>
+            <br>
             
             <div id="unlockSection" class="unlock-qr-section">
-                <p style="font-size:12px; color:#64748b; margin-bottom:8px;">ផ្នែកគ្រប់គ្រងរូបភាពគណនីទូទាត់ប្រាក់ (KHQR) ត្រូវបានការពារ</p>
-                <button type="button" onclick="openQRLockModal()" class="qr-tool-btn" style="margin:0 auto; background:#b45309;"><i class="fa-solid fa-unlock"></i> 🔓 បើកសិទ្ធិកែសម្រួលប្រអប់គណនី</button>
+                <p style="font-size:13px; color:#64748b; margin-bottom:10px; font-weight: 600;">ផ្នែកគ្រប់គ្រងរូបភាពគណនីទូទាត់ប្រាក់ (KHQR) ត្រូវបានចាក់សោការពារសុវត្ថិភាព</p>
+                <button type="button" onclick="openQRLockModal()" class="btn-orange-lock">
+                    <i class="fa-solid fa-key"></i> បើកសិទ្ធិកែសម្រួលប្រអប់គណនី
+                </button>
             </div>
 
             <div id="qrEditorBlock" class="qr-editor-container">
-                <label style="font-weight: 700; font-size: 13px; color: #0f172a; display: block; margin-bottom: 6px;"><i class="fa-solid fa-qrcode"></i> កែសម្រួលប្រអប់គណនីទូទាត់ប្រាក់ (ចាក់សោសុវត្ថិភាព)៖</label>
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-qrcode"></i> កែសម្រួលប្រអប់គណនីទូទាត់ប្រាក់ (បើកសិទ្ធិរួចរាល់)៖</label>
                 <input type="file" id="qrFileInput" accept="image/*" onchange="previewQRFile(this)" style="padding: 6px !important; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius:6px;">
                 
                 <div class="qr-preview-box">
@@ -446,7 +451,7 @@
             document.getElementById("displayAccNumber").innerText = accountNumber;
         }
 
-        // Login Admin System (Master Password: Qq128080)
+        // Login Admin (Master Password: Qq128080)
         function openLoginModal() { document.getElementById("loginModal").style.display="flex"; }
         function closeLoginModal() { document.getElementById("loginModal").style.display="none"; document.getElementById("adminPassInput").value=""; }
         
@@ -461,10 +466,10 @@
         
         function verifyAdminPassword(ev) {
             ev.preventDefault();
-            // ប្រើប្រាស់លេខកូដសម្ងាត់ដើម Qq128080 សម្រាប់ទ្វារទី១
             if(document.getElementById("adminPassInput").value === "Qq128080") {
                 closeLoginModal(); 
                 
+                // លាក់ផ្ទាំងកែគណនី និងបង្ហាញប៊ូតុងចាក់សោសិន
                 document.getElementById("qrEditorBlock").style.display = "none";
                 document.getElementById("unlockSection").style.display = "block";
                 
@@ -477,13 +482,13 @@
             }
         }
 
-        // 🔓 ផ្ទៀងផ្ទាត់កូដសម្ងាត់ជាន់ទី២ សម្រាប់ប៊ូតុងបើកផ្ទាំង QR (Password: Qq20262027)
+        // 🔓 ផ្ទៀងផ្ទាត់កូដសម្ងាត់ជាន់ទី២ (Password: Qq20262027) តាមរយៈប៊ូតុងពណ៌ទឹកក្រូច
         function verifyQREditorAccess(ev) {
             ev.preventDefault();
             if(document.getElementById("qrPassInput").value === "Qq20262027") {
                 closeQRLockModal();
-                document.getElementById("unlockSection").style.display = "none";
-                document.getElementById("qrEditorBlock").style.display = "block";
+                document.getElementById("unlockSection").style.display = "none"; // លាក់ប៊ូតុងចុច
+                document.getElementById("qrEditorBlock").style.display = "block";  // បង្ហាញផ្ទាំងកែសម្រួលគណនេយ្យ
                 
                 document.getElementById("qrPreviewImg").src = storeQR;
                 currentRotation = qrRotation;
@@ -496,12 +501,9 @@
             }
         }
 
-        // 🛠️ មុខងារបង្វិល ពង្រីកបង្រួម និង ចាប់អូសរូបភាព
-        let currentRotation = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let isDragging = false;
-        let startX, startY;
+        // QR Image Manipulations
+        let currentRotation = 0; let currentX = 0; let currentY = 0;
+        let isDragging = false; let startX, startY;
 
         function previewQRFile(input) {
             const file = input.files[0];
@@ -515,61 +517,26 @@
             }
         }
 
-        function adjustRotation(degrees) {
-            currentRotation = (currentRotation + degrees) % 360;
-            applyZoomAndRotate();
-        }
-
-        function resetPositions() {
-            currentRotation = 0;
-            currentX = 0;
-            currentY = 0;
-            document.getElementById("qrZoomSlider").value = 100;
-            applyZoomAndRotate();
-        }
+        function adjustRotation(degrees) { currentRotation = (currentRotation + degrees) % 360; applyZoomAndRotate(); }
+        function resetPositions() { currentRotation = 0; currentX = 0; currentY = 0; document.getElementById("qrZoomSlider").value = 100; applyZoomAndRotate(); }
 
         function applyZoomAndRotate() {
             const zoomVal = document.getElementById("qrZoomSlider").value;
             document.getElementById("zoomValLabel").innerText = zoomVal + "%";
-            
             const scale = zoomVal / 100;
             const img = document.getElementById("qrPreviewImg");
-            
             img.style.transform = `rotate(${currentRotation}deg) scale(${scale})`;
-            img.style.left = currentX + 'px';
-            img.style.top = currentY + 'px';
+            img.style.left = currentX + 'px'; img.style.top = currentY + 'px';
         }
 
-        // 🖐️ ចាប់ផ្តើមព្រឹត្តិការណ៍ ចាប់អូសរូបភាព (Mouse & Touch Events)
+        // Drag Features
         const frame = document.getElementById("previewFrame");
-        
-        frame.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX - currentX;
-            startY = e.clientY - currentY;
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            currentX = e.clientX - startX;
-            currentY = e.clientY - startY;
-            applyZoomAndRotate();
-        });
-
+        frame.addEventListener('mousedown', (e) => { isDragging = true; startX = e.clientX - currentX; startY = e.clientY - currentY; });
+        window.addEventListener('mousemove', (e) => { if (!isDragging) return; currentX = e.clientX - startX; currentY = e.clientY - startY; applyZoomAndRotate(); });
         window.addEventListener('mouseup', () => { isDragging = false; });
-
-        // Touch Support សម្រាប់ទូរសព្ទដៃ
-        frame.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startX = e.touches[0].clientX - currentX;
-            startY = e.touches[0].clientY - currentY;
-        });
-        frame.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            currentX = e.touches[0].clientX - startX;
-            currentY = e.touches[0].clientY - startY;
-            applyZoomAndRotate();
-        });
+        // Touch
+        frame.addEventListener('touchstart', (e) => { isDragging = true; startX = e.touches[0].clientX - currentX; startY = e.touches[0].clientY - currentY; });
+        frame.addEventListener('touchmove', (e) => { if (!isDragging) return; currentX = e.touches[0].clientX - startX; currentY = e.touches[0].clientY - startY; applyZoomAndRotate(); });
         frame.addEventListener('touchend', () => { isDragging = false; });
 
         function saveQRAndAccountChanges() {
@@ -582,10 +549,7 @@
             if (newNumber) accountNumber = `លេខគណនី៖ ${newNumber}`;
             if (previewSrc && previewSrc !== window.location.href) storeQR = previewSrc;
             
-            qrRotation = currentRotation;
-            qrZoomScale = zoomVal / 100;
-            qrPosX = currentX;
-            qrPosY = currentY;
+            qrRotation = currentRotation; qrZoomScale = zoomVal / 100; qrPosX = currentX; qrPosY = currentY;
 
             localStorage.setItem('kpa_v1_qr', storeQR);
             localStorage.setItem('kpa_v1_qr_rotate', qrRotation);
@@ -599,54 +563,39 @@
             showNotification(true, "🏪 រក្សាទុកទីតាំងគណនី!", "ប្រព័ន្ធបានរក្សាទុកមុំបង្វិល ទំហំពង្រីក និងទម្រង់អូសទីតាំងរូបភាពជោគជ័យ។", "កម្រិតពង្រីក៖ " + zoomVal + "%", `កូអរដោនេ៖ X:${qrPosX}px, Y:${qrPosY}px`, "");
         }
 
-        // Distributor Logic
+        // Distributor
         const districtMap = {
             "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌសែនសុខ"],
             "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកអង្គស្នួល"],
             "សៀមរាប": ["ក្រុងសៀមរាប", "ស្រុកពួក", "ស្រុកសូទ្រនិគម", "ស្រុកប្រាសាទបាគង"],
-            "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកសង្កែ", "ស្រ突ថ្មគោល", "ស្រុកបាណន់"]
+            "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកសង្កែ", "ស្រុកថ្មគោល", "ស្រុកបាណន់"]
         };
         function updateDistricts() {
             const prov = document.getElementById("provSelect").value;
             const dist = document.getElementById("distSelect");
             dist.innerHTML = '<option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>';
-            if(districtMap[prov]) {
-                districtMap[prov].forEach(d => {
-                    const o = document.createElement("option"); o.value=d; o.text=d; dist.appendChild(o);
-                });
-            }
+            if(districtMap[prov]) { districtMap[prov].forEach(d => { const o = document.createElement("option"); o.value=d; o.text=d; dist.appendChild(o); }); }
         }
         function updateFullAddress() {
-            const p = document.getElementById("provSelect").value;
-            const d = document.getElementById("distSelect").value;
-            const c = document.getElementById("communeInput").value;
-            const v = document.getElementById("villageInput").value;
+            const p = document.getElementById("provSelect").value; const d = document.getElementById("distSelect").value;
+            const c = document.getElementById("communeInput").value; const v = document.getElementById("villageInput").value;
             const b = document.getElementById("fullAddrBox");
-            if(p || d || c || v) {
-                b.innerText = `ភូមិ/ផ្លូវ/ផ្ទះ ${v || '...'}, ឃុំ/សង្កាត់ ${c || '...'}, ${d || '...'}, ${p || '...'}`;
-            } else { b.innerText = "សូមបំពេញព័ត៌មានខាងលើ..."; }
+            if(p || d || c || v) { b.innerText = `ភូមិ/ផ្លូវ/ផ្ទះ ${v || '...'}, ឃុំ/សង្កាត់ ${c || '...'}, ${d || '...'}, ${p || '...'}`; } 
+            else { b.innerText = "សូមបំពេញព័ត៌មានខាងលើ..."; }
         }
         function openDistributorModal() { document.getElementById("distributorModal").style.display="flex"; }
-        function closeDistributorModal() { document.getElementById("distributorModal").style.display="none"; document.getElementById("distForm").reset(); updateFullAddress(); }
+        function closeDistributorModal() { document.getElementById("distForm").reset(); updateFullAddress(); document.getElementById("distributorModal").style.display="none"; }
         
         function submitDistForm(ev) {
             ev.preventDefault();
-            const n = document.getElementById("distName").value;
-            const a = document.getElementById("distAge").value;
-            const j = document.getElementById("distJob").value;
-            const t = document.getElementById("distTel").value;
-            const addr = document.getElementById("fullAddrBox").innerText;
+            const n = document.getElementById("distName").value; const a = document.getElementById("distAge").value;
+            const j = document.getElementById("distJob").value; const t = document.getElementById("distTel").value; const addr = document.getElementById("fullAddrBox").innerText;
             const m = `🤝 *ចុះឈ្មោះតំណាងចែកចាយថ្មី*\n\n👤 ឈ្មោះ: ${n}\n🎂 អាយុ: ${a}\n💼 មុខរបរ: ${j}\n📞 លេខ/តេឡេក្រាម: ${t}\n📍 អាសយដ្ឋាន: ${addr}`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: "POST", headers: {"Content-Type":"application/json"},
-                body: JSON.stringify({chat_id:CHAT_ID, text:m, parse_mode:"Markdown"})
-            }).then(() => {
-                closeDistributorModal();
-                showNotification(true, "🤝 ដាក់ពាក្យជោគជ័យ!", "ព័ត៌មានស្នើសុំរបស់អ្នកត្រូវបានបញ្ជូនទៅរដ្ឋបាលរួចរាល់។", `👤 ឈ្មោះ៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`, `📍 តំបន់ចែកចាយ៖ ${document.getElementById("provSelect").value}`);
-            });
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({chat_id:CHAT_ID, text:m, parse_mode:"Markdown"}) })
+            .then(() => { closeDistributorModal(); showNotification(true, "🤝 ដាក់ពាក្យជោគជ័យ!", "ព័ត៌មានស្នើសុំរបស់អ្នកត្រូវបានបញ្ជូនទៅរដ្ឋបាលរួចរាល់។", `👤 ឈ្មោះ៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`, `📍 តំបន់ចែកចាយ៖ ${document.getElementById("provSelect").value}`); });
         }
 
-        // Admin Edit Product Code
+        // Product Editor
         let editIdx = null; let tempImgs = [];
         function closeAdminModal() { document.getElementById("adminModal").style.display="none"; document.getElementById("adminEditor").style.display="none"; }
         
@@ -665,22 +614,17 @@
                 showNotification(false, "🔍 រកមិនឃើញផលិតផល!", `មិនមានទិន្នន័យផលិតផលណាដែលមានលេខកូដ "${code}" ឡើយ។`, "កំហុស៖ រកមិនឃើញទិន្នន័យ", "សូមពិនិត្យមើល៖ លេខកូដឡើងវិញ", "");
             }
         }
-        
-        function processFile(f, k) {
-            const r = new FileReader(); r.onload = (e) => { if(k==='main') tempImgs[0]=e.target.result; else tempImgs[k]=e.target.result; };
-            if(f.files[0]) r.readAsDataURL(f.files[0]);
-        }
+        function processFile(f, k) { const r = new FileReader(); r.onload = (e) => { if(k==='main') tempImgs[0]=e.target.result; else tempImgs[k]=e.target.result; }; if(f.files[0]) r.readAsDataURL(f.files[0]); }
         
         function saveChanges() {
             db[editIdx].title = document.getElementById("editTitle").value;
             db[editIdx].price = document.getElementById("editPrice").value;
             db[editIdx].desc = document.getElementById("editDesc").value;
-            db[editIdx].images = [...tempImgs];
-            saveDB(); render(db); closeAdminModal();
+            db[editIdx].images = [...tempImgs]; saveDB(); render(db); closeAdminModal();
             showNotification(true, "💾 រក្សាទុកជោគជ័យ!", "ទិន្នន័យផលិតផលត្រូវបានធ្វើបច្ចុប្បន្នភាពរួចរាល់។", `📦 កូដ៖ ${db[editIdx].code}`, `✨ ឈ្មោះ៖ ${db[editIdx].title}`, "");
         }
 
-        // Shop Detail Slider & Ordering
+        // Shop Client Detail Slider
         let curS = 0; let actP = null;
         function openDetail(i) {
             actP = db[i]; curS=0;
@@ -697,37 +641,21 @@
         function updateS() { document.getElementById("sliderWrap").style.transform = `translateX(-${curS*100}%)`; }
 
         function submitOrder(ev) {
-            ev.preventDefault();
-            const btn = ev.target.querySelector('button'); btn.disabled=true;
-            const n = document.getElementById("orderName").value;
-            const t = document.getElementById("orderTel").value;
-            const addr = document.getElementById("orderAddr").value;
-            const f = document.getElementById("orderReceipt").files[0];
+            ev.preventDefault(); const btn = ev.target.querySelector('button'); btn.disabled=true;
+            const n = document.getElementById("orderName").value; const t = document.getElementById("orderTel").value; const addr = document.getElementById("orderAddr").value; const f = document.getElementById("orderReceipt").files[0];
             const cap = `🛍️ *កម្ម៉ង់ថ្មី*\nកូដ: ${actP.code}\nតម្លៃ: ${actP.price}\n👤 ឈ្មោះ: ${n}\n📞 លេខ: ${t}\n📍 អាសយដ្ឋាន: ${addr}`;
             const fd = new FormData(); fd.append("chat_id", CHAT_ID); fd.append("photo", f); fd.append("caption", cap); fd.append("parse_mode", "Markdown");
             fetch(`https://api.telegram.org/sendPhoto`, {method:"POST", body:fd})
-            .then(() => {
-                closeDetail();
-                showNotification(true, "🎉 បញ្ជាទិញជោគជ័យ!", "យើងនឹងពិនិត្យមើលបង្កាន់ដៃ និងទាក់ទងទៅអ្នកឆាប់ៗ Laz។", `📦 កូដទំនិញ៖ ${actP.code}`, `👤 អ្នកទទួល៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`);
-            }).finally(() => btn.disabled=false);
+            .then(() => { closeDetail(); showNotification(true, "🎉 បញ្ជាទិញជោគជ័យ!", "យើងនឹងពិនិត្យមើលបង្កាន់ដៃ និងទាក់ទងទៅអ្នកឆាប់ៗឡើយ។", `📦 កូដទំនិញ៖ ${actP.code}`, `👤 អ្នកទទួល៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`); })
+            .finally(() => btn.disabled=false);
         }
 
-        // Unified Notification Controller
+        // Notification UI
         function showNotification(isSuccess, title, msg, l1, l2, l3) {
-            const cardBox = document.getElementById("succCardBox");
-            const iconBox = document.getElementById("succIconBox");
-            const icon = document.getElementById("succIcon");
-
-            if (isSuccess) {
-                cardBox.classList.remove("error-border");
-                icon.className = "fa-solid fa-check";
-            } else {
-                cardBox.classList.add("error-border");
-                icon.className = "fa-solid fa-xmark";
-            }
-
-            document.getElementById("succTitle").innerText = title;
-            document.getElementById("succMsg").innerText = msg;
+            const cardBox = document.getElementById("succCardBox"); const icon = document.getElementById("succIcon");
+            if (isSuccess) { cardBox.classList.remove("error-border"); icon.className = "fa-solid fa-check"; } 
+            else { cardBox.classList.add("error-border"); icon.className = "fa-solid fa-xmark"; }
+            document.getElementById("succTitle").innerText = title; document.getElementById("succMsg").innerText = msg;
             document.getElementById("line1").innerHTML = l1 ? `<b>${l1}</b>` : "";
             document.getElementById("line2").innerHTML = l2 ? `<b>${l2}</b>` : "";
             document.getElementById("line3").innerHTML = l3 ? `<b>${l3}</b>` : "";
@@ -743,7 +671,7 @@
             document.querySelectorAll(".tab-btn").forEach(x => x.classList.remove("active")); b.classList.add("active");
             if(c === 'all') render(db); else render(db.filter(x => x.category === c));
         }
-        
+
         render(db);
     </script>
 </body>
