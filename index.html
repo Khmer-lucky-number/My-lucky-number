@@ -3,105 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ខ្មែរ Shopee V3</title>
+    <title>សមាគមន៍ផលិតផលខ្មែរ v1.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kantumruy Pro', sans-serif; }
-        body { background-color: #f5f5f5; color: #222; }
+        body { background-color: #f1f5f9; color: #1e293b; }
 
-        /* Header Layout */
+        /* Header Style */
         header {
-            background: linear-gradient(-180deg, #f53d2d, #f63);
-            padding: 15px 5%; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            padding: 18px 5%; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border-bottom: 3px solid #d4af37;
         }
         .header-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
         .top-row { display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase; }
+        header h1 { font-size: 24px; font-weight: 700; color: #d4af37; letter-spacing: 0.5px; }
+        header h1 span { font-size: 14px; color: #94a3b8; font-weight: 400; margin-left: 5px; }
         
         .header-buttons { display: flex; gap: 10px; }
-        .distributor-btn { background-color: #fff; color: #f53d2d; border: none; padding: 10px 18px; font-size: 13px; font-weight: 700; border-radius: 4px; cursor: pointer; }
-        .admin-btn { background-color: #222; color: #fff; border: none; padding: 10px 15px; font-size: 13px; font-weight: 700; border-radius: 4px; cursor: pointer; }
-        .admin-btn:hover { background-color: #444; }
+        .distributor-btn { background-color: #d4af37; color: #0f172a; border: none; padding: 10px 18px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .distributor-btn:hover { background-color: #f3f0df; transform: translateY(-1px); }
+        .admin-btn { background-color: #334155; color: #f8fafc; border: 1px solid #475569; padding: 10px 15px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .admin-btn:hover { background-color: #475569; color: #d4af37; }
 
-        .search-container { display: flex; background-color: #fff; border-radius: 4px; overflow: hidden; padding: 3px; }
-        .search-container input { width: 100%; padding: 10px 15px; border: none; outline: none; font-size: 14px; }
-        .search-btn { background-color: #f53d2d; color: #fff; border: none; padding: 0 25px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .search-container { display: flex; background-color: #fff; border-radius: 6px; overflow: hidden; padding: 3px; border: 1px solid #cbd5e1; }
+        .search-container input { width: 100%; padding: 10px 15px; border: none; outline: none; font-size: 14px; color: #334155; }
+        .search-btn { background-color: #0f172a; color: #d4af37; border: none; padding: 0 25px; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 4px; }
 
-        /* Tabs Filter */
-        .category-tabs { max-width: 1200px; margin: 20px auto 0 auto; padding: 0 20px; display: flex; gap: 10px; overflow-x: auto; }
+        /* Category Tabs */
+        .category-tabs { max-width: 1200px; margin: 25px auto 0 auto; padding: 0 20px; display: flex; gap: 10px; overflow-x: auto; }
         .category-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { background-color: #fff; color: #555; padding: 10px 20px; border-radius: 20px; border: 1px solid #e8e8e8; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-        .tab-btn.active, .tab-btn:hover { background-color: #f53d2d; color: #fff; border-color: #f53d2d; }
+        .tab-btn { background-color: #fff; color: #64748b; padding: 10px 22px; border-radius: 20px; border: 1px solid #e2e8f0; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+        .tab-btn.active, .tab-btn:hover { background-color: #0f172a; color: #d4af37; border-color: #0f172a; }
 
-        /* Product Grid */
+        /* Product Grid Grid */
         .container { max-width: 1200px; margin: 20px auto 60px auto; padding: 0 20px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 12px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
         
         .product-card {
-            background-color: #fff; border-radius: 4px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-            border: 1px solid transparent; transition: all 0.2s; display: flex; flex-direction: column; justify-content: space-between; position: relative;
+            background-color: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0; transition: all 0.25s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative;
         }
-        .product-card:hover { transform: translateY(-3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: #f53d2d; }
-        .discount-badge { position: absolute; top: 0; right: 0; background-color: #ffd839; color: #f53d2d; font-size: 12px; font-weight: 700; padding: 4px 6px; border-bottom-left-radius: 4px; z-index: 5; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #d4af37; }
         
-        .product-image-area { width: 100%; height: 185px; background-color: #fafafa; }
-        .product-image-area img { width: 100%; height: 100%; object-fit: cover; }
+        .product-image-area { width: 100%; height: 200px; background-color: #f8fafc; overflow: hidden; }
+        .product-image-area img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .product-card:hover .product-image-area img { transform: scale(1.03); }
 
-        .product-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
-        .product-code { font-size: 11px; background-color: #f1f5f9; color: #475569; padding: 2px 6px; border-radius: 3px; align-self: flex-start; margin-bottom: 6px; font-weight: 600; }
-        .product-title { font-size: 13px; font-weight: 400; line-height: 1.4; height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #333; margin-bottom: 8px; }
-        .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .product-price { font-size: 16px; font-weight: 600; color: #f53d2d; }
-        .product-sold { font-size: 11px; color: #757575; }
+        .product-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; justify-content: space-between; }
+        .product-code { font-size: 11px; background-color: #f1f5f9; color: #475569; padding: 3px 8px; border-radius: 4px; align-self: flex-start; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.5px; }
+        .product-title { font-size: 14px; font-weight: 600; line-height: 1.5; height: 42px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; color: #1e293b; margin-bottom: 10px; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .product-price { font-size: 18px; font-weight: 700; color: #dc2626; }
         
-        .view-detail-btn { display: block; width: 100%; padding: 8px; background-color: #fff; color: #f53d2d; text-align: center; border: 1px solid #f53d2d; border-radius: 3px; font-size: 13px; font-weight: 600; cursor: pointer; }
-        .view-detail-btn:hover { background-color: #f53d2d; color: #fff; }
+        .view-detail-btn { display: block; width: 100%; padding: 10px; background-color: #fff; color: #0f172a; text-align: center; border: 1px solid #0f172a; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .view-detail-btn:hover { background-color: #0f172a; color: #d4af37; }
 
         /* Modals Generic Layout */
-        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background-color: #fff; padding: 25px; border-radius: 8px; width: 100%; max-width: 600px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; color: #bbb; cursor: pointer; }
-        .close-btn:hover { color: #333; }
-        .modal h2 { font-size: 20px; margin-bottom: 15px; text-align: center; color: #f53d2d; border-bottom: 2px solid #f53d2d; padding-bottom: 8px; }
+        .modal { display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background-color: #fff; padding: 30px; border-radius: 12px; width: 100%; max-width: 650px; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; color: #94a3b8; cursor: pointer; transition: color 0.2s; }
+        .close-btn:hover { color: #1e293b; }
+        .modal h2 { font-size: 20px; margin-bottom: 20px; text-align: center; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
 
-        /* Detail Modal Elements */
+        /* Detail Area Slider */
         .detail-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 15px; }
-        .image-slider-container { width: 100%; position: relative; background-color: #f8fafc; border-radius: 6px; overflow: hidden; height: 280px; }
+        .image-slider-container { width: 100%; position: relative; background-color: #f8fafc; border-radius: 8px; overflow: hidden; height: 300px; border: 1px solid #e2e8f0; }
         .slider-wrapper { display: flex; width: 100%; height: 100%; transition: transform 0.3s ease-in-out; }
-        .slider-wrapper img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
-        .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(0,0,0,0.5); color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 18px; font-weight: bold; z-index: 10; }
+        .slider-wrapper img { width: 100%; height: 100%; object-fit: contain; flex-shrink: 0; background-color: #fff; }
+        .slider-arrow { position: absolute; top: 50%; transform: translateY(-50%); background-color: rgba(15,23,42,0.6); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 16px; font-weight: bold; z-index: 10; display: flex; align-items: center; justify-content: center; }
         .arrow-left { left: 10px; } .arrow-right { right: 10px; }
-        .detail-info-box h3 { font-size: 18px; color: #222; margin-bottom: 8px; }
-        .detail-info-box .price { font-size: 24px; color: #f53d2d; font-weight: 700; margin-bottom: 15px; }
-        .detail-desc { font-size: 13px; color: #555; line-height: 1.6; background-color: #f9f9f9; padding: 10px; border-radius: 4px; margin-top: 8px; border-left: 3px solid #f53d2d; }
+        .detail-info-box h3 { font-size: 18px; color: #0f172a; margin-bottom: 8px; }
+        .detail-info-box .price { font-size: 24px; color: #dc2626; font-weight: 700; margin-bottom: 15px; }
+        .detail-desc { font-size: 13px; color: #475569; line-height: 1.6; background-color: #f8fafc; padding: 12px; border-radius: 6px; margin-top: 8px; border-left: 4px solid #d4af37; }
         
-        /* Order & Registration Forms */
-        .order-form-section { background-color: #fff3f0; padding: 15px; border-radius: 6px; border: 1px solid #ffccbc; margin-top: 20px; }
-        .order-form-section h4 { color: #f53d2d; margin-bottom: 12px; font-size: 16px; border-bottom: 1px dashed #ffccbc; padding-bottom: 6px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #444; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; background-color: #fff; }
-        .form-group input:focus, .form-group textarea:focus { border-color: #f53d2d; }
-        .address-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .full-address-box { background-color: #f9f9f9; border: 1px dashed #f53d2d; padding: 12px; border-radius: 4px; font-size: 13px; color: #444; min-height: 40px; }
+        /* Forms styling */
+        .order-form-section { background-color: #fdfbf7; padding: 20px; border-radius: 8px; border: 1px solid #fef3c7; margin-top: 25px; }
+        .order-form-section h4 { color: #b45309; margin-bottom: 15px; font-size: 15px; border-bottom: 1px dashed #fde68a; padding-bottom: 6px; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #344054; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px 14px; border: 1px solid #d0d5dd; border-radius: 6px; font-size: 14px; outline: none; background-color: #fff; color: #1e293b; box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05); }
+        .form-group input:focus, .form-group textarea:focus { border-color: #0f172a; box-shadow: 0px 0px 0px 4px rgba(15, 23, 42, 0.1); }
         
-        .file-upload-input { background-color: #fff; padding: 8px !important; border: 2px dashed #f53d2d !important; cursor: pointer; }
-        .payment-box { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 6px; border: 1px dashed #f53d2d; margin-top: 10px; }
+        .file-upload-input { background-color: #f8fafc !important; padding: 10px !important; border: 2px dashed #cbd5e1 !important; cursor: pointer; }
+        .payment-box { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 6px; border: 1px dashed #d4af37; margin-top: 10px; }
         .qr-code-img { width: 100px; height: 100px; object-fit: contain; }
-        .payment-instruction { font-size: 12px; color: #555; line-height: 1.4; }
+        .payment-instruction { font-size: 12px; color: #475569; line-height: 1.5; }
         
-        .checkout-btn, .submit-btn { width: 100%; padding: 14px; background: linear-gradient(180deg, #f53d2d, #ff5722); color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 15px; }
-        .checkout-btn:hover, .submit-btn:hover { background: #e33626; }
-        .checkout-btn:disabled, .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .checkout-btn { width: 100%; padding: 14px; background: #0f172a; color: #d4af37; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05); transition: all 0.2s; }
+        .checkout-btn:hover { background: #1e293b; color: #fff; }
+        .checkout-btn:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
 
-        /* Admin Dashboard UI Specifics */
-        .admin-search-area { background-color: #f1f5f9; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #cbd5e1; display: flex; gap: 10px; }
-        .admin-editor-panel { display: none; border-top: 2px dashed #cbd5e1; padding-top: 15px; }
-        .image-inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        /* ========================================================
+           🎯 សំណួរទី២៖ ផ្ទាំងវាយបញ្ចូលពាក្យសម្ងាត់ទំនើប (GLASSMORPHISM LOGIN)
+           ======================================================== */
+        .login-card {
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-radius: 16px;
+            padding: 35px 30px; width: 100%; max-width: 400px; border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25); text-align: center; animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .login-icon { width: 60px; height: 60px; background: #fef3c7; color: #d4af37; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 15px auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        .login-card h3 { font-size: 18px; color: #0f172a; margin-bottom: 6px; font-weight: 700; }
+        .login-card p { font-size: 12px; color: #64748b; margin-bottom: 20px; }
+        .password-input { text-align: center; font-size: 18px !important; letter-spacing: 4px; font-weight: 700; }
+        .login-submit-btn { width: 100%; padding: 12px; background: #0f172a; color: #d4af37; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
+        .login-submit-btn:hover { background: #1e293b; transform: translateY(-1px); }
 
-        footer { text-align: center; padding: 25px; background-color: #fff; color: #888; margin-top: 60px; border-top: 1px solid #e0e0e0; font-size: 13px; }
-        @media (max-width: 768px) { .address-grid { grid-template-columns: 1fr; gap: 0; } .product-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; } }
+        /* ========================================================
+           🎯 សំណួរទី១៖ ផ្ទាំងគ្រប់គ្រង ADMIN (FILE UPLOAD ONLY)
+           ======================================================== */
+        .admin-search-area { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; gap: 10px; }
+        .admin-editor-panel { display: none; border-top: 2px dashed #e2e8f0; padding-top: 20px; }
+        .image-inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .upload-box-wrapper { background: #f8fafc; border: 1px dashed #cbd5e1; padding: 10px; border-radius: 6px; }
+        .upload-box-wrapper label { color: #0f172a; font-weight: 600; }
+
+        footer { text-align: center; padding: 30px; background-color: #fff; color: #64748b; margin-top: 60px; border-top: 1px solid #e2e8f0; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -109,14 +128,14 @@
     <header>
         <div class="header-container">
             <div class="top-row">
-                <h1>ខ្មែរ Shopee <span style="font-size: 14px; font-weight: 400; opacity: 0.9;">V3</span></h1>
+                <h1>សមាគមន៍ផលិតផលខ្មែរ <span>v1.0</span></h1>
                 <div class="header-buttons">
-                    <button class="distributor-btn" onclick="openDistributorModal()">ចុះឈ្មោះតំណាងចែកចាយ</button>
-                    <button class="admin-btn" onclick="loginAdmin()">🔐 គ្រប់គ្រង</button>
+                    <button class="distributor-btn" onclick="alert('ប្រព័ន្ធចុះឈ្មោះចែកចាយ!')">តំណាងចែកចាយ</button>
+                    <button class="admin-btn" onclick="openLoginModal()">🔐 គ្រប់គ្រងប្រព័ន្ធ</button>
                 </div>
             </div>
             <div class="search-container">
-                <input type="text" id="searchInput" oninput="searchProducts()" placeholder="ស្វែងរកផលិតផលនៅទីនេះ...">
+                <input type="text" id="searchInput" oninput="searchProducts()" placeholder="ស្វែងរកតាមឈ្មោះផលិតផល ឬវាយលេខកូដទំនិញ...">
                 <button class="search-btn">ស្វែងរក</button>
             </div>
         </div>
@@ -124,18 +143,90 @@
 
     <div class="category-tabs">
         <button class="tab-btn active" onclick="filterCategory('all', this)">ផលិតផលទាំងអស់</button>
-        <button class="tab-btn" onclick="filterCategory('electronics', this)">គ្រឿងអេឡិចត្រូនិច</button>
-        <button class="tab-btn" onclick="filterCategory('fashion', this)">សម្លៀកបំពាក់ & ម៉ូដ</button>
+        <button class="tab-btn" onclick="filterCategory('food', this)">ចំណីអាហារ & ភេសជ្ជៈ</button>
+        <button class="tab-btn" onclick="filterCategory('handicraft', this)">សិប្បកម្ម & វត្ថុអនុស្សាវរីយ៍</button>
     </div>
 
     <div class="container">
         <div class="product-grid" id="productGrid"></div>
     </div>
 
+    <div id="loginModal" class="modal" style="background-color: rgba(15, 23, 42, 0.4);">
+        <div class="login-card">
+            <span class="close-btn" onclick="closeLoginModal()">&times;</span>
+            <div class="login-icon">🔑</div>
+            <h3>ផ្ទាំងផ្ទៀងផ្ទាត់អ្នកគ្រប់គ្រង</h3>
+            <p>សូមបញ្ចូលលេខកូដសម្ងាត់បច្ចេកទេសដើម្បីបើកទិន្នន័យ</p>
+            <form onsubmit="verifyAdminPassword(event)">
+                <div class="form-group">
+                    <input type="password" id="adminPassInput" class="password-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="login-submit-btn">🔐 ផ្ទៀងផ្ទាត់ និងចូលទៅកាន់ប្រព័ន្ធ</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="adminModal" class="modal">
+        <div class="modal-content" style="max-width: 680px;">
+            <span class="close-btn" onclick="closeAdminModal()">&times;</span>
+            <h2>🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យផលិតផលខ្មែរ</h2>
+            
+            <div class="admin-search-area">
+                <input type="text" id="adminSearchCode" placeholder="វាយលេខកូដដើម្បីកែសម្រួល... (ឧទាហរណ៍៖ KP-000001)" style="width:75%; padding:11px; border:1px solid #cbd5e1; border-radius:6px; outline:none;">
+                <button type="button" onclick="loadProductToEdit()" style="width:25%; background-color:#0f172a; color:#d4af37; border:none; border-radius:6px; cursor:pointer; font-weight:600;">ស្វែងរកកូដ</button>
+            </div>
+
+            <div class="admin-editor-panel" id="adminEditorPanel">
+                <h3 style="font-size:14px; margin-bottom:15px; color:#475569;">📝 កំពុងកែសម្រួលទំនិញកូដ៖ <span id="editingCodeDisplay" style="color:#dc2626; font-weight:700;"></span></h3>
+                
+                <div class="form-group">
+                    <label>កែប្រែឈ្មោះផលិតផល៖</label>
+                    <input type="text" id="editTitle">
+                </div>
+                <div class="form-group">
+                    <label>កែប្រែតម្លៃផលិតផល (Price)៖</label>
+                    <input type="text" id="editPrice">
+                </div>
+                <div class="form-group">
+                    <label>កែប្រែអត្ថបទពិពណ៌នាផលិតផល៖</label>
+                    <textarea id="editDesc" rows="3"></textarea>
+                </div>
+
+                <h4 style="font-size:13px; margin:15px 0 10px 0; color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:6px;">🖼️ ផ្នែកផ្លាស់ប្តូររូបភាព (Upload Files)</h4>
+                
+                <div class="form-group" style="background: #fffbeb; border: 1px dashed #fde68a; padding: 12px; border-radius: 6px;">
+                    <label style="color: #b45309;">📸 ផ្លាស់ប្តូររូបភាពដើមនៃផលិតផល (Main Card Image)៖</label>
+                    <input type="file" id="editMainFile" class="file-upload-input" accept="image/*" onchange="processFile(this, 'main')">
+                </div>
+
+                <div class="image-inputs-grid">
+                    <div class="upload-box-wrapper">
+                        <label>រូបភាពលម្អិតទី ១ (ស្លាយ)៖</label>
+                        <input type="file" class="file-upload-input" accept="image/*" onchange="processFile(this, 0)">
+                    </div>
+                    <div class="upload-box-wrapper">
+                        <label>រូបភាពលម្អិតទី ២ (ស្លាយ)៖</label>
+                        <input type="file" class="file-upload-input" accept="image/*" onchange="processFile(this, 1)">
+                    </div>
+                    <div class="upload-box-wrapper">
+                        <label>រូបភាពលម្អិតទី ៣ (ស្លាយ)៖</label>
+                        <input type="file" class="file-upload-input" accept="image/*" onchange="processFile(this, 2)">
+                    </div>
+                    <div class="upload-box-wrapper">
+                        <label>រូបភាពលម្អិតទី ៤ (ស្លាយ)៖</label>
+                        <input type="file" class="file-upload-input" accept="image/*" onchange="processFile(this, 3)">
+                    </div>
+                </div>
+
+                <button type="button" onclick="saveProductChanges()" class="checkout-btn" style="background: #10b981; color: white; margin-top: 20px;">💾 រក្សាទុកទិន្នន័យជាស្ថាពរ</button>
+            </div>
+        </div>
+    </div>
+
     <div id="detailModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeDetailModal()">&times;</span>
-            <h2 id="modalHeaderCode" style="font-size: 14px; color: #666; margin-bottom: 5px; text-align: left; border: none; padding: 0;">កូដទំនិញ៖ ...</h2>
+            <h2 id="modalHeaderCode" style="font-size: 13px; color: #64748b; margin-bottom: 5px; text-align: left; border: none; padding: 0;">កូដទំនិញ៖ ...</h2>
             
             <div class="detail-grid">
                 <div class="image-slider-container">
@@ -147,131 +238,48 @@
                 <div class="detail-info-box">
                     <h3 id="modalProductTitle">ឈ្មោះផលិតផល</h3>
                     <div class="price" id="modalProductPrice">$0.00</div>
-                    <strong>📄 ការពិពណ៌នាផលិតផល៖</strong>
-                    <div class="detail-desc" id="modalProductDesc">មិនមានការពិពណ៌នាឡើយ។</div>
+                    <strong>📄 ព័ត៌មានរៀបរាប់៖</strong>
+                    <div class="detail-desc" id="modalProductDesc">មិនទាន់មានទិន្នន័យពិពណ៌នាឡើយ។</div>
                 </div>
             </div>
 
             <div class="order-form-section">
-                <h4>✍️ បំពេញព័ត៌មានដើម្បីកុម្ម៉ង់ទិញ</h4>
+                <h4>✍️ បំពេញព័ត៌មានដឹកជញ្ជូន និងភ្ជាប់បង្កាន់ដៃ</h4>
                 <form id="orderForm" onsubmit="submitOrderWithPhoto(event)">
-                    <div class="form-group"><label>ឈ្មោះរបស់អ្នកទិញ៖</label><input type="text" id="custName" required></div>
+                    <div class="form-group"><label>ឈ្មោះពេញ៖</label><input type="text" id="custName" required></div>
                     <div class="form-group"><label>លេខទូរសព្ទ៖</label><input type="text" id="custPhone" required></div>
-                    <div class="form-group"><label>អាសយដ្ឋានដឹកជញ្ជូន៖</label><textarea id="custAddress" rows="2" required></textarea></div>
+                    <div class="form-group"><label>អាសយដ្ឋាន៖</label><textarea id="custAddress" rows="2" placeholder="ផ្ទះ លេខផ្លូវ ភូមិ សង្កាត់ ខណ្ឌ ខេត្ត..." required></textarea></div>
                     <div class="form-group">
                         <label>💸 ស្កេនទូទាត់ប្រាក់ (ABA KHQR)៖</label>
                         <div class="payment-box">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ABA_BANK_KHQR" class="qr-code-img" alt="QR Code">
-                            <div class="payment-instruction"><strong>គណនី៖ KHME SHOPEE CO., LTD</strong><br>លេខគណនី៖ 000 777 888<br><span style="color: #e33626;">*សូមថតអេក្រង់បង្កាន់ដៃ រួចបញ្ចូលខាងក្រោម</span></div>
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ABA_BANK_KHMER_PRODUCT_ASSOCIATION" class="qr-code-img" alt="ABA QR">
+                            <div class="payment-instruction"><strong>គណនី៖ KHMER PRODUCT CO., LTD</strong><br>លេខគណនី៖ 000 555 999<br><span style="color: #dc2626;">*សូមថតអេក្រង់រក្សាទុកបង្កាន់ដៃ រួចជ្រើសរើសដាក់ខាងក្រោម</span></div>
                         </div>
                     </div>
-                    <div class="form-group"><label>📸 បញ្ចូលរូបភាពថតអេក្រង់វេរលុយរួច (Screenshot)៖</label><input type="file" id="receiptPhoto" class="file-upload-input" accept="image/*" required></div>
+                    <div class="form-group"><label style="color: #0f172a;">📸 បញ្ចូលរូបភាពថតអេក្រង់បង្កាន់ដៃ (Screenshot Receipt)៖</label><input type="file" id="receiptPhoto" class="file-upload-input" accept="image/*" required></div>
                     <button type="submit" id="btnOrderSubmit" class="checkout-btn">🛒 យល់ព្រមទូទាត់ប្រាក់ និងកម្ម៉ង់ទិញ</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <div id="distributorModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeDistributorModal()">&times;</span>
-            <h2>ចុះឈ្មោះជាតំណាងចែកចាយ</h2>
-            <form id="regForm" onsubmit="submitDistributorToTelegram(event)">
-                <div class="form-group"><label>ឈ្មោះពេញ៖</label><input type="text" id="fullName" required></div>
-                <div class="address-grid">
-                    <div class="form-group"><label>អាយុ៖</label><input type="number" id="age" required></div>
-                    <div class="form-group"><label>មុខរបរបច្ចុប្បន្ន៖</label><input type="text" id="job" required></div>
-                </div>
-                <div class="form-group"><label>លេខតេឡេក្រាម ឬ Username Telegram៖</label><input type="text" id="telegramPhone" required></div>
-                <div class="address-grid">
-                    <div class="form-group">
-                        <label>រាជធានី/ខេត្ត៖</label>
-                        <select id="province" onchange="updateDistricts(); generateFullAddress();" required>
-                            <option value="" disabled selected>--- ជ្រើសរើសខេត្ត ---</option>
-                            <option value="ភ្នំពេញ">ភ្នំពេញ</option>
-                            <option value="កណ្តាល">កណ្តាល</option>
-                            <option value="សៀមរាប">សៀមរាប</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>ក្រុង/ស្រុក/ខណ្ឌ៖</label>
-                        <select id="district" onchange="generateFullAddress();" required><option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option></select>
-                    </div>
-                </div>
-                <div class="address-grid">
-                    <div class="form-group"><label>ឃុំ/សង្កាត់៖</label><input type="text" id="commune" oninput="generateFullAddress();" required></div>
-                    <div class="form-group"><label>ភូមិ/ផ្លូវ/ផ្ទះ៖</label><input type="text" id="village" oninput="generateFullAddress();" required></div>
-                </div>
-                <div class="form-group"><label>អាសយដ្ឋានពេញលេញ៖</label><div id="fullAddressBox" class="full-address-box">សូមបំពេញព័ត៌មានខាងលើ...</div></div>
-                <button type="submit" id="btnRegSubmit" class="submit-btn">បញ្ជូនព័ត៌មានផ្លូវការ</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="adminModal" class="modal">
-        <div class="modal-content" style="max-width: 650px;">
-            <span class="close-btn" onclick="closeAdminModal()">&times;</span>
-            <h2>🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យ (Admin Only)</h2>
-            
-            <div class="admin-search-area">
-                <input type="text" id="adminSearchCode" placeholder="វាយលេខកូដផលិតផលដើម្បីកែប្រែ... (ឧទាហរណ៍៖ KS-000001)" style="width:75%; padding:10px; border:1px solid #cbd5e1; border-radius:4px;">
-                <button type="button" onclick="loadProductToEdit()" style="width:25%; background-color:#222; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">ស្វែងរកកូដ</button>
-            </div>
-
-            <div class="admin-editor-panel" id="adminEditorPanel">
-                <h3 style="font-size:14px; margin-bottom:12px; color:#334155;">📝 កំពុងកែសម្រួលទំនិញ៖ <span id="editingCodeDisplay" style="color:#f53d2d; font-weight:700;"></span></h3>
-                
-                <div class="form-group">
-                    <label>កែប្រែចំណងជើងផលិតផល (Title)៖</label>
-                    <input type="text" id="editTitle">
-                </div>
-                <div class="address-grid">
-                    <div class="form-group">
-                        <label>កែប្រែតម្លៃ (Price)៖</label>
-                        <input type="text" id="editPrice">
-                    </div>
-                    <div class="form-group">
-                        <label>ភាគរយបញ្ចុះតម្លៃ (%)៖</label>
-                        <input type="text" id="editDiscount">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>កែប្រែអត្ថបទពិពណ៌នា (Description)៖</label>
-                    <textarea id="editDesc" rows="3"></textarea>
-                </div>
-
-                <h4 style="font-size:13px; margin:15px 0 8px 0; color:#475569; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">🖼️ គ្រប់គ្រងរូបភាពលម្អិតទាំង ៤ សន្លឹក (ដាក់ជាលីង URL ពីរូបភាពលើ Google)</h4>
-                <div class="image-inputs-grid">
-                    <div class="form-group"><label>រូបភាពទី ១ (រូបដើមលើកាត)៖</label><input type="text" id="editImg1"></div>
-                    <div class="form-group"><label>រូបភាពលម្អិតទី ២៖</label><input type="text" id="editImg2"></div>
-                    <div class="form-group"><label>រូបភាពលម្អិតទី ៣៖</label><input type="text" id="editImg3"></div>
-                    <div class="form-group"><label>រូបភាពលម្អិតទី ៤៖</label><input type="text" id="editImg4"></div>
-                </div>
-
-                <button type="button" onclick="saveProductChanges()" class="submit-btn" style="background: #10b981;">💾 រក្សាទុកការផ្លាស់ប្តូរទាំងអស់</button>
-            </div>
-        </div>
-    </div>
+    <footer>
+        <p>&copy; 2026 សមាគមន៍ផលិតផលខ្មែរ v1.0 - រក្សាសិទ្ធិគ្រប់យ៉ាង</p>
+    </footer>
 
     <script>
-        // ==========================================
-        // 🎯 ឃ្លាំងទិន្នន័យដើម (Default Products)
-        // ==========================================
-        const defaultProducts = [
-            { id: 1, category: 'electronics', code: 'KS-000001', title: 'ទូរសព្ទដៃឆ្លាតវៃ Smartphone Pro Max ជំនាន់ថ្មី ២០២៦', price: '$899.00', sold: 'លក់ដាច់ 1.2k', discount: '10%', desc: 'ទូរសព្ទដៃទំនើបចុងក្រោយបង្អស់ កាមេរ៉ាច្បាស់កម្រិត 200MP ថ្មកាន់បាន ៣ថ្ងៃពេញ ដំណើរការលឿនរលូនជាមួយបន្ទះឈីបជំនាន់ថ្មី។', images: ['https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1565630916779-e303be97b6f5?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1573148195900-7845dcb9b127?auto=format&fit=crop&w=400&q=80'] },
-            { id: 2, category: 'electronics', code: 'KS-000002', title: 'កាសស្តាប់ត្រចៀកប្ល៊ូធូស Wireless Headphones សំឡេងបាសធ្ងន់ពីងៗ', price: '$24.50', sold: 'លក់ដាច់ 5.8k', discount: '45%', desc: 'កាសប្ល៊ូធូសស៊េរីថ្មី សំឡេងពិរោះបុកបាសធ្ងន់ណែនល្អ មិនឈឺត្រចៀកពេលពាក់យូរ ទប់ស្កាត់សំឡេងរំខានពីខាងក្រៅបានយ៉ាងល្អ។', images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=400&q=80'] },
-            { id: 3, category: 'fashion', code: 'KS-000003', title: 'អាវយឺតដៃខ្លីបុរសសាច់ទន់ត្រជាក់ បែបយុវវ័យកូរ៉េស្រស់សង្ហា', price: '$7.99', sold: 'លក់ដាច់ 12k', discount: '30%', desc: 'អាវយឺតដៃខ្លីម៉ូដទាន់សម័យ សាច់ក្រណាត់កប្បាស ១០០% ទន់ ត្រជាក់ មិនយារ មិនចេញពណ៌ពេលបោកគក់ ស័ក្តិសមសម្រាប់យុវវ័យសម័យថ្មី។', images: ['https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80'] }
+        // ឃ្លាំងទិន្នន័យផលិតផលខ្មែរគំរូ
+        const defaultDatabase = [
+            { id: 1, category: 'food', code: 'KP-000001', title: 'ម្រេចកំពតធម្មជាតិលេខ១ គុណភាពនាំចេញលំដាប់អន្តរជាតិ', price: '$12.50', sold: '1.5k', desc: 'ម្រេចកំពតពិតប្រាកដ (PGI) មានក្លិនឈ្ងុយប្រហើរខ្លាំង រសជាតិហឹរដិតល្អ ផលិតផលសរីរាង្គធម្មជាតិមិនប្រើប្រាស់ថ្នាំគីមីឡើយ។', images: ['https://images.unsplash.com/photo-1532134200667-980f34991185?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1532134200667-980f34991185?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=400&q=80'] },
+            { id: 2, category: 'handicraft', code: 'KP-000002', title: 'កាបូបយួរដៃត្បាញពីកំប្លោកខ្មែរ កែច្នៃបែបប្រណិតភាព', price: '$18.00', sold: '850', desc: 'សិប្បកម្មដៃខ្មែរពិតៗ ត្បាញចេញពីដើមកំប្លោកស្ងួតមាំមួនប្រើប្រាស់បានយូរ អមដោយការរចនាម៉ូដទាន់សម័យ ស័ក្តិសមបំផុតសម្រាប់នារីសម័យថ្មី។', images: ['https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=400&q=80', 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=400&q=80'] }
         ];
 
-        // ទាញទិន្នន័យពី LocalStorage បើគ្មានទេ យកពី Default ខាងលើ (ដើម្បីកុំឱ្យបាត់ពេល Refresh វេបសាយ)
-        let productsDatabase = JSON.parse(localStorage.getItem('products_v3')) || defaultProducts;
+        let productsDatabase = JSON.parse(localStorage.getItem('khmer_products_v1')) || defaultDatabase;
 
-        // រក្សាទុកចូលក្នុង Storage
         function saveToStorage() {
-            localStorage.setItem('products_v3', JSON.stringify(productsDatabase));
+            localStorage.setItem('khmer_products_v1', JSON.stringify(productsDatabase));
         }
 
-        // មុខងារបង្ហាញផលិតផល (សំណួរទី៣៖ លុបប៊ូតុងកាមេរ៉ាសម្រាប់ប្តូររូបថតមនុស្សចេញអស់ហើយ)
         function renderProducts(list) {
             const grid = document.getElementById("productGrid");
             grid.innerHTML = "";
@@ -279,7 +287,6 @@
                 const idx = productsDatabase.findIndex(p => p.id === product.id);
                 grid.innerHTML += `
                     <div class="product-card">
-                        <div class="discount-badge">-${product.discount}</div>
                         <div class="product-image-area">
                             <img src="${product.images[0]}" alt="${product.title}">
                         </div>
@@ -288,7 +295,6 @@
                             <div class="product-title">${product.title}</div>
                             <div class="price-row">
                                 <div class="product-price">${product.price}</div>
-                                <div class="product-sold">${product.sold}</div>
                             </div>
                             <button class="view-detail-btn" onclick="openDetailModal(${idx})">មើលលម្អិត</button>
                         </div>
@@ -300,7 +306,104 @@
         renderProducts(productsDatabase);
 
         // ==========================================
-        // 🎯 ផ្នែកមើលលម្អិតផលិតផល (Detail Product)
+        // 🔒 សំណួរទី២៖ ប្រព័ន្ធគ្រប់គ្រងផ្ទាំង Login
+        // ==========================================
+        function openLoginModal() {
+            document.getElementById("loginModal").style.display = "flex";
+            document.getElementById("adminPassInput").value = "";
+            document.getElementById("adminPassInput").focus();
+        }
+        function closeLoginModal() {
+            document.getElementById("loginModal").style.display = "none";
+        }
+        function verifyAdminPassword(event) {
+            event.preventDefault();
+            const password = document.getElementById("adminPassInput").value;
+            if (password === "Qq128080") {
+                closeLoginModal();
+                document.getElementById("adminModal").style.display = "flex";
+            } else {
+                alert("❌ លេខកូដសម្ងាត់អ្នកគ្រប់គ្រងមិនត្រឹមត្រូវឡើយ! សូមព្យាយាមម្តងទៀត។");
+            }
+        }
+
+        // ==========================================
+        // 🛠️ សំណួរទី១៖ ប្រព័ន្ធគ្រប់គ្រងការ Upload រូបភាពក្នុង Admin
+        // ==========================================
+        let editingProductIndex = null;
+        let adminTempImages = []; // កន្លែងផ្ទុករូបភាពបណ្តោះអាសន្នពេល Upload
+
+        function closeAdminModal() {
+            document.getElementById("adminModal").style.display = "none";
+            document.getElementById("adminEditorPanel").style.display = "none";
+            document.getElementById("adminSearchCode").value = "";
+        }
+
+        function loadProductToEdit() {
+            const searchCode = document.getElementById("adminSearchCode").value.trim().toUpperCase();
+            const index = productsDatabase.findIndex(p => p.code.toUpperCase() === searchCode);
+
+            if (index !== -1) {
+                editingProductIndex = index;
+                const prod = productsDatabase[index];
+
+                document.getElementById("editingCodeDisplay").innerText = prod.code;
+                document.getElementById("editTitle").value = prod.title;
+                document.getElementById("editPrice").value = prod.price;
+                document.getElementById("editDesc").value = prod.desc || "";
+                
+                // ចម្លងរូបភាពចាស់ៗចូលក្នុងអារ៉េបណ្តោះអាសន្ន
+                adminTempImages = [...prod.images];
+
+                // លាងសម្អាតប្រអប់ជ្រើសរើស File ទាំងអស់សិន
+                document.getElementById("editMainFile").value = "";
+                const fileInputs = document.querySelectorAll(".image-inputs-grid input[type='file']");
+                fileInputs.forEach(input => input.value = "");
+
+                document.getElementById("adminEditorPanel").style.display = "block";
+            } else {
+                alert("❌ រកមិនឃើញលេខកូដផលិតផល " + searchCode + " ឡើយ។");
+                document.getElementById("adminEditorPanel").style.display = "none";
+            }
+        }
+
+        // មុខងារបំលែងរូបភាព File ទៅជាទិន្នន័យអក្សរ Base64 ដើម្បីរក្សាទុកក្នុង LocalStorage
+        function processFile(fileInput, targetKey) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (targetKey === 'main') {
+                    adminTempImages[0] = e.target.result; // ប្តូររូបភាពដើមលើកាត
+                } else {
+                    adminTempImages[targetKey] = e.target.result; // ប្តូររូបភាពលម្អិតស្លាយ
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProductChanges() {
+            if (editingProductIndex !== null) {
+                const prod = productsDatabase[editingProductIndex];
+
+                prod.title = document.getElementById("editTitle").value;
+                prod.price = document.getElementById("editPrice").value;
+                prod.desc = document.getElementById("editDesc").value;
+                
+                // រក្សាទុករូបភាពដែលបាន Upload ថ្មី
+                prod.images = [...adminTempImages];
+
+                saveToStorage();
+                renderProducts(productsDatabase);
+                
+                alert("💾 បានរក្សាទុកការផ្លាស់ប្តូរ និងអាប់ឡូតរូបភាពរបស់ផលិតផល " + prod.code + " រួចរាល់!");
+                closeAdminModal();
+            }
+        }
+
+        // ==========================================
+        // 🛒 ផ្នែកបង្ហាញព័ត៌មានលម្អិតរបស់អតិថិជន
         // ==========================================
         let currentSlideIndex = 0;
         let activeProductObj = null;
@@ -326,160 +429,18 @@
         }
 
         function closeDetailModal() { document.getElementById("detailModal").style.display = "none"; document.getElementById("orderForm").reset(); }
-        function moveSlide(direction) { currentSlideIndex += direction; if (currentSlideIndex > 3) currentSlideIndex = 0; if (currentSlideIndex < 0) currentSlideIndex = 3; updateSliderPosition(); }
+        function moveSlide(direction) { currentSlideIndex += direction; if (currentSlideIndex >= activeProductObj.images.length) currentSlideIndex = 0; if (currentSlideIndex < 0) currentSlideIndex = activeProductObj.images.length - 1; updateSliderPosition(); }
         function updateSliderPosition() { document.getElementById("sliderWrapper").style.transform = `translateX(-${currentSlideIndex * 100}%)`; }
 
-        // ==========================================
-        // 🎯 ផ្ទាំងគ្រប់គ្រង ADMIN DASHBOARD (សំណួរទី៤ និង ទី៥)
-        // ==========================================
-        let editingProductIndex = null;
-
-        function loginAdmin() {
-            // សំណួរទី៤៖ ដាក់លេខកូដសម្ងាត់ការពារ Qq128080
-            const pass = prompt("សូមបញ្ចូលលេខកូដសម្ងាត់អ្នកគ្រប់គ្រង (Admin Password)៖");
-            if (pass === "Qq128080") {
-                document.getElementById("adminModal").style.display = "flex";
-            } else if (pass !== null) {
-                alert("❌ លេខកូដសម្ងាត់មិនត្រឹមត្រូវទេ! អ្នកមិនអាចចូលប្រើប្រាស់បានឡើយ។");
-            }
-        }
-
-        function closeAdminModal() {
-            document.getElementById("adminModal").style.display = "none";
-            document.getElementById("adminEditorPanel").style.display = "none";
-            document.getElementById("adminSearchCode").value = "";
-        }
-
-        // សំណួរទី៥៖ ប្រព័ន្ធស្វែងរកកូដដើម្បីកែសម្រួលទិន្នន័យគ្រប់ជ្រុងជ្រោយ
-        function loadProductToEdit() {
-            const searchCode = document.getElementById("adminSearchCode").value.trim().toUpperCase();
-            const index = productsDatabase.findIndex(p => p.code.toUpperCase() === searchCode);
-
-            if (index !== -1) {
-                editingProductIndex = index;
-                const prod = productsDatabase[index];
-
-                document.getElementById("editingCodeDisplay").innerText = prod.code;
-                document.getElementById("editTitle").value = prod.title;
-                document.getElementById("editPrice").value = prod.price;
-                document.getElementById("editDiscount").value = prod.discount;
-                document.getElementById("editDesc").value = prod.desc || "";
-                
-                // បំពេញលីងរូបភាពទាំង ៤ សន្លឹកចូលក្នុងប្រអប់កែប្រែ
-                document.getElementById("editImg1").value = prod.images[0] || "";
-                document.getElementById("editImg2").value = prod.images[1] || "";
-                document.getElementById("editImg3").value = prod.images[2] || "";
-                document.getElementById("editImg4").value = prod.images[3] || "";
-
-                document.getElementById("adminEditorPanel").style.display = "block";
-            } else {
-                alert("❌ រកមិនឃើញផលិតផលដែលមានលេខកូដ " + searchCode + " ឡើយ! សូមពិនិត្យឡើងវិញ។");
-                document.getElementById("adminEditorPanel").style.display = "none";
-            }
-        }
-
-        function saveProductChanges() {
-            if (editingProductIndex !== null) {
-                const prod = productsDatabase[editingProductIndex];
-
-                // ទាញយកតម្លៃថ្មីពីប្រអប់បំពេញផ្ញើចូល Database
-                prod.title = document.getElementById("editTitle").value;
-                prod.price = document.getElementById("editPrice").value;
-                prod.discount = document.getElementById("editDiscount").value;
-                prod.desc = document.getElementById("editDesc").value;
-
-                prod.images[0] = document.getElementById("editImg1").value;
-                prod.images[1] = document.getElementById("editImg2").value;
-                prod.images[2] = document.getElementById("editImg3").value;
-                prod.images[3] = document.getElementById("editImg4").value;
-
-                saveToStorage(); // រក្សាទុកចូលក្នុង LocalStorage ការពារការបាត់បង់
-                renderProducts(productsDatabase); // បង្ហាញការផ្លាស់ប្តូរលើអេក្រង់ដើមភ្លាមៗ
-                
-                alert("💾 បានរក្សាទុកការកែប្រែទិន្នន័យផលិតផល " + prod.code + " ដោយជោគជ័យ!");
-                closeAdminModal();
-            }
-        }
-
-        // ==========================================
-        // 🎯 ប្រព័ន្ធចុះឈ្មោះតំណាងចែកចាយ (សំណួរទី១)
-        // ==========================================
-        function openDistributorModal() { document.getElementById("distributorModal").style.display = "flex"; }
-        function closeDistributorModal() { document.getElementById("distributorModal").style.display = "none"; document.getElementById("regForm").reset(); }
-
-        const districtsByProvince = {
-            "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌសែនសុខ", "ខណ្ឌពោធិ៍សែនជ័យ"],
-            "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកខ្សាច់កណ្តាល"],
-            "សៀមរាប": ["ក្រុងសៀមរាប", "ស្រុកពួក", "ស្រុកសូទ្រនិគម", "ស្រុកប្រាសាទបាគង"]
-        };
-
-        function updateDistricts() {
-            const provinceSelect = document.getElementById("province");
-            const districtSelect = document.getElementById("district");
-            const selectedProvince = provinceSelect.value;
-            districtSelect.innerHTML = '<option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>';
-            if (districtsByProvince[selectedProvince]) {
-                districtsByProvince[selectedProvince].forEach(function(d) {
-                    const opt = document.createElement("option"); opt.value = d; opt.text = d; districtSelect.appendChild(opt);
-                });
-            }
-        }
-
-        function generateFullAddress() {
-            const prov = document.getElementById("province").value || "";
-            const dist = document.getElementById("district").value || "";
-            const comm = document.getElementById("commune").value || "";
-            const vill = document.getElementById("village").value || "";
-            const box = document.getElementById("fullAddressBox");
-
-            if (prov || dist || comm || vill) {
-                let txt = `ភូមិ/ផ្លូវ/ផ្ទះ ${vill}, ឃុំ/សង្កាត់ ${comm}, ${dist}, ខេត្ត/ក្រុង ${prov}`;
-                box.innerText = txt;
-                return txt;
-            }
-            box.innerText = "សូមបំពេញព័ត៌មានខាងលើ...";
-            return "";
-        }
-
-        function submitDistributorToTelegram(event) {
-            event.preventDefault();
-            const btn = document.getElementById("btnRegSubmit");
-            btn.disabled = true; btn.innerText = "កំពុងបញ្ជូន...";
-
-            const BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI'; 
-            const CHAT_ID = '-5387523552'; 
-
-            const name = document.getElementById("fullName").value;
-            const age = document.getElementById("age").value;
-            const job = document.getElementById("job").value;
-            const tel = document.getElementById("telegramPhone").value;
-            const addr = generateFullAddress();
-
-            const textMsg = `🔔 *មានសមាជិកចុះឈ្មោះតំណាងចែកចាយថ្មី!*\n\n👤 *ឈ្មោះ៖* ${name}\n🎂 *អាយុ៖* ${age} ឆ្នាំ\n💼 *មុខរបរ៖* ${job}\n📞 *តេឡេក្រាម៖* ${tel}\n📍 *អាសយដ្ឋាន៖* ${addr}`;
-
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: textMsg, parse_mode: "Markdown" })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if(data.ok) { alert("🎉 បានបញ្ជូនព័ត៌មានចុះឈ្មោះតំណាងចែកចាយទៅតេឡេក្រាមរួចរាល់!"); closeDistributorModal(); }
-            })
-            .finally(() => { btn.disabled = false; btn.innerText = "បញ្ជូនព័ត៌មានផ្លូវការ"; });
-        }
-
-        // ==========================================
-        // 🎯 ប្រព័ន្ធបញ្ជូនការបញ្ជាទិញទំនិញ + រូបភាពបង្កាន់ដៃ
-        // ==========================================
+        // ប្រព័ន្ធផ្ញើទៅ Telegram
         function submitOrderWithPhoto(event) {
             event.preventDefault();
             const btn = document.getElementById("btnOrderSubmit");
             const fileInput = document.getElementById("receiptPhoto");
             
-            if (fileInput.files.length === 0) { alert("សូមជ្រើសរើសរូបភាពបង្កាន់ដៃ!"); return; }
+            if (fileInput.files.length === 0) { alert("សូមបញ្ចូលរូបភាពបង្កាន់ដៃ!"); return; }
 
-            btn.disabled = true; btn.innerText = "កំពុងបញ្ជូនការបញ្ជាទិញ...";
+            btn.disabled = true; btn.innerText = "កំពុងបញ្ជូនទិន្នន័យ...";
 
             const BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI'; 
             const CHAT_ID = '-5387523552'; 
@@ -488,7 +449,7 @@
             const cPhone = document.getElementById("custPhone").value;
             const cAddress = document.getElementById("custAddress").value;
 
-            const captionMessage = `🛍️ *មានការបញ្ជាទិញថ្មី!*\n\n🆔 *កូដទំនិញ៖* ${activeProductObj.code}\n📦 *ឈ្មោះទំនិញ៖* ${activeProductObj.title}\n💰 *តម្លៃ៖* ${activeProductObj.price}\n-------------------\n👤 *អតិថិជន៖* ${cName}\n📞 *លេខទូរសព្ទ៖* ${cPhone}\n📍 *អាសយដ្ឋាន៖* ${cAddress}`;
+            const captionMessage = `🛍️ *មានការបញ្ជាទិញថ្មី (សមាគមន៍ផលិតផលខ្មែរ)*\n\n🆔 *កូដទំនិញ៖* ${activeProductObj.code}\n📦 *ឈ្មោះទំនិញ៖* ${activeProductObj.title}\n💰 *តម្លៃផលិតផល៖* ${activeProductObj.price}\n-------------------\n👤 *អតិថិជន៖* ${cName}\n📞 *លេខទូរសព្ទ៖* ${cPhone}\n📍 *អាសយដ្ឋាន៖* ${cAddress}`;
 
             const formData = new FormData();
             formData.append("chat_id", CHAT_ID);
@@ -499,13 +460,12 @@
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData })
             .then(res => res.json())
             .then(data => {
-                if (data.ok) { alert("🎉 ការបញ្ជាទិញ និងបង្កាន់ដៃត្រូវបានផ្ញើទៅកាន់តេឡេក្រាមជោគជ័យ!"); closeDetailModal(); }
+                if (data.ok) { alert("🎉 ការបញ្ជាទិញ និងរូបភាពបង្កាន់ដៃបង់ប្រាក់ ត្រូវបានផ្ញើទៅកាន់ក្រុមការងាររួចរាល់!"); closeDetailModal(); }
                 else { alert("❌ បរាជ័យក្នុងការផ្ញើ!"); }
             })
             .finally(() => { btn.disabled = false; btn.innerText = "🛒 យល់ព្រមទូទាត់ប្រាក់ និងកម្ម៉ង់ទិញ"; });
         }
 
-        // ស្វែងរក និងជម្រើសប្រភេទលើអេក្រង់ដើម
         function searchProducts() {
             const txt = document.getElementById("searchInput").value.toLowerCase();
             renderProducts(productsDatabase.filter(p => p.title.toLowerCase().includes(txt) || p.code.toLowerCase().includes(txt)));
