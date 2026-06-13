@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ហាងលក់ទំនិញអនឡាញរបស់ខ្ញុំ</title>
+    <title>ហាងលក់ទំនិញអនឡាញ</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;700&display=swap');
         
@@ -28,6 +28,10 @@
             align-items: center;
         }
 
+        header h1 {
+            font-size: 22px;
+        }
+
         .distributor-btn {
             background-color: #ff9900;
             color: #1a1a1a;
@@ -36,6 +40,76 @@
             font-size: 14px;
             font-weight: 700;
             border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .distributor-btn:hover {
+            background-color: #e68a00;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e44d26;
+            margin-bottom: 15px;
+        }
+
+        .buy-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
             cursor: pointer;
         }
 
@@ -94,7 +168,7 @@
             margin-bottom: 5px;
         }
 
-        .form-group input, .form-group select {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
@@ -103,11 +177,26 @@
             outline: none;
         }
 
-        /* រៀបចំប្រអប់អាសយដ្ឋានឱ្យដើរទន្ទឹមគ្នា ២ជួរផ្ដេក */
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #ff9900;
+        }
+
         .address-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
+        }
+
+        /* ស្ទីលប្រអប់បង្ហាញអាសយដ្ឋានរួម */
+        .full-address-box {
+            background-color: #f8f9fa;
+            border: 1px dashed #ff9900;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #2b2b2b;
+            min-height: 44px;
+            word-break: break-word;
         }
 
         .submit-btn {
@@ -127,6 +216,14 @@
             background-color: #cccccc;
             cursor: not-allowed;
         }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background-color: #1a1a1a;
+            color: #888;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
@@ -136,6 +233,21 @@
         <button class="distributor-btn" onclick="openModal()">ចុះឈ្មោះជាតំណាងចែកចាយ</button>
     </header>
 
+    <div class="container">
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="https://via.placeholder.com/300x250?text=Product" alt="ផលិតផល">
+                </div>
+                <div class="product-info">
+                    <div class="product-title">ផលិតផលលក់ដាច់</div>
+                    <div class="product-price">$0.00</div>
+                    <button class="buy-btn">បញ្ជាទិញឥឡូវនេះ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="registerModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -144,31 +256,31 @@
             <form id="regForm" onsubmit="submitToTelegram(event)">
                 <div class="form-group">
                     <label for="fullName">ឈ្មោះពេញ៖</label>
-                    <input type="text" id="fullName" placeholder="ឧទាហរណ៍៖ សុខ ជា" required>
+                    <input type="text" id="fullName" placeholder="បញ្ចូលឈ្មោះពេញរបស់អ្នក" required>
                 </div>
 
                 <div class="address-grid">
                     <div class="form-group">
                         <label for="age">អាយុ៖</label>
-                        <input type="number" id="age" placeholder="អាយុ" required>
+                        <input type="number" id="age" placeholder="បញ្ចូលអាយុ" required>
                     </div>
                     <div class="form-group">
                         <label for="job">មុខរបរបច្ចុប្បន្ន៖</label>
-                        <input type="text" id="job" placeholder="មុខរបរ" required>
+                        <input type="text" id="job" placeholder="បញ្ចូលមុខរបរ" required>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="telegramPhone">លេខតេឡេក្រាម (Telegram)៖</label>
-                    <input type="tel" id="telegramPhone" placeholder="ឧទាហរណ៍៖ 012345678" required>
+                    <label for="telegramPhone">លេខតេឡេក្រាម ឬ Username Telegram៖</label>
+                    <input type="text" id="telegramPhone" placeholder="បញ្ចូលលេខទូរសព្ទ ឬឈ្មោះអ្នកប្រើប្រាស់តេឡេក្រាម" required>
                 </div>
                 
                 <h3 style="font-size: 15px; margin: 15px 0 10px 0; color: #ff9900; border-bottom: 1px dashed #ccc; padding-bottom: 5px;">អាសយដ្ឋានរស់នៅបច្ចុប្បន្ន</h3>
                 
                 <div class="address-grid">
                     <div class="form-group">
-                        <label for="province">រាជធានី/ខេត្ត៖</label>
-                        <select id="province" onchange="updateDistricts()" required>
+                        <label for="province">รាជធានី/ខេត្ត៖</label>
+                        <select id="province" onchange="updateDistricts(); generateFullAddress();" required>
                             <option value="" disabled selected>--- ជ្រើសរើសខេត្ត ---</option>
                             <option value="ភ្នំពេញ">ភ្នំពេញ</option>
                             <option value="កណ្តាល">កណ្តាល</option>
@@ -180,7 +292,7 @@
                     
                     <div class="form-group">
                         <label for="district">ក្រុង/ស្រុក/ខណ្ឌ៖</label>
-                        <select id="district" required>
+                        <select id="district" onchange="generateFullAddress();" required>
                             <option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>
                         </select>
                     </div>
@@ -189,13 +301,18 @@
                 <div class="address-grid">
                     <div class="form-group">
                         <label for="commune">ឃុំ/សង្កាត់៖</label>
-                        <input type="text" id="commune" placeholder="ឧទាហរណ៍៖ ចោមចៅ" required>
+                        <input type="text" id="commune" oninput="generateFullAddress();" placeholder="បញ្ចូលឃុំ ឬសង្កាត់" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="village">ភូមិ/ផ្លូវ/ផ្ទះ៖</label>
-                        <input type="text" id="village" placeholder="ឧទាហរណ៍៖ ភូមិ៣ ឬ ផ្ទះលេខ១០" required>
+                        <input type="text" id="village" oninput="generateFullAddress();" placeholder="បញ្ចូលភូមិ ផ្លូវ ឬលេខផ្ទះ" required>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label>អាសយដ្ឋានពេញលេញ (ប្រព័ន្ធផ្គុំជូនស្វ័យប្រវត្ត)៖</label>
+                    <div id="fullAddressBox" class="full-address-box">សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...</div>
                 </div>
 
                 <div class="form-group">
@@ -206,10 +323,14 @@
                     </select>
                 </div>
                 
-                <button type="submit" id="btnSubmit" class="submit-btn">បញ្ជូនព័ត៌មាន</button>
+                <button type="submit" id="btnSubmit" class="submit-btn">បញ្ជូនព័ត៌មានផ្លូវការ</button>
             </form>
         </div>
     </div>
+
+    <footer>
+        <p>&copy; 2026 រក្សាសិទ្ធិគ្រប់យ៉ាងដោយ ហាងអនឡាញ</p>
+    </footer>
 
     <script>
         const modal = document.getElementById("registerModal");
@@ -217,7 +338,6 @@
         function closeModal() { modal.style.display = "none"; }
         window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
 
-        // ទិន្នន័យស្រុក/ខណ្ឌ ផ្អែកលើខេត្តនីមួយៗ (អាចបន្ថែមខេត្តផ្សេងទៀតតាមទម្រង់នេះបាន)
         const districtsByProvince = {
             "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌឫស្សីកែវ", "ខណ្ឌសែនសុខ", "ខណ្ឌពោធិ៍សែនជ័យ", "ខណ្ឌជ្រោយចង្វារ", "ខណ្ឌព្រែកព្នៅ", "ខណ្ឌច្បារអំពៅ", "ខណ្ឌដង្កោ", "ខណ្ឌកំបូល", "ខណ្ឌបឹងកេងកង"],
             "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកខ្សាច់កណ្តាល", "ស្រុកកោះធំ", "ស្រុកពញាឮ", "ស្រុកល្វាឯម", "ស្រុកមុខកំពូល", "ស្រុកអង្គស្នួល", "ស្រុកស្អាង"],
@@ -226,13 +346,11 @@
             "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកបាណន់", "ស្រុកថ្មគោល", "ស្រុកបវេល", "ស្រុកឯកភ្នំ", "ស្រុកសង្កែ", "ស្រុកគាស់ក្រឡ", "ស្រុកសំឡូត", "ស្រុកសំពៅលូន", "ស្រុកភ្នំព្រឹក", "ស្រុកកំរៀង", "ស្រុកមោងឫស្សី", "ស្រុក រតនមណ្ឌល"]
         };
 
-        // មុខងារធ្វើបច្ចុប្បន្នភាពប្រអប់ស្រុក នៅពេលប្តូរខេត្ត
         function updateDistricts() {
             const provinceSelect = document.getElementById("province");
             const districtSelect = document.getElementById("district");
             const selectedProvince = provinceSelect.value;
 
-            // លុបជម្រើសស្រុកចាស់ៗចោលសិន
             districtSelect.innerHTML = '<option value="" disabled selected>--- ជ្រើសរើសស្រុក ---</option>';
 
             if (districtsByProvince[selectedProvince]) {
@@ -245,13 +363,38 @@
             }
         }
 
-        // មុខងារផ្ញើទិន្នន័យទៅ Telegram
+        // មុខងារផ្គុំអត្ថបទអាសយដ្ឋានបង្ហាញក្នុងប្រអប់
+        function generateFullAddress() {
+            const province = document.getElementById("province").value || "";
+            const district = document.getElementById("district").value || "";
+            const commune = document.getElementById("commune").value || "";
+            const village = document.getElementById("village").value || "";
+            const box = document.getElementById("fullAddressBox");
+
+            if (province || district || commune || village) {
+                let fullText = "";
+                if(village) fullText += `ភូមិ/ផ្លូវ/ផ្ទះ ${village}, `;
+                if(commune) fullText += `ឃុំ/សង្កាត់ ${commune}, `;
+                if(district) fullText += `${district}, `;
+                if(province) fullText += `រាជធានី/ខេត្ត ${province}`;
+                
+                // លុបសញ្ញាក្បៀសចុងក្រោយចេញបើមាន
+                fullText = fullText.replace(/,\s*$/, "");
+                box.innerText = fullText;
+                return fullText;
+            } else {
+                box.innerText = "សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...";
+                return "";
+            }
+        }
+
         function submitToTelegram(event) {
             event.preventDefault();
             const btnSubmit = document.getElementById("btnSubmit");
             btnSubmit.disabled = true;
-            btnSubmit.innerText = "កំពុងផ្ញើ...";
+            btnSubmit.innerText = "កំពុងបញ្ជូន...";
 
+            // លុបចោលការណែនាំគំរូ ជំនួសដោយកូដដំណើរការផ្ទាល់ខ្លួនរបស់អ្នក
             const TELEGRAM_BOT_TOKEN = 'សូមដាក់_BOT_TOKEN_របស់អ្នកនៅទីនេះ'; 
             const TELEGRAM_CHAT_ID = 'សូមដាក់_CHAT_ID_របស់អ្នកនៅទីនេះ'; 
 
@@ -259,26 +402,16 @@
             const age = document.getElementById("age").value;
             const job = document.getElementById("job").value;
             const telegramPhone = document.getElementById("telegramPhone").value;
-            
-            // ទាញទិន្នន័យអាសយដ្ឋានលម្អិត
-            const province = document.getElementById("province").value;
-            const district = document.getElementById("district").value;
-            const commune = document.getElementById("commune").value;
-            const village = document.getElementById("village").value;
-            
+            const fullAddress = generateFullAddress();
             const experience = document.getElementById("experience").value;
 
-            // រៀបចំអត្ថបទផ្ញើទៅ Telegram ឱ្យមានរបៀបរៀបរយគ្រប់ជ្រុងជ្រោយ
             const message = `🔔 *មានសមាជិកចុះឈ្មោះថ្មី!*\n\n` +
                             `👤 *ឈ្មោះពេញ៖* ${name}\n` +
-                            `🎂 *អាយុ៖* ${age} ឆ្នាំ | *មុខរបរ៖* ${job}\n` +
-                            `📞 *លេខតេឡេក្រាម៖* ${telegramPhone}\n` +
-                            `📈 *បទពិសោធន៍៖* ${experience}\n\n` +
-                            `📍 *អាសយដ្ឋានបច្ចុប្បន្ន៖*\n` +
-                            ` - ភូមិ/ផ្លូវ៖ ${village}\n` +
-                            ` - ឃុំ/សង្កាត់៖ ${commune}\n` +
-                            ` - ស្រុក/ខណ្ឌ៖ ${district}\n` +
-                            ` - រាជធានី/ខេត្ត៖ ${province}`;
+                            `🎂 *អាយុ៖* ${age} ឆ្នាំ\n` +
+                            `💼 *មុខរបរ៖* ${job}\n` +
+                            `📞 *តេឡេក្រាម/Username៖* ${telegramPhone}\n` +
+                            `📍 *អាសយដ្ឋានពិតប្រាកដ៖* ${fullAddress}\n` +
+                            `📈 *បទពិសោធន៍៖* ${experience}`;
 
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
@@ -289,19 +422,20 @@
             })
             .then(response => {
                 if (response.ok) {
-                    alert("🎉 ការចុះឈ្មោះបានជោគជ័យ!");
+                    alert("🎉 ការចុះឈ្មោះត្រូវបានបញ្ជូនទៅកាន់ប្រព័ន្ធដោយជោគជ័យ!");
                     document.getElementById("regForm").reset();
+                    document.getElementById("fullAddressBox").innerText = "សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...";
                     closeModal();
                 } else {
-                    alert("❌ មានបញ្ហា Bot Token ឬ Chat ID!");
+                    alert("❌ ការភ្ជាប់បរាជ័យ! សូមពិនិត្យមើល Bot Token និង Chat ID នៅក្នុងកូដរបស់អ្នក។");
                 }
             })
             .catch(error => {
-                alert("❌ មិនអាចភ្ជាប់ទៅកាន់ប្រព័ន្ធបានទេ!");
+                alert("❌ មិនអាចភ្ជាប់ទៅកាន់ប្រព័ន្ធតេឡេក្រាមបានទេ! សូមពិនិត្យមើលអ៊ីនធឺណិត ឬបើកជាមួយ Browser ផ្សេង (ដូចជា Firefox)។");
             })
             .finally(() => {
                 btnSubmit.disabled = false;
-                btnSubmit.innerText = "បញ្ជូនព័ត៌មាន";
+                btnSubmit.innerText = "បញ្ជូនព័ត៌មានផ្លូវការ";
             });
         }
     </script>
