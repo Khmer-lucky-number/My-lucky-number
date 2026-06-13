@@ -147,18 +147,9 @@
         .zoom-slider-container input[type=range] { flex: 1; cursor: pointer; accent-color: #0f172a; }
         .zoom-val-text { font-size: 11px; font-weight: 700; color: #475569; min-width: 35px; text-align: right; }
 
-        /* Security Unlock Button Styling */
-        .unlock-qr-section { background: #fdfbf7; border: 1px dashed #d4af37; padding: 30px 15px; border-radius: 8px; text-align: center; }
-        .btn-orange-lock { background: linear-gradient(135deg, #d97706, #b45309); color: white; border: none; padding: 14px 24px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; margin: 0 auto; box-shadow: 0 4px 10px rgba(217,119,6,0.25); transition: all 0.2s; }
-        .btn-orange-lock:hover { transform: translateY(-1px); background: #b45309; }
-
         /* Admin Layouts */
         .admin-search-area { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; gap: 10px; }
         .admin-editor-panel { display: none; border-top: 2px dashed #e2e8f0; padding-top: 20px; }
-
-        /* Multi-page System View blocks */
-        #firstPageMaster { display: block; }
-        #secondPageEditor { display: none; }
 
         footer { text-align: center; padding: 30px; background-color: #fff; color: #64748b; margin-top: 60px; border-top: 1px solid #e2e8f0; font-size: 13px; }
         @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
@@ -208,24 +199,6 @@
                     </div>
                 </div>
                 <button type="submit" class="submit-btn-gold" style="margin-top:0;">🔐 ផ្ទៀងផ្ទាត់</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="qrLockModal" class="modal">
-        <div class="login-card" style="border: 2px solid #d4af37;">
-            <span class="close-btn" onclick="closeQRLockModal()">&times;</span>
-            <div class="success-checkmark" style="background:#fffbeb; color:#d4af37;"><i class="fa-solid fa-lock"></i></div>
-            <h3>ផ្ទៀងផ្ទាត់សិទ្ធិជាន់ខ្ពស់</h3>
-            <p>សូមបញ្ចូលកូដសម្ងាត់ដើម្បីកែប្រែប្រព័ន្ធទិន្នន័យ</p>
-            <form onsubmit="verifyQREditorAccess(event)">
-                <div class="form-group">
-                    <div class="pass-group">
-                        <input type="password" id="qrPassInput" placeholder="បញ្ចូលកូដសម្ងាត់ប្រអប់គណនី..." required style="padding-right: 45px;">
-                        <button type="button" class="toggle-password-btn" onclick="togglePass('qrPassInput', 'qrEyeIcon')"><i id="qrEyeIcon" class="fa-solid fa-eye"></i></button>
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn-gold" style="background:#d4af37; color:#0f172a;">🔓 អនុញ្ញាតចូលកែសម្រួល</button>
             </form>
         </div>
     </div>
@@ -281,79 +254,65 @@
             <h2 style="border-bottom: 2px solid #f1f5f9; padding-bottom:10px;">🛠️ ផ្ទាំងគ្រប់គ្រងទិន្នន័យប្រព័ន្ធ</h2>
             <br>
             
-            <div id="firstPageMaster">
-                <div class="unlock-qr-section">
-                    <div class="success-checkmark" style="background:#fef3c7; color:#d97706; margin-bottom:15px;"><i class="fa-solid fa-key"></i></div>
-                    <h3 style="font-size:16px; margin-bottom:10px; color:#1e293b;">ប្រព័ន្ធកែសម្រួលទិន្នន័យត្រូវបានចាក់សោ</h3>
-                    <p style="font-size:13px; color:#64748b; margin-bottom:20px; line-height:1.6;">សូមចុចប៊ូតុងខាងក្រោមដើម្បីបញ្ចូលលេខកូដសម្ងាត់ជាន់ខ្ពស់ មុនពេលចូលទៅផ្លាស់ប្តូររូបភាព KHQR, អត្ថបទផលិតផល ឬរូបភាពទំនិញផ្សេងៗ។</p>
-                    <button type="button" onclick="openQRLockModal()" class="btn-orange-lock">
-                        <i class="fa-solid fa-shield-halved"></i> បើកសិទ្ធិកែសម្រួលប្រអប់គណនី និងទិន្នន័យ
-                    </button>
-                </div>
-            </div>
-
-            <div id="secondPageEditor">
+            <div class="qr-editor-container">
+                <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-qrcode"></i> កែសម្រួលប្រអប់គណនីទូទាត់ប្រាក់ (KHQR)៖</label>
+                <input type="file" id="qrFileInput" accept="image/*" onchange="previewQRFile(this)" style="padding: 6px !important; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius:6px;">
                 
-                <div class="qr-editor-container">
-                    <label style="font-weight: 700; font-size: 13px; color: #1e293b; display: block; margin-bottom: 6px;"><i class="fa-solid fa-qrcode"></i> កែសម្រួលប្រអប់គណនីទូទាត់ប្រាក់ (KHQR)៖</label>
-                    <input type="file" id="qrFileInput" accept="image/*" onchange="previewQRFile(this)" style="padding: 6px !important; background: #fff; width: 100%; border: 1px solid #cbd5e1; border-radius:6px;">
+                <div class="qr-preview-box">
+                    <span style="font-size:11px; color:#64748b; margin-bottom:5px;">💡 ចុចឱ្យជាប់លើរូបភាព រួចអូស (Drag) ដើម្បីតម្រឹមឆ្វេងស្តាំលើក្រោម</span>
                     
-                    <div class="qr-preview-box">
-                        <span style="font-size:11px; color:#64748b; margin-bottom:5px;">💡 ចុចឱ្យជាប់លើរូបភាព រួចអូស (Drag) ដើម្បីតម្រឹមឆ្វេងស្តាំលើក្រោម</span>
-                        
-                        <div class="qr-preview-frame" id="previewFrame">
-                            <img id="qrPreviewImg" src="" alt="Preview QR" style="left: 0px; top: 0px;">
+                    <div class="qr-preview-frame" id="previewFrame">
+                        <img id="qrPreviewImg" src="" alt="Preview QR" style="left: 0px; top: 0px;">
+                    </div>
+                    
+                    <div class="qr-tools">
+                        <div class="zoom-slider-container">
+                            <i class="fa-solid fa-magnifying-glass-minus" style="font-size:12px; color:#64748b;"></i>
+                            <input type="range" id="qrZoomSlider" min="30" max="300" value="100" oninput="applyZoomAndRotate()">
+                            <i class="fa-solid fa-magnifying-glass-plus" style="font-size:12px; color:#64748b;"></i>
+                            <span id="zoomValLabel" class="zoom-val-text">100%</span>
                         </div>
                         
-                        <div class="qr-tools">
-                            <div class="zoom-slider-container">
-                                <i class="fa-solid fa-magnifying-glass-minus" style="font-size:12px; color:#64748b;"></i>
-                                <input type="range" id="qrZoomSlider" min="30" max="300" value="100" oninput="applyZoomAndRotate()">
-                                <i class="fa-solid fa-magnifying-glass-plus" style="font-size:12px; color:#64748b;"></i>
-                                <span id="zoomValLabel" class="zoom-val-text">100%</span>
-                            </div>
-                            
-                            <div class="qr-btn-group">
-                                <button type="button" class="qr-tool-btn" onclick="adjustRotation(-90)"><i class="fa-solid fa-rotate-left"></i> បង្វិលឆ្វេង</button>
-                                <button type="button" class="qr-tool-btn" onclick="resetPositions()"><i class="fa-solid fa-arrow-rotate-left"></i> កំណត់ឡើងវិញ</button>
-                                <button type="button" class="qr-tool-btn" onclick="adjustRotation(90)"><i class="fa-solid fa-rotate-right"></i> បង្វិលស្តាំ</button>
-                            </div>
+                        <div class="qr-btn-group">
+                            <button type="button" class="qr-tool-btn" onclick="adjustRotation(-90)"><i class="fa-solid fa-rotate-left"></i> បង្វិលឆ្វេង</button>
+                            <button type="button" class="qr-tool-btn" onclick="resetPositions()"><i class="fa-solid fa-arrow-rotate-left"></i> កំណត់ឡើងវិញ</button>
+                            <button type="button" class="qr-tool-btn" onclick="adjustRotation(90)"><i class="fa-solid fa-rotate-right"></i> បង្វិលស្តាំ</button>
                         </div>
                     </div>
-
-                    <div class="form-grid" style="margin-top: 10px;">
-                        <div class="form-group"><label>ឈ្មោះគណនីធនាគារ៖</label><input type="text" id="editAccName"></div>
-                        <div class="form-group"><label>លេខគណនី / ព័ត៌មានបន្ថែម៖</label><input type="text" id="editAccNumber"></div>
-                    </div>
-                    <button type="button" onclick="saveQRAndAccountChanges()" class="submit-btn-gold" style="background:#0f172a; font-size:13px; padding:10px; margin-top:5px;">💾 រក្សាទុកការផ្លាស់ប្តូរគណនី</button>
                 </div>
 
-                <div class="admin-search-area">
-                    <input type="text" id="adminSearchCode" placeholder="វាយលេខកូដផលិតផល... (ឧ. KP-000001)" style="flex:1; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
-                    <button type="button" onclick="loadToEdit()" class="admin-btn" style="background:#0f172a; border-radius:6px;">ស្វែងរកទំនិញ</button>
+                <div class="form-grid" style="margin-top: 10px;">
+                    <div class="form-group"><label>ឈ្មោះគណនីធនាគារ៖</label><input type="text" id="editAccName"></div>
+                    <div class="form-group"><label>លេខគណនី / ព័ត៌មានបន្ថែម៖</label><input type="text" id="editAccNumber"></div>
                 </div>
-
-                <div id="adminEditor" class="admin-editor-panel">
-                    <h3 style="font-size:14px; margin-bottom:15px;">📝 កំពុងកែប្រែ៖ <span id="editingCode" style="color:red; font-weight:700;"></span></h3>
-                    <div class="form-group"><label>ឈ្មោះផលិតផល៖</label><input type="text" id="editTitle"></div>
-                    <div class="form-grid">
-                        <div class="form-group"><label>តម្លៃ ($)៖</label><input type="text" id="editPrice"></div>
-                        <div class="form-group"><label>ការពិពណ៌នា៖</label><textarea id="editDesc" rows="2"></textarea></div>
-                    </div>
-                    <div class="form-group" style="background:#fffbeb; padding:10px; border-radius:6px; border:1px dashed #fde68a;">
-                        <label>📸 ប្តូររូបភាពដើម (Main Image)៖</label>
-                        <input type="file" accept="image/*" onchange="processFile(this, 'main')">
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ១</label><input type="file" accept="image/*" onchange="processFile(this, 0)"></div>
-                        <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ២</label><input type="file" accept="image/*" onchange="processFile(this, 1)"></div>
-                        <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៣</label><input type="file" accept="image/*" onchange="processFile(this, 2)"></div>
-                        <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៤</label><input type="file" accept="image/*" onchange="processFile(this, 3)"></div>
-                    </div>
-                    <button type="button" onclick="saveChanges()" class="submit-btn-gold" style="background:#10b981; color:#fff; border:none;">💾 រក្សាទុកទិន្នន័យទំនិញ</button>
-                </div>
-
+                <button type="button" onclick="saveQRAndAccountChanges()" class="submit-btn-gold" style="background:#0f172a; font-size:13px; padding:10px; margin-top:5px;">💾 រក្សាទុកការផ្លាស់ប្តូរគណនី</button>
             </div>
+
+            <div class="admin-search-area">
+                <input type="text" id="adminSearchCode" placeholder="វាយលេខកូដផលិតផល... (ឧ. KP-000001)" style="flex:1; padding:10px; border-radius:6px; border:1px solid #cbd5e1;">
+                <button type="button" onclick="loadToEdit()" class="admin-btn" style="background:#0f172a; border-radius:6px;">ស្វែងរកទំនិញ</button>
+            </div>
+
+            <div id="adminEditor" class="admin-editor-panel">
+                <h3 style="font-size:14px; margin-bottom:15px;">📝 កំពុងកែប្រែ៖ <span id="editingCode" style="color:red; font-weight:700;"></span></h3>
+                <div class="form-group"><label>ឈ្មោះផលិតផល៖</label><input type="text" id="editTitle"></div>
+                <div class="form-grid">
+                    <div class="form-group"><label>តម្លៃ ($)៖</label><input type="text" id="editPrice"></div>
+                    <div class="form-group"><label>ការពិពណ៌នា៖</label><textarea id="editDesc" rows="2"></textarea></div>
+                </div>
+                <div class="form-group" style="background:#fffbeb; padding:10px; border-radius:6px; border:1px dashed #fde68a;">
+                    <label>📸 ប្តូររូបភាពដើម (Main Image)៖</label>
+                    <input type="file" accept="image/*" onchange="processFile(this, 'main')">
+                </div>
+                <div class="form-grid">
+                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ១</label><input type="file" accept="image/*" onchange="processFile(this, 0)"></div>
+                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ២</label><input type="file" accept="image/*" onchange="processFile(this, 1)"></div>
+                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៣</label><input type="file" accept="image/*" onchange="processFile(this, 2)"></div>
+                    <div class="form-group"><label style="font-size:11px;">រូបលម្អិត ៤</label><input type="file" accept="image/*" onchange="processFile(this, 3)"></div>
+                </div>
+                <button type="button" onclick="saveChanges()" class="submit-btn-gold" style="background:#10b981; color:#fff; border:none;">💾 រក្សាទុកទិន្នន័យទំនិញ</button>
+            </div>
+
         </div>
     </div>
 
@@ -460,9 +419,6 @@
         // Login Actions
         function openLoginModal() { document.getElementById("loginModal").style.display="flex"; }
         function closeLoginModal() { document.getElementById("loginModal").style.display="none"; document.getElementById("adminPassInput").value=""; }
-        
-        function openQRLockModal() { document.getElementById("qrLockModal").style.display="flex"; }
-        function closeQRLockModal() { document.getElementById("qrLockModal").style.display="none"; document.getElementById("qrPassInput").value=""; }
 
         function togglePass(inputId, iconId) {
             const p = document.getElementById(inputId); const e = document.getElementById(iconId);
@@ -470,43 +426,28 @@
             else { p.type="password"; e.className="fa-solid fa-eye"; }
         }
         
-        // ទ្វារទី១៖ ផ្ទៀងផ្ទាត់កូដ Master Qq128080
+        // ផ្ទៀងផ្ទាត់កូដ Master Qq128080 រួចបើកផ្ទាំងគ្រប់គ្រងរួមភ្លាមៗ
         function verifyAdminPassword(ev) {
             ev.preventDefault();
             if(document.getElementById("adminPassInput").value === "Qq128080") {
                 closeLoginModal(); 
                 
-                // បង្ហាញទំព័រទី១ (ប៊ូតុងចាក់សោ) និង លាក់ទំព័រទី២ (ផ្ទាំងកែសម្រួល) ជាមុនសិន
-                document.getElementById("firstPageMaster").style.display = "block";
-                document.getElementById("secondPageEditor").style.display = "none";
-                
+                // បំពេញទិន្នន័យឈ្មោះ និងលេខគណនីបច្ចុប្បន្នចូលក្នុងប្រអប់កែសម្រួល
                 document.getElementById("editAccName").value = accountName.replace('គណនី៖ ', '');
                 document.getElementById("editAccNumber").value = accountNumber.replace('លេខគណនី៖ ', '');
                 
-                document.getElementById("adminModal").style.display="flex";
-            } else { 
-                showNotification(false, "🔐 ផ្ទៀងផ្ទាត់បរាជ័យ!", "លេខសម្ងាត់គ្រប់គ្រងប្រព័ន្ធមិនត្រឹមត្រូវឡើយ។", "កំហុស៖ ខុសលេខសម្ងាត់ Master", "", "");
-            }
-        }
-
-        // ទ្វារទី២៖ ផ្ទៀងផ្ទាត់កូដជាន់ខ្ពស់ Qq20262027 រួចបើកទំព័រទី២ភ្លាមៗ
-        function verifyQREditorAccess(ev) {
-            ev.preventDefault();
-            if(document.getElementById("qrPassInput").value === "Qq20262027") {
-                closeQRLockModal();
-                
-                // ប្តូរទំព័រ៖ លាក់ប៊ូតុងចាក់សោ (ទំព័រ១) ហើយបើកបង្ហាញផ្ទាំងកែសម្រួលរួមទាំងអស់ (ទំព័រ២)
-                document.getElementById("firstPageMaster").style.display = "none"; 
-                document.getElementById("secondPageEditor").style.display = "block";  
-                
+                // បង្ហាញរូបភាព preview របស់ KHQR នៅក្នុងផ្ទាំងបញ្ជា
                 document.getElementById("qrPreviewImg").src = storeQR;
                 currentRotation = qrRotation;
                 currentX = qrPosX;
                 currentY = qrPosY;
                 document.getElementById("qrZoomSlider").value = qrZoomScale * 100;
                 applyZoomAndRotate();
-            } else {
-                showNotification(false, "🔒 កូដសម្ងាត់មិនត្រឹមត្រូវ!", "លេខកូដសម្រួលប្រព័ន្ធមិនត្រឹមត្រូវឡើយ មិនអាចបើកទំព័របានទេ។", "ស្ថានភាព៖ ត្រូវបានបដិសេធ", "", "");
+
+                // បើកបង្ហាញផ្ទាំងគ្រប់គ្រងទាំងមូលរួមគ្នា
+                document.getElementById("adminModal").style.display="flex";
+            } else { 
+                showNotification(false, "🔐 ផ្ទៀងផ្ទាត់បរាជ័យ!", "លេខសម្ងាត់គ្រប់គ្រងប្រព័ន្ធមិនត្រឹមត្រូវឡើយ។", "កំហុស៖ ខុសលេខសម្ងាត់ Master", "", "");
             }
         }
 
