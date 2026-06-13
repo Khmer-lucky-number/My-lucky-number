@@ -126,15 +126,15 @@
         .order-form-section { background-color: #fdfbf7; padding: 20px; border-radius: 8px; border: 1px solid #fef3c7; margin-top: 25px; }
         .payment-box { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 6px; border: 1px dashed #d4af37; margin-top: 10px; }
         
-        /* 📱 Client Fixed Display Box */
+        /* Client Display Box */
         .qr-container-wrapper { width: 110px; height: 110px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; position: relative; }
         .qr-code-img { position: absolute; max-width: none; max-height: none; transform-origin: center center; transition: transform 0.1s ease-out; }
 
-        /* 🛠️ Admin QR Editor Box & 🖐️ Move Gesture Controller */
+        /* Admin QR Editor Area */
         .qr-editor-container { background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: none; }
         .qr-preview-box { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #f8fafc; padding: 15px; border-radius: 6px; margin: 10px 0; border: 1px dashed #cbd5e1; }
         
-        /* 🖐️ ផ្ទៃ Frame ដែលអនុញ្ញាតឱ្យ ចាប់អូសរូបភាពបាន (Drag Box Container) */
+        /* Drag Frame Container */
         .qr-preview-frame { width: 140px; height: 140px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; position: relative; cursor: move; user-select: none; }
         .qr-preview-frame img { position: absolute; max-width: none; max-height: none; transform-origin: center center; pointer-events: none; }
         
@@ -411,7 +411,6 @@
 
         let db = JSON.parse(localStorage.getItem('kpa_v1_db')) || defaultDB;
         
-        // ទាញយកព័ត៌មានកូអរដោនេអូស (X, Y) និង Scale, Rotation ពី LocalStorage
         let storeQR = localStorage.getItem('kpa_v1_qr') || 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ABA_BANK';
         let qrRotation = parseInt(localStorage.getItem('kpa_v1_qr_rotate')) || 0;
         let qrZoomScale = parseFloat(localStorage.getItem('kpa_v1_qr_zoom')) || 1.0;
@@ -437,7 +436,6 @@
                 </div>`;
             });
             
-            // បង្ហាញរូបភាព និងទីតាំងនៅលើផ្ទាំងទិញរបស់អតិថិជន
             const clientQR = document.getElementById("qrImg");
             clientQR.src = storeQR;
             clientQR.style.transform = `rotate(${qrRotation}deg) scale(${qrZoomScale})`;
@@ -448,7 +446,7 @@
             document.getElementById("displayAccNumber").innerText = accountNumber;
         }
 
-        // Login Admin System (Master Password: Qq20262027)
+        // Login Admin System (Master Password: Qq128080)
         function openLoginModal() { document.getElementById("loginModal").style.display="flex"; }
         function closeLoginModal() { document.getElementById("loginModal").style.display="none"; document.getElementById("adminPassInput").value=""; }
         
@@ -463,15 +461,13 @@
         
         function verifyAdminPassword(ev) {
             ev.preventDefault();
-            // ប្តូរលេខកូដសម្ងាត់ទៅជា Qq20262027 តាមការស្នើសុំ
-            if(document.getElementById("adminPassInput").value === "Qq20262027") {
+            // ប្រើប្រាស់លេខកូដសម្ងាត់ដើម Qq128080 សម្រាប់ទ្វារទី១
+            if(document.getElementById("adminPassInput").value === "Qq128080") {
                 closeLoginModal(); 
                 
-                // លាក់ Block កែសម្រួល QR ទុកជាមុនសិនរាល់ពេលចូល Admin
                 document.getElementById("qrEditorBlock").style.display = "none";
                 document.getElementById("unlockSection").style.display = "block";
                 
-                // ត្រៀមទិន្នន័យអត្ថបទចូល Input
                 document.getElementById("editAccName").value = accountName.replace('គណនី៖ ', '');
                 document.getElementById("editAccNumber").value = accountNumber.replace('លេខគណនី៖ ', '');
                 
@@ -481,7 +477,7 @@
             }
         }
 
-        // 🔓 ផ្ទៀងផ្ទាត់កូដសម្ងាត់ជាន់ទី២ ដើម្បីបើកផ្ទាំង QR
+        // 🔓 ផ្ទៀងផ្ទាត់កូដសម្ងាត់ជាន់ទី២ សម្រាប់ប៊ូតុងបើកផ្ទាំង QR (Password: Qq20262027)
         function verifyQREditorAccess(ev) {
             ev.preventDefault();
             if(document.getElementById("qrPassInput").value === "Qq20262027") {
@@ -489,7 +485,6 @@
                 document.getElementById("unlockSection").style.display = "none";
                 document.getElementById("qrEditorBlock").style.display = "block";
                 
-                // ផ្ទុកទិន្នន័យរូបភាពចូលផ្ទាំង Preview Admin
                 document.getElementById("qrPreviewImg").src = storeQR;
                 currentRotation = qrRotation;
                 currentX = qrPosX;
@@ -501,7 +496,7 @@
             }
         }
 
-        // 🛠️ មុខងារបង្វិល ពង្រីកបង្រួម និង ចាប់អូសរូបភាព (Rotate, Zoom & Drag Gesture)
+        // 🛠️ មុខងារបង្វិល ពង្រីកបង្រួម និង ចាប់អូសរូបភាព
         let currentRotation = 0;
         let currentX = 0;
         let currentY = 0;
@@ -563,7 +558,7 @@
 
         window.addEventListener('mouseup', () => { isDragging = false; });
 
-        // ទ្រទ្រង់ការអូសលើទូរសព្ទដៃ (Touch Support)
+        // Touch Support សម្រាប់ទូរសព្ទដៃ
         frame.addEventListener('touchstart', (e) => {
             isDragging = true;
             startX = e.touches[0].clientX - currentX;
@@ -576,7 +571,6 @@
             applyZoomAndRotate();
         });
         frame.addEventListener('touchend', () => { isDragging = false; });
-
 
         function saveQRAndAccountChanges() {
             const newName = document.getElementById("editAccName").value.trim();
@@ -593,7 +587,6 @@
             qrPosX = currentX;
             qrPosY = currentY;
 
-            // រក្សាទុកកូអរដោនេ និងទិន្នន័យទាំងអស់ចូល LocalStorage
             localStorage.setItem('kpa_v1_qr', storeQR);
             localStorage.setItem('kpa_v1_qr_rotate', qrRotation);
             localStorage.setItem('kpa_v1_qr_zoom', qrZoomScale);
@@ -611,7 +604,7 @@
             "ភ្នំពេញ": ["ខណ្ឌដូនពេញ", "ខណ្ឌចំការមន", "ខណ្ឌ៧មករា", "ខណ្ឌទួលគោក", "ខណ្ឌមានជ័យ", "ខណ្ឌសែនសុខ"],
             "កណ្តាល": ["ក្រុងតាខ្មៅ", "ស្រុកកណ្តាលស្ទឹង", "ស្រុកគៀនស្វាយ", "ស្រុកអង្គស្នួល"],
             "សៀមរាប": ["ក្រុងសៀមរាប", "ស្រុកពួក", "ស្រុកសូទ្រនិគម", "ស្រុកប្រាសាទបាគង"],
-            "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកសង្កែ", "ស្រុកថ្មគោល", "ស្រុកបាណន់"]
+            "បាត់ដំបង": ["ក្រុងបាត់ដំបង", "ស្រុកសង្កែ", "ស្រ突ថ្មគោល", "ស្រុកបាណន់"]
         };
         function updateDistricts() {
             const prov = document.getElementById("provSelect").value;
@@ -715,7 +708,7 @@
             fetch(`https://api.telegram.org/sendPhoto`, {method:"POST", body:fd})
             .then(() => {
                 closeDetail();
-                showNotification(true, "🎉 បញ្ជាទិញជោគជ័យ!", "យើងនឹងពិនិត្យមើលបង្កាន់ដៃ និងទាក់ទងទៅអ្នកឆាប់ៗ។", `📦 កូដទំនិញ៖ ${actP.code}`, `👤 អ្នកទទួល៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`);
+                showNotification(true, "🎉 បញ្ជាទិញជោគជ័យ!", "យើងនឹងពិនិត្យមើលបង្កាន់ដៃ និងទាក់ទងទៅអ្នកឆាប់ៗ Laz។", `📦 កូដទំនិញ៖ ${actP.code}`, `👤 អ្នកទទួល៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`);
             }).finally(() => btn.disabled=false);
         }
 
@@ -751,7 +744,6 @@
             if(c === 'all') render(db); else render(db.filter(x => x.category === c));
         }
         
-        // រត់ Render ដំបូង
         render(db);
     </script>
 </body>
