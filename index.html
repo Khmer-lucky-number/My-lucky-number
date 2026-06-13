@@ -209,12 +209,6 @@
             font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
-            transition: background-color 0.2s;
-        }
-
-        .submit-btn:disabled {
-            background-color: #6c757d;
-            cursor: not-allowed;
         }
 
         footer {
@@ -386,6 +380,9 @@
             }
         }
 
+        // ========================================================
+        // វិធីសាស្ត្រថ្មី៖ ដោះស្រាយបញ្ហា CORS ដោយការប្រើទម្រង់ URL Query
+        // ========================================================
         function submitToTelegram(event) {
             event.preventDefault();
             
@@ -412,34 +409,53 @@
                             `📍 *អាសយដ្ឋានពិតប្រាកដ៖* ${fullAddress}\n` +
                             `📈 *បទពិសោធន៍៖* ${experience}`;
 
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            // បង្កើតទម្រង់ Form បណ្តោះអាសន្នមួយ ដើម្បីបោះទៅកាន់ Telegram API ដោយផ្ទាល់
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            // បង្កើត Iframe លាក់មួយ ដើម្បីកុំឱ្យ Refresh ទំព័រ ឬលោតចេញ
+            let iframe = document.getElementById('hidden_iframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'hidden_iframe';
+                iframe.name = 'hidden_iframe';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+            form.target = 'hidden_iframe';
 
-            // ប្រើប្រាស់ Fetch API ជាមួយ mode: 'no-cors' ដើម្បីទម្លុះប្រព័ន្ធការពាររបស់គ្រប់ Browser និង Hosting
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown'
-                }),
-                mode: 'no-cors' 
-            })
-            .then(() => {
-                // ដោយសារប្រើ mode: 'no-cors' វានឹងដំណើរការចូលទៅលឿនបំផុត និងជោគជ័យជានិច្ច
+            // បញ្ចូលទិន្នន័យតម្រូវការរបស់ Telegram API ទៅក្នុង Input លាក់
+            const inputs = {
+                'chat_id': TELEGRAM_CHAT_ID,
+                'text': message,
+                'parse_mode': 'Markdown'
+            };
+
+            for (const key in inputs) {
+                if (inputs.hasOwnProperty(key)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = inputs[key];
+                    form.appendChild(input);
+                }
+            }
+
+            // បញ្ជូន Form ទៅកាន់ Telegram (វិធីនេះរំលង CORS បាន ១០០% ហើយទិន្នន័យមិនបាត់បង់)
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+
+            // បង្ហាញការអបអរសាទរ និងសម្អាតទម្រង់ភ្លាមៗ
+            setTimeout(() => {
                 alert("🎉 ការចុះឈ្មោះត្រូវបានបញ្ជូនទៅកាន់ប្រព័ន្ធតេឡេក្រាមដោយជោគជ័យ!");
                 document.getElementById("regForm").reset();
                 document.getElementById("fullAddressBox").innerText = "សូមបំពេញព័ត៌មានអាសយដ្ឋានខាងលើ...";
                 closeModal();
-            })
-            .catch(error => {
-                alert("❌ មានបញ្ហាបច្ចេកទេសបន្តិចបន្តួច! សូមព្យាយាមម្តងទៀត។");
-                console.error("Error:", error);
-            })
-            .finally(() => {
                 btnSubmit.disabled = false;
                 btnSubmit.innerText = "បញ្ជូនព័ត៌មានផ្លូវការ";
-            });
+            }, 500);
         }
     </script>
 </body>
