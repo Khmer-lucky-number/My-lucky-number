@@ -72,7 +72,7 @@
             position: absolute; right: 15px; background: none; border: none; color: #64748b; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; height: 100%;
         }
 
-        /* 🤝 រចនាប័ទ្មថ្មី៖ ផ្ទាំងទម្រង់ចុះឈ្មោះតំណាងចែកចាយ (Distributor Modal Design) */
+        /* 🤝 ផ្ទាំងទម្រង់ចុះឈ្មោះតំណាងចែកចាយ */
         .distributor-header-box { text-align: center; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; }
         .distributor-header-box h2 { font-size: 22px; color: #0f172a; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .distributor-header-box h2 i { color: #d4af37; }
@@ -99,18 +99,23 @@
         }
         .submit-btn-gold:hover { background: #d4af37; color: #0f172a; transform: translateY(-1px); }
 
-        /* 🌟 រចនាប័ទ្មថ្មី៖ ផ្ទាំងបញ្ជាក់ជោគជ័យពណ៌មាសប្រណិត (Gold-Themed Success Popup Modal) */
+        /* 🌟 ផ្ទាំងបញ្ជាក់ជោគជ័យ/បរាជ័យ ពណ៌មាសប្រណិតលោតចុះពីលើ */
         .success-card {
             background: #fff; border-radius: 16px; padding: 40px 30px; width: 100%; max-width: 460px;
             text-align: center; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.3); border: 2px solid #d4af37;
             animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-40px); } to { opacity: 1; transform: translateY(0); } }
+        
         .success-checkmark { 
             width: 65px; height: 65px; background: #fef3c7; color: #d4af37; border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 18px auto;
             box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
         }
+        /* Style សម្រាប់ស្ថានភាព Error / បរាជ័យ */
+        .success-checkmark.error-type { background: #fee2e2; color: #dc2626; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.2); }
+        .error-border { border-color: #dc2626 !important; }
+
         .success-card h3 { font-size: 22px; color: #0f172a; margin-bottom: 8px; font-weight: 700; }
         .success-card p { font-size: 13px; color: #64748b; line-height: 1.6; margin-bottom: 20px; }
         .success-details { background: #f8fafc; border-radius: 8px; padding: 15px; text-align: left; margin: 15px 0; border: 1px solid #e2e8f0; font-size: 13px; }
@@ -126,7 +131,7 @@
         .payment-box { display: flex; align-items: center; gap: 15px; background: white; padding: 12px; border-radius: 6px; border: 1px dashed #d4af37; margin-top: 10px; }
         .qr-code-img { width: 100px; height: 100px; object-fit: contain; }
 
-        /* Admin Dashboard Dashboard Styling */
+        /* Admin Control Panel */
         .admin-search-area { background-color: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; gap: 10px; }
         .admin-editor-panel { display: none; border-top: 2px dashed #e2e8f0; padding-top: 20px; }
 
@@ -301,8 +306,8 @@
     </div>
 
     <div id="successModal" class="modal" style="background: rgba(15, 23, 42, 0.7); align-items: flex-start; padding-top: 60px;">
-        <div class="success-card">
-            <div class="success-checkmark"><i class="fa-solid fa-check"></i></div>
+        <div class="success-card" id="succCardBox">
+            <div class="success-checkmark" id="succIconBox"><i id="succIcon" class="fa-solid fa-check"></i></div>
             <h3 id="succTitle">ប្រតិបត្តិការជោគជ័យ!</h3>
             <p id="succMsg"></p>
             <div class="success-details" id="succDetailBox">
@@ -358,11 +363,16 @@
             if(p.type === "password") { p.type="text"; e.className="fa-solid fa-eye-slash"; }
             else { p.type="password"; e.className="fa-solid fa-eye"; }
         }
+        
         function verifyAdminPassword(ev) {
             ev.preventDefault();
             if(document.getElementById("adminPassInput").value === "Qq128080") {
-                closeLoginModal(); document.getElementById("adminModal").style.display="flex";
-            } else { alert("ខុសលេខសម្ងាត់!"); }
+                closeLoginModal(); 
+                document.getElementById("adminModal").style.display="flex";
+            } else { 
+                // ជំនួស alert() ដោយ ផ្ទាំង Error មាស-ក្រហម ប្រណិត
+                showNotification(false, "🔐 ផ្ទៀងផ្ទាត់បរាជ័យ!", "លេខសម្ងាត់គ្រប់គ្រងប្រព័ន្ធបច្ចេកទេសមិនត្រឹមត្រូវឡើយ។ សូមព្យាយាមម្តងទៀត!", "កំហុស៖ ខុសលេខសម្ងាត់", "សិទ្ធិចូលប្រើប្រាស់៖ ត្រូវបានបដិសេធ", "");
+            }
         }
 
         // Distributor Logic & Dynamic Address Mapping
@@ -408,13 +418,14 @@
                 body: JSON.stringify({chat_id:CHAT_ID, text:m, parse_mode:"Markdown"})
             }).then(() => {
                 closeDistributorModal();
-                showSuccess("🤝 ដាក់ពាក្យជោគជ័យ!", "ព័ត៌មានស្នើសុំធ្វើតំណាងចែកចាយរបស់អ្នកត្រូវបានបញ្ជូនទៅរដ្ឋបាលរួចរាល់។", `👤 ឈ្មោះ៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`, `📍 តំបន់ចែកចាយ៖ ${document.getElementById("provSelect").value}`);
+                showNotification(true, "🤝 ដាក់ពាក្យជោគជ័យ!", "ព័ត៌មានស្នើសុំធ្វើតំណាងចែកចាយរបស់អ្នកត្រូវបានបញ្ជូនទៅរដ្ឋបាលរួចរាល់។", `👤 ឈ្មោះ៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`, `📍 តំបន់ចែកចាយ៖ ${document.getElementById("provSelect").value}`);
             });
         }
 
         // Admin Edit Product Code
         let editIdx = null; let tempImgs = [];
         function closeAdminModal() { document.getElementById("adminModal").style.display="none"; document.getElementById("adminEditor").style.display="none"; }
+        
         function loadToEdit() {
             const code = document.getElementById("adminSearchCode").value.toUpperCase();
             const idx = db.findIndex(p => p.code === code);
@@ -426,23 +437,35 @@
                 document.getElementById("editDesc").value = p.desc;
                 tempImgs = [...p.images];
                 document.getElementById("adminEditor").style.display="block";
-            } else { alert("រកមិនឃើញកូដនេះទេ!"); }
+            } else { 
+                // ជំនួស alert() ដោយ ផ្ទាំង Error ម៉ូដប្រណិត
+                showNotification(false, "🔍 រកមិនឃើញផលិតផល!", `មិនមានទិន្នន័យផលិតផលណាដែលមានលេខកូដ "${code}" នៅក្នុងប្រព័ន្ធឡើយ។`, "កំហុស៖ រកមិនឃើញទិន្នន័យ", "សូមពិនិត្យមើល៖ លេខកូដឡើងវិញ", "");
+            }
         }
+        
         function uploadStoreQR(f) {
-            const r = new FileReader(); r.onload = (e) => { storeQR = e.target.result; localStorage.setItem('kpa_v1_qr', storeQR); render(db); alert("ប្តូរ QR ហាងជោគជ័យ!"); };
+            const r = new FileReader(); r.onload = (e) => { 
+                storeQR = e.target.result; 
+                localStorage.setItem('kpa_v1_qr', storeQR); 
+                render(db); 
+                // ជំនួស alert() ដោយផ្ទាំងម៉ូដប្រណិត
+                showNotification(true, "🏪 ធ្វើបច្ចុប្បន្នភាព KHQR!", "រូបភាពគណនីបង់ប្រាក់ KHQR របស់ហាង ត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ។", "ប្រព័ន្ធ៖ រក្សាទុកជោគជ័យ", "ស្ថានភាព៖ ដំណើរការធម្មតា", "");
+            };
             if(f.files[0]) r.readAsDataURL(f.files[0]);
         }
+        
         function processFile(f, k) {
             const r = new FileReader(); r.onload = (e) => { if(k==='main') tempImgs[0]=e.target.result; else tempImgs[k]=e.target.result; };
             if(f.files[0]) r.readAsDataURL(f.files[0]);
         }
+        
         function saveChanges() {
             db[editIdx].title = document.getElementById("editTitle").value;
             db[editIdx].price = document.getElementById("editPrice").value;
             db[editIdx].desc = document.getElementById("editDesc").value;
             db[editIdx].images = [...tempImgs];
             saveDB(); render(db); closeAdminModal();
-            showSuccess("💾 រក្សាទុកជោគជ័យ!", "ទិន្នន័យផលិតផលត្រូវបានធ្វើបច្ចុប្បន្នភាព។", `📦 កូដ៖ ${db[editIdx].code}`, `✨ ឈ្មោះ៖ ${db[editIdx].title}`, "");
+            showNotification(true, "💾 រក្សាទុកជោគជ័យ!", "ទិន្នន័យផលិតផលត្រូវបានធ្វើបច្ចុប្បន្នភាពទៅក្នុងប្រព័ន្ធផ្ទុកទិន្នន័យរួចរាល់។", `📦 កូដ៖ ${db[editIdx].code}`, `✨ ឈ្មោះ៖ ${db[editIdx].title}`, "");
         }
 
         // Shop Detail Slider & Ordering
@@ -473,20 +496,34 @@
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {method:"POST", body:fd})
             .then(() => {
                 closeDetail();
-                showSuccess("🎉 បញ្ជាទិញជោគជ័យ!", "យើងនឹងពិនិត្យនិងទាក់ទងទៅអ្នកឆាប់ៗ។", `📦 កូដទំនិញ៖ ${actP.code}`, `👤 អ្នកទទួល៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`);
+                showNotification(true, "🎉 បញ្ជាទិញជោគជ័យ!", "យើងនឹងពិនិត្យមើលបង្កាន់ដៃ និងទាក់ទងទៅអ្នកឆាប់ៗ។", `📦 កូដទំនិញ៖ ${actP.code}`, `👤 អ្នកទទួល៖ ${n}`, `📞 លេខទូរសព្ទ៖ ${t}`);
             }).finally(() => btn.disabled=false);
         }
 
-        // Success Popup Controller
-        function showSuccess(t, m, l1, l2, l3) {
-            document.getElementById("succTitle").innerText = t;
-            document.getElementById("succMsg").innerText = m;
-            document.getElementById("line1").innerHTML = l1;
-            document.getElementById("line2").innerHTML = l2;
-            document.getElementById("line3").innerHTML = l3;
-            document.getElementById("successModal").style.display="flex";
+        // 🌟 Unified Success/Error Popup Controller (ជំនួស alert ចាស់ចោលទាំងស្រុង)
+        function showNotification(isSuccess, title, msg, l1, l2, l3) {
+            const cardBox = document.getElementById("succCardBox");
+            const iconBox = document.getElementById("succIconBox");
+            const icon = document.getElementById("succIcon");
+
+            if (isSuccess) {
+                cardBox.classList.remove("error-border");
+                iconBox.classList.remove("error-type");
+                icon.className = "fa-solid fa-check";
+            } else {
+                cardBox.classList.add("error-border");
+                iconBox.classList.add("error-type");
+                icon.className = "fa-solid fa-xmark";
+            }
+
+            document.getElementById("succTitle").innerText = title;
+            document.getElementById("succMsg").innerText = msg;
+            document.getElementById("line1").innerHTML = l1 ? `<b>${l1}</b>` : "";
+            document.getElementById("line2").innerHTML = l2 ? `<b>${l2}</b>` : "";
+            document.getElementById("line3").innerHTML = l3 ? `<b>${l3}</b>` : "";
+            document.getElementById("successModal").style.display = "flex";
         }
-        function closeSuccess() { document.getElementById("successModal").style.display="none"; }
+        function closeSuccess() { document.getElementById("successModal").style.display = "none"; }
 
         function searchProducts() {
             const v = document.getElementById("searchInput").value.toLowerCase();
