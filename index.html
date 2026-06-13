@@ -273,35 +273,28 @@
         function closeModal() { modal.style.display = "none"; }
         window.onclick = function(event) { if (event.target == modal) { modal.style.display = "none"; } }
 
-        // ========================================================
-        // មុខងារផ្ញើទិន្នន័យទៅកាន់ Telegram Group ផ្ទាល់ខ្លួនរបស់អ្នក
-        // ========================================================
         function submitToTelegram(event) {
             event.preventDefault();
 
-            // ប៊ូតុងផ្ញើទិន្នន័យ (ដើម្បីការពារកុំឱ្យគេចុចទ្វេដងពេលកំពុងផ្ញើ)
             const btnSubmit = document.getElementById("btnSubmit");
             btnSubmit.disabled = true;
             btnSubmit.innerText = "កំពុងផ្ញើ...";
 
-            // ១. ដាក់ព័ត៌មាន Bot របស់អ្នកនៅទីនេះ
+            // ព័ត៌មានគណនី Telegram របស់អ្នកដែលបានបំពេញរួចរាល់
             const TELEGRAM_BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI'; 
             const TELEGRAM_CHAT_ID = '-5387523552'; 
 
-            // ២. ទាញយកតម្លៃពី Form មកបញ្ចូលគ្នាជាអត្ថបទសម្រាប់ផ្ញើ
             const name = document.getElementById("fullName").value;
             const phone = document.getElementById("phone").value;
             const location = document.getElementById("location").value;
             const experience = document.getElementById("experience").value;
 
-            // រៀបចំទម្រង់សារឱ្យមើលទៅស្អាតក្នុង Telegram
             const message = `🔔 *មានសមាជិកចុះឈ្មោះថ្មី!*\n\n` +
                             `👤 *ឈ្មោះ៖* ${name}\n` +
                             `📞 *លេខទូរសព្ទ៖* ${phone}\n` +
                             `📍 *ទីតាំង៖* ${location}\n` +
                             `💼 *បទពិសោធន៍៖* ${experience}`;
 
-            // ៣. ប្រើប្រាស់ API Fetch របស់ JavaScript ដើម្បីបាញ់ចូល Telegram
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
 
             fetch(url, {
@@ -312,16 +305,16 @@
                 body: JSON.stringify({
                     chat_id: TELEGRAM_CHAT_ID,
                     text: message,
-                    parse_mode: 'Markdown' // ធ្វើឱ្យអក្សរដិតស្អាត
+                    parse_mode: 'Markdown'
                 })
             })
             .then(response => {
                 if (response.ok) {
                     alert("🎉 ការចុះឈ្មោះបានជោគជ័យ! យើងខ្ញុំនឹងទាក់ទងទៅលោកអ្នកក្នុងពេលឆាប់ៗ។");
-                    document.getElementById("regForm").reset(); // លាងទិន្នន័យចាស់ចោល
-                    closeModal(); // បិទ Popup
+                    document.getElementById("regForm").reset();
+                    closeModal();
                 } else {
-                    alert("❌ មានបញ្ហា! សូមពិនិត្យមើលការកំណត់ Bot Token ឬ Chat ID ម្តងទៀត។");
+                    alert("❌ មានបញ្ហា! សូមពិនិត្យមើលការកំណត់ Bot ក្នុង Group របស់អ្នកម្តងទៀត។");
                 }
             })
             .catch(error => {
@@ -329,7 +322,6 @@
                 alert("❌ មិនអាចភ្ជាប់ទៅកាន់ប្រព័ន្ធបានទេ! សូមពិនិត្យអ៊ីនធឺណិតរបស់អ្នក។");
             })
             .finally(() => {
-                // បើកប៊ូតុងឱ្យដំណើរការធម្មតាវិញ
                 btnSubmit.disabled = false;
                 btnSubmit.innerText = "បញ្ជូនព័ត៌មាន";
             });
