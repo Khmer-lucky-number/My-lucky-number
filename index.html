@@ -19,7 +19,7 @@
             color: #ffffff; 
             display: flex; 
             justify-content: center; 
-            align-items: center; 
+            align-items: flex-start; 
             min-height: 100vh; 
             padding: 0;
             margin: 0;
@@ -40,35 +40,61 @@
             margin: 0 auto; 
         }
         
-        /* Desktop Layout - Full Width */
+        /* Desktop Layout - Full Width with Left Fixed, Right Scrollable */
         @media (min-width: 1024px) { 
             body { 
                 padding: 0; 
-                align-items: flex-start; 
             } 
             .container { 
                 max-width: 100%;
                 width: 100%;
-                padding: 35px 40px; 
-                border-radius: 0;
+                padding: 0;
                 min-height: 100vh;
+                border-radius: 0;
+                background: linear-gradient(180deg, #0a0a2a 0%, #12123a 100%);
             } 
             .desktop-grid { 
                 display: grid; 
-                grid-template-columns: 1fr 1.2fr; 
-                gap: 35px; 
-                align-items: start; 
-            } 
+                grid-template-columns: 380px 1fr; 
+                gap: 0;
+                align-items: start;
+                min-height: 100vh;
+            }
+            /* Left Panel - Fixed/Sticky */
             .desktop-left { 
                 display: flex; 
                 flex-direction: column; 
                 gap: 25px; 
-            } 
+                padding: 35px 25px;
+                background: rgba(10, 10, 42, 0.5);
+                backdrop-filter: blur(10px);
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow-y: auto;
+                border-right: 1px solid rgba(255,255,255,0.1);
+            }
+            /* Right Panel - Scrollable */
             .desktop-right { 
                 display: flex; 
                 flex-direction: column; 
                 gap: 25px; 
-            } 
+                padding: 35px 25px;
+                max-height: 100vh;
+                overflow-y: auto;
+            }
+            /* Custom scrollbar for right panel */
+            .desktop-right::-webkit-scrollbar {
+                width: 8px;
+            }
+            .desktop-right::-webkit-scrollbar-track {
+                background: rgba(255,255,255,0.1);
+                border-radius: 10px;
+            }
+            .desktop-right::-webkit-scrollbar-thumb {
+                background: rgba(74,222,128,0.5);
+                border-radius: 10px;
+            }
             .desktop-left .live-time-badge { 
                 display: flex; 
                 justify-content: center; 
@@ -132,6 +158,12 @@
                 background: rgba(236,72,153,0.2); 
                 transform: translateY(-2px); 
             } 
+            /* Zodiac Grid on Desktop - Keep same as mobile (3 columns) */
+            .desktop-right .zodiac-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 15px !important;
+            }
             .desktop-bet-title { 
                 font-size: 1rem; 
             } 
@@ -398,7 +430,7 @@
             } 
         }
         
-        /* Rest of the styles remain the same as original */
+        /* Rest of the styles remain the same */
         .container.hide { display: none; }
         .back-btn { background: rgba(255,255,255,0.1); border: none; padding: 8px 16px; border-radius: 40px; color: white; cursor: pointer; margin-bottom: 20px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; }
         .top-controls { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -614,7 +646,7 @@
             </div>
             <div style="overflow-x: auto; max-height: 400px; overflow-y: auto;">
                 <table class="bets-table" id="adminBetsTable">
-                    <thead><tr><th>#</th><th>📅 កាលបរិច្ឆេទ</th><th>🎯 ឆ្នាំភ្នាល់</th><th>💰 ចំនួនទឹកប្រាក់</th><th>⏰ ម៉ោងគោលដៅ</th><th>📊 ស្ថានភាព</th><th>🏆 រង្វាន់</th><th>📝 លទ្ធផល</th></tr></thead>
+                    <thead><tr><th>#</th><th>📅 កាលបរិច្ឆេទ</th><th>🎯 ឆ្នាំភ្នាល់</th><th>💰 ចំនួនទឹកប្រាក់</th><th>⏰ ម៉ោងគោលដៅ</th><th>📊 ស្ថានភាព</th><th>🏆 រង្វាន់</th><th>📝 លទ្ធផល</th><tr></thead>
                     <tbody id="adminBetsTableBody"></tbody>
                 </table>
             </div>
@@ -637,7 +669,7 @@
 <div class="modal" id="adminHistoryModal"><div class="modal-content"><div class="modal-title">📜 ប្រវត្តិបញ្ចូលលុយរបស់ Admin</div><div class="history-modal-list" id="adminHistoryList"></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminHistoryModal">បិទ</button></div></div></div>
 
 <script>
-    // Full JavaScript code from previous version - kept intact
+    // Full JavaScript code from previous version - kept intact (same as before)
     const SECRET_PIN = "Qq2026";
     const ADMIN_PIN = "Qq1280";
     let currentBalance = 0, depositHistory = [], betHistory = [], selectedZodiac = "", currentAction = "", pendingBetAmount = 0, pendingZodiac = "", pendingAdminAction = "", soundEnabled = true, audioContext = null, currentLang = "km", rewardMultiplier = 10;
@@ -826,7 +858,7 @@
         if(summaryTotalLosses) summaryTotalLosses.innerHTML='$'+totalLossesAmt.toFixed(2);
         if(summaryTotalRewards) summaryTotalRewards.innerHTML='$'+totalRewards.toFixed(2);
         let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}NonNull<td style="font-size:0.65rem">${b.date}NonNull<td>${b.picked}NonNull<td>$${b.amount.toFixed(2)}NonNull<td>${formatHour(b.targetHour)}NonNull<td class="${statusClass}">${statusText}NonNull<td class="${statusClass}">${rewardText}NonNull<td style="font-size:0.65rem">${resultText}NonNull</tr>`;});
-        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យNonNull<tr>';
+        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យNonNull</table>';
         const adminBetsTableBody = document.getElementById('adminBetsTableBody');
         if(adminBetsTableBody) adminBetsTableBody.innerHTML=html;
     }
