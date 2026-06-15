@@ -6,7 +6,7 @@
     <title>1212ហាងលក់ផលិតផលខ្មែរ v2.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* ========== ALL EXISTING STYLES (KEPT) ========== */
+        /* ========== ALL STYLES ========== */
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kantumruy Pro', sans-serif; }
@@ -336,7 +336,7 @@
         </div>
     </div>
 
-    <!-- Admin Modal (condensed for brevity - same as before) -->
+    <!-- Admin Modal -->
     <div id="adminModal" class="modal">
         <div class="modal-content" style="max-width: 850px;">
             <span class="close-btn" onclick="closeAdminModal()">&times;</span>
@@ -787,7 +787,541 @@
         function escapeHtml(text) { if (!text) return ''; const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
         function searchProducts() { renderProducts(); }
         
-        // Distributor Functions with COMPLETE PROVINCES
+        // Detail Modal
+        function openDetail(idx) { 
+            const allProducts = getProductDisplayList(); 
+            actP = allProducts[idx]; 
+            curS = 0; 
+            incrementView(actP.id);
+            document.getElementById("detailCode").innerText = `កូដ៖ ${actP.code}`; 
+            document.getElementById("detailTitle").innerText = actP.title; 
+            const discountPercent = getDiscountPercent(actP.originalPrice, actP.price);
+            document.getElementById("detailPriceContainer").innerHTML = `<div class="price-container">${actP.originalPrice ? `<span class="original-price">$${actP.originalPrice.toFixed(2)}</span>` : ''}<span class="current-price">$${actP.price.toFixed(2)}</span>${discountPercent ? `<span class="discount-percent">សន្សំ ${discountPercent}%</span>` : ''}</div>`; 
+            document.getElementById("detailShipping").innerHTML = formatShipping(actP.shippingFee);
+            document.getElementById("detailDesc").innerText = actP.desc; 
+            document.getElementById("detailStats").innerHTML = `<div class="stat-item like-btn" onclick="toggleLike('${actP.id}')"><i class="fa-regular fa-heart"></i> ${actP.likes || 0}</div><div class="stat-item"><i class="fa-regular fa-eye"></i> ${actP.views || 0}</div>`; 
+            const w = document.getElementById("sliderWrap"); 
+            if (w) { 
+                w.innerHTML = ""; 
+                actP.images.forEach(img => w.innerHTML += `<img src="${img}" style="width:100%; height:100%; object-fit:contain; flex-shrink:0; background:#fff;">`); 
+            } 
+            updateS(); 
+            document.getElementById("detailModal").style.display = "flex"; 
+        }
+        
+        function closeDetail() { document.getElementById("detailModal").style.display = "none"; }
+        function moveSlide(d) { curS += d; if(curS >= actP.images.length) curS = 0; if(curS < 0) curS = actP.images.length - 1; updateS(); }
+        function updateS() { const wrap = document.getElementById("sliderWrap"); if (wrap) wrap.style.transform = `translateX(-${curS * 100}%)`; }
+        
+        // Order Submit
+        function submitOrder(event) {
+            event.preventDefault();
+            const btn = document.getElementById("orderSubmitBtn");
+            btn.disabled = true;
+            btn.innerHTML = "⏳ កំពុងដំណើរការ...";
+            
+            const name = document.getElementById("orderName").value;
+            const tel = document.getElementById("orderTel").value;
+            const address = document.getElementById("orderAddr").value;
+            const shippingCompany = document.getElementById("orderShippingCompany").value;
+            const receiptFile = document.getElementById("orderReceipt").files[0];
+            
+            if (!receiptFile) { showErrorToast("សូមភ្ជាប់រូបភាពបង្កាន់ដៃ!"); btn.disabled=false; btn.innerHTML="✅ យល់ព្រមទិញ"; return; }
+            if (!shippingCompany) { showErrorToast("សូមជ្រើសរើសក្រុមហ៊ុនដឹកជញ្ជូន!"); btn.disabled=false; btn.innerHTML="✅ យល់ព្រមទិញ"; return; }
+            if (!actP) { showErrorToast("សូមជ្រើសរើសផលិតផលម្តងទៀត!"); btn.disabled=false; btn.innerHTML="✅ យល់ព្រមទិញ"; return; }
+            
+            const caption = `🛍️ *កម្ម៉ង់ថ្មី*\n\n📦 កូដ: ${actP.code}\n🏷️ ឈ្មោះ: ${actP.title}\n💰 តម្លៃ: $${actP.price}\n🚚 ក្រុមហ៊ុនដឹក: ${shippingCompany}\n\n👤 ឈ្មោះអតិថិជន: ${name}\n📞 លេខទូរសព្ទ: ${tel}\n📍 អាសយដ្ឋាន: ${address}\n\n*សូមពិនិត្យមើលបង្កាន់ដៃបង់ប្រាក់ខាងលើ*`;
+            const formData = new FormData();
+            formData.append("chat_id", CHAT_ID);
+            formData.append("photo", receiptFile);
+            formData.append("caption", caption);
+            formData.append("parse_mode", "Markdown");
+            
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    closeDetail();
+                    document.getElementById("orderForm").reset();
+                    showSuccessToast("🛍️ ការបញ្ជាទិញរបស់អ្នកត្រូវបានផ្ញើរួចរាល់!", "fa-cart-shopping");
+                } else throw new Error();
+            })
+            .catch(() => showErrorToast("មានបញ្ហា! សូមព្យាយាមម្តងទៀត"))
+            .finally(() => { btn.disabled=false; btn.innerHTML="✅ យល់ព្រមទិញ"; });
+        }
+        
+        // Admin Functions
+        function switchAdminTab(index) { 
+            document.querySelectorAll('.admin-tab-pane').forEach((p, i) => p.classList.toggle('active', i === index)); 
+            document.querySelectorAll('.admin-tab-btn').forEach((b, i) => b.classList.toggle('active', i === index)); 
+        }
+        
+        function openLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
+        function closeLoginModal() { document.getElementById("loginModal").style.display = "none"; document.getElementById("adminPassInput").value = ""; }
+        function togglePass(id, iconId) { const p = document.getElementById(id), e = document.getElementById(iconId); if(p.type === "password") { p.type="text"; e.className="fa-solid fa-eye-slash"; } else { p.type="password"; e.className="fa-solid fa-eye"; } }
+        function verifyAdminPassword(e) { 
+            e.preventDefault(); 
+            if(document.getElementById("adminPassInput").value === "Qq128080") { 
+                closeLoginModal(); 
+                document.getElementById("productAlbumSelect").innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+                document.getElementById("quickEditAlbum").innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+                renderIconGrid();
+                renderAlbumList();
+                renderProductsListForDelete();
+                document.getElementById("adminModal").style.display = "flex"; 
+                showSuccessToast("ចូលប្រព័ន្ធគ្រប់គ្រងជោគជ័យ!", "fa-unlock-alt"); 
+            } else showErrorToast("លេខសម្ងាត់មិនត្រឹមត្រូវ!"); 
+        }
+        function closeAdminModal() { document.getElementById("adminModal").style.display = "none"; }
+        
+        // Add New Product Functions
+        function previewMainImage(input) { 
+            const preview = document.getElementById('mainImagePreview'); 
+            preview.innerHTML = ''; 
+            if (input.files && input.files[0]) { 
+                const reader = new FileReader(); 
+                reader.onload = e => { 
+                    mainImageData = e.target.result; 
+                    preview.innerHTML = `<div class="image-preview-item"><img src="${mainImageData}"></div>`; 
+                    document.getElementById('mainProductImageUrl').value = ''; 
+                }; 
+                reader.readAsDataURL(input.files[0]); 
+            } 
+        }
+        
+        function addAdditionalImageField() { 
+            if (additionalImageCount >= 9) { showWarningToast("អ្នកអាចបញ្ចូលរូបភាពបានតែ 9 ប៉ុណ្ណោះ!"); return; } 
+            const container = document.getElementById('additionalImagesContainer'); 
+            const idx = additionalImageCount; 
+            const div = document.createElement('div'); 
+            div.className = 'image-input-row'; 
+            div.style.marginBottom = '10px'; 
+            div.innerHTML = `<input type="file" class="additional-img" accept="image/*" onchange="previewAdditionalImage(this, ${idx})"><input type="text" class="additional-img-url" placeholder="ឬ URL" style="margin-top:5px;"><button type="button" onclick="removeAdditionalImageField(this, ${idx})" style="background:#dc2626; color:white; border:none; border-radius:4px; padding:4px 8px; margin-top:5px;">លុប</button>`; 
+            container.appendChild(div); 
+            additionalImageCount++; 
+        }
+        
+        function previewAdditionalImage(input, idx) { 
+            if (input.files && input.files[0]) { 
+                const reader = new FileReader(); 
+                reader.onload = e => { 
+                    if (!additionalImages[idx]) additionalImages[idx] = {}; 
+                    additionalImages[idx].file = e.target.result; 
+                    updateAdditionalPreview(); 
+                    const urlInput = input.parentElement.querySelector('.additional-img-url'); 
+                    if (urlInput) urlInput.value = ''; 
+                }; 
+                reader.readAsDataURL(input.files[0]); 
+            } 
+        }
+        
+        function updateAdditionalPreview() { 
+            const preview = document.getElementById('additionalImagesPreview'); 
+            preview.innerHTML = ''; 
+            for (let i = 0; i < additionalImageCount; i++) { 
+                const imgData = additionalImages[i]; 
+                const urlInput = document.querySelector(`#additionalImagesContainer .image-input-row:nth-child(${i+1}) .additional-img-url`); 
+                const urlValue = urlInput ? urlInput.value : ''; 
+                if (imgData && imgData.file) { 
+                    const div = document.createElement('div'); 
+                    div.className = 'image-preview-item'; 
+                    div.innerHTML = `<img src="${imgData.file}"><div class="remove-img" onclick="removeAdditionalImage(${i})">×</div>`; 
+                    preview.appendChild(div); 
+                } else if (urlValue) { 
+                    const div = document.createElement('div'); 
+                    div.className = 'image-preview-item'; 
+                    div.innerHTML = `<img src="${urlValue}"><div class="remove-img" onclick="removeAdditionalImageUrl(${i})">×</div>`; 
+                    preview.appendChild(div); 
+                } 
+            } 
+        }
+        
+        function removeAdditionalImage(idx) { 
+            additionalImages[idx] = null; 
+            const fileInput = document.querySelector(`#additionalImagesContainer .image-input-row:nth-child(${idx+1}) input[type="file"]`); 
+            if (fileInput) fileInput.value = ''; 
+            updateAdditionalPreview(); 
+        }
+        
+        function addNewProductWithLoading(e) { 
+            e.preventDefault();
+            const title = document.getElementById('newProductTitle').value;
+            const price = document.getElementById('newProductPrice').value;
+            if (!title || !price) {
+                showErrorToast("សូមបំពេញព័ត៌មានចាំបាច់!");
+                return;
+            }
+            
+            showLoadingBar(() => {
+                const albumId = document.getElementById('productAlbumSelect').value, 
+                      originalPrice = document.getElementById('newOriginalPrice').value ? parseFloat(document.getElementById('newOriginalPrice').value) : null, 
+                      priceVal = parseFloat(price), 
+                      shippingFee = document.getElementById('newShippingFee').value || '0', 
+                      likes = parseInt(document.getElementById('newProductLikes').value) || 0, 
+                      views = parseInt(document.getElementById('newProductViews').value) || 0, 
+                      desc = document.getElementById('newProductDesc').value, 
+                      category = document.getElementById('newProductCategory').value; 
+                
+                let mainImage = mainImageData; 
+                const mainImageUrl = document.getElementById('mainProductImageUrl').value; 
+                if (mainImageUrl && !mainImage) mainImage = mainImageUrl; 
+                if (!mainImage) { 
+                    showErrorToast("សូមបញ្ចូលរូបភាពដើម!"); 
+                    return; 
+                } 
+                
+                let images = [mainImage]; 
+                for (let i = 0; i < additionalImageCount; i++) { 
+                    const imgData = additionalImages[i]; 
+                    const urlInput = document.querySelector(`#additionalImagesContainer .image-input-row:nth-child(${i+1}) .additional-img-url`); 
+                    const urlValue = urlInput ? urlInput.value : ''; 
+                    if (imgData && imgData.file) images.push(imgData.file); 
+                    else if (urlValue) images.push(urlValue); 
+                } 
+                
+                const newCode = `KP-${String(Date.now()).slice(-6)}`; 
+                const newProduct = { 
+                    id: Date.now(), 
+                    albumId, 
+                    category, 
+                    code: newCode, 
+                    title, 
+                    originalPrice, 
+                    price: priceVal, 
+                    shippingFee: shippingFee.toString(), 
+                    desc, 
+                    images, 
+                    likes, 
+                    views 
+                }; 
+                db.push(newProduct); 
+                saveAllData(); 
+                
+                document.getElementById('addProductForm').reset(); 
+                mainImageData = null; 
+                additionalImages = []; 
+                additionalImageCount = 0; 
+                document.getElementById('mainImagePreview').innerHTML = ''; 
+                document.getElementById('additionalImagesContainer').innerHTML = ''; 
+                document.getElementById('additionalImagesPreview').innerHTML = ''; 
+                
+                renderAlbumTabs(); 
+                renderProducts(); 
+                renderProductsListForDelete(); 
+                
+                showSuccessToast(`✅ បង្ហោះផលិតផល "${title}" ជោគជ័យ!`, "fa-cloud-upload-alt");
+            });
+        }
+        
+        // Album Functions
+        const ICON_LIST = ['🌾','🍲','🏺','🧣','🎁','🎨','📚','🥘','☕','🍚','🛍️','💎','🧵','👘','🖼️','🏮','🧺','⚱️','🥥','🍊'];
+        function renderIconGrid(selected = '🌾') { 
+            const container = document.getElementById('albumIconGrid'); 
+            if (!container) return; 
+            container.innerHTML = ICON_LIST.map(icon => `<div class="icon-option ${selected === icon ? 'selected' : ''}" data-icon="${icon}" onclick="selectAlbumIcon('${icon}')">${icon}</div>`).join(''); 
+        }
+        function selectAlbumIcon(icon) { 
+            document.getElementById('newAlbumIcon').value = icon; 
+            document.querySelectorAll('.icon-option').forEach(el => el.classList.remove('selected')); 
+            document.querySelector(`.icon-option[data-icon="${icon}"]`).classList.add('selected'); 
+        }
+        function renderAlbumList() { 
+            const container = document.getElementById('albumListDisplay'); 
+            if (albums.length === 0) { container.innerHTML = '<p>មិនទាន់មាន Album</p>'; return; } 
+            container.innerHTML = '<h4>📁 បញ្ជី Album</h4>'; 
+            albums.forEach(album => { 
+                const count = getProductDisplayList().filter(p => p.albumId === album.id).length; 
+                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:#f8fafc; border-radius:12px; margin-bottom:10px;"><div>${album.icon} <strong>${album.name}</strong> (${count} ផលិតផល)</div><div><button class="admin-btn" style="padding:5px 12px; background:#dc2626;" onclick="deleteAlbum('${album.id}')"><i class="fa-solid fa-trash"></i> លុប</button></div></div>`; 
+            }); 
+        }
+        function createNewAlbum(e) { 
+            e.preventDefault(); 
+            const name = document.getElementById('newAlbumName').value, icon = document.getElementById('newAlbumIcon').value; 
+            albums.push({ id: 'album_' + Date.now(), name, icon }); 
+            saveAllData(); 
+            document.getElementById('createAlbumForm').reset(); 
+            renderIconGrid(); 
+            renderAlbumList(); 
+            renderAlbumTabs(); 
+            document.getElementById('productAlbumSelect').innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+            document.getElementById('quickEditAlbum').innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+            showSuccessToast(`📁 បង្កើត Album "${name}" ជោគជ័យ!`, "fa-folder-plus"); 
+        }
+        function deleteAlbum(albumId) { 
+            if (confirm('លុប Album នេះ?')) { 
+                albums = albums.filter(a => a.id !== albumId); 
+                saveAllData(); 
+                renderAlbumList(); 
+                renderAlbumTabs(); 
+                document.getElementById('productAlbumSelect').innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+                document.getElementById('quickEditAlbum').innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+                showSuccessToast("🗑️ លុប Album ជោគជ័យ!", "fa-trash-alt"); 
+            } 
+        }
+        
+        // Edit Product Functions
+        function loadToEdit() { 
+            const code = document.getElementById("adminSearchCode").value.toUpperCase(); 
+            const idx = db.findIndex(p => p.code === code); 
+            if(idx !== -1) { 
+                editIdx = idx; 
+                const p = db[idx]; 
+                document.getElementById("editingCode").innerText = p.code; 
+                document.getElementById("editTitle").value = p.title; 
+                document.getElementById("editOriginalPrice").value = p.originalPrice || ''; 
+                document.getElementById("editPrice").value = p.price; 
+                document.getElementById("editShippingFee").value = p.shippingFee || '0'; 
+                document.getElementById("editLikes").value = p.likes || 0; 
+                document.getElementById("editViews").value = p.views || 0; 
+                document.getElementById("editDesc").value = p.desc; 
+                document.getElementById("editCategory").value = p.category; 
+                tempImgs = [...p.images]; 
+                document.getElementById("adminEditor").style.display = "block"; 
+            } else { 
+                showErrorToast(`រកមិនឃើញកូដ "${code}"`); 
+            } 
+        }
+        function processFile(f, k) { 
+            const r = new FileReader(); 
+            r.onload = (e) => { if(k==='main') tempImgs[0]=e.target.result; else tempImgs[k]=e.target.result; }; 
+            if(f.files[0]) r.readAsDataURL(f.files[0]); 
+        }
+        function saveChanges() { 
+            if (editIdx === null) return; 
+            db[editIdx].title = document.getElementById("editTitle").value; 
+            db[editIdx].originalPrice = document.getElementById("editOriginalPrice").value ? parseFloat(document.getElementById("editOriginalPrice").value) : null; 
+            db[editIdx].price = parseFloat(document.getElementById("editPrice").value); 
+            db[editIdx].shippingFee = document.getElementById("editShippingFee").value || '0'; 
+            db[editIdx].likes = parseInt(document.getElementById("editLikes").value) || 0; 
+            db[editIdx].views = parseInt(document.getElementById("editViews").value) || 0; 
+            db[editIdx].desc = document.getElementById("editDesc").value; 
+            db[editIdx].category = document.getElementById("editCategory").value; 
+            db[editIdx].images = [...tempImgs]; 
+            saveAllData(); 
+            renderProducts(); 
+            document.getElementById("adminEditor").style.display = "none"; 
+            document.getElementById("adminSearchCode").value = ""; 
+            showSuccessToast(`✏️ កែសម្រួលផលិតផល "${db[editIdx].title}" ជោគជ័យ!`, "fa-edit"); 
+        }
+        
+        // Delete/Edit Product Functions
+        let productToDelete = null;
+        function renderProductsListForDelete() { 
+            const container = document.getElementById('productsListContainer'); 
+            const allProducts = getProductDisplayList(); 
+            if (allProducts.length === 0) { container.innerHTML = '<p>មិនទាន់មានផលិតផល</p>'; return; } 
+            container.innerHTML = ''; 
+            allProducts.forEach(p => { 
+                const album = albums.find(a => a.id === p.albumId); 
+                container.innerHTML += `<div class="product-list-item">
+                    <div class="product-list-info">
+                        <div class="product-list-code">${p.code}</div>
+                        <div class="product-list-title">${escapeHtml(p.title)} ${album ? `(${album.icon} ${album.name})` : ''}</div>
+                    </div>
+                    <div>
+                        <button class="edit-product-btn" onclick="openEditFromDelete('${p.id}')"><i class="fa-solid fa-pen"></i> កែ</button>
+                        <button class="delete-product-btn" onclick="deleteProductById('${p.id}')"><i class="fa-solid fa-trash"></i> លុប</button>
+                    </div>
+                </div>`; 
+            }); 
+        }
+        
+        function searchProductForDelete() { 
+            const code = document.getElementById('deleteSearchCode').value.toUpperCase(); 
+            const product = db.find(p => p.code === code); 
+            const resultDiv = document.getElementById('deleteProductResult'); 
+            if (!product) { showErrorToast(`រកមិនឃើញកូដ "${code}"`); resultDiv.style.display = 'none'; return; } 
+            productToDelete = product; 
+            document.getElementById('deleteProductCode').innerText = product.code; 
+            document.getElementById('deleteProductTitle').innerText = product.title; 
+            resultDiv.style.display = 'block'; 
+        }
+        
+        function confirmDeleteProduct() { 
+            if (!productToDelete) return; 
+            if (confirm(`លុប "${productToDelete.title}"?`)) { 
+                deleteProductById(productToDelete.id); 
+                document.getElementById('deleteProductResult').style.display = 'none'; 
+                document.getElementById('deleteSearchCode').value = ''; 
+                productToDelete = null; 
+            } 
+        }
+        
+        function deleteProductById(pid) { 
+            db = db.filter(p => p.id != pid); 
+            saveAllData(); 
+            renderProducts(); 
+            renderAlbumTabs(); 
+            renderProductsListForDelete(); 
+            showSuccessToast("🗑️ លុបផលិតផលជោគជ័យ!", "fa-trash-alt"); 
+        }
+        
+        function openEditFromDelete(pid) { 
+            const product = db.find(p => p.id == pid); 
+            if (!product) return; 
+            editFromDeleteProduct = product; 
+            document.getElementById('quickEditCode').value = product.code; 
+            document.getElementById('quickEditTitle').value = product.title; 
+            document.getElementById('quickEditOriginalPrice').value = product.originalPrice || ''; 
+            document.getElementById('quickEditPrice').value = product.price; 
+            document.getElementById('quickEditShippingFee').value = product.shippingFee || '0'; 
+            document.getElementById('quickEditLikes').value = product.likes || 0; 
+            document.getElementById('quickEditViews').value = product.views || 0; 
+            document.getElementById('quickEditDesc').value = product.desc; 
+            document.getElementById('quickEditCategory').value = product.category; 
+            document.getElementById('quickEditAlbum').innerHTML = albums.map(a => `<option value="${a.id}" ${product.albumId === a.id ? 'selected' : ''}>${a.icon} ${a.name}</option>`).join(''); 
+            quickEditMainImage = product.images[0]; 
+            document.getElementById('quickEditMainPreview').innerHTML = `<div class="image-preview-item"><img src="${quickEditMainImage}"></div>`; 
+            quickEditAdditionalImages = product.images.slice(1) || []; 
+            updateQuickEditAdditionalPreview(); 
+            document.getElementById('quickEditModal').style.display = 'flex'; 
+        }
+        
+        function updateQuickEditAdditionalPreview() { 
+            const preview = document.getElementById('quickEditAdditionalPreview'); 
+            preview.innerHTML = ''; 
+            (quickEditAdditionalImages || []).forEach((img, idx) => { 
+                if (img) { 
+                    const div = document.createElement('div'); 
+                    div.className = 'image-preview-item'; 
+                    div.innerHTML = `<img src="${img}"><div class="remove-img" onclick="removeQuickEditImage(${idx})">×</div>`; 
+                    preview.appendChild(div); 
+                } 
+            }); 
+        }
+        
+        function removeQuickEditImage(idx) { 
+            quickEditAdditionalImages.splice(idx, 1); 
+            updateQuickEditAdditionalPreview(); 
+        }
+        
+        function previewQuickEditMainImage(input) { 
+            if (input.files && input.files[0]) { 
+                const reader = new FileReader(); 
+                reader.onload = e => { 
+                    quickEditMainImage = e.target.result; 
+                    document.getElementById('quickEditMainPreview').innerHTML = `<div class="image-preview-item"><img src="${quickEditMainImage}"></div>`; 
+                }; 
+                reader.readAsDataURL(input.files[0]); 
+            } 
+        }
+        
+        function addQuickEditAdditionalImage() { 
+            const container = document.getElementById('quickEditAdditionalContainer'); 
+            const div = document.createElement('div'); 
+            div.className = 'image-input-row'; 
+            div.style.marginBottom = '10px'; 
+            div.innerHTML = `<input type="file" class="quickEditAdditionalImg" accept="image/*" onchange="previewQuickEditAdditionalImage(this)"><input type="text" class="quickEditAdditionalUrl" placeholder="ឬ URL" style="margin-top:5px;"><button type="button" onclick="removeQuickEditAdditionalField(this)" style="background:#dc2626; color:white; border:none; border-radius:4px; padding:4px 8px; margin-top:5px;">លុប</button>`; 
+            container.appendChild(div); 
+        }
+        
+        function previewQuickEditAdditionalImage(input) { 
+            if (input.files && input.files[0]) { 
+                const reader = new FileReader(); 
+                reader.onload = e => { 
+                    if (!quickEditAdditionalImages) quickEditAdditionalImages = []; 
+                    quickEditAdditionalImages.push(e.target.result); 
+                    updateQuickEditAdditionalPreview(); 
+                    const urlInput = input.parentElement.querySelector('.quickEditAdditionalUrl'); 
+                    if (urlInput) urlInput.value = ''; 
+                    input.value = ''; 
+                    input.parentElement.remove(); 
+                }; 
+                reader.readAsDataURL(input.files[0]); 
+            } 
+        }
+        
+        function removeQuickEditAdditionalField(btn) { 
+            btn.parentElement.remove(); 
+        }
+        
+        function saveQuickEdit() { 
+            if (!editFromDeleteProduct) return; 
+            const idx = db.findIndex(p => p.id === editFromDeleteProduct.id); 
+            if (idx === -1) return; 
+            let allImages = [quickEditMainImage]; 
+            if (quickEditAdditionalImages) allImages.push(...quickEditAdditionalImages); 
+            const urlInputs = document.querySelectorAll('#quickEditAdditionalContainer .quickEditAdditionalUrl'); 
+            urlInputs.forEach(inp => { if (inp.value) allImages.push(inp.value); }); 
+            db[idx].title = document.getElementById('quickEditTitle').value; 
+            db[idx].originalPrice = document.getElementById('quickEditOriginalPrice').value ? parseFloat(document.getElementById('quickEditOriginalPrice').value) : null; 
+            db[idx].price = parseFloat(document.getElementById('quickEditPrice').value); 
+            db[idx].shippingFee = document.getElementById('quickEditShippingFee').value || '0'; 
+            db[idx].likes = parseInt(document.getElementById('quickEditLikes').value) || 0; 
+            db[idx].views = parseInt(document.getElementById('quickEditViews').value) || 0; 
+            db[idx].desc = document.getElementById('quickEditDesc').value; 
+            db[idx].category = document.getElementById('quickEditCategory').value; 
+            db[idx].albumId = document.getElementById('quickEditAlbum').value; 
+            db[idx].images = allImages.filter(img => img); 
+            saveAllData(); 
+            renderProducts(); 
+            renderAlbumTabs(); 
+            renderProductsListForDelete(); 
+            showSuccessToast(`✏️ កែសម្រួលផលិតផល "${db[idx].title}" ជោគជ័យ!`, "fa-edit"); 
+            closeQuickEditModal(); 
+        }
+        
+        function closeQuickEditModal() { 
+            document.getElementById('quickEditModal').style.display = 'none'; 
+            editFromDeleteProduct = null; 
+            quickEditMainImage = null; 
+            quickEditAdditionalImages = []; 
+            document.getElementById('quickEditAdditionalContainer').innerHTML = ''; 
+        }
+        
+        // QR Editor Functions
+        function previewQRFile(input) { 
+            if (input.files && input.files[0]) { 
+                const reader = new FileReader(); 
+                reader.onload = e => { 
+                    document.getElementById("qrPreviewImg").src = e.target.result; 
+                    resetPositions(); 
+                }; 
+                reader.readAsDataURL(input.files[0]); 
+            } 
+        }
+        function adjustRotation(deg) { currentRotation = (currentRotation + deg) % 360; applyZoomAndRotate(); }
+        function resetPositions() { currentRotation = 0; currentX = 0; currentY = 0; document.getElementById("qrZoomSlider").value = 100; applyZoomAndRotate(); }
+        function applyZoomAndRotate() { 
+            const zoomVal = document.getElementById("qrZoomSlider").value; 
+            document.getElementById("zoomValLabel").innerText = zoomVal + "%"; 
+            const scale = zoomVal / 100; 
+            const img = document.getElementById("qrPreviewImg"); 
+            if (img) { 
+                img.style.transform = `rotate(${currentRotation}deg) scale(${scale})`; 
+                img.style.left = currentX + 'px'; 
+                img.style.top = currentY + 'px'; 
+            } 
+        }
+        function saveQRChanges() { 
+            const newName = document.getElementById("editAccName").value.trim(); 
+            const newNumber = document.getElementById("editAccNumber").value.trim(); 
+            const previewSrc = document.getElementById("qrPreviewImg").src; 
+            const zoomVal = document.getElementById("qrZoomSlider").value; 
+            if (newName) accountName = `គណនី៖ ${newName}`; 
+            if (newNumber) accountNumber = `លេខគណនី៖ ${newNumber}`; 
+            if (previewSrc && previewSrc !== window.location.href) storeQR = previewSrc; 
+            qrRotation = currentRotation; 
+            qrZoomScale = zoomVal / 100; 
+            qrPosX = currentX; 
+            qrPosY = currentY; 
+            saveAllData(); 
+            renderProducts(); 
+            showSuccessToast("📱 រក្សាទុក QR Code ជោគជ័យ!", "fa-qrcode"); 
+        }
+        
+        // Setup QR drag
+        const frame = document.getElementById("previewFrame");
+        if (frame) {
+            frame.addEventListener('mousedown', (e) => { isDragging = true; dragStartX = e.clientX - currentX; dragStartY = e.clientY - currentY; });
+            window.addEventListener('mousemove', (e) => { if (!isDragging) return; currentX = e.clientX - dragStartX; currentY = e.clientY - dragStartY; applyZoomAndRotate(); });
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            frame.addEventListener('touchstart', (e) => { isDragging = true; dragStartX = e.touches[0].clientX - currentX; dragStartY = e.touches[0].clientY - currentY; });
+            frame.addEventListener('touchmove', (e) => { if (!isDragging) return; currentX = e.touches[0].clientX - dragStartX; currentY = e.touches[0].clientY - dragStartY; applyZoomAndRotate(); });
+            frame.addEventListener('touchend', () => { isDragging = false; });
+        }
+        
+        // Distributor Functions
         function updateDistricts() { 
             const prov = document.getElementById("provSelect").value; 
             const dist = document.getElementById("distSelect"); 
@@ -828,22 +1362,17 @@
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({chat_id:CHAT_ID, text:m, parse_mode:"Markdown"}) }).then(() => { closeDistributorModal(); showSuccessToast("🤝 ចុះឈ្មោះតំណាងចែកចាយជោគជ័យ!", "fa-handshake"); }).catch(() => showErrorToast("មានបញ្ហា! សូមព្យាយាមម្តងទៀត")); 
         }
         
-        // ========== REST OF THE FUNCTIONS (SAME AS BEFORE) ==========
-        // [The remaining functions (openLoginModal, closeLoginModal, togglePass, verifyAdminPassword, 
-        // switchAdminTab, previewMainImage, addAdditionalImageField, previewAdditionalImage, 
-        // updateAdditionalPreview, removeAdditionalImage, addNewProductWithLoading, 
-        // renderIconGrid, selectAlbumIcon, renderAlbumList, createNewAlbum, deleteAlbum,
-        // loadToEdit, processFile, saveChanges, renderProductsListForDelete, searchProductForDelete,
-        // confirmDeleteProduct, deleteProductById, openEditFromDelete, updateQuickEditAdditionalPreview,
-        // removeQuickEditImage, previewQuickEditMainImage, addQuickEditAdditionalImage,
-        // previewQuickEditAdditionalImage, removeQuickEditAdditionalField, saveQuickEdit,
-        // closeQuickEditModal, previewQRFile, adjustRotation, resetPositions, applyZoomAndRotate,
-        // saveQRChanges, openDetail, closeDetail, moveSlide, updateS, submitOrder] 
-        // remain exactly the same as in the previous version...]
-        
-        // For brevity, I'll note that all the previously working functions remain unchanged
-        // The key addition is the COMPLETE districtMap with all provinces and districts
-        
+        // Initialize
+        function init() { 
+            renderAlbumTabs(); 
+            renderProducts(); 
+            document.getElementById("productAlbumSelect").innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+            document.getElementById("quickEditAlbum").innerHTML = albums.map(a => `<option value="${a.id}">${a.icon} ${a.name}</option>`).join('');
+            renderIconGrid(); 
+            renderAlbumList(); 
+            renderProductsListForDelete(); 
+        }
+        init();
     </script>
 </body>
 </html>
