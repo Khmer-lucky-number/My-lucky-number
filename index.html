@@ -23,6 +23,7 @@
             min-height: 100vh; 
             padding: 0;
             margin: 0;
+            overflow: hidden; /* Prevent body scroll when resizing */
         }
         
         /* Main Container - Full Width Responsive */
@@ -44,6 +45,7 @@
         @media (min-width: 1024px) { 
             body { 
                 padding: 0; 
+                overflow: auto;
             } 
             .container { 
                 max-width: 100%;
@@ -54,13 +56,12 @@
                 background: linear-gradient(180deg, #0a0a2a 0%, #12123a 100%);
             } 
             .desktop-grid { 
-                display: grid; 
-                grid-template-columns: 480px 1fr;
-                gap: 0;
-                align-items: start;
+                display: flex; /* Use flex for easier resize */
+                align-items: stretch;
                 min-height: 100vh;
+                position: relative;
             }
-            /* Left Panel - Fixed/Sticky */
+            /* Left Panel - Resizable */
             .desktop-left { 
                 display: flex; 
                 flex-direction: column; 
@@ -68,11 +69,43 @@
                 padding: 30px 25px;
                 background: rgba(10, 10, 42, 0.5);
                 backdrop-filter: blur(10px);
-                position: sticky;
-                top: 0;
+                position: relative;
                 height: 100vh;
                 overflow-y: auto;
                 border-right: 1px solid rgba(255,255,255,0.1);
+                width: 520px; /* Default width */
+                min-width: 320px;
+                max-width: 800px;
+                transition: width 0.1s ease;
+                flex-shrink: 0;
+            }
+            /* Resize Handle */
+            .resize-handle {
+                position: absolute;
+                top: 0;
+                right: -5px;
+                width: 10px;
+                height: 100%;
+                cursor: ew-resize;
+                background: rgba(74,222,128,0);
+                z-index: 100;
+                transition: background 0.2s;
+            }
+            .resize-handle:hover {
+                background: rgba(74,222,128,0.5);
+            }
+            .resize-handle:active {
+                background: rgba(74,222,128,0.8);
+            }
+            /* Right Panel - Takes remaining space */
+            .desktop-right { 
+                display: flex; 
+                flex-direction: column; 
+                gap: 25px; 
+                padding: 30px 30px; 
+                height: 100vh;
+                overflow-y: auto;
+                flex: 1;
             }
             /* Custom scrollbar for left panel */
             .desktop-left::-webkit-scrollbar {
@@ -85,15 +118,6 @@
             .desktop-left::-webkit-scrollbar-thumb {
                 background: rgba(74,222,128,0.3);
                 border-radius: 10px;
-            }
-            /* Right Panel - Scrollable */
-            .desktop-right { 
-                display: flex; 
-                flex-direction: column; 
-                gap: 25px; 
-                padding: 30px 30px; 
-                max-height: 100vh;
-                overflow-y: auto;
             }
             /* Custom scrollbar for right panel */
             .desktop-right::-webkit-scrollbar {
@@ -246,9 +270,6 @@
             .mobile-only { 
                 display: none; 
             } 
-            .desktop-grid { 
-                display: grid; 
-            }
         }
         
         /* Tablet Layout */
@@ -625,7 +646,7 @@
         <div class="law-text" id="lawText"><p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p><p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p><p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p><p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p><p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p><p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p></div>
     </div>
     <!-- Desktop Layout -->
-    <div class="desktop-grid"><div class="desktop-left"><div class="top-controls"><button class="top-btn" id="soundToggleBtnDesktop">🔊 <span id="soundTextDesktop">បិទសំឡេង</span></button><button class="top-btn" id="langToggleBtnDesktop">🌐 <span id="langTextDesktop">ភាសាខ្មែរ</span></button></div><div class="main-title" id="mainTitleDesktop">ឆ្នាំសំណាងទាំង 12 🎁🎉</div><div class="sub-title" id="subTitleDesktop">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div><div class="live-time-badge" id="liveClockDesktop">📅 --/--/---- | ⏰ --:--:--</div><div class="balance-card"><div class="floating-money"><div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div><div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div></div><div class="balance-inner"><div class="balance-label" id="balanceLabelDesktop">សមតុល្យទឹកប្រាក់របស់អ្នក</div><div class="balance-amount">$<span id="userBalanceDesktop">0.00</span></div></div></div><div class="info-badge" id="infoBadgeDesktop">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div><div class="section-indicator" id="currentHourTextDesktop">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div><div class="lucky-circle" id="luckyNumberDesktop">?</div><div class="countdown-box" id="countdownBoxDesktop"><span id="countdownTextDesktop">លទ្ធផលបន្ទាប់ចេញក្នុង៖ </span><span class="countdown-time" id="countdownTimerDesktop">--:--</span></div></div><div class="desktop-right"><div class="zodiac-single-box"><div class="zodiac-title" id="zodiacTitleDesktop">🗓️ តារាងឆ្នាំសំណាងទាំង ១២ (ចុចជ្រើសរើស)</div><div class="zodiac-grid" id="zodiacGridDesktop"></div></div><div class="desktop-bet-section"><div class="desktop-bet-title">💰 បញ្ចូលទឹកប្រាក់ដើម្បីទស្សន៍ទាយ</div><div class="desktop-selected-zodiac" id="desktopSelectedZodiac"><span>⭐ ឆ្នាំដែលបានជ្រើសរើស៖</span><span id="selectedZodiacName">មិនទាន់ជ្រើសរើស</span></div><div class="desktop-bet-input"><input type="number" class="bet-input-field" id="desktopBetAmount" placeholder="បញ្ចូលចំនួនទឹកប្រាក់" min="0.01" step="0.01" value="0"></div><div class="desktop-bet-shortcuts"><button class="desktop-bet-shortcut" data-amount="1">$1</button><button class="desktop-bet-shortcut" data-amount="5">$5</button><button class="desktop-bet-shortcut" data-amount="10">$10</button><button class="desktop-bet-shortcut" data-amount="20">$20</button><button class="desktop-bet-shortcut" data-amount="50">$50</button></div><div class="desktop-preview-box"><div class="desktop-preview-row"><span class="desktop-preview-label">ទឹកប្រាក់បច្ចុប្បន្ន:</span><span class="desktop-preview-value" id="desktopPreCurrent">$0.00</span></div><div class="desktop-preview-row"><span class="desktop-preview-label">ត្រូវកាត់:</span><span class="desktop-preview-value negative" id="desktopPreCost">$0.00</span></div><div class="desktop-preview-row"><span class="desktop-preview-label">នៅសល់:</span><span class="desktop-preview-value" id="desktopPreRemain">$0.00</span></div></div><button class="desktop-bet-confirm" id="desktopConfirmBetBtn">✅ យល់ព្រមទស្សន៍ទាយ</button></div><div class="history-wrapper"><div class="history-header"><div class="tabs"><button class="tab active" data-tab="result" id="tabResultDesktop">លទ្ធផលម៉ោង</button><button class="tab" data-tab="deposit" id="tabDepositDesktop">ប្រវត្តិបញ្ចូលលុយ</button><button class="tab" data-tab="bet" id="tabBetDesktop">ប្រវត្តិទស្សន៍ទាយ</button></div><button class="toggle-history" id="toggleHistoryBtnDesktop">👁️ លាក់</button></div><div class="history-box" id="historyBoxDesktop"><div id="resultTabDesktop"><div id="scheduleListDesktop"></div></div><div id="depositTabDesktop" style="display:none;"><div id="depositListDesktop"></div></div><div id="betTabDesktop" style="display:none;"><div id="betListDesktop"></div></div></div></div><button class="admin-panel-btn" id="adminPanelBtnDesktop">🔧 ផ្ទាំងគ្រប់គ្រង</button><div class="player-actions"><button class="player-btn" id="playerLawBtnDesktop">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button><button class="player-btn" id="playerTelegramBtnDesktop">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button></div><div class="law-text" id="lawTextDesktop"><p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p><p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p><p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p><p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p><p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p><p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p></div></div></div>
+    <div class="desktop-grid"><div class="desktop-left" id="desktopLeftPanel"><div class="top-controls"><button class="top-btn" id="soundToggleBtnDesktop">🔊 <span id="soundTextDesktop">បិទសំឡេង</span></button><button class="top-btn" id="langToggleBtnDesktop">🌐 <span id="langTextDesktop">ភាសាខ្មែរ</span></button></div><div class="main-title" id="mainTitleDesktop">ឆ្នាំសំណាងទាំង 12 🎁🎉</div><div class="sub-title" id="subTitleDesktop">ប្រព័ន្ធទស្សន៍ទាយ 24 ម៉ោង</div><div class="live-time-badge" id="liveClockDesktop">📅 --/--/---- | ⏰ --:--:--</div><div class="balance-card"><div class="floating-money"><div class="money-note">💵</div><div class="money-note">💰</div><div class="money-note">💶</div><div class="money-note">💷</div><div class="money-note">💴</div><div class="money-note">💸</div><div class="money-note">🪙</div></div><div class="balance-inner"><div class="balance-label" id="balanceLabelDesktop">សមតុល្យទឹកប្រាក់របស់អ្នក</div><div class="balance-amount">$<span id="userBalanceDesktop">0.00</span></div></div></div><div class="info-badge" id="infoBadgeDesktop">⏰ ការចាក់ទស្សន៍ទាយនៅម៉ោងណាមួយ នឹងត្រូវចាក់សម្រាប់ម៉ោងបន្ទាប់! លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</div><div class="section-indicator" id="currentHourTextDesktop">🔮 ឆ្នាំសំណាងបច្ចុប្បន្ន៖</div><div class="lucky-circle" id="luckyNumberDesktop">?</div><div class="countdown-box" id="countdownBoxDesktop"><span id="countdownTextDesktop">លទ្ធផលបន្ទាប់ចេញក្នុង៖ </span><span class="countdown-time" id="countdownTimerDesktop">--:--</span></div><div class="resize-handle" id="resizeHandle"></div></div><div class="desktop-right"><div class="zodiac-single-box"><div class="zodiac-title" id="zodiacTitleDesktop">🗓️ តារាងឆ្នាំសំណាងទាំង ១២ (ចុចជ្រើសរើស)</div><div class="zodiac-grid" id="zodiacGridDesktop"></div></div><div class="desktop-bet-section"><div class="desktop-bet-title">💰 បញ្ចូលទឹកប្រាក់ដើម្បីទស្សន៍ទាយ</div><div class="desktop-selected-zodiac" id="desktopSelectedZodiac"><span>⭐ ឆ្នាំដែលបានជ្រើសរើស៖</span><span id="selectedZodiacName">មិនទាន់ជ្រើសរើស</span></div><div class="desktop-bet-input"><input type="number" class="bet-input-field" id="desktopBetAmount" placeholder="បញ្ចូលចំនួនទឹកប្រាក់" min="0.01" step="0.01" value="0"></div><div class="desktop-bet-shortcuts"><button class="desktop-bet-shortcut" data-amount="1">$1</button><button class="desktop-bet-shortcut" data-amount="5">$5</button><button class="desktop-bet-shortcut" data-amount="10">$10</button><button class="desktop-bet-shortcut" data-amount="20">$20</button><button class="desktop-bet-shortcut" data-amount="50">$50</button></div><div class="desktop-preview-box"><div class="desktop-preview-row"><span class="desktop-preview-label">ទឹកប្រាក់បច្ចុប្បន្ន:</span><span class="desktop-preview-value" id="desktopPreCurrent">$0.00</span></div><div class="desktop-preview-row"><span class="desktop-preview-label">ត្រូវកាត់:</span><span class="desktop-preview-value negative" id="desktopPreCost">$0.00</span></div><div class="desktop-preview-row"><span class="desktop-preview-label">នៅសល់:</span><span class="desktop-preview-value" id="desktopPreRemain">$0.00</span></div></div><button class="desktop-bet-confirm" id="desktopConfirmBetBtn">✅ យល់ព្រមទស្សន៍ទាយ</button></div><div class="history-wrapper"><div class="history-header"><div class="tabs"><button class="tab active" data-tab="result" id="tabResultDesktop">លទ្ធផលម៉ោង</button><button class="tab" data-tab="deposit" id="tabDepositDesktop">ប្រវត្តិបញ្ចូលលុយ</button><button class="tab" data-tab="bet" id="tabBetDesktop">ប្រវត្តិទស្សន៍ទាយ</button></div><button class="toggle-history" id="toggleHistoryBtnDesktop">👁️ លាក់</button></div><div class="history-box" id="historyBoxDesktop"><div id="resultTabDesktop"><div id="scheduleListDesktop"></div></div><div id="depositTabDesktop" style="display:none;"><div id="depositListDesktop"></div></div><div id="betTabDesktop" style="display:none;"><div id="betListDesktop"></div></div></div></div><button class="admin-panel-btn" id="adminPanelBtnDesktop">🔧 ផ្ទាំងគ្រប់គ្រង</button><div class="player-actions"><button class="player-btn" id="playerLawBtnDesktop">📜 អានច្បាប់ និងលក្ខខណ្ឌ</button><button class="player-btn" id="playerTelegramBtnDesktop">📱 ទំនាក់ទំនងអ្នកគ្រប់គ្រង</button></div><div class="law-text" id="lawTextDesktop"><p>📜 <strong>ច្បាប់ និងលក្ខខណ្ឌ</strong></p><p>1. ការទស្សន៍ទាយនីមួយៗត្រូវចំណាយទឹកប្រាក់តាមការកំណត់</p><p>2. ប្រសិនបើទស្សន៍ទាយត្រូវ អ្នកនឹងទទួលបានរង្វាន់ x10 នៃទឹកប្រាក់ដែលបានភ្នាល់</p><p>3. លទ្ធផលនឹងចេញភ្លាមៗនៅពេលដល់ម៉ោងគោលដៅ</p><p>4. ការសម្រេចចិត្តទាំងអស់គឺស្ថិតនៅលើប្រព័ន្ធ</p><p>5. សូមអាន និងយល់ច្បាស់មុនពេលចាប់ផ្តើមទស្សន៍ទាយ</p></div></div></div>
 </div>
 
 <!-- Admin Panel - 3 Columns Layout -->
@@ -678,7 +699,7 @@
             </div>
             <div style="overflow-x: auto; max-height: 400px; overflow-y: auto;">
                 <table class="bets-table" id="adminBetsTable">
-                    <thead><tr><th>#</th><th>📅 កាលបរិច្ឆេទ</th><th>🎯 ឆ្នាំភ្នាល់</th><th>💰 ចំនួនទឹកប្រាក់</th><th>⏰ ម៉ោងគោលដៅ</th><th>📊 ស្ថានភាព</th><th>🏆 រង្វាន់</th><th>📝 លទ្ធផល</th></td></thead>
+                    <thead><tr><th>#</th><th>📅 កាលបរិច្ឆេទ</th><th>🎯 ឆ្នាំភ្នាល់</th><th>💰 ចំនួនទឹកប្រាក់</th><th>⏰ ម៉ោងគោលដៅ</th><th>📊 ស្ថានភាព</th><th>🏆 រង្វាន់</th><th>📝 លទ្ធផល</th></tr></thead>
                     <tbody id="adminBetsTableBody"></tbody>
                 </table>
             </div>
@@ -701,6 +722,44 @@
 <div class="modal" id="adminHistoryModal"><div class="modal-content"><div class="modal-title">📜 ប្រវត្តិបញ្ចូលលុយរបស់ Admin</div><div class="history-modal-list" id="adminHistoryList"></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminHistoryModal">បិទ</button></div></div></div>
 
 <script>
+    // ==================== RESIZE FUNCTIONALITY ====================
+    (function() {
+        const leftPanel = document.getElementById('desktopLeftPanel');
+        const resizeHandle = document.getElementById('resizeHandle');
+        if (!leftPanel || !resizeHandle) return;
+        
+        let isResizing = false;
+        let startX = 0;
+        let startWidth = 0;
+        
+        resizeHandle.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            startX = e.clientX;
+            startWidth = leftPanel.offsetWidth;
+            document.body.style.cursor = 'ew-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+        
+        window.addEventListener('mousemove', function(e) {
+            if (!isResizing) return;
+            const dx = e.clientX - startX;
+            let newWidth = startWidth + dx;
+            // Min width 320px, Max width 800px
+            newWidth = Math.min(800, Math.max(320, newWidth));
+            leftPanel.style.width = newWidth + 'px';
+        });
+        
+        window.addEventListener('mouseup', function() {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+    })();
+    
+    // ==================== ORIGINAL SCRIPT (Preserved) ====================
     const SECRET_PIN = "Qq2026";
     const ADMIN_PIN = "Qq1280";
     let currentBalance = 0, depositHistory = [], betHistory = [], selectedZodiac = "", currentAction = "", pendingBetAmount = 0, pendingZodiac = "", pendingAdminAction = "", soundEnabled = true, audioContext = null, currentLang = "km", rewardMultiplier = 10;
@@ -888,8 +947,8 @@
         if(summaryTotalWins) summaryTotalWins.innerHTML='$'+totalWinsAmt.toFixed(2);
         if(summaryTotalLosses) summaryTotalLosses.innerHTML='$'+totalLossesAmt.toFixed(2);
         if(summaryTotalRewards) summaryTotalRewards.innerHTML='$'+totalRewards.toFixed(2);
-        let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}NonNull<td style="font-size:0.65rem">${b.date}NonNull<td>${b.picked}NonNull<td>$${b.amount.toFixed(2)}NonNull<td>${formatHour(b.targetHour)}NonNull<td class="${statusClass}">${statusText}NonNull<td class="${statusClass}">${rewardText}NonNull<td style="font-size:0.65rem">${resultText}NonNull<tr>`;});
-        if(!filtered.length)html='<tr><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យNonNull<tr>';
+        let html="";filtered.slice(0,100).forEach((b,idx)=>{let statusClass=b.status==='win'?'status-win':(b.status==='lose'?'status-lose':'status-pending'),statusText=b.status==='win'?'ឈ្នះ':(b.status==='lose'?'ចាញ់':'កំពុងរង់ចាំ'),rewardText=b.status==='win'?`+$${(b.reward||0).toFixed(2)}`:(b.status==='lose'?`-$${b.amount.toFixed(2)}`:'--'),resultText=b.resultZodiac||(b.status==='pending'?'កំពុងរង់ចាំ':'--');html+=`<tr><td>${idx+1}NonNull<td style="font-size:0.65rem">${b.date}NonNull<td>${b.picked}NonNull<td>$${b.amount.toFixed(2)}NonNull<td>${formatHour(b.targetHour)}NonNull<td class="${statusClass}">${statusText}NonNull<td class="${statusClass}">${rewardText}NonNull<td style="font-size:0.65rem">${resultText}NonNull</tr>`;});
+        if(!filtered.length)html='<td><td colspan="8" style="text-align:center;padding:20px">គ្មានទិន្នន័យNonNull</tr>';
         const adminBetsTableBody = document.getElementById('adminBetsTableBody');
         if(adminBetsTableBody) adminBetsTableBody.innerHTML=html;
     }
@@ -1169,7 +1228,7 @@
             const dg = document.querySelector('.desktop-grid');
             const mo = document.querySelector('.mobile-only');
             if(window.innerWidth>=1024){
-                if(dg) dg.style.display='grid';
+                if(dg) dg.style.display='flex';
                 if(mo) mo.style.display='none';
             }else if(window.innerWidth>=768 && window.innerWidth<=1023){
                 if(dg) dg.style.display='flex';
