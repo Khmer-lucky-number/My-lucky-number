@@ -3,144 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ប្រព័ន្ធគ្រប់គ្រង និងចុះឈ្មោះសមាជិក</title>
+    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក និងអាជីវកម្មអនឡាញ</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { font-family: 'Kantumruy Pro', sans-serif; }
+        body { font-family: 'Kantumruy Pro', sans-serif; bg-gradient-to-br from-slate-50 to-slate-100; }
+        .glass-effect { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-slate-50 min-h-screen text-slate-800">
 
-    <nav class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">ក្រុមហ៊ុនយើងខ្ញុំ</h1>
-            <div class="space-x-4">
-                <button onclick="showSection('register-sec')" class="hover:underline font-semibold">ចុះឈ្មោះយក ID</button>
-                <button onclick="showSection('job-sec')" class="hover:underline font-semibold">ជ្រើសរើសបុគ្គលិក</button>
-                <button onclick="showSection('shop-sec')" class="hover:underline font-semibold">ហាងទំនិញ</button>
+    <nav class="glass-effect sticky top-0 z-50 border-b border-slate-200/80 shadow-sm transition-all duration-300">
+        <div class="container mx-auto max-w-6xl px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md shadow-blue-500/20">
+                    <i class="fa-solid fa-cubes text-xl"></i>
+                </div>
+                <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">SmartPortal</span>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-1">
+                <button onclick="showSection('register-sec')" class="nav-btn px-4 py-2 rounded-lg font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200">
+                    <i class="fa-solid fa-id-card mr-1 text-blue-500"></i> ចុះឈ្មោះយក ID
+                </button>
+                <button onclick="showSection('job-sec')" class="nav-btn px-4 py-2 rounded-lg font-medium text-slate-600 hover:text-orange-600 hover:bg-orange-50 transition-all duration-200">
+                    <i class="fa-solid fa-briefcase mr-1 text-orange-500"></i> ជ្រើសរើសបុគ្គលិក
+                </button>
+                <button onclick="showSection('shop-sec')" class="nav-btn px-4 py-2 rounded-lg font-medium text-slate-600 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-200">
+                    <i class="fa-solid fa-store mr-1 text-emerald-500"></i> ហាងទំនិញ
+                </button>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto p-6 max-w-3xl">
+    <header class="relative bg-slate-900 text-white overflow-hidden py-16 md:py-24">
+        <div class="absolute inset-0 opacity-25 mix-blend-multiply">
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80" alt="Banner" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-indigo-950/80"></div>
+        
+        <div class="container mx-auto max-w-4xl px-4 relative z-10 text-center">
+            <span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase">ស្វាគមន៍មកកាន់ប្រព័ន្ធគ្រប់គ្រងសេវាកម្ម</span>
+            <h1 class="text-3xl md:text-5xl font-bold mt-4 leading-tight">ស្វែងរកការងារ ចុះឈ្មោះសមាជិក <br>និង បង្ហោះលក់ទំនិញងាយៗ</h1>
+            <p class="text-slate-300 mt-4 text-base md:text-lg max-w-2xl mx-auto font-light">រាល់ព័ត៌មានដែលអ្នកបានបំពេញ នឹងត្រូវបញ្ជូនទៅកាន់ក្រុមការងារក្នុង Telegram ភ្លាមៗប្រកបដោយសុវត្ថិភាព។</p>
+            
+            <div class="mt-8 flex flex-wrap justify-center gap-3 md:hidden">
+                <button onclick="showSection('register-sec')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"><i class="fa-solid fa-id-card"></i> ចុះឈ្មោះ</button>
+                <button onclick="showSection('job-sec')" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium"><i class="fa-solid fa-briefcase"></i> ដាក់ការងារ</button>
+                <button onclick="showSection('shop-sec')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium"><i class="fa-solid fa-store"></i> ហាង</button>
+            </div>
+        </div>
+    </header>
 
-        <section id="register-sec" class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-bold text-blue-600 mb-6 border-b pb-2">១. ទម្រង់ចុះឈ្មោះដើម្បីទទួលបានលេខ ID</h2>
-            <form id="regForm" onsubmit="submitToTelegram(event, 'ចុះឈ្មោះយក ID')">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <main class="container mx-auto p-4 md:p-6 max-w-4xl -mt-10 relative z-20">
+
+        <section id="register-sec" class="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-100 overflow-hidden transform transition-all duration-300">
+            <div class="md:flex">
+                <div class="md:w-1/3 bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 text-white/10 text-9xl"><i class="fa-solid fa-id-card"></i></div>
                     <div>
-                        <label class="block text-gray-700 font-medium">ឈ្មោះពេញ</label>
-                        <input type="text" id="reg-name" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-400 outline-none">
+                        <h3 class="text-2xl font-bold mb-2">ចុះឈ្មោះសមាជិក</h3>
+                        <p class="text-blue-100 text-sm font-light leading-relaxed">បំពេញព័ត៌មានខាងស្តាំ ដើម្បីទទួលបានលេខសម្គាល់ ID ផ្លូវការសម្រាប់ប្រើប្រាស់ក្នុងប្រព័ន្ធ។</p>
                     </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">អាយុ</label>
-                        <input type="number" id="reg-age" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-400 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">មុខរបរ</label>
-                        <input type="text" id="reg-job" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-400 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">លេខទូរស័ព្ទ / Telegram Username</label>
-                        <input type="text" id="reg-contact" placeholder="@username ឬ 012345..." required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-400 outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-gray-700 font-medium">អាសយដ្ឋាន / ទីលំនៅបច្ចុប្បន្ន</label>
-                        <textarea id="reg-address" rows="2" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-blue-400 outline-none"></textarea>
+                    <div class="mt-8 md:mt-0 space-y-3">
+                        <div class="flex items-center text-sm text-blue-100"><i class="fa-solid fa-bolt mr-2 text-yellow-400"></i> បង្កើត ID ជូនភ្លាមៗ</div>
+                        <div class="flex items-center text-sm text-blue-100"><i class="fa-solid fa-shield-check mr-2 text-emerald-400"></i> ព័ត៌មានសុវត្ថិភាព</div>
                     </div>
                 </div>
-                <button type="submit" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded transition duration-200">
-                    ផ្ញើទិន្នន័យ និងបង្កើត ID
-                </button>
-            </form>
-            <div id="id-display" class="hidden mt-4 p-4 bg-green-100 text-green-800 rounded text-center font-bold"></div>
+                
+                <div class="md:w-2/3 p-6 md:p-8">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center"><i class="fa-solid fa-pen-to-square text-blue-600 mr-2"></i> ទម្រង់ចុះឈ្មោះទូទៅ</h2>
+                    <form id="regForm" onsubmit="submitToTelegram(event, 'ចុះឈ្មោះយក ID')" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">ឈ្មោះពេញ <span class="text-red-500">*</span></label>
+                                <input type="text" id="reg-name" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">អាយុ <span class="text-red-500">*</span></label>
+                                <input type="number" id="reg-age" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">មុខរបរបច្ចុប្បន្ន <span class="text-red-500">*</span></label>
+                                <input type="text" id="reg-job" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">លេខទូរស័ព្ទ / Telegram <span class="text-red-500">*</span></label>
+                                <input type="text" id="reg-contact" placeholder="@username ឬ លេខទូរស័ព្ទ" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-slate-600 text-sm font-medium">អាសយដ្ឋាន / ទីលំនៅបច្ចុប្បន្ន <span class="text-red-500">*</span></label>
+                                <textarea id="reg-address" rows="2" placeholder="ផ្ទះលេខ, ផ្លូវ, សង្កាត់/ឃុំ, ខណ្ឌ/ស្រុក, ខេត្ត/ក្រុង..." required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold p-3 rounded-xl shadow-md shadow-blue-500/20 transition duration-200 flex justify-center items-center">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> ផ្ញើទិន្នន័យ និងបង្កើត ID
+                        </button>
+                    </form>
+                    <div id="id-display" class="hidden mt-4 p-4 border border-emerald-200 bg-emerald-50 text-emerald-800 rounded-xl text-center font-semibold shadow-inner animate-pulse"></div>
+                </div>
+            </div>
         </section>
 
 
-        <section id="job-sec" class="bg-white p-6 rounded-lg shadow-md mb-8 hidden">
-            <h2 class="text-2xl font-bold text-orange-600 mb-6 border-b pb-2">២. ដាក់ពាក្យបម្រើការងារ (Recruitment)</h2>
-            <form id="jobForm" onsubmit="submitToTelegram(event, 'ដាក់ពាក្យធ្វើការ')">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <section id="job-sec" class="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-100 overflow-hidden transform transition-all duration-300 hidden">
+            <div class="md:flex">
+                <div class="md:w-1/3 bg-gradient-to-br from-orange-500 to-red-600 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 text-white/10 text-9xl"><i class="fa-solid fa-user-tie"></i></div>
                     <div>
-                        <label class="block text-gray-700 font-medium">ឈ្មោះពេញ</label>
-                        <input type="text" id="job-name" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-orange-400 outline-none">
+                        <h3 class="text-2xl font-bold mb-2">ឱកាសការងារ</h3>
+                        <p class="text-orange-100 text-sm font-light leading-relaxed">យើងកំពុងស្វែងរកដៃគូ និងបុគ្គលិកឆ្នើមដើម្បីពង្រីកអាជីវកម្មបន្ថែម។ ដាក់ពាក្យឥឡូវនេះ!</p>
                     </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">តួនាទីចង់ដាក់ពាក្យ</label>
-                        <select id="job-position" class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-orange-400 outline-none">
-                            <option>បុគ្គលិកផ្នែកលក់ (Sales)</option>
-                            <option>អ្នកដឹកជញ្ជូន (Delivery)</option>
-                            <option>គណនេយ្យ (Accounting)</option>
-                            <option>រដ្ឋបាល (Admin)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">អាយុ</label>
-                        <input type="number" id="job-age" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-orange-400 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">លេខទូរស័ព្ទ / Telegram</label>
-                        <input type="text" id="job-contact" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-orange-400 outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-gray-700 font-medium">ប្រវត្តិរូបសង្ខេប ឬ បទពិសោធន៍ការងារ</label>
-                        <textarea id="job-exp" rows="3" placeholder="រៀបរាប់ពីបទពិសោធន៍របស់អ្នកសង្ខេប..." required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-orange-400 outline-none"></textarea>
+                    <div class="mt-8 md:mt-0 space-y-2 text-sm text-orange-100">
+                        <div><i class="fa-solid fa-circle-check mr-1 text-yellow-300"></i> ពិនិត្យប្រវត្តិរូបរហ័ស</div>
+                        <div><i class="fa-solid fa-circle-check mr-1 text-yellow-300"></i> បរិយាកាសការងារល្អ</div>
                     </div>
                 </div>
-                <button type="submit" class="w-full mt-4 bg-orange-500 hover:bg-orange-600 text-white font-bold p-3 rounded transition duration-200">
-                    ដាក់ពាក្យភ្លាមៗ
-                </button>
-            </form>
+                
+                <div class="md:w-2/3 p-6 md:p-8">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center"><i class="fa-solid fa-briefcase text-orange-500 mr-2"></i> ដាក់ពាក្យបម្រើការងារ (Recruitment)</h2>
+                    <form id="jobForm" onsubmit="submitToTelegram(event, 'ដាក់ពាក្យធ្វើការ')" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">ឈ្មោះពេញ <span class="text-red-500">*</span></label>
+                                <input type="text" id="job-name" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">តួនាទីចង់ដាក់ពាក្យ <span class="text-red-500">*</span></label>
+                                <select id="job-position" class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 bg-white focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all">
+                                    <option>បុគ្គលិកផ្នែកលក់ (Sales Executive)</option>
+                                    <option>អ្នកដឹកជញ្ជូនរហ័ស (Delivery)</option>
+                                    <option>គណនេយ្យករ (Accountant)</option>
+                                    <option>អ្នកគ្រប់គ្រងទូទៅ (Admin Manager)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">អាយុ <span class="text-red-500">*</span></label>
+                                <input type="number" id="job-age" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">លេខទូរស័ព្ទ / Telegram <span class="text-red-500">*</span></label>
+                                <input type="text" id="job-contact" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-slate-600 text-sm font-medium">ប្រវត្តិរូបសង្ខេប ឬ បទពិសោធន៍ការងារ <span class="text-red-500">*</span></label>
+                                <textarea id="job-exp" rows="3" placeholder="រៀបរាប់ពីប្រវត្តិសិក្សា ឬបទពិសោធន៍ការងាររបស់អ្នកសង្ខេប..." required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold p-3 rounded-xl shadow-md shadow-orange-500/20 transition duration-200 flex justify-center items-center">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> បញ្ជូនពាក្យសុំធ្វើការ
+                        </button>
+                    </form>
+                </div>
+            </div>
         </section>
 
 
-        <section id="shop-sec" class="bg-white p-6 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold text-green-600 mb-6 border-b pb-2">៣. បង្ហោះលក់ផលិតផលផ្ទាល់ខ្លួន</h2>
-            <form id="shopForm" onsubmit="submitToTelegram(event, 'បង្ហោះលក់ទំនិញ')">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <section id="shop-sec" class="bg-white rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-100 overflow-hidden transform transition-all duration-300 hidden">
+            <div class="md:flex">
+                <div class="md:w-1/3 bg-gradient-to-br from-emerald-500 to-teal-600 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 text-white/10 text-9xl"><i class="fa-solid fa-basket-shopping"></i></div>
                     <div>
-                        <label class="block text-gray-700 font-medium">ឈ្មោះអ្នកលក់</label>
-                        <input type="text" id="shop-seller" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-green-400 outline-none">
+                        <h3 class="text-2xl font-bold mb-2">ទីផ្សារអនឡាញ</h3>
+                        <p class="text-emerald-100 text-sm font-light leading-relaxed">មានទំនិញចង់លក់មែនទេ? បង្ហោះនៅទីនេះ ព័ត៌មានទំនិញនឹងត្រូវផ្សព្វផ្សាយចូលគ្រុបភ្លាមៗ។</p>
                     </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">លេខទូរស័ព្ទ</label>
-                        <input type="text" id="shop-contact" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-green-400 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">ឈ្មោះទំនិញ/ផលិតផល</label>
-                        <input type="text" id="shop-item" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-green-400 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 font-medium">តម្លៃ ($)</label>
-                        <input type="text" id="shop-price" placeholder="ឧទហរណ៍៖ $15" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-green-400 outline-none">
-                    </div>
-                    <div class="md:col-span-2">
-                        <label class="block text-gray-700 font-medium">ព័ត៌មានលម្អិតពីទំនិញ</label>
-                        <textarea id="shop-desc" rows="3" required class="w-full p-2 border rounded mt-1 focus:ring-2 focus:ring-green-400 outline-none"></textarea>
+                    <div class="mt-8 md:mt-0 space-y-2 text-sm text-emerald-100">
+                        <div><i class="fa-solid fa-tags mr-1 text-yellow-300"></i> លក់ដាច់បានលឿន</div>
+                        <div><i class="fa-solid fa-users mr-1 text-yellow-300"></i> ដល់អតិថិជនចំគោលដៅ</div>
                     </div>
                 </div>
-                <button type="submit" class="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold p-3 rounded transition duration-200">
-                    បង្ហោះលក់ទៅក្នុងគ្រុប
-                </button>
-            </form>
+                
+                <div class="md:w-2/3 p-6 md:p-8">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center"><i class="fa-solid fa-store text-emerald-600 mr-2"></i> បង្ហោះលក់ផលិតផលផ្ទាល់ខ្លួន</h2>
+                    <form id="shopForm" onsubmit="submitToTelegram(event, 'បង្ហោះលក់ទំនិញ')" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">ឈ្មោះអ្នកលក់ <span class="text-red-500">*</span></label>
+                                <input type="text" id="shop-seller" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">លេខទូរស័ព្ទទំនាក់ទំនង <span class="text-red-500">*</span></label>
+                                <input type="text" id="shop-contact" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">ឈ្មោះទំនិញ / ផលិតផល <span class="text-red-500">*</span></label>
+                                <input type="text" id="shop-item" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-slate-600 text-sm font-medium">តម្លៃទំនិញ ($) <span class="text-red-500">*</span></label>
+                                <input type="text" id="shop-price" placeholder="ឧទាហរណ៍៖ $25 ឬ ចរចា" required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-slate-600 text-sm font-medium">ព័ត៌មានលម្អិតពីទំនិញ <span class="text-red-500">*</span></label>
+                                <textarea id="shop-desc" rows="3" placeholder="ពណ៌នាពីស្ថានភាពទំនិញ ពណ៌ ទំហំ ឬមុខងារ..." required class="w-full p-2.5 border border-slate-200 rounded-xl mt-1 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold p-3 rounded-xl shadow-md shadow-emerald-500/20 transition duration-200 flex justify-center items-center">
+                            <i class="fa-solid fa-bullhorn mr-2"></i> បង្ហោះលក់ទៅក្នុងគ្រុបភ្លាមៗ
+                        </button>
+                    </form>
+                </div>
+            </div>
         </section>
 
-    </div>
+    </main>
+
+    <footer class="text-center py-8 text-slate-400 text-sm">
+        <p>© 2026 SmartPortal. រក្សាសិទ្ធិគ្រប់យ៉ាង។</p>
+    </footer>
 
     <script>
-        // បញ្ចូលព័ត៌មាន Bot របស់អ្នកដែលបានផ្តល់ជូន
+        // កូដសម្ងាត់ដែលអ្នកបានផ្តល់ជូន
         const TELEGRAM_BOT_TOKEN = '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI';
         const TELEGRAM_CHAT_ID = '-5387523552';
 
-        // មុខងារប្តូរ Menu មើលតាមផ្នែក
         // មុខងារប្តូរ Menu មើលតាមផ្នែក
         function showSection(sectionId) {
             document.getElementById('register-sec').classList.add('hidden');
             document.getElementById('job-sec').classList.add('hidden');
             document.getElementById('shop-sec').classList.add('hidden');
             
-            document.getElementById(sectionId).classList.remove('hidden');
+            const target = document.getElementById(sectionId);
+            target.classList.remove('hidden');
+            
+            // Effect រំកិលអេក្រង់មកចំ Section
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // មុខងារបញ្ជូនទិន្នន័យទៅកាន់ Telegram
@@ -148,7 +237,7 @@
             event.preventDefault();
 
             let message = `🔔 *មានព័ត៌មានថ្មីពីវេបសាយ (${type})*\n`;
-            message += `----------------------------------\n`;
+            message += `━━━━━━━━━━━━━━━━━━\n`;
 
             if (type === 'ចុះឈ្មោះយក ID') {
                 const name = document.getElementById('reg-name').value;
@@ -157,19 +246,17 @@
                 const contact = document.getElementById('reg-contact').value;
                 const address = document.getElementById('reg-address').value;
                 
-                // បង្កើតលេខ ID ចៃដន្យ (ឧទាហរណ៍៖ ID-4721)
                 const randomID = 'ID-' + Math.floor(1000 + Math.random() * 9000);
 
-                message += `🆔 *លេខសម្គាល់សមាជិក:* ${randomID}\n`;
+                message += `🆔 *លេខសម្គាល់សមាជិក:* \`${randomID}\`\n`;
                 message += `👤 *ឈ្មោះ:* ${name}\n`;
                 message += `🎂 *អាយុ:* ${age} ឆ្នាំ\n`;
                 message += `💼 *មុខរបរ:* ${job}\n`;
                 message += `📞 *ទំនាក់ទំនង:* ${contact}\n`;
                 message += `📍 *អាសយដ្ឋាន:* ${address}\n`;
 
-                // បង្ហាញ ID លើអេក្រង់ឱ្យអ្នកចុះឈ្មោះឃើញ
                 const idDisplay = document.getElementById('id-display');
-                idDisplay.innerHTML = `🎉 ចុះឈ្មោះជោគជ័យ! លេខ ID របស់អ្នកគឺ៖ <span class="text-xl text-red-600">${randomID}</span> (ព័ត៌មានត្រូវបានផ្ញើទៅកាន់ក្រុមការងារ)`;
+                idDisplay.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> ចុះឈ្មោះជោគជ័យ! លេខ ID ផ្លូវការរបស់អ្នកគឺ៖ <span class="text-xl text-red-600 font-bold">${randomID}</span>`;
                 idDisplay.classList.remove('hidden');
                 document.getElementById('regForm').reset();
 
@@ -181,7 +268,7 @@
                 message += `📝 *ប្រវត្តិសង្ខេប:* ${document.getElementById('job-exp').value}\n`;
                 
                 document.getElementById('jobForm').reset();
-                alert('ពាក្យសុំធ្វើការរបស់លោកអ្នកត្រូវបានបញ្ជូនទៅហើយ!');
+                alert('🚀 ពាក្យសុំធ្វើការរបស់លោកអ្នកត្រូវបានបញ្ជូនទៅហើយ!');
 
             } else if (type === 'បង្ហោះលក់ទំនិញ') {
                 message += `👤 *អ្នកលក់:* ${document.getElementById('shop-seller').value}\n`;
@@ -191,8 +278,11 @@
                 message += `ℹ️ *ពិពណ៌នា:* ${document.getElementById('shop-desc').value}\n`;
                 
                 document.getElementById('shopForm').reset();
-                alert('ទំនិញរបស់អ្នកត្រូវបានបង្ហោះចូលគ្រុបហើយ!');
+                alert('🎉 ទំនិញរបស់អ្នកត្រូវបានបង្ហោះចូលគ្រុបហើយ!');
             }
+
+            message += `━━━━━━━━━━━━━━━━━━\n`;
+            message += `🌐 _ផ្ញើចេញពីទម្រង់បណ្តាញ SmartPortal_`;
 
             // កូដ API ផ្ញើទៅតេឡេក្រាម
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -209,12 +299,11 @@
             .then(response => response.json())
             .then(data => {
                 if(!data.ok) {
-                    alert('មានបញ្ហាក្នុងការផ្ញើទៅកាន់ Telegram! សូមប្រាកដថា Bot របស់អ្នកត្រូវបានដាក់ចូលជា Admin ក្នុងគ្រុបហើយ។');
+                    alert('មានបញ្ហាក្នុងការផ្ញើ! សូមពិនិត្យមើលសិទ្ធិ Bot ក្នុងគ្រុបរបស់អ្នក។');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('ការតភ្ជាប់មានបញ្ហា!');
             });
         }
     </script>
