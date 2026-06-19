@@ -53,11 +53,11 @@
     <header class="relative bg-[#0f172a] py-24 overflow-hidden border-b border-white/5">
         <div class="absolute top-0 right-0 w-1/2 h-full bg-indigo-600/10 blur-[120px] rounded-full"></div>
         <div class="container mx-auto max-w-5xl px-6 relative z-10 text-center">
-            <h1 class="text-4xl md:text-5xl font-black text-white leading-normal mb-6">
-                គ្រប់គ្រងទិន្នន័យ និងផ្សារអនឡាញបែប <br>
+            <h1 class="text-3xl md:text-5xl font-black text-white leading-relaxed md:leading-normal mb-8 tracking-wide">
+                គ្រប់គ្រងទិន្នន័យ និងផ្សារអនឡាញបែប <br class="hidden md:block">
                 <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">ឌីជីថលឆ្លាតវៃ ២០២៦</span>
             </h1>
-            <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-light leading-relaxed">
+            <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto font-light leading-loose px-4">
                 សូមជ្រើសរើសសេវាកម្មណាមួយខាងក្រោមដើម្បីបំពេញទម្រង់បែបបទ។ រាល់ទិន្នន័យនឹងត្រូវបញ្ជូនទៅកាន់ Telegram Group ចំគោលដៅដាច់ដោយឡែកពីគ្នា។
             </p>
         </div>
@@ -102,25 +102,37 @@
             <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <div>
                     <h2 class="text-2xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent pb-1">ទម្រង់ចុះឈ្មោះព័ត៌មានផ្ទាល់ខ្លួន</h2>
-                    <p class="text-slate-500 text-xs mt-1">សូមបំពេញព័ត៌មានពិត ដើម្បីប្រព័ន្ធបង្កើតលេខសម្គាល់ ID ជូន</p>
+                    <p class="text-slate-500 text-xs mt-1">សូមបំពេញព័ត៌មានឲ្យបានគ្រប់គ្រាន់ ដើម្បីប្រព័ន្ធបង្កើតលេខសម្គាល់ ID ជូន</p>
                 </div>
                 <button onclick="closeModal('register-modal')" class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="overflow-y-auto p-8">
-                <form id="regForm" class="space-y-6">
+                <form id="regForm" onsubmit="handleRegisterSubmit(event)" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-slate-700 text-sm font-bold mb-2">ឈ្មោះពេញ *</label>
-                            <input type="text" required class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                            <label class="block text-slate-700 text-sm font-bold mb-2">ឈ្មោះពេញ (ខ្មែរ/អង់គ្លេស) *</label>
+                            <input type="text" id="reg-name" required class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                         </div>
                         <div>
                             <label class="block text-slate-700 text-sm font-bold mb-2">ភេទ *</label>
-                            <select class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                            <select id="reg-gender" class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                                 <option>ប្រុស</option><option>ស្រី</option><option>ផ្សេងៗ</option>
                             </select>
                         </div>
+                        <div>
+                            <label class="block text-slate-700 text-sm font-bold mb-2">ថ្ងៃខែឆ្នាំកំណើត *</label>
+                            <input type="date" id="reg-dob" required class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 text-sm font-bold mb-2">លេខទូរស័ព្ទ / Telegram *</label>
+                            <input type="tel" id="reg-phone" required placeholder="012345678" class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-slate-700 text-sm font-bold mb-2">អាសយដ្ឋានបច្ចុប្បន្ន *</label>
+                            <input type="text" id="reg-address" required placeholder="រាជធានីភ្នំពេញ ឬ ខេត្ត..." class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
                     </div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-5 rounded-2xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all">បង្កើត ID និងបញ្ជូនទិន្នន័យ</button>
+                    <button type="submit" id="reg-submit-btn" class="w-full bg-indigo-600 text-white font-bold py-5 rounded-2xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all">បង្កើត ID និងបញ្ជូនទិន្នន័យ</button>
                 </form>
             </div>
         </div>
@@ -136,12 +148,36 @@
                 <button onclick="closeModal('job-modal')" class="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm text-slate-400 hover:text-red-500 transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="overflow-y-auto p-8">
-                <form id="jobForm" class="space-y-6">
-                    <div>
-                        <label class="block text-slate-700 text-sm font-bold mb-2">ឈ្មោះពេញបេក្ខជន *</label>
-                        <input type="text" required class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                <form id="jobForm" onsubmit="handleJobSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-slate-700 text-sm font-bold mb-2">ឈ្មោះពេញបេក្ខជន *</label>
+                            <input type="text" id="job-name" required class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 text-sm font-bold mb-2">ភេទ *</label>
+                            <select id="job-gender" class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                                <option>ប្រុស</option><option>ស្រី</option><option>ផ្សេងៗ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 text-sm font-bold mb-2">ជំនាញឯកទេស / មុខតំណែងចង់ធ្វើ *</label>
+                            <input type="text" id="job-role" required placeholder="ឧ. Graphic Designer, Web Developer" class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 text-sm font-bold mb-2">លេខទូរស័ព្ទសាកសួរ *</label>
+                            <input type="tel" id="job-phone" required class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-slate-700 text-sm font-bold mb-2">បទពិសោធន៍ការងារកន្លងមក *</label>
+                            <textarea id="job-exp" rows="2" required placeholder="រៀបរាប់សង្ខេបពីកន្លែងចាស់ ឬគម្រោងធ្លាប់ធ្វើ..." class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-slate-700 text-sm font-bold mb-2">តំណភ្ជាប់ប្រវត្តិរូប (Link CV / Drive) *</label>
+                            <input type="url" id="job-cv" required placeholder="https://drive.google.com/..." class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                        </div>
                     </div>
-                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-5 rounded-2xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all">បញ្ជូនពាក្យសុំធ្វើការទៅក្រុម HR</button>
+                    <button type="submit" id="job-submit-btn" class="w-full bg-indigo-600 text-white font-bold py-5 rounded-2xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 transition-all">បញ្ជូនពាក្យសុំធ្វើការទៅក្រុម HR</button>
                 </form>
             </div>
         </div>
@@ -176,6 +212,11 @@
                             </select>
                         </div>
 
+                        <div id="custom-cat-container" class="md:col-span-2 hide-field">
+                            <label class="block text-orange-600 text-sm font-bold mb-2">✍️ បញ្ចូលប្រភេទផលិតផលដោយដៃផ្ទាល់ *</label>
+                            <input type="text" id="shop-custom-cat" placeholder="ឧទាហរណ៍៖ សម្ភារៈកីឡា, គ្រឿងសង្ហារឹម..." class="w-full bg-orange-50/60 border border-orange-200 rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-orange-500 transition-all">
+                        </div>
+
                         <div id="name-container">
                             <label class="block text-slate-700 text-sm font-bold mb-2">ឈ្មោះទំនិញ / ផលិតផល *</label>
                             <input type="text" id="shop-item" class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
@@ -200,7 +241,7 @@
                             <div>
                                 <label class="block text-slate-700 text-sm font-bold mb-2">ស្ថានភាពដឹកជញ្ជូន *</label>
                                 <select id="shop-deliv" class="w-full bg-slate-100 border-none rounded-2xl px-5 py-4 outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
-                                    <option>มีសេវាដឹកជញ្ជូនរហ័ស</option>
+                                    <option>មានសេវាដឹកជញ្ជូនរហ័ស</option>
                                     <option>អតិថិជនមកយកផ្ទាល់</option>
                                 </select>
                             </div>
@@ -269,12 +310,24 @@
             document.getElementById(id).classList.add('hidden'); 
         }
 
-        // មុខងារពិនិត្យប្រភេទផលិតផល ដើម្បីលាក់ប្រអប់បញ្ចូលទិន្នន័យ
+        // មុខងារត្រួតពិនិត្យប្រភេទផលិតផល និងបើកប្រអប់សរសេរដៃ
         function checkCategory() {
             const cat = document.getElementById('shop-cat').value;
             const nameField = document.getElementById('name-container');
             const delivField = document.getElementById('delivery-container');
+            const customCatField = document.getElementById('custom-cat-container');
+            const customInput = document.getElementById('shop-custom-cat');
 
+            // បង្ហាញប្រអប់សរសេរដៃពេលរើសប្រភេទ "ផ្សេងៗ"
+            if (cat === 'general') {
+                customCatField.classList.remove('hide-field');
+                customInput.required = true;
+            } else {
+                customCatField.classList.add('hide-field');
+                customInput.required = false;
+            }
+
+            // លាក់ប្រអប់ឈ្មោះទំនិញ និងសេវាដឹកជញ្ជូន សម្រាប់ អចលនទ្រព្យ និងយានយន្ត
             if (cat === 'estate' || cat === 'vehicle') {
                 nameField.classList.add('hide-field');
                 delivField.classList.add('hide-field');
@@ -288,7 +341,7 @@
             }
         }
 
-        // បង្ហាញរូបភាពតូចៗ Preview
+        // បង្ហាញរូបភាព Preview
         function handlePreview(input) {
             const preview = document.getElementById('image-preview');
             preview.innerHTML = '';
@@ -301,7 +354,7 @@
             });
         }
 
-        // មុខងារបង្រួមទំហំរូបភាព (Resize Image)
+        // បង្រួមទំហំរូបភាព (Resize Image)
         async function resizeImage(file) {
             return new Promise(resolve => {
                 const reader = new FileReader();
@@ -323,7 +376,87 @@
             });
         }
 
-        // មុខងារបញ្ជូនទិន្នន័យ និងរូបភាពទៅកាន់ Telegram Group
+        // ១. បញ្ជូនទិន្នន័យទម្រង់ចុះឈ្មោះយក ID
+        async function handleRegisterSubmit(event) {
+            event.preventDefault();
+            const btn = document.getElementById('reg-submit-btn');
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> កំពុងបញ្ជូន...`;
+            btn.disabled = true;
+
+            const name = document.getElementById('reg-name').value;
+            const gender = document.getElementById('reg-gender').value;
+            const dob = document.getElementById('reg-dob').value;
+            const phone = document.getElementById('reg-phone').value;
+            const address = document.getElementById('reg-address').value;
+
+            let caption = `🪪 *ព័ត៌មានចុះឈ្មោះសមាជិកថ្មី (យក ID)*\n`;
+            caption += `━━━━━━━━━━━━━━━━━━\n`;
+            caption += `👤 ឈ្មោះពេញ: *${name}*\n`;
+            caption += `🚻 ភេទ: *${gender}*\n`;
+            caption += `📅 ថ្ងៃខែឆ្នាំកំណើត: ${dob}\n`;
+            caption += `📞 លេខទូរស័ព្ទ: *${phone}*\n`;
+            caption += `📍 អាសយដ្ឋាន: ${address}\n`;
+            caption += `━━━━━━━━━━━━━━━━━━`;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: caption, parse_mode: 'Markdown' })
+                });
+                document.getElementById('regForm').reset();
+                closeModal('register-modal');
+                document.getElementById('success-panel').classList.remove('hidden');
+            } catch (err) {
+                alert('មានកំហុសក្នុងការផ្ញើទិន្នន័យ!');
+            } finally {
+                btn.innerHTML = `បង្កើត ID និងបញ្ជូនទិន្នន័យ`;
+                btn.disabled = false;
+            }
+        }
+
+        // ២. បញ្ជូនទិន្នន័យទម្រង់ដាក់ពាក្យធ្វើការ
+        async function handleJobSubmit(event) {
+            event.preventDefault();
+            const btn = document.getElementById('job-submit-btn');
+            btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> កំពុងបញ្ជូន...`;
+            btn.disabled = true;
+
+            const name = document.getElementById('job-name').value;
+            const gender = document.getElementById('job-gender').value;
+            const role = document.getElementById('job-role').value;
+            const phone = document.getElementById('job-phone').value;
+            const exp = document.getElementById('job-exp').value;
+            const cv = document.getElementById('job-cv').value;
+
+            let caption = `💼 *ពាក្យសុំបម្រើការងារថ្មី (HR)*\n`;
+            caption += `━━━━━━━━━━━━━━━━━━\n`;
+            caption += `👤 បេក្ខជន: *${name}*\n`;
+            caption += `🚻 ភេទ: *${gender}*\n`;
+            caption += `🎯 មុខតំណែងចង់ធ្វើ: *${role}*\n`;
+            caption += `📞 លេខទូរស័ព្ទ: ${phone}\n`;
+            caption += `📝 បទពិសោធន៍: ${exp}\n`;
+            caption += `🔗 តំណភ្ជាប់ CV: [ចុចទីនេះដើម្បីមើល](${cv})\n`;
+            caption += `━━━━━━━━━━━━━━━━━━`;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: caption, parse_mode: 'Markdown' })
+                });
+                document.getElementById('jobForm').reset();
+                closeModal('job-modal');
+                document.getElementById('success-panel').classList.remove('hidden');
+            } catch (err) {
+                alert('មានកំហុសក្នុងការផ្ញើទិន្នន័យ!');
+            } finally {
+                btn.innerHTML = `បញ្ជូនពាក្យសុំធ្វើការទៅក្រុម HR`;
+                btn.disabled = false;
+            }
+        }
+
+        // ៣. បញ្ជូនទិន្នន័យនិងរូបភាពទំនិញលក់
         async function handleProductUpload(event) {
             event.preventDefault();
             const btn = document.getElementById('submit-btn');
@@ -334,8 +467,14 @@
             if (files.length === 0) { alert('សូមជ្រើសរើសរូបភាព!'); btn.disabled = false; return; }
 
             const catElement = document.getElementById('shop-cat');
-            const catText = catElement.options[catElement.selectedIndex].text;
+            let catText = catElement.options[catElement.selectedIndex].text;
             const catValue = catElement.value;
+            
+            // បើសិនជារើសយក "ផ្សេងៗ" ត្រូវយកអត្ថបទសរសេរដៃជំនួសវិញ
+            if (catValue === 'general') {
+                const customCatVal = document.getElementById('shop-custom-cat').value;
+                catText = `📦 ផ្សេងៗ (${customCatVal})`;
+            }
             
             const item = document.getElementById('shop-item').value || (catValue === 'estate' ? 'អចលនទ្រព្យ' : 'យានយន្ត');
             const price = document.getElementById('shop-price').value;
@@ -346,7 +485,7 @@
             const desc = document.getElementById('shop-desc').value;
 
             try {
-                // ១. ផ្ញើរូបភាពចូល Telegram មុនជាប្រភេទ Album
+                // ក. ផ្ញើរូបភាពជា Album
                 const media = [];
                 const formData = new FormData();
                 formData.append('chat_id', CHAT_ID);
@@ -357,10 +496,9 @@
                     media.push({ type: 'photo', media: `attach://p${i}` });
                 }
                 formData.append('media', JSON.stringify(media));
-
                 await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`, { method: 'POST', body: formData });
 
-                // ២. ផ្ញើសារអត្ថបទលម្អិតតាមក្រោយ
+                // ខ. ផ្ញើសារអត្ថបទលម្អិត
                 let caption = `📝 *ព័ត៌មានលម្អិតទំនិញថ្មី*\n`;
                 caption += `━━━━━━━━━━━━━━━━━━\n`;
                 caption += `🏷️ ប្រភេទ: *${catText}*\n`;
@@ -382,14 +520,14 @@
                     body: JSON.stringify({ chat_id: CHAT_ID, text: caption, parse_mode: 'Markdown' })
                 });
 
-                // បង្ហាញផ្ទាំងជោគជ័យ
                 document.getElementById('shopForm').reset();
                 document.getElementById('image-preview').innerHTML = '';
+                document.getElementById('custom-cat-container').classList.add('hide-field');
                 closeModal('shop-modal');
                 document.getElementById('success-panel').classList.remove('hidden');
 
             } catch (err) {
-                alert('មានបញ្ហាក្នុងការបញ្ជូនទិន្នន័យ! សូមព្យាយាមម្តងទៀត។');
+                alert('មានបញ្ហាក្នុងការបញ្ជូនទិន្នន័យ!');
             } finally {
                 btn.innerHTML = `<span>បង្ហោះលក់ទំនិញចូលប្រព័ន្ធភ្លាមៗ</span> <i class="fa-solid fa-paper-plane"></i>`;
                 btn.disabled = false;
