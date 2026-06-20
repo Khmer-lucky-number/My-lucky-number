@@ -68,14 +68,12 @@
 
         /* ====== កែសម្រួលសម្រាប់ទូរស័ព្ទ ====== */
         @media (max-width: 640px) {
-            /* 1. កែពណ៌ចំណងជើងធំៗឱ្យឃើញច្បាស់ */
             .hero-title .gradient-text,
             .hero-sub .gradient-text {
                 -webkit-text-fill-color: white !important;
                 background: none !important;
                 color: white !important;
             }
-            /* 2. កែទំហំ ID Display */
             #idDisplayBox {
                 padding: 4px 8px !important;
                 font-size: 10px !important;
@@ -91,7 +89,6 @@
             #idDisplayBox i {
                 font-size: 10px !important;
             }
-            /* 3. កែទំហំប្រអប់សេវាកម្មទាំង ៤ */
             #services .grid {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 8px !important;
@@ -119,7 +116,6 @@
                 font-size: 8px !important;
                 margin-top: 2px !important;
             }
-            /* 4. កែទំហំ Modal */
             .modal-animate {
                 max-width: 95% !important;
                 margin: 0 auto !important;
@@ -148,7 +144,6 @@
                 font-size: 13px !important;
                 padding: 10px !important;
             }
-            /* 5. កែទំហំប្រអប់ផលិតផល */
             .product-grid {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 10px !important;
@@ -169,7 +164,6 @@
                 font-size: 10px !important;
                 padding: 6px !important;
             }
-            /* 6. កែទំហំប្រអប់ HR */
             .hr-grid {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 10px !important;
@@ -180,7 +174,6 @@
             .hr-grid .p-4 {
                 padding: 10px !important;
             }
-            /* 7. កែទំហំ Hero */
             .hero-title {
                 font-size: 1.4rem !important;
             }
@@ -198,7 +191,6 @@
                 font-size: 12px !important;
                 padding: 8px 14px !important;
             }
-            /* 8. កែទំហំ Footer */
             footer .grid {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 16px !important;
@@ -222,12 +214,10 @@
                 <span class="hidden sm:inline-block text-[8px] md:text-[10px] font-bold text-indigo-300 bg-indigo-500/20 px-2 py-0.5 rounded-full border border-indigo-500/30">Pro v5.0</span>
             </div>
             <div class="flex items-center gap-2 md:gap-3">
-                <!-- ID Display Box - កែសម្រួលទំហំ -->
                 <div id="idDisplayBox" class="hidden sm:flex items-center gap-1 bg-indigo-500/10 border border-indigo-500/30 px-2 py-1 rounded-full text-[9px] md:text-xs">
                     <i class="fa-regular fa-id-card text-indigo-400 text-[10px]"></i>
                     <span id="idDisplayText" class="text-indigo-300 font-medium text-[9px] md:text-xs max-w-[100px] truncate">មិនទាន់ចុះឈ្មោះ</span>
                 </div>
-                <!-- Dashboard Button -->
                 <button onclick="openDashboard()" class="text-slate-300 hover:text-white transition text-base p-1.5 rounded-full hover:bg-white/10 relative">
                     <i class="fa-regular fa-user"></i>
                     <span id="wishlistBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
@@ -497,7 +487,7 @@
                 <span class="rating-star text-2xl md:text-3xl text-slate-300 hover:text-yellow-400 transition" data-star="4" onclick="setRating(4)">★</span>
                 <span class="rating-star text-2xl md:text-3xl text-slate-300 hover:text-yellow-400 transition" data-star="5" onclick="setRating(5)">★</span>
             </div>
-            <p id="rating-text" class="text-center text-xs md:text-sm text-slate-500 mb-3 md:mb-4">សូមជ្រើសរើសផ្កាយ</p>
+            <p id="rating-text" class="text-center text-xs md:text-sm text-slate-500 mb-3 md:mb-4">សូមជ្រើសើសផ្កាយ</p>
             <textarea id="rating-comment" placeholder="បន្ថែមមតិយោបល់ (ស្រេចចិត្ត)..." class="w-full p-2 md:p-3 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-lg md:rounded-xl text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500/50 mb-3 md:mb-4" rows="2 md:rows-3"></textarea>
             <input type="hidden" id="rating-product-id" value="">
             <button onclick="submitRating()" class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold py-2 md:py-3 rounded-lg md:rounded-xl transition shadow-lg shadow-yellow-500/30 text-sm md:text-base">
@@ -1086,10 +1076,15 @@
             const btn = document.getElementById('btn-shop-submit');
             btn.disabled = true;
             btn.innerText = "កំពុងបង្រួមរូបភាព...";
+            
             const cat = document.getElementById('shop-cat').value;
-            if (!cat) { showToast('⚠️ សូមជ្រើសរើសប្រភេទផលិតផល!', 'error');
+            if (!cat) { 
+                showToast('⚠️ សូមជ្រើសរើសប្រភេទផលិតផល!', 'error');
                 btn.disabled = false;
-                btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ"; return; }
+                btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ"; 
+                return; 
+            }
+            
             const seller = document.getElementById('shop-seller').value;
             const contact = document.getElementById('shop-contact').value;
             const item = document.getElementById('shop-item').value;
@@ -1101,24 +1096,37 @@
             const desc = document.getElementById('shop-desc').value;
             const bankName = document.getElementById('shop-bank-name').value || '';
             const bankAccount = document.getElementById('shop-bank-account').value || '';
+            
             let mFile = document.getElementById('shop-main-img').files[0];
             const moreFiles = document.getElementById('shop-more-imgs').files;
             const qrFile = document.getElementById('shop-qr-img').files[0];
-            if (!mFile) { showToast('⚠️ សូមជ្រើសរើសរូបភាពចម្បង!', 'error');
+            
+            if (!mFile) { 
+                showToast('⚠️ សូមជ្រើសរើសរូបភាពចម្បង!', 'error');
                 btn.disabled = false;
-                btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ"; return; }
+                btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ"; 
+                return; 
+            }
+            
             try {
                 mFile = await resizeImage(mFile);
                 const mBase = await toBase64(mFile);
+                
                 const moresBase = [];
                 const resizedMoreFiles = [];
-                for (let i = 0; i < Math.min(moreFiles.length, 10); i++) { let cf = await resizeImage(moreFiles[i]);
+                for (let i = 0; i < Math.min(moreFiles.length, 10); i++) { 
+                    let cf = await resizeImage(moreFiles[i]);
                     resizedMoreFiles.push(cf);
-                    moresBase.push(await toBase64(cf)); }
+                    moresBase.push(await toBase64(cf)); 
+                }
+                
                 let qrBase = null;
                 let qrFileResized = null;
-                if (qrFile) { qrFileResized = await resizeImage(qrFile);
-                    qrBase = await toBase64(qrFileResized); }
+                if (qrFile) { 
+                    qrFileResized = await resizeImage(qrFile);
+                    qrBase = await toBase64(qrFileResized); 
+                }
+                
                 const pObj = {
                     id: Date.now(),
                     userId,
@@ -1144,36 +1152,53 @@
                     reviews: [],
                     timestamp: Date.now()
                 };
+                
                 let list = JSON.parse(localStorage.getItem('portal_shop_feeds')) || [];
                 list.unshift(pObj);
                 localStorage.setItem('portal_shop_feeds', JSON.stringify(list));
                 renderFeed();
+                
                 btn.innerText = "កំពុងផ្ញើទៅ Telegram...";
-
-                // បង្កើតអត្ថបទពេញលេញ
-                let cap =
-                    `🛍️ *មានផលិតផលបង្ហោះលក់ថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• ទំនិញ: *${item}* (${cat})\n• តម្លៃលក់: *${price}* (ដើម: ${oldPrice})\n• ដឹកជញ្ជូន: ${deliv}`;
-                if (delivCompany) cap += `\n• ក្រុមហ៊ុនដឹកជញ្ជូន: ${delivCompany}`;
-                cap += `\n• ថ្លៃដឹកជញ្ជូន: ${fee}\n• អ្នកលក់: ${seller}\n• ទំនាក់ទំនង: ${contact}\n• ព័ត៌មាន: ${desc}\n`;
-                if (bankName) cap += `• ធនាគារ: ${bankName}\n`;
-                if (bankAccount) cap += `• លេខគណនី: ${bankAccount}\n`;
-                cap += `━━━━━━━━━━━━━━━━━━━━`;
-
-                // បង្ហោះរូបភាពទាំងអស់ក្នុង Album តែមួយ
-                const allAlbumFiles = [mFile, ...resizedMoreFiles];
-                const mediaFormData = new FormData();
-                mediaFormData.append('chat_id', TG_CONFIG.SHOP.chat_id);
-                const mediaArray = [];
-                for (let i = 0; i < allAlbumFiles.length; i++) {
-                    mediaFormData.append(`photo_${i}`, allAlbumFiles[i]);
-                    mediaArray.push({ type: 'photo', media: `attach://photo_${i}` });
+                
+                // ==== បង្កើតអត្ថបទសម្រាប់ Telegram (ដូច Job) ====
+                let text = `🛍️ *មានផលិតផលបង្ហោះលក់ថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• ទំនិញ: *${item}* (${cat})\n• តម្លៃលក់: *${price}* (ដើម: ${oldPrice})\n• ដឹកជញ្ជូន: ${deliv}`;
+                if (delivCompany) text += `\n• ក្រុមហ៊ុនដឹកជញ្ជូន: ${delivCompany}`;
+                text += `\n• ថ្លៃដឹកជញ្ជូន: ${fee}\n• អ្នកលក់: ${seller}\n• ទំនាក់ទំនង: ${contact}\n• ព័ត៌មាន: ${desc}\n`;
+                if (bankName) text += `• ធនាគារ: ${bankName}\n`;
+                if (bankAccount) text += `• លេខគណនី: ${bankAccount}\n`;
+                text += `━━━━━━━━━━━━━━━━━━━━`;
+                
+                // ==== បង្ហោះរូបភាពចម្បងជាមួយអត្ថបទ (ដូច Job) ====
+                const formData = new FormData();
+                formData.append('chat_id', TG_CONFIG.SHOP.chat_id);
+                formData.append('photo', mFile);
+                formData.append('caption', text);
+                formData.append('parse_mode', 'Markdown');
+                
+                await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendPhoto`, { 
+                    method: 'POST', 
+                    body: formData 
+                });
+                
+                // ==== បង្ហោះរូបភាពបន្ថែមជា Album (ដូច Job) ====
+                if (resizedMoreFiles.length > 0) {
+                    const mediaFormData = new FormData();
+                    mediaFormData.append('chat_id', TG_CONFIG.SHOP.chat_id);
+                    const mediaArray = [];
+                    for (let i = 0; i < resizedMoreFiles.length; i++) {
+                        mediaFormData.append(`photo_${i}`, resizedMoreFiles[i]);
+                        mediaArray.push({ type: 'photo', media: `attach://photo_${i}` });
+                    }
+                    mediaFormData.append('media', JSON.stringify(mediaArray));
+                    mediaFormData.append('caption', `📸 រូបភាពបន្ថែមសម្រាប់ផលិតផល: ${item}`);
+                    mediaFormData.append('parse_mode', 'Markdown');
+                    await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendMediaGroup`, { 
+                        method: 'POST', 
+                        body: mediaFormData 
+                    });
                 }
-                mediaFormData.append('media', JSON.stringify(mediaArray));
-                mediaFormData.append('caption', cap);
-                mediaFormData.append('parse_mode', 'Markdown');
-                await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendMediaGroup`, { method: 'POST', body: mediaFormData });
-
-                // QR Code (បង្ហោះដាច់ដោយឡែក)
+                
+                // ==== បង្ហោះ QR Code (បើមាន) ====
                 if (qrFileResized) {
                     let qrCap = `📱 *QR Code បង់ប្រាក់*\nផលិតផល: ${item}\nអ្នកលក់: ${seller}`;
                     if (bankName) qrCap += `\nធនាគារ: ${bankName}`;
@@ -1183,14 +1208,18 @@
                     qrData.append('photo', qrFileResized);
                     qrData.append('caption', qrCap);
                     qrData.append('parse_mode', 'Markdown');
-                    await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendPhoto`, { method: 'POST', body: qrData });
+                    await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendPhoto`, { 
+                        method: 'POST', 
+                        body: qrData 
+                    });
                 }
-
+                
                 showToast('✅ បង្ហោះផលិតផលជោគជ័យ!', 'success');
                 document.getElementById('shopForm').reset();
                 document.getElementById('main-preview').classList.add('hidden');
                 document.getElementById('more-previews').innerHTML = '';
                 closeFormModal('shop-modal');
+                
             } catch (err) {
                 console.error('Error:', err);
                 showToast('❌ ការបង្ហោះមានបញ្ហា! សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិត', 'error');
@@ -1207,6 +1236,7 @@
             const btn = document.getElementById('btn-hr-submit');
             btn.disabled = true;
             btn.innerText = "កំពុងរៀបចំ...";
+            
             const name = document.getElementById('hr-name').value;
             const department = document.getElementById('hr-department').value;
             const contact = document.getElementById('hr-contact').value;
@@ -1255,27 +1285,46 @@
 
                 btn.innerText = "កំពុងផ្ញើទៅ Telegram...";
 
-                // បង្កើតអត្ថបទពេញលេញជាមួយរូបភាព
-                let cap =
-                    `📢 *ការជ្រើសរើសបុគ្គលិកថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• អ្នកបង្ហោះ: ${name}\n• ផ្នែកដែលត្រូវជ្រើសរើស: *${department}*\n• ទំនាក់ទំនង: ${contact}\n• ទីតាំង: ${location}\n• ពណ៌នា: ${desc}\n━━━━━━━━━━━━━━━━━━━━`;
+                // ==== បង្កើតអត្ថបទសម្រាប់ Telegram (ដូច Job) ====
+                let text = `📢 *ការជ្រើសរើសបុគ្គលិកថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• អ្នកបង្ហោះ: ${name}\n• ផ្នែកដែលត្រូវជ្រើសរើស: *${department}*\n• ទំនាក់ទំនង: ${contact}\n• ទីតាំង: ${location}\n• ពណ៌នា: ${desc}\n━━━━━━━━━━━━━━━━━━━━`;
 
-                // បង្ហោះរូបភាពជា Album ជាមួយអត្ថបទ
-                const mediaFormData = new FormData();
-                mediaFormData.append('chat_id', TG_CONFIG.HR.chat_id);
-                const mediaArray = [];
-                for (let i = 0; i < resizedImages.length; i++) {
-                    mediaFormData.append(`photo_${i}`, resizedImages[i]);
-                    mediaArray.push({ type: 'photo', media: `attach://photo_${i}` });
+                // ==== បង្ហោះរូបភាពទីមួយជាមួយអត្ថបទ (ដូច Job) ====
+                const firstImage = resizedImages[0];
+                const formData = new FormData();
+                formData.append('chat_id', TG_CONFIG.HR.chat_id);
+                formData.append('photo', firstImage);
+                formData.append('caption', text);
+                formData.append('parse_mode', 'Markdown');
+                
+                await fetch(`https://api.telegram.org/bot${TG_CONFIG.HR.token}/sendPhoto`, { 
+                    method: 'POST', 
+                    body: formData 
+                });
+
+                // ==== បង្ហោះរូបភាពបន្ថែមជា Album (ដូច Job) ====
+                if (resizedImages.length > 1) {
+                    const remainingImages = resizedImages.slice(1);
+                    const mediaFormData = new FormData();
+                    mediaFormData.append('chat_id', TG_CONFIG.HR.chat_id);
+                    const mediaArray = [];
+                    for (let i = 0; i < remainingImages.length; i++) {
+                        mediaFormData.append(`photo_${i}`, remainingImages[i]);
+                        mediaArray.push({ type: 'photo', media: `attach://photo_${i}` });
+                    }
+                    mediaFormData.append('media', JSON.stringify(mediaArray));
+                    mediaFormData.append('caption', `📸 រូបភាពបន្ថែមសម្រាប់ការជ្រើសរើសបុគ្គលិកផ្នែក: ${department}`);
+                    mediaFormData.append('parse_mode', 'Markdown');
+                    await fetch(`https://api.telegram.org/bot${TG_CONFIG.HR.token}/sendMediaGroup`, { 
+                        method: 'POST', 
+                        body: mediaFormData 
+                    });
                 }
-                mediaFormData.append('media', JSON.stringify(mediaArray));
-                mediaFormData.append('caption', cap);
-                mediaFormData.append('parse_mode', 'Markdown');
-                await fetch(`https://api.telegram.org/bot${TG_CONFIG.HR.token}/sendMediaGroup`, { method: 'POST', body: mediaFormData });
 
                 showToast('✅ បង្ហោះការជ្រើសរើសបុគ្គលិកជោគជ័យ!', 'success');
                 document.getElementById('hrForm').reset();
                 document.getElementById('hr-previews').innerHTML = '';
                 closeFormModal('hr-modal');
+                
             } catch (err) {
                 console.error('Error:', err);
                 showToast('❌ ការបង្ហោះមានបញ្ហា! សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិត', 'error');
@@ -1327,7 +1376,6 @@
 
             feedBox.innerHTML = pageItems.map(p => {
                 const stars = p.rating ? '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating)) : '☆☆☆☆☆';
-                // បង្ហាញតម្លៃជា $/៛
                 const displayPrice = p.price.includes('៛') ? p.price : '$' + p.price.replace('$', '');
                 const displayOldPrice = p.oldPrice && p.oldPrice !== '$0' ? (p.oldPrice.includes('៛') ? p.oldPrice : '$' + p.oldPrice.replace('$', '')) : '';
                 return `
