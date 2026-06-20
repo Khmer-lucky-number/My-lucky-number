@@ -598,15 +598,15 @@
                             <div id="deliveryCompanyField"><label class="block text-slate-600 dark:text-slate-400 text-[10px] md:text-xs font-medium">ក្រុមហ៊ុនដឹកជញ្ជូន <span class="text-red-500">*</span></label>
                                 <select id="shop-deliv-company" class="w-full p-2 md:p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-lg md:rounded-xl mt-1 text-xs md:text-sm">
                                     <option value="">-- សូមជ្រើសរើសក្រុមហ៊ុន --</option>
-                                    <option>ជីអិនអេច បញ្ជូនរហ័ស (GNH Express)</option>
-                                    <option>សេវាដឹកជញ្ជូន វីង (Ving Delivery)</option>
-                                    <option>ជេនអេច វី (JHV Express)</option>
-                                    <option>សេវាដឹកជញ្ជូន អេសស៊ី (SC Express)</option>
-                                    <option>សេវាដឹកជញ្ជូន ស៊ីជេ (CJ Express)</option>
-                                    <option>សេវាដឹកជញ្ជូន អេនឌី (ND Express)</option>
-                                    <option>ខេមបូឌៀ ប៉ុស្តិ៍ (Cambodia Post)</option>
-                                    <option>ឌីអេចអិល កម្ពុជា (DHL Cambodia)</option>
-                                    <option>អេហ្វអាយធី ឡូជីស្ទីក (FIT Logistics)</option>
+                                    <option>វីរៈប៊ុនថាំ (Vireak Buntham / VET Express)</option>
+                                    <option>J&T Express</option>
+                                    <option>Flash Express</option>
+                                    <option>Capitol, សូរិយា, ឡារីតា (Larita)</option>
+                                    <option>Cambodia Post (ប្រៃសណីយ៍កម្ពុជា)</option>
+                                    <option>Grab (GrabExpress)</option>
+                                    <option>Foodpanda</option>
+                                    <option>Nham24 (Nham24 Express)</option>
+                                    <option>Lalamove</option>
                                     <option>ផ្សេងទៀត (Other)</option>
                                 </select>
                             </div>
@@ -1016,187 +1016,190 @@
             btn.innerText = "បញ្ជូនពាក្យសុំទៅក្រុម HR";
         }
 
-        // ====== SHOP (កែសម្រួលថ្មី - Caption ពេញលេញ) ======
-        async function handleProductUpload(event) {
-            event.preventDefault();
-            const userId = document.getElementById('shop-user-id').value;
-            if (!validateUserId(userId)) return;
-            const btn = document.getElementById('btn-shop-submit');
-            btn.disabled = true;
-            btn.innerText = "កំពុងបង្រួមរូបភាព...";
-            
-            // ទទួលប្រភេទផលិតផល
-            let cat = document.getElementById('shop-cat').value;
-            if (cat === 'other') {
-                const customCat = document.getElementById('shop-cat-custom').value.trim();
-                if (!customCat) {
-                    showToast('⚠️ សូមបញ្ចូលប្រភេទផលិតផលដោយដៃ!', 'error');
-                    btn.disabled = false;
-                    btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
-                    return;
-                }
-                cat = '📦 ' + customCat;
-            } else if (!cat) {
-                showToast('⚠️ សូមជ្រើសរើសប្រភេទផលិតផល!', 'error');
-                btn.disabled = false;
-                btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
-                return;
-            }
-            
-            const seller = document.getElementById('shop-seller').value;
-            const contact = document.getElementById('shop-contact').value;
-            const item = document.getElementById('shop-item').value;
-            const price = document.getElementById('shop-price').value;
-            const oldPrice = document.getElementById('shop-old-price').value || '';
-            const deliv = document.getElementById('shop-deliv-status')?.value || 'មិនអនុវត្ត';
-            const delivCompany = document.getElementById('shop-deliv-company')?.value || '';
-            const fee = document.getElementById('shop-deliv-fee')?.value || '';
-            const desc = document.getElementById('shop-desc').value;
-            const bankName = document.getElementById('shop-bank-name').value || '';
-            const bankAccount = document.getElementById('shop-bank-account').value || '';
-            
-            let mFile = document.getElementById('shop-main-img').files[0];
-            const moreFiles = document.getElementById('shop-more-imgs').files;
-            const qrFile = document.getElementById('shop-qr-img').files[0];
-            
-            if (!mFile) {
-                showToast('⚠️ សូមជ្រើសរើសរូបភាពចម្បង!', 'error');
-                btn.disabled = false;
-                btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
-                return;
-            }
-            
-            try {
-                mFile = await resizeImage(mFile);
-                const mBase = await toBase64(mFile);
-                
-                const moresBase = [];
-                const resizedMoreFiles = [];
-                for (let i = 0; i < Math.min(moreFiles.length, 10); i++) {
-                    let cf = await resizeImage(moreFiles[i]);
-                    resizedMoreFiles.push(cf);
-                    moresBase.push(await toBase64(cf));
-                }
-                
-                let qrBase = null;
-                let qrFileResized = null;
-                if (qrFile) {
-                    qrFileResized = await resizeImage(qrFile);
-                    qrBase = await toBase64(qrFileResized);
-                }
-                
-                // រក្សាទុកក្នុង Local Storage
-                const pObj = {
-                    id: Date.now(),
-                    userId,
-                    seller,
-                    contact,
-                    item,
-                    cat,
-                    price,
-                    oldPrice,
-                    deliv,
-                    delivCompany,
-                    fee: fee || 'មិនបានបញ្ជាក់',
-                    desc,
-                    mainImg: mBase,
-                    moreImgs: moresBase,
-                    qrImg: qrBase,
-                    bankName: bankName || 'មិនបានបញ្ជាក់',
-                    bankAccount: bankAccount || 'មិនបានបញ្ជាក់',
-                    views: 1,
-                    likes: 0,
-                    rating: 0,
-                    ratingCount: 0,
-                    reviews: [],
-                    timestamp: Date.now()
-                };
-                
-                let list = JSON.parse(localStorage.getItem('portal_shop_feeds')) || [];
-                list.unshift(pObj);
-                localStorage.setItem('portal_shop_feeds', JSON.stringify(list));
-                renderFeed();
-                
-                btn.innerText = "កំពុងផ្ញើទៅ Telegram...";
-                
-                // ====== បង្កើត Caption ពេញលេញ ======
-                let caption = `🛍️ *មានផលិតផលបង្ហោះលក់ថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n`;
-                caption += `• លេខ ID: \`${userId}\`\n`;
-                caption += `• ទំនិញ: *${item}*\n`;
-                caption += `• ប្រភេទ: ${cat}\n`;
-                caption += `• តម្លៃលក់: *${price}*`;
-                if (oldPrice) caption += ` (ដើម: ${oldPrice})`;
-                caption += `\n`;
-                caption += `• ដឹកជញ្ជូន: ${deliv}`;
-                if (delivCompany) caption += `\n• ក្រុមហ៊ុនដឹកជញ្ជូន: ${delivCompany}`;
-                if (fee) caption += `\n• ថ្លៃដឹកជញ្ជូន: ${fee}`;
-                caption += `\n• អ្នកលក់: ${seller}`;
-                caption += `\n• ទំនាក់ទំនង: ${contact}`;
-                if (bankName && bankName !== 'មិនបានបញ្ជាក់') caption += `\n• ធនាគារ: ${bankName}`;
-                if (bankAccount && bankAccount !== 'មិនបានបញ្ជាក់') caption += `\n• លេខគណនី: ${bankAccount}`;
-                caption += `\n• ព័ត៌មាន: ${desc}`;
-                caption += `\n━━━━━━━━━━━━━━━━━━━━`;
-                
-                // ====== បង្ហោះរូបភាពទាំងអស់ ======
-                const allImages = [mFile, ...resizedMoreFiles];
-                
-                if (allImages.length === 1) {
-                    const formData = new FormData();
-                    formData.append('chat_id', TG_CONFIG.SHOP.chat_id);
-                    formData.append('photo', allImages[0]);
-                    formData.append('caption', caption);
-                    formData.append('parse_mode', 'Markdown');
-                    await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendPhoto`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                } else {
-                    const mediaFormData = new FormData();
-                    mediaFormData.append('chat_id', TG_CONFIG.SHOP.chat_id);
-                    const mediaArray = [];
-                    for (let i = 0; i < allImages.length; i++) {
-                        mediaFormData.append(`photo_${i}`, allImages[i]);
-                        mediaArray.push({ type: 'photo', media: `attach://photo_${i}` });
-                    }
-                    mediaFormData.append('media', JSON.stringify(mediaArray));
-                    mediaFormData.append('caption', caption);
-                    mediaFormData.append('parse_mode', 'Markdown');
-                    await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendMediaGroup`, {
-                        method: 'POST',
-                        body: mediaFormData
-                    });
-                }
-                
-                // ====== QR Code ======
-                if (qrFileResized) {
-                    let qrCap = `📱 *QR Code បង់ប្រាក់*\nផលិតផល: ${item}\nអ្នកលក់: ${seller}`;
-                    if (bankName && bankName !== 'មិនបានបញ្ជាក់') qrCap += `\nធនាគារ: ${bankName}`;
-                    if (bankAccount && bankAccount !== 'មិនបានបញ្ជាក់') qrCap += `\nលេខគណនី: ${bankAccount}`;
-                    const qrData = new FormData();
-                    qrData.append('chat_id', TG_CONFIG.SHOP.chat_id);
-                    qrData.append('photo', qrFileResized);
-                    qrData.append('caption', qrCap);
-                    qrData.append('parse_mode', 'Markdown');
-                    await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendPhoto`, {
-                        method: 'POST',
-                        body: qrData
-                    });
-                }
-                
-                showToast('✅ បង្ហោះផលិតផលជោគជ័យ!', 'success');
-                document.getElementById('shopForm').reset();
-                document.getElementById('main-preview').classList.add('hidden');
-                document.getElementById('more-previews').innerHTML = '';
-                document.getElementById('customCategoryContainer').style.display = 'none';
-                closeFormModal('shop-modal');
-                
-            } catch (err) {
-                console.error('Error:', err);
-                showToast('❌ ការបង្ហោះមានបញ្ហា! សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិត', 'error');
-            }
+        // ====== SHOP (កែសម្រួលថ្មី - បង្ហោះជា Album តែមួយ) ======
+async function handleProductUpload(event) {
+    event.preventDefault();
+    const userId = document.getElementById('shop-user-id').value;
+    if (!validateUserId(userId)) return;
+    const btn = document.getElementById('btn-shop-submit');
+    btn.disabled = true;
+    btn.innerText = "កំពុងបង្រួមរូបភាព...";
+    
+    // ទទួលប្រភេទផលិតផល
+    let cat = document.getElementById('shop-cat').value;
+    if (cat === 'other') {
+        const customCat = document.getElementById('shop-cat-custom').value.trim();
+        if (!customCat) {
+            showToast('⚠️ សូមបញ្ចូលប្រភេទផលិតផលដោយដៃ!', 'error');
             btn.disabled = false;
             btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
+            return;
         }
+        cat = '📦 ' + customCat;
+    } else if (!cat) {
+        showToast('⚠️ សូមជ្រើសរើសប្រភេទផលិតផល!', 'error');
+        btn.disabled = false;
+        btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
+        return;
+    }
+    
+    const seller = document.getElementById('shop-seller').value;
+    const contact = document.getElementById('shop-contact').value;
+    const item = document.getElementById('shop-item').value;
+    const price = document.getElementById('shop-price').value;
+    const oldPrice = document.getElementById('shop-old-price').value || '';
+    const deliv = document.getElementById('shop-deliv-status')?.value || 'មិនអនុវត្ត';
+    const delivCompany = document.getElementById('shop-deliv-company')?.value || '';
+    const fee = document.getElementById('shop-deliv-fee')?.value || '';
+    const desc = document.getElementById('shop-desc').value;
+    const bankName = document.getElementById('shop-bank-name').value || '';
+    const bankAccount = document.getElementById('shop-bank-account').value || '';
+    
+    let mFile = document.getElementById('shop-main-img').files[0];
+    const moreFiles = document.getElementById('shop-more-imgs').files;
+    const qrFile = document.getElementById('shop-qr-img').files[0];
+    
+    if (!mFile) {
+        showToast('⚠️ សូមជ្រើសរើសរូបភាពចម្បង!', 'error');
+        btn.disabled = false;
+        btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
+        return;
+    }
+    
+    try {
+        mFile = await resizeImage(mFile);
+        const mBase = await toBase64(mFile);
+        
+        const moresBase = [];
+        const resizedMoreFiles = [];
+        for (let i = 0; i < Math.min(moreFiles.length, 10); i++) {
+            let cf = await resizeImage(moreFiles[i]);
+            resizedMoreFiles.push(cf);
+            moresBase.push(await toBase64(cf));
+        }
+        
+        let qrBase = null;
+        let qrFileResized = null;
+        if (qrFile) {
+            qrFileResized = await resizeImage(qrFile);
+            qrBase = await toBase64(qrFileResized);
+        }
+        
+        // រក្សាទុកក្នុង Local Storage
+        const pObj = {
+            id: Date.now(),
+            userId,
+            seller,
+            contact,
+            item,
+            cat,
+            price,
+            oldPrice,
+            deliv,
+            delivCompany,
+            fee: fee || 'មិនបានបញ្ជាក់',
+            desc,
+            mainImg: mBase,
+            moreImgs: moresBase,
+            qrImg: qrBase,
+            bankName: bankName || 'មិនបានបញ្ជាក់',
+            bankAccount: bankAccount || 'មិនបានបញ្ជាក់',
+            views: 1,
+            likes: 0,
+            rating: 0,
+            ratingCount: 0,
+            reviews: [],
+            timestamp: Date.now()
+        };
+        
+        let list = JSON.parse(localStorage.getItem('portal_shop_feeds')) || [];
+        list.unshift(pObj);
+        localStorage.setItem('portal_shop_feeds', JSON.stringify(list));
+        renderFeed();
+        
+        btn.innerText = "កំពុងផ្ញើទៅ Telegram...";
+        
+        // ====== បង្កើត Caption ពេញលេញ ======
+        let caption = `🛍 *មានផលិតផលបង្ហោះលក់ថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n`;
+        caption += `• លេខ ID: \`${userId}\`\n`;
+        caption += `• ទំនិញ: *${item}*\n`;
+        caption += `• ប្រភេទ: ${cat}\n`;
+        caption += `• តម្លៃលក់: *${price}*`;
+        if (oldPrice) caption += ` (ដើម: ${oldPrice})`;
+        caption += `\n`;
+        caption += `• ដឹកជញ្ជូន: ${deliv}\n`;
+        if (delivCompany) caption += `• ក្រុមហ៊ុនដឹកជញ្ជូន: ${delivCompany}\n`;
+        if (fee) caption += `• ថ្លៃដឹកជញ្ជូន: ${fee}\n`;
+        caption += `• អ្នកលក់: ${seller}\n`;
+        caption += `• ទំនាក់ទំនង: ${contact}\n`;
+        if (bankName && bankName !== 'មិនបានបញ្ជាក់') caption += `• ធនាគារ: ${bankName}\n`;
+        if (bankAccount && bankAccount !== 'មិនបានបញ្ជាក់') caption += `• លេខគណនី: ${bankAccount}\n`;
+        caption += `• ព័ត៌មាន: ${desc}\n`;
+        caption += `━━━━━━━━━━━━━━━━━━━━`;
+        
+        // ====== បង្ហោះជា Album (MediaGroup) ======
+        // ប្រមូលរូបភាពទាំងអស់
+        const allImages = [mFile, ...resizedMoreFiles];
+        
+        // បើមាន QR Code បន្ថែមចូលក្នុង Album
+        if (qrFileResized) {
+            allImages.push(qrFileResized);
+        }
+        
+        if (allImages.length === 1) {
+            // បើមានរូបភាពតែមួយ ប្រើ sendPhoto
+            const formData = new FormData();
+            formData.append('chat_id', TG_CONFIG.SHOP.chat_id);
+            formData.append('photo', allImages[0]);
+            formData.append('caption', caption);
+            formData.append('parse_mode', 'Markdown');
+            await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            });
+        } else {
+            // បើមានរូបភាពច្រើន ប្រើ sendMediaGroup (Album)
+            const mediaFormData = new FormData();
+            mediaFormData.append('chat_id', TG_CONFIG.SHOP.chat_id);
+            const mediaArray = [];
+            for (let i = 0; i < allImages.length; i++) {
+                mediaFormData.append(`photo_${i}`, allImages[i]);
+                // រូបភាពទីមួយមាន Caption
+                if (i === 0) {
+                    mediaArray.push({ 
+                        type: 'photo', 
+                        media: `attach://photo_${i}`,
+                        caption: caption,
+                        parse_mode: 'Markdown'
+                    });
+                } else {
+                    mediaArray.push({ 
+                        type: 'photo', 
+                        media: `attach://photo_${i}`
+                    });
+                }
+            }
+            mediaFormData.append('media', JSON.stringify(mediaArray));
+            await fetch(`https://api.telegram.org/bot${TG_CONFIG.SHOP.token}/sendMediaGroup`, {
+                method: 'POST',
+                body: mediaFormData
+            });
+        }
+        
+        showToast('✅ បង្ហោះផលិតផលជោគជ័យ!', 'success');
+        document.getElementById('shopForm').reset();
+        document.getElementById('main-preview').classList.add('hidden');
+        document.getElementById('more-previews').innerHTML = '';
+        document.getElementById('customCategoryContainer').style.display = 'none';
+        closeFormModal('shop-modal');
+        
+    } catch (err) {
+        console.error('Error:', err);
+        showToast('❌ ការបង្ហោះមានបញ្ហា! សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិត', 'error');
+    }
+    btn.disabled = false;
+    btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
+}
 
         // ====== HR POST ======
         async function submitHRPost(event) {
