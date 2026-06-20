@@ -75,8 +75,33 @@
             color: rgba(255,255,255,0.6); font-size: 14px; background: rgba(0,0,0,0.4);
             padding: 6px 18px; border-radius: 20px; backdrop-filter: blur(8px);
         }
-        .id-required { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
-        .dark .id-required { border-color: #ef4444 !important; background-color: #7f1d1d !important; }
+        /* Modal Background Decoration */
+        .modal-bg-pattern {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .modal-bg-pattern .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.06;
+        }
+        .modal-bg-pattern .circle:nth-child(1) { width: 200px; height: 200px; top: -60px; right: -60px; background: #4f46e5; }
+        .modal-bg-pattern .circle:nth-child(2) { width: 150px; height: 150px; bottom: -40px; left: -40px; background: #7c3aed; }
+        .modal-bg-pattern .circle:nth-child(3) { width: 100px; height: 100px; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #8b5cf6; }
+        /* Form placeholder styling */
+        input::placeholder, textarea::placeholder { color: #94a3b8; font-size: 12px; opacity: 0.7; }
+        .dark input::placeholder, .dark textarea::placeholder { color: #64748b; }
+        /* Hero responsive */
+        .hero-title { font-size: clamp(1.8rem, 8vw, 4rem); line-height: 1.2; }
+        .hero-sub { font-size: clamp(1.6rem, 6vw, 3.5rem); line-height: 1.2; }
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.6rem; }
+            .hero-sub { font-size: 1.4rem; }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors duration-300">
@@ -109,52 +134,55 @@
         </div>
     </nav>
 
-    <!-- ========== HERO SECTION ========== -->
-    <header class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white py-20 md:py-28">
-        <div class="absolute inset-0 opacity-20">
+    <!-- ========== HERO SECTION (កែលម្អ) ========== -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white py-16 md:py-24">
+        <div class="absolute inset-0 opacity-15">
             <div class="absolute top-10 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
             <div class="absolute bottom-10 right-10 w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl animate-pulse delay-1000"></div>
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-pink-600 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
         </div>
         <div class="container mx-auto max-w-6xl px-4 relative z-10">
-            <div class="text-center space-y-6">
-                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-5 py-2 rounded-full text-sm font-medium text-indigo-200">
+            <div class="text-center space-y-4">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 rounded-full text-xs md:text-sm font-medium text-indigo-200">
                     <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
                     ប្រព័ន្ធដំណើរការ ២៤/៧
                 </div>
-                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-                    <span class="bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ</span><br/>
-                    <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">និងផ្សារអនឡាញឆ្លាតវៃ</span>
+                <!-- Hero Title: ច្បាស់ និងមើលងាយ -->
+                <h1 class="hero-title font-extrabold leading-tight">
+                    <span class="bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ</span>
                 </h1>
-                <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto font-light leading-relaxed">
+                <h2 class="hero-sub font-extrabold leading-tight">
+                    <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">និងផ្សារអនឡាញឆ្លាតវៃ</span>
+                </h2>
+                <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto font-light leading-relaxed px-2">
                     ចុះឈ្មោះសមាជិក ដាក់ពាក្យសុំការងារ ឬបង្ហោះលក់ទំនិញបានយ៉ាងឆាប់រហ័ស។
                     រាល់ទិន្នន័យនឹងត្រូវបញ្ជូនទៅកាន់ក្រុមការងារតាមរយៈ Telegram ដោយស្វ័យប្រវត្តិ។
                 </p>
-                <div class="flex flex-wrap justify-center gap-4 pt-4">
-                    <button onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold px-8 py-3.5 rounded-2xl shadow-2xl shadow-indigo-500/30 transition-all flex items-center gap-2">
+                <div class="flex flex-wrap justify-center gap-3 pt-2">
+                    <button onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold px-6 py-3 md:px-8 md:py-3.5 rounded-2xl shadow-2xl shadow-indigo-500/30 transition-all flex items-center gap-2 text-sm md:text-base">
                         <i class="fa-solid fa-rocket"></i> ចាប់ផ្តើមប្រើប្រាស់
                     </button>
-                    <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" class="glass hover:bg-white/10 text-white font-medium px-8 py-3.5 rounded-2xl border border-white/20 transition-all flex items-center gap-2">
+                    <button onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})" class="glass hover:bg-white/10 text-white font-medium px-6 py-3 md:px-8 md:py-3.5 rounded-2xl border border-white/20 transition-all flex items-center gap-2 text-sm md:text-base">
                         <i class="fa-regular fa-eye"></i> មើលផលិតផល
                     </button>
                 </div>
-                <div class="grid grid-cols-3 gap-4 max-w-lg mx-auto mt-12 pt-8 border-t border-white/10">
-                    <div><div class="text-2xl font-bold text-white"><span class="stat-number" id="statProducts">0</span>+</div><div class="text-xs text-slate-400">ផលិតផល</div></div>
-                    <div><div class="text-2xl font-bold text-white"><span class="stat-number" id="statMembers">0</span>+</div><div class="text-xs text-slate-400">សមាជិក</div></div>
-                    <div><div class="text-2xl font-bold text-white"><span class="stat-number" id="statViews">0</span>k</div><div class="text-xs text-slate-400">ទស្សនា</div></div>
+                <div class="grid grid-cols-3 gap-3 max-w-xs mx-auto mt-8 pt-6 border-t border-white/10">
+                    <div><div class="text-xl md:text-2xl font-bold text-white"><span class="stat-number" id="statProducts">0</span>+</div><div class="text-[10px] text-slate-400">ផលិតផល</div></div>
+                    <div><div class="text-xl md:text-2xl font-bold text-white"><span class="stat-number" id="statMembers">0</span>+</div><div class="text-[10px] text-slate-400">សមាជិក</div></div>
+                    <div><div class="text-xl md:text-2xl font-bold text-white"><span class="stat-number" id="statViews">0</span>k</div><div class="text-[10px] text-slate-400">ទស្សនា</div></div>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- ========== SERVICES / CARDS ========== -->
-    <section id="services" class="container mx-auto max-w-6xl px-4 -mt-10 relative z-20">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <section id="services" class="container mx-auto max-w-6xl px-4 -mt-8 relative z-20">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <!-- Card 1: Register -->
-            <div onclick="openFormModal('register-modal')" class="group bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div onclick="openFormModal('register-modal')" class="group bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-blue-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
                 <div class="relative">
-                    <div class="bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-600 text-blue-600 group-hover:text-white w-14 h-14 rounded-2xl flex items-center justify-center text-xl transition-all duration-300 shadow-lg shadow-blue-500/20 mb-3">
+                    <div class="bg-blue-100 dark:bg-blue-900/30 group-hover:bg-blue-600 text-blue-600 group-hover:text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg transition-all duration-300 shadow-lg shadow-blue-500/20 mb-3">
                         <i class="fa-solid fa-id-card"></i>
                     </div>
                     <h3 class="font-bold text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">ចុះឈ្មោះយក ID</h3>
@@ -163,10 +191,10 @@
                 </div>
             </div>
             <!-- Card 2: Job Apply -->
-            <div onclick="openFormModal('job-modal')" class="group bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div onclick="openFormModal('job-modal')" class="group bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-orange-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
                 <div class="relative">
-                    <div class="bg-orange-100 dark:bg-orange-900/30 group-hover:bg-orange-500 text-orange-500 group-hover:text-white w-14 h-14 rounded-2xl flex items-center justify-center text-xl transition-all duration-300 shadow-lg shadow-orange-500/20 mb-3">
+                    <div class="bg-orange-100 dark:bg-orange-900/30 group-hover:bg-orange-500 text-orange-500 group-hover:text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg transition-all duration-300 shadow-lg shadow-orange-500/20 mb-3">
                         <i class="fa-solid fa-user-tie"></i>
                     </div>
                     <h3 class="font-bold text-sm group-hover:text-orange-500 dark:group-hover:text-orange-400 transition">ដាក់ពាក្យបម្រើការងារ</h3>
@@ -175,10 +203,10 @@
                 </div>
             </div>
             <!-- Card 3: Shop -->
-            <div onclick="openFormModal('shop-modal')" class="group bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div onclick="openFormModal('shop-modal')" class="group bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-emerald-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
                 <div class="relative">
-                    <div class="bg-emerald-100 dark:bg-emerald-900/30 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white w-14 h-14 rounded-2xl flex items-center justify-center text-xl transition-all duration-300 shadow-lg shadow-emerald-500/20 mb-3">
+                    <div class="bg-emerald-100 dark:bg-emerald-900/30 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg transition-all duration-300 shadow-lg shadow-emerald-500/20 mb-3">
                         <i class="fa-solid fa-store"></i>
                     </div>
                     <h3 class="font-bold text-sm group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">បង្ហោះលក់ទំនិញ</h3>
@@ -187,10 +215,10 @@
                 </div>
             </div>
             <!-- Card 4: HR Post -->
-            <div onclick="openFormModal('hr-modal')" class="group bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-24 h-24 bg-pink-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div onclick="openFormModal('hr-modal')" class="group bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-xl hover:shadow-2xl border border-slate-200/60 dark:border-slate-700/60 cursor-pointer transition-all duration-300 card-hover relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-pink-500/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
                 <div class="relative">
-                    <div class="bg-pink-100 dark:bg-pink-900/30 group-hover:bg-pink-600 text-pink-600 group-hover:text-white w-14 h-14 rounded-2xl flex items-center justify-center text-xl transition-all duration-300 shadow-lg shadow-pink-500/20 mb-3">
+                    <div class="bg-pink-100 dark:bg-pink-900/30 group-hover:bg-pink-600 text-pink-600 group-hover:text-white w-12 h-12 rounded-2xl flex items-center justify-center text-lg transition-all duration-300 shadow-lg shadow-pink-500/20 mb-3">
                         <i class="fa-solid fa-bullhorn"></i>
                     </div>
                     <h3 class="font-bold text-sm group-hover:text-pink-600 dark:group-hover:text-pink-400 transition">បង្ហោះជ្រើសរើសបុគ្គលិក</h3>
@@ -202,7 +230,7 @@
     </section>
 
     <!-- ========== PRODUCTS SECTION ========== -->
-    <section id="products" class="container mx-auto max-w-6xl px-4 py-16">
+    <section id="products" class="container mx-auto max-w-6xl px-4 py-12">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
                 <h2 class="text-2xl font-bold flex items-center gap-2">
@@ -250,32 +278,32 @@
         <div id="hrEmptyState" class="hidden text-center py-16">
             <i class="fa-regular fa-face-frown text-5xl text-slate-300 mb-4"></i>
             <p class="text-slate-400 text-lg">មិនទាន់មានការបង្ហោះជ្រើសរើសបុគ្គលិកណាមួយឡើយ</p>
-            <p class="text-slate-400 text-sm">សូមចុចបង្ហោះជ្រើសរើសបុគ្គលិកដើម្បីចាប់ផ្តើម</p>
+            <p class="text-slate-400 text-sm">សូមចុកបង្ហោះជ្រើសរើសបុគ្គលិកដើម្បីចាប់ផ្តើម</p>
         </div>
         <div id="hrPagination" class="flex justify-center gap-2 mt-8"></div>
     </section>
 
     <!-- ========== ABOUT SECTION ========== -->
-    <section class="bg-white dark:bg-slate-800 border-y border-slate-200 dark:border-slate-700 py-16">
+    <section class="bg-white dark:bg-slate-800 border-y border-slate-200 dark:border-slate-700 py-12">
         <div class="container mx-auto max-w-6xl px-4">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="grid md:grid-cols-2 gap-10 items-center">
                 <div class="space-y-4">
                     <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm flex items-center gap-2"><i class="fa-solid fa-circle-info"></i> អំពីយើង</span>
-                    <h2 class="text-3xl font-bold">SmartPortal — <span class="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">វេទិកាឌីជីថលទំនើប</span></h2>
-                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <h2 class="text-2xl md:text-3xl font-bold">SmartPortal — <span class="bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent">វេទិកាឌីជីថលទំនើប</span></h2>
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm">
                         SmartPortal គឺជាប្រព័ន្ធគ្រប់គ្រងសមាជិក និងផ្សារអនឡាញដែលត្រូវបានរចនាឡើងដើម្បីជួយសម្រួលដល់ការគ្រប់គ្រងទិន្នន័យ ការជ្រើសរើសបុគ្គលិក និងការលក់ទំនិញតាមអនឡាញ។
                     </p>
-                    <div class="grid grid-cols-2 gap-4 pt-2">
-                        <div class="flex items-start gap-3"><i class="fa-solid fa-shield-check text-indigo-500 text-xl mt-0.5"></i><div><h4 class="font-semibold text-sm">សុវត្ថិភាពខ្ពស់</h4><p class="text-xs text-slate-400">ទិន្នន័យត្រូវបានការពារ</p></div></div>
-                        <div class="flex items-start gap-3"><i class="fa-solid fa-bolt text-indigo-500 text-xl mt-0.5"></i><div><h4 class="font-semibold text-sm">លឿនរហ័ស</h4><p class="text-xs text-slate-400">ដំណើរការស្វ័យប្រវត្តិ</p></div></div>
-                        <div class="flex items-start gap-3"><i class="fa-solid fa-users text-indigo-500 text-xl mt-0.5"></i><div><h4 class="font-semibold text-sm">សហគមន៍ធំ</h4><p class="text-xs text-slate-400">សមាជិករាប់ពាន់នាក់</p></div></div>
-                        <div class="flex items-start gap-3"><i class="fa-solid fa-headset text-indigo-500 text-xl mt-0.5"></i><div><h4 class="font-semibold text-sm">ជំនួយ ២៤/៧</h4><p class="text-xs text-slate-400">ឆ្លើយតបគ្រប់ពេល</p></div></div>
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <div class="flex items-start gap-2"><i class="fa-solid fa-shield-check text-indigo-500 text-lg mt-0.5"></i><div><h4 class="font-semibold text-sm">សុវត្ថិភាពខ្ពស់</h4><p class="text-xs text-slate-400">ទិន្នន័យត្រូវបានការពារ</p></div></div>
+                        <div class="flex items-start gap-2"><i class="fa-solid fa-bolt text-indigo-500 text-lg mt-0.5"></i><div><h4 class="font-semibold text-sm">លឿនរហ័ស</h4><p class="text-xs text-slate-400">ដំណើរការស្វ័យប្រវត្តិ</p></div></div>
+                        <div class="flex items-start gap-2"><i class="fa-solid fa-users text-indigo-500 text-lg mt-0.5"></i><div><h4 class="font-semibold text-sm">សហគមន៍ធំ</h4><p class="text-xs text-slate-400">សមាជិករាប់ពាន់នាក់</p></div></div>
+                        <div class="flex items-start gap-2"><i class="fa-solid fa-headset text-indigo-500 text-lg mt-0.5"></i><div><h4 class="font-semibold text-sm">ជំនួយ ២៤/៧</h4><p class="text-xs text-slate-400">ឆ្លើយតបគ្រប់ពេល</p></div></div>
                     </div>
                 </div>
                 <div class="relative">
-                    <div class="glass rounded-3xl p-6 border border-indigo-500/20 shadow-2xl">
+                    <div class="glass rounded-2xl p-5 border border-indigo-500/20 shadow-2xl">
                         <div class="flex items-center gap-4 mb-4">
-                            <img src="https://ui-avatars.com/api/?name=Smart+Portal&background=4f46e5&color=fff&size=64" class="w-14 h-14 rounded-xl" alt="SmartPortal">
+                            <img src="https://ui-avatars.com/api/?name=Smart+Portal&background=4f46e5&color=fff&size=64" class="w-12 h-12 rounded-xl" alt="SmartPortal">
                             <div><h3 class="font-bold">SmartPortal Team</h3><p class="text-xs text-slate-400">ប្រតិបត្តិការតាំងពីឆ្នាំ ២០២៤</p></div>
                         </div>
                         <div class="space-y-2 text-sm">
@@ -290,34 +318,34 @@
     </section>
 
     <!-- ========== TESTIMONIALS ========== -->
-    <section class="py-16 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <section class="py-12 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
         <div class="container mx-auto max-w-6xl px-4">
-            <div class="text-center mb-10">
+            <div class="text-center mb-8">
                 <span class="text-indigo-600 dark:text-indigo-400 font-semibold text-sm">ការវាយតម្លៃ</span>
-                <h2 class="text-3xl font-bold">អតិថិជនរបស់យើងនិយាយថា</h2>
+                <h2 class="text-2xl md:text-3xl font-bold">អតិថិជនរបស់យើងនិយាយថា</h2>
             </div>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200/60 dark:border-slate-700/60">
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border border-slate-200/60 dark:border-slate-700/60">
                     <div class="flex text-yellow-400 text-sm mb-2"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">"SmartPortal ជួយឱ្យខ្ញុំលក់ទំនិញបានយ៉ាងងាយស្រួល។ ការបង្ហោះទំនិញឆាប់រហ័ស និងទទួលបានអតិថិជនច្រើន!"</p>
-                    <div class="flex items-center gap-3 mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <img src="https://ui-avatars.com/api/?name=Sokha+Kim&background=8b5cf6&color=fff&size=40" class="w-10 h-10 rounded-full" alt="User">
+                    <div class="flex items-center gap-3 mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
+                        <img src="https://ui-avatars.com/api/?name=Sokha+Kim&background=8b5cf6&color=fff&size=40" class="w-8 h-8 rounded-full" alt="User">
                         <div><h4 class="font-semibold text-sm">សុខា គឹម</h4><p class="text-xs text-slate-400">អ្នកលក់ទំនិញ</p></div>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200/60 dark:border-slate-700/60">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border border-slate-200/60 dark:border-slate-700/60">
                     <div class="flex text-yellow-400 text-sm mb-2"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">"ប្រព័ន្ធចុះឈ្មោះសមាជិកងាយស្រួលប្រើ និងទទួលបាន ID ភ្លាមៗ។ សូមអរគុណ SmartPortal!"</p>
-                    <div class="flex items-center gap-3 mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <img src="https://ui-avatars.com/api/?name=Visal+Cheng&background=3b82f6&color=fff&size=40" class="w-10 h-10 rounded-full" alt="User">
+                    <div class="flex items-center gap-3 mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
+                        <img src="https://ui-avatars.com/api/?name=Visal+Cheng&background=3b82f6&color=fff&size=40" class="w-8 h-8 rounded-full" alt="User">
                         <div><h4 class="font-semibold text-sm">វិសាល ជេង</h4><p class="text-xs text-slate-400">សមាជិកថ្មី</p></div>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-200/60 dark:border-slate-700/60">
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-lg border border-slate-200/60 dark:border-slate-700/60">
                     <div class="flex text-yellow-400 text-sm mb-2"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
                     <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">"បានដាក់ពាក្យសុំការងារតាមរយៈ SmartPortal ហើយទទួលបានការឆ្លើយតបពី HR យ៉ាងឆាប់រហ័ស។ មិនដែលខកចិត្ត!"</p>
-                    <div class="flex items-center gap-3 mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-700/60">
-                        <img src="https://ui-avatars.com/api/?name=Rithy+Phan&background=10b981&color=fff&size=40" class="w-10 h-10 rounded-full" alt="User">
+                    <div class="flex items-center gap-3 mt-3 pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
+                        <img src="https://ui-avatars.com/api/?name=Rithy+Phan&background=10b981&color=fff&size=40" class="w-8 h-8 rounded-full" alt="User">
                         <div><h4 class="font-semibold text-sm">រិទ្ធិ ផាន់</h4><p class="text-xs text-slate-400">បេក្ខជន</p></div>
                     </div>
                 </div>
@@ -327,7 +355,7 @@
 
     <!-- ========== FOOTER ========== -->
     <footer class="bg-slate-900 text-slate-300 border-t border-slate-800">
-        <div class="container mx-auto max-w-6xl px-4 py-12">
+        <div class="container mx-auto max-w-6xl px-4 py-10">
             <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
                 <div>
                     <div class="flex items-center gap-2 mb-4">
@@ -378,116 +406,129 @@
     <!-- ===================== ALL MODALS ============================ -->
     <!-- ============================================================ -->
 
-    <!-- ========== REGISTER MODAL ========== -->
+    <!-- ========== REGISTER MODAL (ជាមួយ Placeholder & Background) ========== -->
     <div id="register-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-indigo-500">
-            <button onclick="closeFormModal('register-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
-            <h2 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-id-card text-indigo-500 mr-2"></i> ទម្រង់ចុះឈ្មោះព័ត៌មានផ្ទាល់ខ្លួន</h2>
-            <form id="regForm" onsubmit="submitRegister(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះពេញ <span class="text-red-500">*</span></label><input type="text" id="reg-name" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ភេទ <span class="text-red-500">*</span></label><select id="reg-gender" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>ប្រុស</option><option>ស្រី</option><option>ផ្សេងៗ</option></select></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាយុ <span class="text-red-500">*</span></label><input type="number" id="reg-age" required min="1" max="120" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ថ្ងៃខែឆ្នាំកំណើត <span class="text-red-500">*</span></label><input type="date" id="reg-dob" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">មុខរបរបច្ចុប្បន្ន <span class="text-red-500">*</span></label><input type="text" id="reg-job" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">កម្រិតនៃការសិក្សា <span class="text-red-500">*</span></label><input type="text" id="reg-edu" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Username Telegram <span class="text-red-500">*</span></label><input type="text" id="reg-contact" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
-                    <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាសយដ្ឋានបច្ចុប្បន្ន <span class="text-red-500">*</span></label><textarea id="reg-address" rows="2" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></textarea></div>
-                </div>
-                <button type="submit" id="btn-reg-submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold p-3 rounded-xl shadow-lg shadow-indigo-500/30 transition">បង្កើត ID និងបញ្ជូនទិន្នន័យ</button>
-            </form>
-            <div id="id-display" class="hidden mt-4 p-4 border border-emerald-200 bg-emerald-50 dark:bg-emerald-900/30 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 rounded-xl text-center font-semibold"></div>
+            <!-- Background Decoration -->
+            <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
+            <div class="relative z-10">
+                <button onclick="closeFormModal('register-modal')" class="absolute top-2 right-2 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                <h2 class="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-id-card text-indigo-500 mr-2"></i> ទម្រង់ចុះឈ្មោះព័ត៌មានផ្ទាល់ខ្លួន</h2>
+                <form id="regForm" onsubmit="submitRegister(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះពេញ <span class="text-red-500">*</span></label><input type="text" id="reg-name" required placeholder="ឧ. សុខា គឹម" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ភេទ <span class="text-red-500">*</span></label><select id="reg-gender" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>ប្រុស</option><option>ស្រី</option><option>ផ្សេងៗ</option></select></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាយុ <span class="text-red-500">*</span></label><input type="number" id="reg-age" required min="1" max="120" placeholder="ឧ. 25" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ថ្ងៃខែឆ្នាំកំណើត <span class="text-red-500">*</span></label><input type="date" id="reg-dob" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">មុខរបរបច្ចុប្បន្ន <span class="text-red-500">*</span></label><input type="text" id="reg-job" required placeholder="ឧ. គ្រូបង្រៀន" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">កម្រិតនៃការសិក្សា <span class="text-red-500">*</span></label><input type="text" id="reg-edu" required placeholder="ឧ. បរិញ្ញាបត្រ" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Username Telegram <span class="text-red-500">*</span></label><input type="text" id="reg-contact" required placeholder="ឧ. 012345678 / @sokha" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></div>
+                        <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាសយដ្ឋានបច្ចុប្បន្ន <span class="text-red-500">*</span></label><textarea id="reg-address" rows="2" required placeholder="ឧ. ផ្ទះលេខ ១២៣ ភ្នំពេញ" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-indigo-500/50"></textarea></div>
+                    </div>
+                    <button type="submit" id="btn-reg-submit" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold p-3 rounded-xl shadow-lg shadow-indigo-500/30 transition">បង្កើត ID និងបញ្ជូនទិន្នន័យ</button>
+                </form>
+                <div id="id-display" class="hidden mt-4 p-4 border border-emerald-200 bg-emerald-50 dark:bg-emerald-900/30 dark:border-emerald-700 text-emerald-800 dark:text-emerald-200 rounded-xl text-center font-semibold"></div>
+            </div>
         </div>
     </div>
 
-    <!-- ========== JOB MODAL ========== -->
+    <!-- ========== JOB MODAL (ជាមួយ Placeholder & Background) ========== -->
     <div id="job-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-orange-500">
-            <button onclick="closeFormModal('job-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
-            <h2 class="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-user-tie text-orange-500 mr-2"></i> ទម្រង់ដាក់ពាក្យសុំបម្រើការងារ</h2>
-            <form id="jobForm" onsubmit="submitJob(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2"><label class="block text-red-600 dark:text-red-400 text-xs font-semibold">🆔 លេខ ID របស់អ្នក <span class="text-red-500">*</span></label><input type="text" id="job-user-id" required placeholder="បញ្ចូលលេខ ID ដែលអ្នកបានចុះឈ្មោះ" class="w-full p-2.5 border-2 border-red-300 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-red-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះពេញ <span class="text-red-500">*</span></label><input type="text" id="job-name" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាយុ <span class="text-red-500">*</span></label><input type="number" id="job-age" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">កម្ពស់ (cm) <span class="text-red-500">*</span></label><input type="number" id="job-height" required step="0.1" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ជ្រើសរើសតួនាទី</label><select id="job-position" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 text-xs"><option value="">-- សូមជ្រើសរើស --</option><option>អ្នកគ្រប់គ្រងទូទៅ</option><option>បុគ្គលិកផ្នែករដ្ឋបាល</option><option>ធនធានមនុស្ស</option><option>បុគ្គលិកផ្នែកលក់</option><option>ផ្នែកទីផ្សារឌីជីថល</option></select></div>
-                    <div><label class="block text-orange-600 dark:text-orange-400 text-xs font-semibold">ឬ បញ្ចូលតួនាទីផ្សេង (ស្រេចចិត្ត)</label><input type="text" id="job-position-custom" placeholder="វាយបញ្ចូលតួនាទី..." class="w-full p-2.5 border border-orange-200 dark:border-orange-800 bg-orange-50/30 dark:bg-orange-900/10 rounded-xl mt-1"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">កម្រិតនៃការសិក្សា <span class="text-red-500">*</span></label><input type="text" id="job-edu" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Username Telegram <span class="text-red-500">*</span></label><input type="text" id="job-contact" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ប្រាក់ខែរំពឹងទុក <span class="text-red-500">*</span></label><input type="text" id="job-salary" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ប្រភេទម៉ោងធ្វើការ <span class="text-red-500">*</span></label><select id="job-time-type" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>ពេញម៉ោង</option><option>ក្រៅម៉ោង</option><option>ពីផ្ទះ</option></select></div>
-                    <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាសយដ្ឋានបច្ចុប្បន្ន <span class="text-red-500">*</span></label><textarea id="job-address" rows="2" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></textarea></div>
-                    <div class="sm:col-span-2 p-3 border border-dashed border-orange-300 dark:border-orange-800 bg-orange-50/20 dark:bg-orange-900/10 rounded-xl"><label class="block text-orange-700 dark:text-orange-300 text-xs font-semibold mb-1">📸 បង្ហោះរូបថតបេក្ខជន <span class="text-red-500">*</span></label><input type="file" id="job-photo" accept="image/*" required class="w-full text-xs"></div>
-                    <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">បទពិសោធន៍ការងារ <span class="text-red-500">*</span></label><textarea id="job-experience" rows="2" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></textarea></div>
-                </div>
-                <button type="submit" id="btn-job-submit" class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold p-3 rounded-xl shadow-lg shadow-orange-500/30 transition">បញ្ជូនពាក្យសុំទៅក្រុម HR</button>
-            </form>
+            <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
+            <div class="relative z-10">
+                <button onclick="closeFormModal('job-modal')" class="absolute top-2 right-2 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                <h2 class="text-xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-user-tie text-orange-500 mr-2"></i> ទម្រង់ដាក់ពាក្យសុំបម្រើការងារ</h2>
+                <form id="jobForm" onsubmit="submitJob(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="sm:col-span-2"><label class="block text-red-600 dark:text-red-400 text-xs font-semibold">🆔 លេខ ID របស់អ្នក <span class="text-red-500">*</span></label><input type="text" id="job-user-id" required placeholder="ឧ. ID-12345" class="w-full p-2.5 border-2 border-red-300 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-red-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះពេញ <span class="text-red-500">*</span></label><input type="text" id="job-name" required placeholder="ឧ. វិសាល ជេង" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាយុ <span class="text-red-500">*</span></label><input type="number" id="job-age" required placeholder="ឧ. 25" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">កម្ពស់ (cm) <span class="text-red-500">*</span></label><input type="number" id="job-height" required step="0.1" placeholder="ឧ. 175" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ជ្រើសរើសតួនាទី</label><select id="job-position" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 text-xs"><option value="">-- សូមជ្រើសរើស --</option><option>អ្នកគ្រប់គ្រងទូទៅ</option><option>បុគ្គលិកផ្នែករដ្ឋបាល</option><option>ធនធានមនុស្ស</option><option>បុគ្គលិកផ្នែកលក់</option><option>ផ្នែកទីផ្សារឌីជីថល</option></select></div>
+                        <div><label class="block text-orange-600 dark:text-orange-400 text-xs font-semibold">ឬ បញ្ចូលតួនាទីផ្សេង (ស្រេចចិត្ត)</label><input type="text" id="job-position-custom" placeholder="ឧ. អ្នកសរសេរកម្មវិធី" class="w-full p-2.5 border border-orange-200 dark:border-orange-800 bg-orange-50/30 dark:bg-orange-900/10 rounded-xl mt-1"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">កម្រិតនៃការសិក្សា <span class="text-red-500">*</span></label><input type="text" id="job-edu" required placeholder="ឧ. បរិញ្ញាបត្រជាន់ខ្ពស់" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Username Telegram <span class="text-red-500">*</span></label><input type="text" id="job-contact" required placeholder="ឧ. 098765432 / @visal" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ប្រាក់ខែរំពឹងទុក <span class="text-red-500">*</span></label><input type="text" id="job-salary" required placeholder="ឧ. $500" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ប្រភេទម៉ោងធ្វើការ <span class="text-red-500">*</span></label><select id="job-time-type" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>ពេញម៉ោង</option><option>ក្រៅម៉ោង</option><option>ពីផ្ទះ</option></select></div>
+                        <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">អាសយដ្ឋានបច្ចុប្បន្ន <span class="text-red-500">*</span></label><textarea id="job-address" rows="2" required placeholder="ឧ. ផ្ទះលេខ ៤៥ សង្កាត់បឹងកេងកង" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></textarea></div>
+                        <div class="sm:col-span-2 p-3 border border-dashed border-orange-300 dark:border-orange-800 bg-orange-50/20 dark:bg-orange-900/10 rounded-xl"><label class="block text-orange-700 dark:text-orange-300 text-xs font-semibold mb-1">📸 បង្ហោះរូបថតបេក្ខជន <span class="text-red-500">*</span></label><input type="file" id="job-photo" accept="image/*" required class="w-full text-xs"></div>
+                        <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">បទពិសោធន៍ការងារ <span class="text-red-500">*</span></label><textarea id="job-experience" rows="2" required placeholder="ឧ. មានបទពិសោធន៍ ៣ ឆ្នាំក្នុងផ្នែកលក់..." class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-orange-500/50"></textarea></div>
+                    </div>
+                    <button type="submit" id="btn-job-submit" class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold p-3 rounded-xl shadow-lg shadow-orange-500/30 transition">បញ្ជូនពាក្យសុំទៅក្រុម HR</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- ========== SHOP MODAL ========== -->
+    <!-- ========== SHOP MODAL (ជាមួយ Placeholder & Background) ========== -->
     <div id="shop-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-emerald-500">
-            <button onclick="closeFormModal('shop-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
-            <h2 class="text-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-store text-emerald-500 mr-2"></i> បង្ហោះលក់ផលិតផលថ្មី</h2>
-            <form id="shopForm" onsubmit="handleProductUpload(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2"><label class="block text-red-600 dark:text-red-400 text-xs font-semibold">🆔 លេខ ID របស់អ្នក <span class="text-red-500">*</span></label><input type="text" id="shop-user-id" required placeholder="បញ្ចូលលេខ ID ដែលអ្នកបានចុះឈ្មោះ" class="w-full p-2.5 border-2 border-red-300 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-red-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">👑 ប្រភេទផលិតផល <span class="text-red-500">*</span></label>
-                        <select id="shop-cat" required onchange="toggleDeliveryFields()" class="w-full p-2.5 border border-indigo-300 dark:border-indigo-800 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 rounded-xl mt-1 text-xs outline-none focus:ring-2 focus:ring-emerald-500/50">
-                            <option value="">-- សូមជ្រើសរើស --</option>
-                            <option>👕 សម្លៀកបំពាក់</option>
-                            <option>👜 កាបូប និងស្បែកជើង</option>
-                            <option>📱 ទូរស័ព្ទ និងអេឡិចត្រូនិក</option>
-                            <option>💻 កុំព្យូទ័រ និងគ្រឿងបន្លាស់</option>
-                            <option>💄 គ្រឿងសម្អាង</option>
-                            <option>🍹 ចំណីអាហារ និងភេសជ្ជៈ</option>
-                            <option>🚗 រថយន្ត និងយានយន្ត</option>
-                            <option>🏠 អចលនទ្រព្យ</option>
-                            <option>📦 ផលិតផលផ្សេងៗ</option>
-                        </select>
+            <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
+            <div class="relative z-10">
+                <button onclick="closeFormModal('shop-modal')" class="absolute top-2 right-2 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                <h2 class="text-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-store text-emerald-500 mr-2"></i> បង្ហោះលក់ផលិតផលថ្មី</h2>
+                <form id="shopForm" onsubmit="handleProductUpload(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="sm:col-span-2"><label class="block text-red-600 dark:text-red-400 text-xs font-semibold">🆔 លេខ ID របស់អ្នក <span class="text-red-500">*</span></label><input type="text" id="shop-user-id" required placeholder="ឧ. ID-12345" class="w-full p-2.5 border-2 border-red-300 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-red-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">👑 ប្រភេទផលិតផល <span class="text-red-500">*</span></label>
+                            <select id="shop-cat" required onchange="toggleDeliveryFields()" class="w-full p-2.5 border border-indigo-300 dark:border-indigo-800 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 rounded-xl mt-1 text-xs outline-none focus:ring-2 focus:ring-emerald-500/50">
+                                <option value="">-- សូមជ្រើសរើស --</option>
+                                <option>👕 សម្លៀកបំពាក់</option>
+                                <option>👜 កាបូប និងស្បែកជើង</option>
+                                <option>📱 ទូរស័ព្ទ និងអេឡិចត្រូនិក</option>
+                                <option>💻 កុំព្យូទ័រ និងគ្រឿងបន្លាស់</option>
+                                <option>💄 គ្រឿងសម្អាង</option>
+                                <option>🍹 ចំណីអាហារ និងភេសជ្ជៈ</option>
+                                <option>🚗 រថយន្ត និងយានយន្ត</option>
+                                <option>🏠 អចលនទ្រព្យ</option>
+                                <option>📦 ផលិតផលផ្សេងៗ</option>
+                            </select>
+                        </div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះទំនិញ <span class="text-red-500">*</span></label><input type="text" id="shop-item" required placeholder="ឧ. អាវយឺតបុរស" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះអ្នកលក់ <span class="text-red-500">*</span></label><input type="text" id="shop-seller" required placeholder="ឧ. សុខា គឹម" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Telegram <span class="text-red-500">*</span></label><input type="text" id="shop-contact" required placeholder="ឧ. 012345678 / @sokha" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">តម្លៃលក់ ($) <span class="text-red-500">*</span></label><input type="text" id="shop-price" required placeholder="ឧ. 25.00" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">តម្លៃដើម ($)</label><input type="text" id="shop-old-price" placeholder="ឧ. 40.00" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div id="deliveryFields"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ស្ថានភាពដឹកជញ្ជូន <span class="text-red-500">*</span></label><select id="shop-deliv-status" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>មានសេវាដឹកជញ្ជូនរហ័ស</option><option>អតិថិជនមកយកផ្ទាល់</option></select></div>
+                        <div id="deliveryFeeField"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ថ្លៃដឹកជញ្ជូន <span class="text-red-500">*</span></label><input type="text" id="shop-deliv-fee" placeholder="ឧ. 2.00" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">🏦 ឈ្មោះធនាគារ</label><input type="text" id="shop-bank-name" placeholder="ឧ. ACLEDA" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">🔢 លេខគណនីធនាគារ</label><input type="text" id="shop-bank-account" placeholder="ឧ. 123456789" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
+                        <div class="p-3 border border-dashed border-purple-300 dark:border-purple-800 bg-purple-50/20 dark:bg-purple-900/10 rounded-xl"><label class="block text-purple-700 dark:text-purple-300 text-xs font-semibold mb-1">📱 QR Code បង់ប្រាក់</label><input type="file" id="shop-qr-img" accept="image/*" class="w-full text-xs"></div>
+                        <div class="p-3 border border-dashed border-emerald-300 dark:border-emerald-800 bg-emerald-50/20 dark:bg-emerald-900/10 rounded-xl"><label class="block text-emerald-700 dark:text-emerald-300 text-xs font-semibold mb-1">📸 រូបភាពចម្បង *</label><input type="file" id="shop-main-img" accept="image/*" required onchange="previewMainImg(this)" class="w-full text-xs"><div id="main-preview" class="mt-2 hidden"><img id="img-m-view" class="h-14 w-14 object-cover rounded-lg border"></div></div>
+                        <div class="p-3 border border-dashed border-blue-300 dark:border-blue-800 bg-blue-50/20 dark:bg-blue-900/10 rounded-xl"><label class="block text-blue-700 dark:text-blue-300 text-xs font-semibold mb-1">🖼️ រូបភាពបន្ថែម</label><input type="file" id="shop-more-imgs" accept="image/*" multiple onchange="previewMoreImgs(this)" class="w-full text-xs"><div id="more-previews" class="mt-2 flex flex-wrap gap-1"></div></div>
+                        <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ពណ៌នាទំនិញ <span class="text-red-500">*</span></label><textarea id="shop-desc" rows="2" required placeholder="ឧ. អាវយឺតគុណភាពខ្ពស់ ផលិតពីកប្បាស ១០០%" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></textarea></div>
                     </div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះទំនិញ <span class="text-red-500">*</span></label><input type="text" id="shop-item" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះអ្នកលក់ <span class="text-red-500">*</span></label><input type="text" id="shop-seller" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Telegram <span class="text-red-500">*</span></label><input type="text" id="shop-contact" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">តម្លៃលក់ ($) <span class="text-red-500">*</span></label><input type="text" id="shop-price" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">តម្លៃដើម ($)</label><input type="text" id="shop-old-price" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div id="deliveryFields"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ស្ថានភាពដឹកជញ្ជូន <span class="text-red-500">*</span></label><select id="shop-deliv-status" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>មានសេវាដឹកជញ្ជូនរហ័ស</option><option>អតិថិជនមកយកផ្ទាល់</option></select></div>
-                    <div id="deliveryFeeField"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ថ្លៃដឹកជញ្ជូន <span class="text-red-500">*</span></label><input type="text" id="shop-deliv-fee" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">🏦 ឈ្មោះធនាគារ</label><input type="text" id="shop-bank-name" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">🔢 លេខគណនីធនាគារ</label><input type="text" id="shop-bank-account" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                    <div class="p-3 border border-dashed border-purple-300 dark:border-purple-800 bg-purple-50/20 dark:bg-purple-900/10 rounded-xl"><label class="block text-purple-700 dark:text-purple-300 text-xs font-semibold mb-1">📱 QR Code បង់ប្រាក់</label><input type="file" id="shop-qr-img" accept="image/*" class="w-full text-xs"></div>
-                    <div class="p-3 border border-dashed border-emerald-300 dark:border-emerald-800 bg-emerald-50/20 dark:bg-emerald-900/10 rounded-xl"><label class="block text-emerald-700 dark:text-emerald-300 text-xs font-semibold mb-1">📸 រូបភាពចម្បង *</label><input type="file" id="shop-main-img" accept="image/*" required onchange="previewMainImg(this)" class="w-full text-xs"><div id="main-preview" class="mt-2 hidden"><img id="img-m-view" class="h-14 w-14 object-cover rounded-lg border"></div></div>
-                    <div class="p-3 border border-dashed border-blue-300 dark:border-blue-800 bg-blue-50/20 dark:bg-blue-900/10 rounded-xl"><label class="block text-blue-700 dark:text-blue-300 text-xs font-semibold mb-1">🖼️ រូបភាពបន្ថែម</label><input type="file" id="shop-more-imgs" accept="image/*" multiple onchange="previewMoreImgs(this)" class="w-full text-xs"><div id="more-previews" class="mt-2 flex flex-wrap gap-1"></div></div>
-                    <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ពណ៌នាទំនិញ <span class="text-red-500">*</span></label><textarea id="shop-desc" rows="2" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></textarea></div>
-                </div>
-                <button type="submit" id="btn-shop-submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold p-3 rounded-xl shadow-lg shadow-emerald-500/30 transition">បង្ហោះលក់ទំនិញភ្លាមៗ</button>
-            </form>
+                    <button type="submit" id="btn-shop-submit" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold p-3 rounded-xl shadow-lg shadow-emerald-500/30 transition">បង្ហោះលក់ទំនិញភ្លាមៗ</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- ========== HR MODAL ========== -->
+    <!-- ========== HR MODAL (ជាមួយ Placeholder & Background) ========== -->
     <div id="hr-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-pink-500">
-            <button onclick="closeFormModal('hr-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
-            <h2 class="text-xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-bullhorn text-pink-500 mr-2"></i> បង្ហោះជ្រើសរើសបុគ្គលិក</h2>
-            <form id="hrForm" onsubmit="submitHRPost(event)" class="space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="sm:col-span-2"><label class="block text-red-600 dark:text-red-400 text-xs font-semibold">🆔 លេខ ID អ្នកបង្ហោះ <span class="text-red-500">*</span></label><input type="text" id="hr-user-id" required placeholder="បញ្ចូលលេខ ID របស់អ្នក" class="w-full p-2.5 border-2 border-red-300 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះអ្នកបង្ហោះ <span class="text-red-500">*</span></label><input type="text" id="hr-name" required class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ផ្នែកដែលត្រូវជ្រើសរើស <span class="text-red-500">*</span></label><input type="text" id="hr-department" required placeholder="ឧ. ផ្នែកលក់, ផ្នែក IT" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Username Telegram / លីង Telegram <span class="text-red-500">*</span></label><input type="text" id="hr-contact" required placeholder="ឧ. 012345678 / @username / t.me/..." class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
-                    <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ទីតាំង <span class="text-red-500">*</span></label><input type="text" id="hr-location" required placeholder="ឧ. ភ្នំពេញ, សៀមរាប" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
-                    <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ពណ៌នាអំពីការជ្រើសរើសបុគ្គលិក <span class="text-red-500">*</span></label><textarea id="hr-desc" rows="3" required placeholder="រៀបរាប់ពីតម្រូវការ បទពិសោធន៍ និងលក្ខខណ្ឌការងារ..." class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></textarea></div>
-                    <div class="sm:col-span-2 p-3 border border-dashed border-pink-300 dark:border-pink-800 bg-pink-50/20 dark:bg-pink-900/10 rounded-xl">
-                        <label class="block text-pink-700 dark:text-pink-300 text-xs font-semibold mb-1">📸 បង្ហោះរូបភាព (១-៤ សន្លឹក) <span class="text-red-500">*</span></label>
-                        <input type="file" id="hr-images" accept="image/*" multiple required class="w-full text-xs">
-                        <div id="hr-previews" class="mt-2 flex flex-wrap gap-2"></div>
+            <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
+            <div class="relative z-10">
+                <button onclick="closeFormModal('hr-modal')" class="absolute top-2 right-2 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
+                <h2 class="text-xl font-bold bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent mb-6 flex items-center border-b border-slate-200/20 pb-3"><i class="fa-solid fa-bullhorn text-pink-500 mr-2"></i> បង្ហោះជ្រើសរើសបុគ្គលិក</h2>
+                <form id="hrForm" onsubmit="submitHRPost(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="sm:col-span-2"><label class="block text-red-600 dark:text-red-400 text-xs font-semibold">🆔 លេខ ID អ្នកបង្ហោះ <span class="text-red-500">*</span></label><input type="text" id="hr-user-id" required placeholder="ឧ. ID-12345" class="w-full p-2.5 border-2 border-red-300 dark:border-red-800 bg-red-50/30 dark:bg-red-900/10 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ឈ្មោះអ្នកបង្ហោះ <span class="text-red-500">*</span></label><input type="text" id="hr-name" required placeholder="ឧ. សុខា គឹម" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ផ្នែកដែលត្រូវជ្រើសរើស <span class="text-red-500">*</span></label><input type="text" id="hr-department" required placeholder="ឧ. ផ្នែកលក់" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Username Telegram / លីង Telegram <span class="text-red-500">*</span></label><input type="text" id="hr-contact" required placeholder="ឧ. 012345678 / @sokha / t.me/sokha" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
+                        <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ទីតាំង <span class="text-red-500">*</span></label><input type="text" id="hr-location" required placeholder="ឧ. ភ្នំពេញ" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></div>
+                        <div class="sm:col-span-2"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ពណ៌នាអំពីការជ្រើសរើសបុគ្គលិក <span class="text-red-500">*</span></label><textarea id="hr-desc" rows="3" required placeholder="រៀបរាប់ពីតម្រូវការ បទពិសោធន៍ និងលក្ខខណ្ឌការងារ..." class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-pink-500/50"></textarea></div>
+                        <div class="sm:col-span-2 p-3 border border-dashed border-pink-300 dark:border-pink-800 bg-pink-50/20 dark:bg-pink-900/10 rounded-xl">
+                            <label class="block text-pink-700 dark:text-pink-300 text-xs font-semibold mb-1">📸 បង្ហោះរូបភាព (១-៤ សន្លឹក) <span class="text-red-500">*</span></label>
+                            <input type="file" id="hr-images" accept="image/*" multiple required class="w-full text-xs">
+                            <div id="hr-previews" class="mt-2 flex flex-wrap gap-2"></div>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" id="btn-hr-submit" class="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold p-3 rounded-xl shadow-lg shadow-pink-500/30 transition">បង្ហោះការជ្រើសរើសបុគ្គលិក</button>
-            </form>
+                    <button type="submit" id="btn-hr-submit" class="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold p-3 rounded-xl shadow-lg shadow-pink-500/30 transition">បង្ហោះការជ្រើសរើសបុគ្គលិក</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -543,7 +584,7 @@
             REGISTER: { token: '8832988912:AAHopQQf21daUcFIzM4Bl20h9Gzd4IbQ_pI', chat_id: '-5387523552' },
             JOB: { token: '8133960195:AAGss5J-d0GXsFkfsOa3yjQ7p3yp9W5uCFs', chat_id: '-1003791568938' },
             SHOP: { token: '8572743046:AAHyr67sHP-DNpmSgaTucZc2OWe4GYkjnww', chat_id: '-1004319292996' },
-            HR: { token: '8957830113:AAGxikYfnySPxW-jeNe1dEcxITix_pJckZQ', chat_id: '-1004373121052' }  // ✅ កែប្រែ Chat ID ថ្មី
+            HR: { token: '8957830113:AAGxikYfnySPxW-jeNe1dEcxITix_pJckZQ', chat_id: '-1004373121052' }
         };
         const ITEMS_PER_PAGE = 6;
         const HR_ITEMS_PER_PAGE = 6;
@@ -611,7 +652,7 @@
         }
         updateIdDisplay();
 
-        // ========== VALIDATE ID (ថ្មី) ==========
+        // ========== VALIDATE ID ==========
         function validateUserId(inputId) {
             const storedId = localStorage.getItem('user_id');
             if (!storedId) {
@@ -710,7 +751,7 @@
         async function submitJob(event) {
             event.preventDefault();
             const userId = document.getElementById('job-user-id').value;
-            if (!validateUserId(userId)) return;  // ✅ ផ្ទៀងផ្ទាត់ ID
+            if (!validateUserId(userId)) return;
             const btn = document.getElementById('btn-job-submit'); btn.disabled = true; btn.innerText = "កំពុងរៀបចំរូបភាព...";
             const dropPos = document.getElementById('job-position').value;
             const customPos = document.getElementById('job-position-custom').value;
@@ -733,7 +774,7 @@
         async function handleProductUpload(event) {
             event.preventDefault();
             const userId = document.getElementById('shop-user-id').value;
-            if (!validateUserId(userId)) return;  // ✅ ផ្ទៀងផ្ទាត់ ID
+            if (!validateUserId(userId)) return;
             const btn = document.getElementById('btn-shop-submit'); btn.disabled = true; btn.innerText = "កំពុងបង្រួមរូបភាព...";
             const cat = document.getElementById('shop-cat').value; if(!cat) { showToast('⚠️ សូមជ្រើសរើសប្រភេទផលិតផល!', 'error'); btn.disabled = false; btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ"; return; }
             const seller = document.getElementById('shop-seller').value; const contact = document.getElementById('shop-contact').value;
@@ -799,7 +840,7 @@
         async function submitHRPost(event) {
             event.preventDefault();
             const userId = document.getElementById('hr-user-id').value;
-            if (!validateUserId(userId)) return;  // ✅ ផ្ទៀងផ្ទាត់ ID
+            if (!validateUserId(userId)) return;
             const btn = document.getElementById('btn-hr-submit'); btn.disabled = true; btn.innerText = "កំពុងរៀបចំ...";
             const name = document.getElementById('hr-name').value;
             const department = document.getElementById('hr-department').value;
@@ -847,17 +888,18 @@
 
                 btn.innerText = "កំពុងផ្ញើទៅ Telegram...";
 
+                // ✅ បន្ថែមអត្ថបទពណ៌នាទៅក្នុង caption
                 let cap = `📢 *ការជ្រើសរើសបុគ្គលិកថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• អ្នកបង្ហោះ: ${name}\n• ផ្នែកដែលត្រូវជ្រើសរើស: *${department}*\n• ទំនាក់ទំនង: ${contact}\n• ទីតាំង: ${location}\n• ពណ៌នា: ${desc}\n━━━━━━━━━━━━━━━━━━━━`;
 
                 const mediaFormData = new FormData();
-                mediaFormData.append('chat_id', TG_CONFIG.HR.chat_id);  // ✅ ប្រើ Chat ID ថ្មី
+                mediaFormData.append('chat_id', TG_CONFIG.HR.chat_id);
                 const mediaArray = [];
                 for (let i = 0; i < resizedImages.length; i++) {
                     mediaFormData.append(`photo_${i}`, resizedImages[i]);
                     mediaArray.push({ type: 'photo', media: `attach://photo_${i}` });
                 }
                 mediaFormData.append('media', JSON.stringify(mediaArray));
-                mediaFormData.append('caption', cap);
+                mediaFormData.append('caption', cap);  // ✅ បញ្ជូនអត្ថបទជាមួយរូបភាព
                 mediaFormData.append('parse_mode', 'Markdown');
                 await fetch(`https://api.telegram.org/bot${TG_CONFIG.HR.token}/sendMediaGroup`, { method: 'POST', body: mediaFormData });
 
