@@ -75,7 +75,6 @@
             color: rgba(255,255,255,0.6); font-size: 14px; background: rgba(0,0,0,0.4);
             padding: 6px 18px; border-radius: 20px; backdrop-filter: blur(8px);
         }
-        /* Modal Background Decoration */
         .modal-bg-pattern {
             position: absolute;
             inset: 0;
@@ -92,15 +91,27 @@
         .modal-bg-pattern .circle:nth-child(1) { width: 200px; height: 200px; top: -60px; right: -60px; background: #4f46e5; }
         .modal-bg-pattern .circle:nth-child(2) { width: 150px; height: 150px; bottom: -40px; left: -40px; background: #7c3aed; }
         .modal-bg-pattern .circle:nth-child(3) { width: 100px; height: 100px; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #8b5cf6; }
-        /* Form placeholder styling */
         input::placeholder, textarea::placeholder { color: #94a3b8; font-size: 12px; opacity: 0.7; }
         .dark input::placeholder, .dark textarea::placeholder { color: #64748b; }
-        /* Hero responsive */
-        .hero-title { font-size: clamp(1.8rem, 8vw, 4rem); line-height: 1.2; }
-        .hero-sub { font-size: clamp(1.6rem, 6vw, 3.5rem); line-height: 1.2; }
+        /* Hero Title - ពណ៌ស */
+        .hero-title { font-size: clamp(1.8rem, 8vw, 4rem); line-height: 1.2; color: white; }
+        .hero-sub { font-size: clamp(1.6rem, 6vw, 3.5rem); line-height: 1.2; color: white; }
         @media (max-width: 480px) {
             .hero-title { font-size: 1.6rem; }
             .hero-sub { font-size: 1.4rem; }
+        }
+        /* Gradient text for hero - use white */
+        .hero-title .gradient-text {
+            background: linear-gradient(to right, #e0e7ff, #c7d2fe, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub .gradient-text {
+            background: linear-gradient(to right, #e0e7ff, #ddd6fe, #fbcfe8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
@@ -134,7 +145,7 @@
         </div>
     </nav>
 
-    <!-- ========== HERO SECTION (កែលម្អ) ========== -->
+    <!-- ========== HERO SECTION (ពណ៌ស) ========== -->
     <header class="relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white py-16 md:py-24">
         <div class="absolute inset-0 opacity-15">
             <div class="absolute top-10 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
@@ -147,12 +158,12 @@
                     <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span></span>
                     ប្រព័ន្ធដំណើរការ ២៤/៧
                 </div>
-                <!-- Hero Title: ច្បាស់ និងមើលងាយ -->
+                <!-- Hero Title: ពណ៌ស -->
                 <h1 class="hero-title font-extrabold leading-tight">
-                    <span class="bg-gradient-to-r from-indigo-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ</span>
+                    <span class="gradient-text">ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យ</span>
                 </h1>
                 <h2 class="hero-sub font-extrabold leading-tight">
-                    <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">និងផ្សារអនឡាញឆ្លាតវៃ</span>
+                    <span class="gradient-text">និងផ្សារអនឡាញឆ្លាតវៃ</span>
                 </h2>
                 <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto font-light leading-relaxed px-2">
                     ចុះឈ្មោះសមាជិក ដាក់ពាក្យសុំការងារ ឬបង្ហោះលក់ទំនិញបានយ៉ាងឆាប់រហ័ស។
@@ -406,10 +417,9 @@
     <!-- ===================== ALL MODALS ============================ -->
     <!-- ============================================================ -->
 
-    <!-- ========== REGISTER MODAL (ជាមួយ Placeholder & Background) ========== -->
+    <!-- ========== REGISTER MODAL ========== -->
     <div id="register-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-indigo-500">
-            <!-- Background Decoration -->
             <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
             <div class="relative z-10">
                 <button onclick="closeFormModal('register-modal')" class="absolute top-2 right-2 text-slate-400 hover:text-slate-800 dark:hover:text-white text-2xl transition"><i class="fa-solid fa-circle-xmark"></i></button>
@@ -432,7 +442,7 @@
         </div>
     </div>
 
-    <!-- ========== JOB MODAL (ជាមួយ Placeholder & Background) ========== -->
+    <!-- ========== JOB MODAL ========== -->
     <div id="job-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-orange-500">
             <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
@@ -461,7 +471,7 @@
         </div>
     </div>
 
-    <!-- ========== SHOP MODAL (ជាមួយ Placeholder & Background) ========== -->
+    <!-- ========== SHOP MODAL (បន្ថែមមធ្យោបាយដឹកជញ្ជូន) ========== -->
     <div id="shop-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-emerald-500">
             <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
@@ -490,7 +500,25 @@
                         <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">លេខទូរស័ព្ទ / Telegram <span class="text-red-500">*</span></label><input type="text" id="shop-contact" required placeholder="ឧ. 012345678 / @sokha" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
                         <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">តម្លៃលក់ ($) <span class="text-red-500">*</span></label><input type="text" id="shop-price" required placeholder="ឧ. 25.00" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
                         <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">តម្លៃដើម ($)</label><input type="text" id="shop-old-price" placeholder="ឧ. 40.00" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
-                        <div id="deliveryFields"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ស្ថានភាពដឹកជញ្ជូន <span class="text-red-500">*</span></label><select id="shop-deliv-status" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>មានសេវាដឹកជញ្ជូនរហ័ស</option><option>អតិថិជនមកយកផ្ទាល់</option></select></div>
+                        <!-- Delivery Group: Status + Company -->
+                        <div id="deliveryGroup" class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div id="deliveryFields"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ស្ថានភាពដឹកជញ្ជូន <span class="text-red-500">*</span></label><select id="shop-deliv-status" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1"><option>មានសេវាដឹកជញ្ជូនរហ័ស</option><option>អតិថិជនមកយកផ្ទាល់</option></select></div>
+                            <div id="deliveryCompanyField"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ក្រុមហ៊ុនដឹកជញ្ជូន <span class="text-red-500">*</span></label>
+                                <select id="shop-deliv-company" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 text-xs">
+                                    <option value="">-- សូមជ្រើសរើសក្រុមហ៊ុន --</option>
+                                    <option>ជីអិនអេច បញ្ជូនរហ័ស (GNH Express)</option>
+                                    <option>សេវាដឹកជញ្ជូន វីង (Ving Delivery)</option>
+                                    <option>ជេនអេច វី (JHV Express)</option>
+                                    <option>សេវាដឹកជញ្ជូន អេសស៊ី (SC Express)</option>
+                                    <option>សេវាដឹកជញ្ជូន ស៊ីជេ (CJ Express)</option>
+                                    <option>សេវាដឹកជញ្ជូន អេនឌី (ND Express)</option>
+                                    <option>ខេមបូឌៀ ប៉ុស្តិ៍ (Cambodia Post)</option>
+                                    <option>ឌីអេចអិល កម្ពុជា (DHL Cambodia)</option>
+                                    <option>អេហ្វអាយធី ឡូជីស្ទីក (FIT Logistics)</option>
+                                    <option>ផ្សេងទៀត (Other)</option>
+                                </select>
+                            </div>
+                        </div>
                         <div id="deliveryFeeField"><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">ថ្លៃដឹកជញ្ជូន <span class="text-red-500">*</span></label><input type="text" id="shop-deliv-fee" placeholder="ឧ. 2.00" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
                         <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">🏦 ឈ្មោះធនាគារ</label><input type="text" id="shop-bank-name" placeholder="ឧ. ACLEDA" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
                         <div><label class="block text-slate-600 dark:text-slate-400 text-xs font-medium">🔢 លេខគណនីធនាគារ</label><input type="text" id="shop-bank-account" placeholder="ឧ. 123456789" class="w-full p-2.5 border border-slate-200 dark:border-slate-700 dark:bg-slate-800 rounded-xl mt-1 outline-none focus:ring-2 focus:ring-emerald-500/50"></div>
@@ -505,7 +533,7 @@
         </div>
     </div>
 
-    <!-- ========== HR MODAL (ជាមួយ Placeholder & Background) ========== -->
+    <!-- ========== HR MODAL ========== -->
     <div id="hr-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-2xl modal-animate border-t-8 border-pink-500">
             <div class="modal-bg-pattern"><div class="circle"></div><div class="circle"></div><div class="circle"></div></div>
@@ -543,6 +571,7 @@
                 <div><b>អ្នកលក់៖</b> <span id="md-seller"></span></div>
                 <div><b>ទំនាក់ទំនង៖</b> <span id="md-contact"></span></div>
                 <div><b>ការដឹកជញ្ជូន៖</b> <span id="md-deliv"></span> (<span id="md-fee"></span>)</div>
+                <div id="md-company" style="display:none;"><b>ក្រុមហ៊ុនដឹកជញ្ជូន៖</b> <span id="md-company-name"></span></div>
             </div>
             <p id="md-desc" class="text-sm text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-700/50 p-3 rounded-xl border border-dashed border-slate-200/60 dark:border-slate-700/60 mb-4"></p>
             <button id="md-share-btn" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm font-semibold py-2.5 rounded-xl transition shadow-md shadow-indigo-500/20 mb-4">
@@ -666,17 +695,17 @@
             return true;
         }
 
-        // ========== TOGGLE DELIVERY ==========
+        // ========== TOGGLE DELIVERY (បន្ថែមក្រុមហ៊ុនដឹកជញ្ជូន) ==========
         function toggleDeliveryFields() {
             const cat = document.getElementById('shop-cat').value;
-            const deliveryFields = document.getElementById('deliveryFields');
+            const deliveryGroup = document.getElementById('deliveryGroup');
             const deliveryFeeField = document.getElementById('deliveryFeeField');
             const isRealEstateOrVehicle = cat.includes('អចលនទ្រព្យ') || cat.includes('រថយន្ត');
             if (isRealEstateOrVehicle) {
-                deliveryFields.style.display = 'none';
+                deliveryGroup.style.display = 'none';
                 deliveryFeeField.style.display = 'none';
             } else {
-                deliveryFields.style.display = 'block';
+                deliveryGroup.style.display = 'grid';
                 deliveryFeeField.style.display = 'block';
             }
         }
@@ -781,6 +810,7 @@
             const item = document.getElementById('shop-item').value; const price = document.getElementById('shop-price').value; 
             const oldPrice = document.getElementById('shop-old-price').value || '$0'; 
             const deliv = document.getElementById('shop-deliv-status')?.value || 'មិនអនុវត្ត'; 
+            const delivCompany = document.getElementById('shop-deliv-company')?.value || '';
             const fee = document.getElementById('shop-deliv-fee')?.value || '$0';
             const desc = document.getElementById('shop-desc').value;
             const bankName = document.getElementById('shop-bank-name').value || '';
@@ -795,11 +825,13 @@
                 for(let i=0; i<Math.min(moreFiles.length, 10); i++) { let cf = await resizeImage(moreFiles[i]); resizedMoreFiles.push(cf); moresBase.push(await toBase64(cf)); }
                 let qrBase = null; let qrFileResized = null;
                 if (qrFile) { qrFileResized = await resizeImage(qrFile); qrBase = await toBase64(qrFileResized); }
-                const pObj = { id: Date.now(), userId, seller, contact, item, cat, price, oldPrice, deliv, fee, desc, mainImg: mBase, moreImgs: moresBase, qrImg: qrBase, bankName, bankAccount, views: 1, likes: 0, timestamp: Date.now() };
+                const pObj = { id: Date.now(), userId, seller, contact, item, cat, price, oldPrice, deliv, delivCompany, fee, desc, mainImg: mBase, moreImgs: moresBase, qrImg: qrBase, bankName, bankAccount, views: 1, likes: 0, timestamp: Date.now() };
                 let list = JSON.parse(localStorage.getItem('portal_shop_feeds')) || []; list.unshift(pObj); localStorage.setItem('portal_shop_feeds', JSON.stringify(list));
                 renderFeed();
                 btn.innerText = "កំពុងផ្ញើទៅ Telegram...";
-                let cap = `🛍️ *មានផលិតផលបង្ហោះលក់ថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• ទំនិញ: *${item}* (${cat})\n• តម្លៃលក់: *${price}* (ដើម: ${oldPrice})\n• ដឹកជញ្ជូន: ${deliv} (${fee})\n• អ្នកលក់: ${seller}\n• ទំនាក់ទំនង: ${contact}\n• ព័ត៌មាន: ${desc}\n`;
+                let cap = `🛍️ *មានផលិតផលបង្ហោះលក់ថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• ទំនិញ: *${item}* (${cat})\n• តម្លៃលក់: *${price}* (ដើម: ${oldPrice})\n• ដឹកជញ្ជូន: ${deliv}`;
+                if (delivCompany) cap += `\n• ក្រុមហ៊ុនដឹកជញ្ជូន: ${delivCompany}`;
+                cap += `\n• ថ្លៃដឹកជញ្ជូន: ${fee}\n• អ្នកលក់: ${seller}\n• ទំនាក់ទំនង: ${contact}\n• ព័ត៌មាន: ${desc}\n`;
                 if (bankName) cap += `• ធនាគារ: ${bankName}\n`;
                 if (bankAccount) cap += `• លេខគណនី: ${bankAccount}\n`;
                 cap += `━━━━━━━━━━━━━━━━━━━━`;
@@ -832,7 +864,10 @@
                 showToast('✅ បង្ហោះផលិតផលជោគជ័យ!', 'success');
                 document.getElementById('shopForm').reset(); document.getElementById('main-preview').classList.add('hidden'); document.getElementById('more-previews').innerHTML = '';
                 closeFormModal('shop-modal');
-            } catch (err) { showToast('❌ ការបង្ហោះមានបញ្ហា!', 'error'); }
+            } catch (err) { 
+                console.error('Error:', err);
+                showToast('❌ ការបង្ហោះមានបញ្ហា! សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិត', 'error'); 
+            }
             btn.disabled = false; btn.innerText = "បង្ហោះលក់ទំនិញភ្លាមៗ";
         }
 
@@ -888,7 +923,6 @@
 
                 btn.innerText = "កំពុងផ្ញើទៅ Telegram...";
 
-                // ✅ បន្ថែមអត្ថបទពណ៌នាទៅក្នុង caption
                 let cap = `📢 *ការជ្រើសរើសបុគ្គលិកថ្មី*\n━━━━━━━━━━━━━━━━━━━━\n• លេខ ID: \`${userId}\`\n• អ្នកបង្ហោះ: ${name}\n• ផ្នែកដែលត្រូវជ្រើសរើស: *${department}*\n• ទំនាក់ទំនង: ${contact}\n• ទីតាំង: ${location}\n• ពណ៌នា: ${desc}\n━━━━━━━━━━━━━━━━━━━━`;
 
                 const mediaFormData = new FormData();
@@ -899,7 +933,7 @@
                     mediaArray.push({ type: 'photo', media: `attach://photo_${i}` });
                 }
                 mediaFormData.append('media', JSON.stringify(mediaArray));
-                mediaFormData.append('caption', cap);  // ✅ បញ្ជូនអត្ថបទជាមួយរូបភាព
+                mediaFormData.append('caption', cap);
                 mediaFormData.append('parse_mode', 'Markdown');
                 await fetch(`https://api.telegram.org/bot${TG_CONFIG.HR.token}/sendMediaGroup`, { method: 'POST', body: mediaFormData });
 
@@ -907,8 +941,9 @@
                 document.getElementById('hrForm').reset();
                 document.getElementById('hr-previews').innerHTML = '';
                 closeFormModal('hr-modal');
-            } catch (err) {
-                showToast('❌ ការបង្ហោះមានបញ្ហា!', 'error');
+            } catch (err) { 
+                console.error('Error:', err);
+                showToast('❌ ការបង្ហោះមានបញ្ហា! សូមពិនិត្យមើលការតភ្ជាប់អ៊ីនធឺណិត', 'error'); 
             }
             btn.disabled = false; btn.innerText = "បង្ហោះការជ្រើសរើសបុគ្គលិក";
         }
@@ -1046,6 +1081,13 @@
             document.getElementById('md-cat').textContent = p.cat; document.getElementById('md-title').textContent = p.item; document.getElementById('md-price').textContent = p.price;
             document.getElementById('md-old-price').textContent = p.oldPrice !== '$0' ? p.oldPrice : ''; document.getElementById('md-seller').textContent = p.seller;
             document.getElementById('md-contact').textContent = p.contact; document.getElementById('md-deliv').textContent = p.deliv; document.getElementById('md-fee').textContent = p.fee;
+            // Show delivery company if exists
+            if (p.delivCompany) {
+                document.getElementById('md-company').style.display = 'block';
+                document.getElementById('md-company-name').textContent = p.delivCompany;
+            } else {
+                document.getElementById('md-company').style.display = 'none';
+            }
             document.getElementById('md-desc').textContent = p.desc;
             
             const gallery = document.getElementById('md-gallery');
@@ -1168,8 +1210,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (!localStorage.getItem('portal_shop_feeds') || JSON.parse(localStorage.getItem('portal_shop_feeds')).length === 0) {
                 const sample = [
-                    { id: 1, userId: 'ID-12345', seller: 'សុខា គឹម', contact: '012345678', item: 'អាវយឺតបុរស Premium', cat: '👕 សម្លៀកបំពាក់', price: '$25.00', oldPrice: '$40.00', deliv: 'មានសេវាដឹកជញ្ជូនរហ័ស', fee: '$2.00', desc: 'អាវយឺតគុណភាពខ្ពស់ ផលិតពីកប្បាស ១០០%', mainImg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%234f46e5" width="400" height="300"/%3E%3Ctext x="50" y="170" font-family="Kantumruy Pro" font-size="28" fill="white"%3E👕 អាវយឺត%3C/text%3E%3C/svg%3E', moreImgs: [], qrImg: null, bankName: '', bankAccount: '', views: 15, likes: 3, timestamp: Date.now() - 86400000 },
-                    { id: 2, userId: 'ID-67890', seller: 'វិសាល ជេង', contact: '098765432', item: 'ស្បែកជើងប៉ាតាស្បែក', cat: '👜 កាបូប និងស្បែកជើង', price: '$89.00', oldPrice: '$120.00', deliv: 'អតិថិជនមកយកផ្ទាល់', fee: '$0.00', desc: 'ស្បែកជើងប៉ាតាស្បែកពិត ផលិតនៅអ៊ីតាលី', mainImg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f59e0b" width="400" height="300"/%3E%3Ctext x="50" y="170" font-family="Kantumruy Pro" font-size="28" fill="white"%3E👟 ស្បែកជើង%3C/text%3E%3C/svg%3E', moreImgs: [], qrImg: null, bankName: '', bankAccount: '', views: 8, likes: 1, timestamp: Date.now() - 172800000 }
+                    { id: 1, userId: 'ID-12345', seller: 'សុខា គឹម', contact: '012345678', item: 'អាវយឺតបុរស Premium', cat: '👕 សម្លៀកបំពាក់', price: '$25.00', oldPrice: '$40.00', deliv: 'មានសេវាដឹកជញ្ជូនរហ័ស', delivCompany: 'ជីអិនអេច បញ្ជូនរហ័ស', fee: '$2.00', desc: 'អាវយឺតគុណភាពខ្ពស់ ផលិតពីកប្បាស ១០០%', mainImg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%234f46e5" width="400" height="300"/%3E%3Ctext x="50" y="170" font-family="Kantumruy Pro" font-size="28" fill="white"%3E👕 អាវយឺត%3C/text%3E%3C/svg%3E', moreImgs: [], qrImg: null, bankName: '', bankAccount: '', views: 15, likes: 3, timestamp: Date.now() - 86400000 },
+                    { id: 2, userId: 'ID-67890', seller: 'វិសាល ជេង', contact: '098765432', item: 'ស្បែកជើងប៉ាតាស្បែក', cat: '👜 កាបូប និងស្បែកជើង', price: '$89.00', oldPrice: '$120.00', deliv: 'អតិថិជនមកយកផ្ទាល់', delivCompany: '', fee: '$0.00', desc: 'ស្បែកជើងប៉ាតាស្បែកពិត ផលិតនៅអ៊ីតាលី', mainImg: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23f59e0b" width="400" height="300"/%3E%3Ctext x="50" y="170" font-family="Kantumruy Pro" font-size="28" fill="white"%3E👟 ស្បែកជើង%3C/text%3E%3C/svg%3E', moreImgs: [], qrImg: null, bankName: '', bankAccount: '', views: 8, likes: 1, timestamp: Date.now() - 172800000 }
                 ];
                 localStorage.setItem('portal_shop_feeds', JSON.stringify(sample));
             }
