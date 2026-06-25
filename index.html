@@ -214,6 +214,7 @@
                 case 'admin': renderAdmin(container, user); break;
                 case 'adminDeposit': renderAdminDeposit(container, user); break;
                 case 'adminWithdraw': renderAdminWithdraw(container, user); break;
+                case 'adminHistory': renderAdminHistory(container, user); break;
                 default: renderLogin(container);
             }
         }
@@ -584,6 +585,7 @@
             const deposits = DB.getDeposits().filter(d => d.status === 'pending');
             const withdraws = DB.getWithdraws().filter(w => w.status === 'pending');
             const totalBalance = users.reduce((s, u) => s + u.balance, 0);
+            const allTx = DB.getTx().slice(-5).reverse();
 
             container.innerHTML = `
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -600,9 +602,39 @@
                 <button onclick="renderPage('adminWithdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-arrow-right"></i> អនុម័តដក
                 </button>
-                <button onclick="renderPage('adminReceive')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
-                    <i class="fas fa-hand-holding-usd"></i> ទទួលប្រាក់ពីសមាជិក
+                <button onclick="renderPage('adminHistory')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
+                    <i class="fas fa-history"></i> ប្រវត្តិប្រតិបត្តិការ
                 </button>
+            </div>
+
+            <!-- Admin Bank Info Form -->
+            <div class="bg-white rounded-2xl shadow p-6 mb-6">
+                <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-university text-blue-500 mr-2"></i>កែសម្រួលព័ត៌មានធនាគារ Admin</h3>
+                <form id="adminBankForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">ឈ្មោះធនាគារ</label>
+                        <select id="adminBankName" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
+                            <option value="ABA">ABA Bank</option>
+                            <option value="ACLEDA">ACLEDA</option>
+                            <option value="WING">Wing</option>
+                            <option value="TRUE">True Money</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-medium mb-2">លេខគណនី</label>
+                        <input type="text" id="adminAccount" placeholder="លេខគណនី" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-700 text-sm font-medium mb-2">រូបភាព QR Code</label>
+                        <input type="file" id="adminQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR Code របស់ Admin</p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">
+                            <i class="fas fa-save mr-2"></i> រក្សាទុកព័ត៌មាន
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div class="bg-white rounded-2xl shadow overflow-hidden">
@@ -626,6 +658,27 @@
                 </div>
             </div>
             `;
+
+            // Load saved admin bank info
+            const saved = DB.get('adminBankInfo', { bank: 'ABA', account: '', qr: '' });
+            document.getElementById('adminBankName').value = saved.bank || 'ABA';
+            document.getElementById('adminAccount').value = saved.account || '';
+
+            document.getElementById('adminBankForm').onsubmit = (e) => {
+                e.preventDefault();
+                const bank = document.getElementById('adminBankName').value;
+                const account = document.getElementById('adminAccount').value.trim();
+                const qrFile = document.getElementById('adminQR').files[0];
+                if (!account) return alert('សូមបញ្ចូលលេខគណនី!');
+
+                DB.set('adminBankInfo', {
+                    bank: bank,
+                    account: account,
+                    qr: qrFile ? qrFile.name : DB.get('adminBankInfo', {}).qr || ''
+                });
+                alert('✅ បានរក្សាទុកព័ត៌មានធនាគារ Admin ដោយជោគជ័យ!');
+                renderPage('admin');
+            };
         }
 
         // ============================================================
@@ -693,86 +746,41 @@
         }
 
         // ============================================================
-        //  13. PAGE: ADMIN RECEIVE MONEY FROM MEMBER
+        //  13. PAGE: ADMIN HISTORY
         // ============================================================
-        function renderAdminReceive(container, user) {
+        function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            const allTx = DB.getTx().slice(-20).reverse();
 
             container.innerHTML = `
-            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-hand-holding-usd text-blue-500 mr-2"></i>ទទួលប្រាក់ពីសមាជិក</h2>
-                <p class="text-gray-500 text-sm mb-4">សូមបំពេញព័ត៌មានខាងក្រោមដើម្បីទទួលប្រាក់ពីសមាជិក</p>
-
-                <form id="receiveForm">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ជ្រើសរើសសមាជិក</label>
-                        <select id="receiveMember" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
-                            ${DB.getUsers().filter(u => u.role !== 'admin').map(u => `
-                                <option value="${u.phone}">${u.name} (${u.phone}) - ${formatMoney(u.balance)}</option>
-                            `).join('')}
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ធនាគាររបស់សមាជិក</label>
-                        <select id="receiveBank" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
-                            <option value="ABA">ABA Bank</option>
-                            <option value="ACLEDA">ACLEDA</option>
-                            <option value="WING">Wing</option>
-                            <option value="TRUE">True Money</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-hashtag text-blue-500 mr-2"></i>លេខគណនីធនាគារ</label>
-                        <input type="text" id="receiveAccount" placeholder="លេខគណនី" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនទឹកប្រាក់ (៛)</label>
-                        <input type="number" id="receiveAmount" placeholder="100000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-image text-blue-500 mr-2"></i>QR Code ទូទាត់ (ភ្ជាប់រូបភាព)</label>
-                        <input type="file" id="receiveQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR code របស់សមាជិក</p>
-                    </div>
-                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">
-                        <i class="fas fa-check-circle mr-2"></i> បញ្ជាក់ការទទួលប្រាក់
-                    </button>
-                </form>
-
+            <div class="bg-white rounded-2xl shadow p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិប្រតិបត្តិការទាំងអស់</h2>
+                ${allTx.length === 0 ? '<p class="text-gray-400">មិនមានប្រតិបត្តិការទេ</p>' :
+                    `<div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 text-sm">
+                            <thead class="bg-gray-50">
+                                <tr><th class="px-4 py-2 text-left">អ្នកប្រើ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
+                            </thead>
+                            <tbody>
+                                ${allTx.map(t => {
+                                    const user = DB.getUsers().find(u => u.phone === t.phone);
+                                    return `
+                                        <tr class="border-b border-gray-100">
+                                            <td class="px-4 py-2">${user ? user.name : t.phone}</td>
+                                            <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${t.type === 'deposit' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${t.type === 'deposit' ? 'បញ្ចូល' : 'ដក'}</span></td>
+                                            <td class="px-4 py-2 ${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${formatMoney(t.amount)}</td>
+                                            <td class="px-4 py-2 text-xs text-gray-500">${t.note || '-'}</td>
+                                            <td class="px-4 py-2 text-xs text-gray-400">${t.date}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>`
+                }
                 <button onclick="renderPage('admin')" class="mt-4 text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
             </div>
             `;
-
-            document.getElementById('receiveForm').onsubmit = (e) => {
-                e.preventDefault();
-                const phone = document.getElementById('receiveMember').value;
-                const bank = document.getElementById('receiveBank').value;
-                const account = document.getElementById('receiveAccount').value.trim();
-                const amount = parseInt(document.getElementById('receiveAmount').value.trim());
-                const qrFile = document.getElementById('receiveQR').files[0];
-
-                if (!account || !amount || amount <= 0) return alert('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!');
-
-                let users = DB.getUsers();
-                const u = users.find(u => u.phone === phone);
-                if (!u) return alert('មិនរកឃើញសមាជិក!');
-
-                // Add money to member
-                u.balance += amount;
-                DB.setUsers(users);
-                addTransaction(phone, 'deposit', amount, `Admin ទទួលប្រាក់ពី ${u.name} (${bank})`);
-
-                sendTelegram(`✅ Admin បានទទួលប្រាក់ពីសមាជិក
-        សមាជិក: ${u.name} (${phone})
-        ធនាគារ: ${bank}
-        គណនី: ${account}
-        ចំនួន: ${formatMoney(amount)}
-        QR: ${qrFile ? qrFile.name : 'គ្មាន'}
-        សមតុល្យថ្មី: ${formatMoney(u.balance)}`);
-
-                alert(`✅ បានទទួលប្រាក់ពី ${u.name} ចំនួន ${formatMoney(amount)} ដោយជោគជ័យ!`);
-                renderPage('adminReceive');
-            };
         }
 
         // ============================================================
