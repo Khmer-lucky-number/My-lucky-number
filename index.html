@@ -303,13 +303,13 @@
         .danger-btn {
             background: #dc2626;
             color: white;
-            padding: 8px 16px;
-            border-radius: 10px;
+            padding: 6px 12px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
-            font-size: 13px;
+            font-size: 12px;
         }
         .danger-btn:hover {
             background: #b91c1c;
@@ -372,7 +372,6 @@
             © 2026 អាជីវករខ្មែរ — គ្រប់គ្រងហិរញ្ញវត្ថុឆ្លាតវៃ
         </footer>
     </div>
-
     <script>
         // ============================================================
         //  1. DATA LAYER
@@ -406,7 +405,6 @@
                 this.set('nextId', current + 1);
                 return current;
             },
-            // Reset everything except admin account
             resetAll() {
                 const admin = this.getUsers().find(u => u.role === 'admin');
                 this.remove('users');
@@ -420,12 +418,10 @@
                     this.setUsers([admin]);
                 }
             },
-            // Delete a member by phone
             deleteMember(phone) {
                 let users = this.getUsers();
                 users = users.filter(u => u.phone !== phone);
                 this.setUsers(users);
-                // Also remove their transactions
                 let tx = this.getTx();
                 tx = tx.filter(t => t.phone !== phone);
                 this.setTx(tx);
@@ -590,7 +586,23 @@
         }
 
         // ============================================================
-        //  7. RENDER ENGINE
+        //  7. TOGGLE PASSWORD
+        // ============================================================
+        window.togglePassword = function(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        };
+
+        // ============================================================
+        //  8. RENDER ENGINE
         // ============================================================
         function renderPage(page, data = null) {
             const container = document.getElementById('pageContent');
@@ -624,447 +636,6 @@
                 default: renderLogin(container);
             }
         }
-
-        // ============================================================
-        //  8. PAGE: LOGIN / REGISTER
-        // ============================================================
-        function renderLogin(container) {
-            container.innerHTML = `
-            <div class="flex items-center justify-center min-h-[70vh]">
-                <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
-                    <div class="text-center mb-6">
-                        <div class="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                            <i class="fas fa-store text-white text-3xl"></i>
-                        </div>
-                        <h1 class="text-2xl font-bold text-gray-800">អាជីវករខ្មែរ</h1>
-                        <p class="text-gray-500 text-sm">ចូលប្រើ ឬ ចុះឈ្មោះ</p>
-                    </div>
-
-                    <div class="flex bg-gray-100 rounded-xl p-1 mb-6">
-                        <button id="loginTab" class="flex-1 py-2 rounded-lg text-sm font-semibold bg-white shadow-md text-blue-600">ចូលប្រើ</button>
-                        <button id="registerTab" class="flex-1 py-2 rounded-lg text-sm font-semibold text-gray-500">ចុះឈ្មោះ</button>
-                    </div>
-
-                    <form id="loginForm">
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
-                            <input type="tel" id="loginPhone" placeholder="០៩៧ ៨៧ ៦៥ ៤៣" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-lock text-blue-500 mr-2"></i>ពាក្យសម្ងាត់</label>
-                            <div class="password-wrapper">
-                                <input type="password" id="loginPass" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                                <i class="fas fa-eye password-toggle" onclick="togglePassword('loginPass', this)"></i>
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">ចូលប្រើ</button>
-                    </form>
-
-                    <form id="registerForm" class="hidden mt-4">
-                        <div class="mb-3">
-                            <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID (៥ខ្ទង់)</label>
-                            <input type="number" id="regMemberId" placeholder="10001" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user text-blue-500 mr-2"></i>ឈ្មោះពេញ</label>
-                            <input type="text" id="regName" placeholder="សុខ សុខា" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
-                            <input type="tel" id="regPhone" placeholder="០៩៧ ៨៧ ៦៥ ៤៣" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-lock text-blue-500 mr-2"></i>ពាក្យសម្ងាត់</label>
-                            <div class="password-wrapper">
-                                <input type="password" id="regPass" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                                <i class="fas fa-eye password-toggle" onclick="togglePassword('regPass', this)"></i>
-                            </div>
-                        </div>
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition">ចុះឈ្មោះ</button>
-                    </form>
-                </div>
-            </div>
-            `;
-
-            const loginTab = document.getElementById('loginTab');
-            const registerTab = document.getElementById('registerTab');
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-
-            loginTab.onclick = () => {
-                loginTab.className = 'flex-1 py-2 rounded-lg text-sm font-semibold bg-white shadow-md text-blue-600';
-                registerTab.className = 'flex-1 py-2 rounded-lg text-sm font-semibold text-gray-500';
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-            };
-            registerTab.onclick = () => {
-                registerTab.className = 'flex-1 py-2 rounded-lg text-sm font-semibold bg-white shadow-md text-blue-600';
-                loginTab.className = 'flex-1 py-2 rounded-lg text-sm font-semibold text-gray-500';
-                registerForm.classList.remove('hidden');
-                loginForm.classList.add('hidden');
-            };
-
-            loginForm.onsubmit = (e) => {
-                e.preventDefault();
-                const phone = document.getElementById('loginPhone').value.trim();
-                const pass = document.getElementById('loginPass').value.trim();
-                const result = loginUser(phone, pass);
-                if (result.ok) {
-                    const user = getCurrentUser();
-                    if (user.role === 'admin') renderPage('admin');
-                    else renderPage('dashboard');
-                    showToast('✅ ចូលប្រើជោគជ័យ!', 'success');
-                } else {
-                    showToast('❌ ' + result.msg, 'error');
-                }
-            };
-
-            registerForm.onsubmit = (e) => {
-                e.preventDefault();
-                const memberId = document.getElementById('regMemberId').value.trim();
-                const name = document.getElementById('regName').value.trim();
-                const phone = document.getElementById('regPhone').value.trim();
-                const pass = document.getElementById('regPass').value.trim();
-                if (!memberId || !name || !phone || !pass) {
-                    showToast('សូមបំពេញព័ត៌មានឲ្យពេញលេញ!', 'error');
-                    return;
-                }
-                if (memberId.length !== 5) {
-                    showToast('លេខ ID ត្រូវមាន ៥ខ្ទង់!', 'error');
-                    return;
-                }
-                const result = registerUser(phone, name, pass, memberId);
-                if (result.ok) {
-                    showToast(`✅ ចុះឈ្មោះជោគជ័យ! ID: ${result.memberId} សូមចូលប្រើ។`, 'success');
-                    loginTab.click();
-                } else {
-                    showToast('❌ ' + result.msg, 'error');
-                }
-            };
-        }
-
-        // ============================================================
-        //  9. TOGGLE PASSWORD
-        // ============================================================
-        window.togglePassword = function(inputId, icon) {
-            const input = document.getElementById(inputId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        };
-
-        // ============================================================
-        //  10. PAGE: DASHBOARD (User)
-        // ============================================================
-        function renderDashboard(container, user) {
-            if (!user) { renderPage('login'); return; }
-            const tx = DB.getTx().filter(t => t.phone === user.phone).slice(-5).reverse();
-            const totalIn = DB.getTx().filter(t => t.phone === user.phone && t.type === 'deposit').reduce((s, t) => s + t.amount, 0);
-            const totalWithdraw = DB.getTx().filter(t => t.phone === user.phone && t.type === 'withdraw').reduce((s, t) => s + t.amount, 0);
-            const rewards = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់រង្វាន់')).reduce((s, t) => s + t.amount, 0);
-            const income = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
-
-            container.innerHTML = `
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-6 mb-6 text-white">
-                <p class="text-sm text-blue-100"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
-                <p class="balance-big">${formatMoney(user.balance)}</p>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white rounded-2xl shadow p-4 card-hover">
-                    <p class="text-gray-400 text-sm">ការបញ្ចូលទឹកប្រាក់</p>
-                    <p class="text-xl font-bold text-green-600">${formatMoney(totalIn)}</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover">
-                    <p class="text-gray-400 text-sm">បានដកសរុប</p>
-                    <p class="text-xl font-bold text-purple-600">${formatMoney(totalWithdraw)}</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover">
-                    <p class="text-gray-400 text-sm">ប្រាក់រង្វាន់</p>
-                    <p class="text-xl font-bold text-yellow-600">${formatMoney(rewards)}</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover">
-                    <p class="text-gray-400 text-sm">ប្រាក់ចំណូល</p>
-                    <p class="text-xl font-bold text-blue-600">${formatMoney(income)}</p>
-                </div>
-            </div>
-
-            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-center gap-4">
-                <span><i class="fas fa-user text-blue-500 mr-2"></i><strong>${user.name}</strong></span>
-                <span><i class="fas fa-id-card text-blue-500 mr-2"></i><strong>ID: ${user.memberId || 'N/A'}</strong></span>
-                <span><i class="fas fa-phone text-blue-500 mr-2"></i><strong>${user.phone}</strong></span>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <button onclick="renderPage('deposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
-                    <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
-                </button>
-                <button onclick="renderPage('withdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
-                    <i class="fas fa-arrow-right"></i> ដកប្រាក់
-                </button>
-                <a href="https://t.me/+855766437408" target="_blank" class="telegram-btn justify-center">
-                    <i class="fab fa-telegram-plane"></i> ទំនាក់ទំនង Admin
-                </a>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow p-6">
-                <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រតិបត្តិការថ្មីៗ</h3>
-                ${tx.length === 0 ? '<p class="text-gray-400 text-sm">មិនមានប្រតិបត្តិការទេ</p>' :
-                    tx.map(t => `
-                        <div class="flex justify-between border-b border-gray-100 py-2 text-sm">
-                            <span>${t.note || (t.type === 'deposit' ? 'បញ្ចូល' : 'ដក')}</span>
-                            <span class="${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${t.type === 'deposit' ? '➕' : '➡️'} ${formatMoney(t.amount)}</span>
-                            <span class="text-gray-400 text-xs">${t.date}</span>
-                        </div>
-                    `).join('')
-                }
-            </div>
-            `;
-        }
-
-        // ============================================================
-        //  11. PAGE: DEPOSIT (User)
-        // ============================================================
-        function renderDeposit(container, user) {
-            if (!user) { renderPage('login'); return; }
-            const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
-
-            container.innerHTML = `
-            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
-                <div class="page-header">
-                    <h2><i class="fas fa-money-bill-wave text-green-500 mr-2"></i>បញ្ចូលប្រាក់</h2>
-                    <button onclick="renderPage('dashboard')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
-                </div>
-
-                <div class="deposit-info mb-6">
-                    <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ព័ត៌មានធនាគារ Admin</h4>
-                    <p><strong>ឈ្មោះគណនី៖</strong> អាជីវករខ្មែរ</p>
-                    <p><strong>ធនាគារ៖</strong> ${adminInfo.bank || 'ABA Bank'}</p>
-                    <p><strong>លេខគណនី៖</strong> ${adminInfo.account || '001 234 567'}</p>
-                    <div class="flex items-center gap-4 mt-3">
-                        <div class="qr-placeholder" onclick="${adminInfo.qrData ? `showImageViewer('${adminInfo.qrData}')` : 'showToast(\'មិនទាន់មាន QR Code\', \'error\')'}">
-                            ${adminInfo.qrData ? 
-                                `<img src="${adminInfo.qrData}" alt="QR Code" />` :
-                                `<div><i class="fas fa-qrcode text-4xl text-gray-400"></i><p class="text-xs">មិនទាន់មាន QR</p></div>`
-                            }
-                        </div>
-                        <span class="text-xs text-gray-500">${adminInfo.qrData ? 'ចុចលើ QR ដើម្បីមើលធំ' : 'សូមទាក់ទង Admin ដើម្បីទទួលបាន QR Code'}</span>
-                    </div>
-                </div>
-
-                <form id="depositForm">
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID</label>
-                        <input type="text" id="depMemberId" value="${user.memberId || ''}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
-                        <input type="text" id="depPhone" value="${user.phone}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះអ្នកផ្ញើ</label>
-                        <input type="text" id="depSender" value="${user.name}" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ធនាគាររបស់អ្នក</label>
-                        <select id="depBank" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none">
-                            <option value="ABA">ABA Bank</option>
-                            <option value="ACLEDA">ACLEDA</option>
-                            <option value="WING">Wing</option>
-                            <option value="TRUE">True Money</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនទឹកប្រាក់ដែលបានផ្ញើ (៛)</label>
-                        <input type="number" id="depAmount" placeholder="100000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-pen text-blue-500 mr-2"></i>បញ្ជាក់បន្ថែម (ស្រេចចិត្ត)</label>
-                        <textarea id="depNote" rows="2" placeholder="បញ្ជាក់ពីការផ្ញើប្រាក់..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none"></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition">
-                        <i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើទៅ Admin
-                    </button>
-                </form>
-
-                <div class="success-box mt-6">
-                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-green-600 mr-2"></i>ប្រវត្តិបញ្ចូលប្រាក់របស់អ្នក</h4>
-                    ${(() => {
-                        const myDeposits = DB.getDeposits().filter(d => d.phone === user.phone).slice(-5).reverse();
-                        if (myDeposits.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការបញ្ចូលប្រាក់ទេ</p>';
-                        return myDeposits.map(d => `
-                            <div class="flex justify-between items-center border-b border-green-200 py-2 text-sm">
-                                <span>${d.amount.toLocaleString()} ៛</span>
-                                <span class="text-xs ${d.status === 'pending' ? 'text-yellow-600' : 'text-green-600'}">${d.status === 'pending' ? '⏳ រង់ចាំ' : '✅ បានបញ្ចូល'}</span>
-                                <span class="text-xs text-gray-400">${d.date}</span>
-                            </div>
-                        `).join('');
-                    })()}
-                </div>
-            </div>
-            `;
-
-            document.getElementById('depositForm').onsubmit = (e) => {
-                e.preventDefault();
-                const bank = document.getElementById('depBank').value;
-                const sender = document.getElementById('depSender').value.trim();
-                const amount = parseInt(document.getElementById('depAmount').value.trim());
-                const note = document.getElementById('depNote').value.trim();
-                if (!sender || !amount || amount <= 0) {
-                    showToast('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!', 'error');
-                    return;
-                }
-
-                let deposits = DB.getDeposits();
-                deposits.push({
-                    id: genId(),
-                    phone: user.phone,
-                    memberId: user.memberId,
-                    name: user.name,
-                    bank,
-                    sender,
-                    amount,
-                    note,
-                    status: 'pending',
-                    date: getDate()
-                });
-                DB.setDeposits(deposits);
-
-                playNotificationSound();
-                sendTelegram(`📥 សំណើបញ្ចូលប្រាក់
-        អ្នកប្រើ: ${user.name} (ID: ${user.memberId})
-        ទូរសព្ទ: ${user.phone}
-        ធនាគារ: ${bank}
-        អ្នកផ្ញើ: ${sender}
-        ចំនួន: ${formatMoney(amount)}`);
-
-                showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
-                renderPage('deposit');
-            };
-        }
-
-        // ============================================================
-        //  12. PAGE: WITHDRAW (User)
-        // ============================================================
-        function renderWithdraw(container, user) {
-            if (!user) { renderPage('login'); return; }
-            container.innerHTML = `
-            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
-                <div class="page-header">
-                    <h2><i class="fas fa-hand-holding-usd text-purple-500 mr-2"></i>ដកប្រាក់</h2>
-                    <button onclick="renderPage('dashboard')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
-                </div>
-                <p class="text-gray-500 text-sm mb-4">សមតុល្យបច្ចុប្បន្ន: <strong>${formatMoney(user.balance)}</strong></p>
-
-                <form id="withdrawForm">
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID</label>
-                        <input type="text" id="wdMemberId" value="${user.memberId || ''}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
-                        <input type="text" id="wdPhone" value="${user.phone}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះ</label>
-                        <input type="text" id="wdName" value="${user.name}" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ធនាគារទទួល</label>
-                        <select id="wdBank" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none">
-                            <option value="ABA">ABA Bank</option>
-                            <option value="ACLEDA">ACLEDA</option>
-                            <option value="WING">Wing</option>
-                            <option value="TRUE">True Money</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-hashtag text-blue-500 mr-2"></i>លេខគណនី</label>
-                        <input type="text" id="wdAccount" placeholder="លេខគណនី" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនដក (៛)</label>
-                        <input type="number" id="wdAmount" placeholder="50000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-image text-blue-500 mr-2"></i>QR Code ទូទាត់ (ភ្ជាប់រូបភាព)</label>
-                        <input type="file" id="wdQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
-                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR code របស់អ្នក</p>
-                    </div>
-                    <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition">
-                        <i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់
-                    </button>
-                </form>
-
-                <div class="withdraw-box mt-6">
-                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-purple-600 mr-2"></i>ប្រវត្តិដកប្រាក់</h4>
-                    ${(() => {
-                        const myWd = DB.getWithdraws().filter(w => w.phone === user.phone).slice(-5).reverse();
-                        if (myWd.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការដកប្រាក់ទេ</p>';
-                        return myWd.map(w => `
-                            <div class="flex justify-between items-center border-b border-purple-200 py-2 text-sm">
-                                <span>${w.amount.toLocaleString()} ៛</span>
-                                <span class="text-xs ${w.status === 'pending' ? 'text-yellow-600' : 'text-green-600'}">${w.status === 'pending' ? '⏳ រង់ចាំ' : '✅ បានដក'}</span>
-                                <span class="text-xs text-gray-400">${w.date}</span>
-                            </div>
-                        `).join('');
-                    })()}
-                </div>
-            </div>
-            `;
-
-            document.getElementById('withdrawForm').onsubmit = (e) => {
-                e.preventDefault();
-                const bank = document.getElementById('wdBank').value;
-                const accName = document.getElementById('wdName').value.trim();
-                const account = document.getElementById('wdAccount').value.trim();
-                const amount = parseInt(document.getElementById('wdAmount').value.trim());
-                const qrFile = document.getElementById('wdQR').files[0];
-                if (!accName || !account || !amount || amount <= 0) {
-                    showToast('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!', 'error');
-                    return;
-                }
-                if (amount > user.balance) {
-                    showToast('❌ សមតុល្យមិនគ្រប់គ្រាន់!', 'error');
-                    return;
-                }
-
-                let withdraws = DB.getWithdraws();
-                withdraws.push({
-                    id: genId(),
-                    phone: user.phone,
-                    memberId: user.memberId,
-                    name: user.name,
-                    bank,
-                    accName,
-                    account,
-                    amount,
-                    qrFile: qrFile ? qrFile.name : 'មិនមាន',
-                    status: 'pending',
-                    date: getDate()
-                });
-                DB.setWithdraws(withdraws);
-
-                playNotificationSound();
-                sendTelegram(`📤 សំណើដកប្រាក់
-        អ្នកប្រើ: ${user.name} (ID: ${user.memberId})
-        ទូរសព្ទ: ${user.phone}
-        ធនាគារ: ${bank}
-        គណនី: ${account}
-        ឈ្មោះ: ${accName}
-        ចំនួន: ${formatMoney(amount)}`);
-
-                showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
-                renderPage('withdraw');
-            };
-        }
-
         // ============================================================
         //  13. PAGE: ADMIN DASHBOARD
         // ============================================================
@@ -1193,7 +764,7 @@
                                     <td class="px-4 py-2">${formatMoney(u.balance)}</td>
                                     <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${u.status === 'active' ? 'សកម្ម' : 'ផ្អាក'}</span></td>
                                     <td class="px-4 py-2">
-                                        <button onclick="confirmDeleteMember('${u.phone}')" class="danger-btn text-xs"><i class="fas fa-trash"></i> លុប</button>
+                                        <button onclick="confirmDeleteMember('${u.phone}')" class="danger-btn"><i class="fas fa-trash"></i> លុប</button>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -1241,7 +812,6 @@
             renderPage('admin');
         }
 
-        // Preview QR Code
         window.previewAdminQR = function(input) {
             const container = document.getElementById('qrPreviewContainer');
             if (input.files && input.files[0]) {
@@ -1254,48 +824,7 @@
         };
 
         // ============================================================
-        //  14. ADMIN ACTIONS - Delete Member & Reset
-        // ============================================================
-        window.confirmDeleteMember = function(phone) {
-            const user = DB.getUsers().find(u => u.phone === phone);
-            if (!user) return;
-            showModal(
-                'លុបសមាជិក',
-                `តើអ្នកពិតជាចង់លុបសមាជិក <strong>${user.name}</strong> (ID: ${user.memberId}) ចេញពីប្រព័ន្ធមែនទេ?<br><br>ការលុបនេះនឹងលុបទិន្នន័យទាំងអស់របស់សមាជិកនេះចេញជាអចិន្ត្រៃយ៍!`,
-                `deleteMember('${phone}')`,
-                true
-            );
-        };
-
-        window.deleteMember = function(phone) {
-            DB.deleteMember(phone);
-            showToast('✅ បានលុបសមាជិកដោយជោគជ័យ!', 'success');
-            renderPage('admin');
-        };
-
-        window.confirmReset = function() {
-            showModal(
-                'ចាប់ផ្ដើមឡើងវិញ',
-                `តើអ្នកពិតជាចង់ចាប់ផ្ដើមប្រព័ន្ធឡើងវិញមែនទេ?<br><br>
-                <span class="text-red-500 font-bold">សកម្មភាពនេះនឹង៖</span><br>
-                • លុបសមាជិកទាំងអស់ចេញ<br>
-                • លុបប្រតិបត្តិការទាំងអស់<br>
-                • លុបសំណើទាំងអស់<br>
-                • <span class="text-red-500 font-bold">រក្សាគណនី Admin ដដែល</span><br><br>
-                សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!`,
-                `resetSystem()`,
-                true
-            );
-        };
-
-        window.resetSystem = function() {
-            DB.resetAll();
-            showToast('✅ បានចាប់ផ្ដើមប្រព័ន្ធឡើងវិញដោយជោគជ័យ!', 'success');
-            renderPage('admin');
-        };
-
-        // ============================================================
-        //  15. ADMIN DEPOSIT MODAL
+        //  14. ADMIN DEPOSIT MODAL - FIXED
         // ============================================================
         window.showAdminDepositModal = function() {
             showModal(
@@ -1345,7 +874,160 @@
         };
 
         // ============================================================
-        //  16. PAGE: ADMIN REWARD (with search)
+        //  15. ADMIN ACTIONS - Delete Member & Reset
+        // ============================================================
+        window.confirmDeleteMember = function(phone) {
+            const user = DB.getUsers().find(u => u.phone === phone);
+            if (!user) return;
+            showModal(
+                'លុបសមាជិក',
+                `តើអ្នកពិតជាចង់លុបសមាជិក <strong>${user.name}</strong> (ID: ${user.memberId}) ចេញពីប្រព័ន្ធមែនទេ?<br><br>ការលុបនេះនឹងលុបទិន្នន័យទាំងអស់របស់សមាជិកនេះចេញជាអចិន្ត្រៃយ៍!`,
+                `deleteMember('${phone}')`,
+                true
+            );
+        };
+
+        window.deleteMember = function(phone) {
+            DB.deleteMember(phone);
+            showToast('✅ បានលុបសមាជិកដោយជោគជ័យ!', 'success');
+            renderPage('admin');
+        };
+
+        window.confirmReset = function() {
+            showModal(
+                'ចាប់ផ្ដើមឡើងវិញ',
+                `តើអ្នកពិតជាចង់ចាប់ផ្ដើមប្រព័ន្ធឡើងវិញមែនទេ?<br><br>
+                <span class="text-red-500 font-bold">សកម្មភាពនេះនឹង៖</span><br>
+                • លុបសមាជិកទាំងអស់ចេញ<br>
+                • លុបប្រតិបត្តិការទាំងអស់<br>
+                • លុបសំណើទាំងអស់<br>
+                • <span class="text-red-500 font-bold">រក្សាគណនី Admin ដដែល</span><br><br>
+                សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!`,
+                `resetSystem()`,
+                true
+            );
+        };
+
+        window.resetSystem = function() {
+            DB.resetAll();
+            showToast('✅ បានចាប់ផ្ដើមប្រព័ន្ធឡើងវិញដោយជោគជ័យ!', 'success');
+            renderPage('admin');
+        };
+        // ============================================================
+        //  16. PAGE: ADMIN DEPOSIT APPROVAL (with account number)
+        // ============================================================
+        function renderAdminDeposit(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            const pending = DB.getDeposits().filter(d => d.status === 'pending');
+
+            container.innerHTML = `
+            <div class="bg-white rounded-2xl shadow p-6">
+                <div class="page-header">
+                    <h2><i class="fas fa-check-circle text-green-500 mr-2"></i>អនុម័តបញ្ចូលប្រាក់</h2>
+                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
+                ${pending.length === 0 ? '<p class="text-gray-400">មិនមានសំណើរង់ចាំទេ</p>' :
+                    pending.map(d => `
+                        <div class="border border-gray-200 rounded-xl p-4 mb-3 flex flex-wrap justify-between items-center">
+                            <div>
+                                <p><strong>${d.name}</strong> (ID: ${d.memberId || 'N/A'})</p>
+                                <p class="text-sm text-gray-500">📱 ${d.phone} | ${d.bank} - ${d.sender || 'N/A'} | គណនី: ${d.account || 'N/A'}</p>
+                                <p class="text-lg font-bold text-green-600">${formatMoney(d.amount)}</p>
+                                <p class="text-xs text-gray-400">${d.date}</p>
+                                ${d.note ? `<p class="text-xs text-gray-500">📝 ${d.note}</p>` : ''}
+                                <span class="text-xs text-yellow-500">⏳ រង់ចាំអនុម័ត</span>
+                            </div>
+                            <div class="flex gap-2 mt-2 sm:mt-0">
+                                <button onclick="approveDeposit('${d.id}')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">យល់ព្រម</button>
+                                <button onclick="rejectDeposit('${d.id}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm">បដិសេធ</button>
+                            </div>
+                        </div>
+                    `).join('')
+                }
+            </div>
+            `;
+        }
+
+        // ============================================================
+        //  17. PAGE: ADMIN WITHDRAW APPROVAL
+        // ============================================================
+        function renderAdminWithdraw(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            const pending = DB.getWithdraws().filter(w => w.status === 'pending');
+
+            container.innerHTML = `
+            <div class="bg-white rounded-2xl shadow p-6">
+                <div class="page-header">
+                    <h2><i class="fas fa-check-circle text-purple-500 mr-2"></i>អនុម័តដកប្រាក់</h2>
+                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
+                ${pending.length === 0 ? '<p class="text-gray-400">មិនមានសំណើរង់ចាំទេ</p>' :
+                    pending.map(w => `
+                        <div class="border border-gray-200 rounded-xl p-4 mb-3 flex flex-wrap justify-between items-center">
+                            <div>
+                                <p><strong>${w.name}</strong> (ID: ${w.memberId || 'N/A'})</p>
+                                <p class="text-sm text-gray-500">📱 ${w.phone} | ${w.bank} - ${w.account} (${w.accName})</p>
+                                <p class="text-lg font-bold text-purple-600">${formatMoney(w.amount)}</p>
+                                <p class="text-xs text-gray-400">${w.date}</p>
+                                ${w.qrFile ? `<p class="text-xs text-blue-500">📷 QR: ${w.qrFile}</p>` : ''}
+                                <span class="text-xs text-yellow-500">⏳ រង់ចាំអនុម័ត</span>
+                            </div>
+                            <div class="flex gap-2 mt-2 sm:mt-0">
+                                <button onclick="approveWithdraw('${w.id}')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">យល់ព្រម</button>
+                                <button onclick="rejectWithdraw('${w.id}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm">បដិសេធ</button>
+                            </div>
+                        </div>
+                    `).join('')
+                }
+            </div>
+            `;
+        }
+
+        // ============================================================
+        //  18. PAGE: ADMIN HISTORY
+        // ============================================================
+        function renderAdminHistory(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            const allTx = DB.getTx().slice(-30).reverse();
+
+            container.innerHTML = `
+            <div class="bg-white rounded-2xl shadow p-6">
+                <div class="page-header">
+                    <h2><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិប្រតិបត្តិការទាំងអស់</h2>
+                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
+                <span class="text-sm text-gray-500 mb-4 block">សរុប: ${allTx.length} ប្រតិបត្តិការ</span>
+                ${allTx.length === 0 ? '<p class="text-gray-400">មិនមានប្រតិបត្តិការទេ</p>' :
+                    `<div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 text-sm">
+                            <thead class="bg-gray-50">
+                                <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
+                            </thead>
+                            <tbody>
+                                ${allTx.map(t => {
+                                    const user = DB.getUsers().find(u => u.phone === t.phone);
+                                    return `
+                                        <tr class="border-b border-gray-100">
+                                            <td class="px-4 py-2 font-semibold text-blue-600">${user ? user.memberId || 'N/A' : 'N/A'}</td>
+                                            <td class="px-4 py-2">${user ? user.name : t.phone}</td>
+                                            <td class="px-4 py-2">${t.phone}</td>
+                                            <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${t.type === 'deposit' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${t.type === 'deposit' ? 'បញ្ចូល' : 'ដក'}</span></td>
+                                            <td class="px-4 py-2 ${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${formatMoney(t.amount)}</td>
+                                            <td class="px-4 py-2 text-xs text-gray-500">${t.note || '-'}</td>
+                                            <td class="px-4 py-2 text-xs text-gray-400">${t.date}</td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>`
+                }
+            </div>
+            `;
+        }
+
+        // ============================================================
+        //  19. PAGE: ADMIN REWARD
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1463,7 +1145,7 @@
         }
 
         // ============================================================
-        //  17. PAGE: ADMIN INCOME
+        //  20. PAGE: ADMIN INCOME
         // ============================================================
         function renderAdminIncome(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1578,119 +1260,6 @@
                 showToast(`✅ បានផ្ដល់ប្រាក់ចំណូល ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
                 renderPage('adminIncome');
             };
-        }
-
-        // ============================================================
-        //  18. PAGE: ADMIN DEPOSIT APPROVAL
-        // ============================================================
-        function renderAdminDeposit(container, user) {
-            if (!user || user.role !== 'admin') { renderPage('login'); return; }
-            const pending = DB.getDeposits().filter(d => d.status === 'pending');
-
-            container.innerHTML = `
-            <div class="bg-white rounded-2xl shadow p-6">
-                <div class="page-header">
-                    <h2><i class="fas fa-check-circle text-green-500 mr-2"></i>អនុម័តបញ្ចូលប្រាក់</h2>
-                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
-                </div>
-                ${pending.length === 0 ? '<p class="text-gray-400">មិនមានសំណើរង់ចាំទេ</p>' :
-                    pending.map(d => `
-                        <div class="border border-gray-200 rounded-xl p-4 mb-3 flex flex-wrap justify-between items-center">
-                            <div>
-                                <p><strong>${d.name}</strong> (ID: ${d.memberId || 'N/A'})</p>
-                                <p class="text-sm text-gray-500">📱 ${d.phone} | ${d.bank} - ${d.sender || 'N/A'}</p>
-                                <p class="text-lg font-bold text-green-600">${formatMoney(d.amount)}</p>
-                                <p class="text-xs text-gray-400">${d.date}</p>
-                                ${d.note ? `<p class="text-xs text-gray-500">📝 ${d.note}</p>` : ''}
-                                <span class="text-xs text-yellow-500">⏳ រង់ចាំអនុម័ត</span>
-                            </div>
-                            <div class="flex gap-2 mt-2 sm:mt-0">
-                                <button onclick="approveDeposit('${d.id}')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">យល់ព្រម</button>
-                                <button onclick="rejectDeposit('${d.id}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm">បដិសេធ</button>
-                            </div>
-                        </div>
-                    `).join('')
-                }
-            </div>
-            `;
-        }
-
-        // ============================================================
-        //  19. PAGE: ADMIN WITHDRAW APPROVAL
-        // ============================================================
-        function renderAdminWithdraw(container, user) {
-            if (!user || user.role !== 'admin') { renderPage('login'); return; }
-            const pending = DB.getWithdraws().filter(w => w.status === 'pending');
-
-            container.innerHTML = `
-            <div class="bg-white rounded-2xl shadow p-6">
-                <div class="page-header">
-                    <h2><i class="fas fa-check-circle text-purple-500 mr-2"></i>អនុម័តដកប្រាក់</h2>
-                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
-                </div>
-                ${pending.length === 0 ? '<p class="text-gray-400">មិនមានសំណើរង់ចាំទេ</p>' :
-                    pending.map(w => `
-                        <div class="border border-gray-200 rounded-xl p-4 mb-3 flex flex-wrap justify-between items-center">
-                            <div>
-                                <p><strong>${w.name}</strong> (ID: ${w.memberId || 'N/A'})</p>
-                                <p class="text-sm text-gray-500">📱 ${w.phone} | ${w.bank} - ${w.account} (${w.accName})</p>
-                                <p class="text-lg font-bold text-purple-600">${formatMoney(w.amount)}</p>
-                                <p class="text-xs text-gray-400">${w.date}</p>
-                                ${w.qrFile ? `<p class="text-xs text-blue-500">📷 QR: ${w.qrFile}</p>` : ''}
-                                <span class="text-xs text-yellow-500">⏳ រង់ចាំអនុម័ត</span>
-                            </div>
-                            <div class="flex gap-2 mt-2 sm:mt-0">
-                                <button onclick="approveWithdraw('${w.id}')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">យល់ព្រម</button>
-                                <button onclick="rejectWithdraw('${w.id}')" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm">បដិសេធ</button>
-                            </div>
-                        </div>
-                    `).join('')
-                }
-            </div>
-            `;
-        }
-
-        // ============================================================
-        //  20. PAGE: ADMIN HISTORY
-        // ============================================================
-        function renderAdminHistory(container, user) {
-            if (!user || user.role !== 'admin') { renderPage('login'); return; }
-            const allTx = DB.getTx().slice(-30).reverse();
-
-            container.innerHTML = `
-            <div class="bg-white rounded-2xl shadow p-6">
-                <div class="page-header">
-                    <h2><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិប្រតិបត្តិការទាំងអស់</h2>
-                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
-                </div>
-                <span class="text-sm text-gray-500 mb-4 block">សរុប: ${allTx.length} ប្រតិបត្តិការ</span>
-                ${allTx.length === 0 ? '<p class="text-gray-400">មិនមានប្រតិបត្តិការទេ</p>' :
-                    `<div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead class="bg-gray-50">
-                                <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
-                            </thead>
-                            <tbody>
-                                ${allTx.map(t => {
-                                    const user = DB.getUsers().find(u => u.phone === t.phone);
-                                    return `
-                                        <tr class="border-b border-gray-100">
-                                            <td class="px-4 py-2 font-semibold text-blue-600">${user ? user.memberId || 'N/A' : 'N/A'}</td>
-                                            <td class="px-4 py-2">${user ? user.name : t.phone}</td>
-                                            <td class="px-4 py-2">${t.phone}</td>
-                                            <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${t.type === 'deposit' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${t.type === 'deposit' ? 'បញ្ចូល' : 'ដក'}</span></td>
-                                            <td class="px-4 py-2 ${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${formatMoney(t.amount)}</td>
-                                            <td class="px-4 py-2 text-xs text-gray-500">${t.note || '-'}</td>
-                                            <td class="px-4 py-2 text-xs text-gray-400">${t.date}</td>
-                                        </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
-                    </div>`
-                }
-            </div>
-            `;
         }
 
         // ============================================================
@@ -1810,6 +1379,7 @@
             renderPage('login');
         })();
 
+        // Make functions globally accessible
         window.renderPage = renderPage;
         window.logout = logout;
         window.showModal = showModal;
