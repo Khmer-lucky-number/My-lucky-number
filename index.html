@@ -52,6 +52,7 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            overflow: hidden;
         }
         .qr-placeholder:hover {
             transform: scale(1.05);
@@ -299,6 +300,42 @@
             background: #006699;
             transform: scale(1.05);
         }
+        .danger-btn {
+            background: #dc2626;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        .danger-btn:hover {
+            background: #b91c1c;
+            transform: scale(1.05);
+        }
+        .reset-btn {
+            background: #f59e0b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        .reset-btn:hover {
+            background: #d97706;
+            transform: scale(1.05);
+        }
+        .admin-action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -350,6 +387,9 @@
             set(key, val) {
                 localStorage.setItem('ak_' + key, JSON.stringify(val));
             },
+            remove(key) {
+                localStorage.removeItem('ak_' + key);
+            },
             getUsers() { return this.get('users', []); },
             setUsers(u) { this.set('users', u); },
             getTx() { return this.get('tx', []); },
@@ -365,6 +405,36 @@
                 let current = this.get('nextId', 1000);
                 this.set('nextId', current + 1);
                 return current;
+            },
+            // Reset everything except admin account
+            resetAll() {
+                const admin = this.getUsers().find(u => u.role === 'admin');
+                this.remove('users');
+                this.remove('tx');
+                this.remove('withdraws');
+                this.remove('deposits');
+                this.remove('nextId');
+                this.remove('adminBankInfo');
+                this.remove('session');
+                if (admin) {
+                    this.setUsers([admin]);
+                }
+            },
+            // Delete a member by phone
+            deleteMember(phone) {
+                let users = this.getUsers();
+                users = users.filter(u => u.phone !== phone);
+                this.setUsers(users);
+                // Also remove their transactions
+                let tx = this.getTx();
+                tx = tx.filter(t => t.phone !== phone);
+                this.setTx(tx);
+                let deposits = this.getDeposits();
+                deposits = deposits.filter(d => d.phone !== phone);
+                this.setDeposits(deposits);
+                let withdraws = this.getWithdraws();
+                withdraws = withdraws.filter(w => w.phone !== phone);
+                this.setWithdraws(withdraws);
             }
         };
 
@@ -434,6 +504,10 @@
         //  4. IMAGE VIEWER
         // ============================================================
         function showImageViewer(imageSrc) {
+            if (!imageSrc || imageSrc === '') {
+                showToast('មិនមានរូបភាព QR Code សូមទាក់ទង Admin', 'error');
+                return;
+            }
             const viewer = document.getElementById('imageViewer');
             viewer.innerHTML = `
                 <div class="image-viewer" onclick="closeImageViewer()">
@@ -697,7 +771,6 @@
             const income = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
             container.innerHTML = `
-            <!-- Big Balance Box -->
             <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-6 mb-6 text-white">
                 <p class="text-sm text-blue-100"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
                 <p class="balance-big">${formatMoney(user.balance)}</p>
@@ -722,7 +795,6 @@
                 </div>
             </div>
 
-            <!-- Member Info -->
             <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-center gap-4">
                 <span><i class="fas fa-user text-blue-500 mr-2"></i><strong>${user.name}</strong></span>
                 <span><i class="fas fa-id-card text-blue-500 mr-2"></i><strong>ID: ${user.memberId || 'N/A'}</strong></span>
@@ -761,7 +833,7 @@
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
-            const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qr: '' });
+            const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
 
             container.innerHTML = `
             <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
@@ -776,12 +848,13 @@
                     <p><strong>ធនាគារ៖</strong> ${adminInfo.bank || 'ABA Bank'}</p>
                     <p><strong>លេខគណនី៖</strong> ${adminInfo.account || '001 234 567'}</p>
                     <div class="flex items-center gap-4 mt-3">
-                        <div class="qr-placeholder" onclick="showImageViewer('data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="200" height="200" fill="#e2e8f0"/><text x="50" y="110" font-family="sans-serif" font-size="20" fill="#64748b">QR Code Admin</text></svg>')}')">
-                            ${adminInfo.qr ? `<img src="#" alt="QR" />` :
-                                `<div><i class="fas fa-qrcode text-4xl text-gray-400"></i><p class="text-xs">ចុចដើម្បីមើល</p></div>`
+                        <div class="qr-placeholder" onclick="${adminInfo.qrData ? `showImageViewer('${adminInfo.qrData}')` : 'showToast(\'មិនទាន់មាន QR Code\', \'error\')'}">
+                            ${adminInfo.qrData ? 
+                                `<img src="${adminInfo.qrData}" alt="QR Code" />` :
+                                `<div><i class="fas fa-qrcode text-4xl text-gray-400"></i><p class="text-xs">មិនទាន់មាន QR</p></div>`
                             }
                         </div>
-                        <span class="text-xs text-gray-500">ចុចលើ QR ដើម្បីមើលធំ</span>
+                        <span class="text-xs text-gray-500">${adminInfo.qrData ? 'ចុចលើ QR ដើម្បីមើលធំ' : 'សូមទាក់ទង Admin ដើម្បីទទួលបាន QR Code'}</span>
                     </div>
                 </div>
 
@@ -1002,13 +1075,10 @@
             const withdraws = DB.getWithdraws().filter(w => w.status === 'pending');
             const adminBalance = user.balance || 0;
 
-            const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qr: '' });
-
-            // Calculate total income given
+            const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
             const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
             container.innerHTML = `
-            <!-- Admin Balance Box -->
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 mb-6 text-white">
                 <div class="flex items-center justify-between flex-wrap gap-3">
                     <div>
@@ -1030,6 +1100,9 @@
                             <i class="fas fa-history"></i> ប្រវត្តិ
                         </button>
                     </div>
+                </div>
+                <div class="admin-action-buttons mt-3">
+                    <button onclick="confirmReset()" class="reset-btn"><i class="fas fa-undo mr-1"></i> ចាប់ផ្ដើមឡើងវិញ</button>
                 </div>
             </div>
 
@@ -1081,9 +1154,11 @@
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-gray-700 text-sm font-medium mb-2">រូបភាព QR Code</label>
-                        <input type="file" id="adminQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
-                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR Code របស់ Admin</p>
-                        ${adminInfo.qr ? `<p class="text-xs text-green-600 mt-1">✅ បច្ចុប្បន្ន: ${adminInfo.qr}</p>` : ''}
+                        <input type="file" id="adminQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" onchange="previewAdminQR(this)" />
+                        <p class="text-xs text-gray-400 mt-1">សូមជ្រើសរើសរូបភាព QR Code របស់ Admin (JPG, PNG)</p>
+                        <div id="qrPreviewContainer" class="mt-2">
+                            ${adminInfo.qrData ? `<img src="${adminInfo.qrData}" alt="QR Code" class="w-32 h-32 object-cover rounded-xl border border-gray-200" />` : '<p class="text-xs text-gray-400">មិនទាន់មានរូបភាព QR Code</p>'}
+                        </div>
                     </div>
                     <div class="md:col-span-2">
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">
@@ -1096,16 +1171,18 @@
                     <h4 class="font-semibold text-gray-600 text-sm mb-2">📋 ព័ត៌មានដែលបានរក្សាទុក</h4>
                     <p><strong>ធនាគារ:</strong> ${adminInfo.bank || 'មិនទាន់កំណត់'}</p>
                     <p><strong>លេខគណនី:</strong> ${adminInfo.account || 'មិនទាន់កំណត់'}</p>
-                    <p><strong>QR Code:</strong> ${adminInfo.qr ? '✅ មាន' : '❌ មិនមាន'}</p>
+                    <p><strong>QR Code:</strong> ${adminInfo.qrData ? '✅ មាន' : '❌ មិនមាន'}</p>
                 </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow overflow-hidden">
-                <div class="px-6 py-3 border-b border-gray-200 font-semibold text-gray-700"><i class="fas fa-users mr-2"></i>បញ្ជីសមាជិក</div>
+                <div class="px-6 py-3 border-b border-gray-200 font-semibold text-gray-700 flex justify-between items-center">
+                    <span><i class="fas fa-users mr-2"></i>បញ្ជីសមាជិក</span>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 text-sm">
                         <thead class="bg-gray-50">
-                            <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">សមតុល្យ</th><th class="px-4 py-2 text-left">ស្ថានភាព</th></tr>
+                            <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">សមតុល្យ</th><th class="px-4 py-2 text-left">ស្ថានភាព</th><th class="px-4 py-2 text-left">សកម្មភាព</th></tr>
                         </thead>
                         <tbody>
                             ${users.filter(u => u.role !== 'admin').map(u => `
@@ -1115,8 +1192,12 @@
                                     <td class="px-4 py-2">${u.phone}</td>
                                     <td class="px-4 py-2">${formatMoney(u.balance)}</td>
                                     <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${u.status === 'active' ? 'សកម្ម' : 'ផ្អាក'}</span></td>
+                                    <td class="px-4 py-2">
+                                        <button onclick="confirmDeleteMember('${u.phone}')" class="danger-btn text-xs"><i class="fas fa-trash"></i> លុប</button>
+                                    </td>
                                 </tr>
                             `).join('')}
+                            ${users.filter(u => u.role !== 'admin').length === 0 ? '<tr><td colspan="6" class="text-center py-4 text-gray-400">មិនមានសមាជិកទេ</td></tr>' : ''}
                         </tbody>
                     </table>
                 </div>
@@ -1128,24 +1209,93 @@
                 const bank = document.getElementById('adminBankName').value;
                 const account = document.getElementById('adminAccount').value.trim();
                 const qrFile = document.getElementById('adminQR').files[0];
+                
                 if (!account) {
                     showToast('សូមបញ្ចូលលេខគណនី!', 'error');
                     return;
                 }
 
                 const currentInfo = DB.get('adminBankInfo', {});
-                DB.set('adminBankInfo', {
-                    bank: bank,
-                    account: account,
-                    qr: qrFile ? qrFile.name : (currentInfo.qr || '')
-                });
-                showToast('✅ បានរក្សាទុកព័ត៌មានធនាគារ Admin ដោយជោគជ័យ!', 'success');
-                renderPage('admin');
+                let qrData = currentInfo.qrData || '';
+                
+                if (qrFile) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        qrData = e.target.result;
+                        saveAdminBankInfo(bank, account, qrData);
+                    };
+                    reader.readAsDataURL(qrFile);
+                } else {
+                    saveAdminBankInfo(bank, account, qrData);
+                }
             };
         }
 
+        function saveAdminBankInfo(bank, account, qrData) {
+            DB.set('adminBankInfo', {
+                bank: bank,
+                account: account,
+                qrData: qrData
+            });
+            showToast('✅ បានរក្សាទុកព័ត៌មានធនាគារ Admin ដោយជោគជ័យ!', 'success');
+            renderPage('admin');
+        }
+
+        // Preview QR Code
+        window.previewAdminQR = function(input) {
+            const container = document.getElementById('qrPreviewContainer');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    container.innerHTML = `<img src="${e.target.result}" alt="QR Code Preview" class="w-32 h-32 object-cover rounded-xl border border-green-400 shadow" />`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
+
         // ============================================================
-        //  14. ADMIN DEPOSIT MODAL (with password) - FIXED
+        //  14. ADMIN ACTIONS - Delete Member & Reset
+        // ============================================================
+        window.confirmDeleteMember = function(phone) {
+            const user = DB.getUsers().find(u => u.phone === phone);
+            if (!user) return;
+            showModal(
+                'លុបសមាជិក',
+                `តើអ្នកពិតជាចង់លុបសមាជិក <strong>${user.name}</strong> (ID: ${user.memberId}) ចេញពីប្រព័ន្ធមែនទេ?<br><br>ការលុបនេះនឹងលុបទិន្នន័យទាំងអស់របស់សមាជិកនេះចេញជាអចិន្ត្រៃយ៍!`,
+                `deleteMember('${phone}')`,
+                true
+            );
+        };
+
+        window.deleteMember = function(phone) {
+            DB.deleteMember(phone);
+            showToast('✅ បានលុបសមាជិកដោយជោគជ័យ!', 'success');
+            renderPage('admin');
+        };
+
+        window.confirmReset = function() {
+            showModal(
+                'ចាប់ផ្ដើមឡើងវិញ',
+                `តើអ្នកពិតជាចង់ចាប់ផ្ដើមប្រព័ន្ធឡើងវិញមែនទេ?<br><br>
+                <span class="text-red-500 font-bold">សកម្មភាពនេះនឹង៖</span><br>
+                • លុបសមាជិកទាំងអស់ចេញ<br>
+                • លុបប្រតិបត្តិការទាំងអស់<br>
+                • លុបសំណើទាំងអស់<br>
+                • <span class="text-red-500 font-bold">រក្សាគណនី Admin ដដែល</span><br><br>
+                សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!`,
+                `resetSystem()`,
+                true
+            );
+        };
+
+        window.resetSystem = function() {
+            DB.resetAll();
+            showToast('✅ បានចាប់ផ្ដើមប្រព័ន្ធឡើងវិញដោយជោគជ័យ!', 'success');
+            renderPage('admin');
+        };
+
+        // ============================================================
+        //  15. ADMIN DEPOSIT MODAL
         // ============================================================
         window.showAdminDepositModal = function() {
             showModal(
@@ -1195,7 +1345,7 @@
         };
 
         // ============================================================
-        //  15. PAGE: ADMIN REWARD (with search)
+        //  16. PAGE: ADMIN REWARD (with search)
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1313,7 +1463,7 @@
         }
 
         // ============================================================
-        //  16. PAGE: ADMIN INCOME
+        //  17. PAGE: ADMIN INCOME
         // ============================================================
         function renderAdminIncome(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1431,7 +1581,7 @@
         }
 
         // ============================================================
-        //  17. PAGE: ADMIN DEPOSIT APPROVAL
+        //  18. PAGE: ADMIN DEPOSIT APPROVAL
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1466,7 +1616,7 @@
         }
 
         // ============================================================
-        //  18. PAGE: ADMIN WITHDRAW APPROVAL
+        //  19. PAGE: ADMIN WITHDRAW APPROVAL
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1501,7 +1651,7 @@
         }
 
         // ============================================================
-        //  19. PAGE: ADMIN HISTORY
+        //  20. PAGE: ADMIN HISTORY
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1544,7 +1694,7 @@
         }
 
         // ============================================================
-        //  20. ADMIN ACTIONS
+        //  21. ADMIN ACTIONS - Approve/Reject
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
@@ -1632,7 +1782,7 @@
         };
 
         // ============================================================
-        //  21. INIT
+        //  22. INIT
         // ============================================================
         (function init() {
             let users = DB.getUsers();
