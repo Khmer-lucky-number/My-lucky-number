@@ -117,6 +117,35 @@
         .password-wrapper input {
             padding-right: 44px;
         }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #475569;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+        .back-btn:hover {
+            background: #cbd5e1;
+            transform: translateX(-4px);
+        }
+        .back-btn i {
+            font-size: 16px;
+        }
+        .member-id-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -175,7 +204,12 @@
             setDeposits(d) { this.set('deposits', d); },
             getSession() { return this.get('session', null); },
             setSession(s) { this.set('session', s); },
-            clearSession() { localStorage.removeItem('ak_session'); }
+            clearSession() { localStorage.removeItem('ak_session'); },
+            getNextId() {
+                let current = this.get('nextId', 1000);
+                this.set('nextId', current + 1);
+                return current;
+            }
         };
 
         // ============================================================
@@ -194,6 +228,14 @@
         function sendTelegram(msg) {
             console.log('📱 [Telegram] ' + msg);
             showToast('📱 បានផ្ញើទៅ Telegram', 'info');
+            playNotificationSound();
+        }
+
+        function playNotificationSound() {
+            try {
+                const audio = new Audio('data:audio/wav;base64,UklGRnoAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoAAACBhYqFh4OIg4yGjoeOh5GKlJCVjZaQlo6akZ+WoqOdp6Kkq6+rs7Gxtbe3u7m6vL6+wMDCxMTGx8nLy87Q0tLU1tfZ29ve4OLk5ufp6+zu8PL09vf5+/z9//8=');
+                audio.play().catch(() => {});
+            } catch(e) {}
         }
 
         // ============================================================
@@ -238,9 +280,18 @@
         function registerUser(phone, name, password) {
             let users = DB.getUsers();
             if (users.find(u => u.phone === phone)) return { ok: false, msg: 'លេខទូរសព្ទមានរួចហើយ!' };
-            users.push({ phone, name, password, balance: 0, status: 'active', role: 'user' });
+            const memberId = DB.getNextId();
+            users.push({ 
+                phone, 
+                name, 
+                password, 
+                balance: 0, 
+                status: 'active', 
+                role: 'user',
+                memberId: memberId
+            });
             DB.setUsers(users);
-            return { ok: true };
+            return { ok: true, memberId };
         }
 
         function loginUser(phone, password) {
@@ -297,8 +348,10 @@
 
             const navUser = document.getElementById('navUser');
             if (user) {
+                const memberId = user.memberId || 'N/A';
                 navUser.innerHTML = `
                     <span class="text-sm text-gray-600 hidden sm:inline"><i class="fas fa-user-circle mr-1"></i> ${user.name}</span>
+                    <span class="member-id-badge">ID: ${memberId}</span>
                     <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">${user.role === 'admin' ? 'Admin' : user.phone}</span>
                     <span class="text-sm font-bold text-green-600">${formatMoney(user.balance)}</span>
                     <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-sign-out-alt"></i></button>
@@ -421,7 +474,7 @@
                 }
                 const result = registerUser(phone, name, pass);
                 if (result.ok) {
-                    showToast('✅ ចុះឈ្មោះជោគជ័យ! សូមចូលប្រើ។', 'success');
+                    showToast(`✅ ចុះឈ្មោះជោគជ័យ! ID: ${result.memberId} សូមចូលប្រើ។`, 'success');
                     loginTab.click();
                 } else {
                     showToast('❌ ' + result.msg, 'error');
@@ -470,6 +523,13 @@
                 </div>
             </div>
 
+            <!-- Member Info -->
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4 flex flex-wrap items-center justify-center gap-4">
+                <span><i class="fas fa-user text-blue-500 mr-2"></i><strong>${user.name}</strong></span>
+                <span><i class="fas fa-id-card text-blue-500 mr-2"></i><strong>ID: ${user.memberId || 'N/A'}</strong></span>
+                <span><i class="fas fa-phone text-blue-500 mr-2"></i><strong>${user.phone}</strong></span>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <button onclick="renderPage('deposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
@@ -503,7 +563,10 @@
 
             container.innerHTML = `
             <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-money-bill-wave text-green-500 mr-2"></i>បញ្ចូលប្រាក់</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-money-bill-wave text-green-500 mr-2"></i>បញ្ចូលប្រាក់</h2>
+                    <button onclick="renderPage('dashboard')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
 
                 <div class="deposit-info mb-6">
                     <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ព័ត៌មានធនាគារ Admin</h4>
@@ -521,7 +584,19 @@
                 </div>
 
                 <form id="depositForm">
-                    <div class="mb-4">
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID</label>
+                        <input type="text" id="depMemberId" value="${user.memberId || ''}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
+                        <input type="text" id="depPhone" value="${user.phone}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះអ្នកផ្ញើ</label>
+                        <input type="text" id="depSender" value="${user.name}" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none" />
+                    </div>
+                    <div class="mb-3">
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ធនាគាររបស់អ្នក</label>
                         <select id="depBank" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none">
                             <option value="ABA">ABA Bank</option>
@@ -530,11 +605,7 @@
                             <option value="TRUE">True Money</option>
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះអ្នកផ្ញើ</label>
-                        <input type="text" id="depSender" placeholder="ឈ្មោះពេញ" value="${user.name}" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none" />
-                    </div>
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនទឹកប្រាក់ដែលបានផ្ញើ (៛)</label>
                         <input type="number" id="depAmount" placeholder="100000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none" />
                     </div>
@@ -561,8 +632,6 @@
                         `).join('');
                     })()}
                 </div>
-
-                <button onclick="renderPage('dashboard')" class="mt-4 text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
             </div>
             `;
 
@@ -581,6 +650,7 @@
                 deposits.push({
                     id: genId(),
                     phone: user.phone,
+                    memberId: user.memberId,
                     name: user.name,
                     bank,
                     sender,
@@ -591,8 +661,10 @@
                 });
                 DB.setDeposits(deposits);
 
+                playNotificationSound();
                 sendTelegram(`📥 សំណើបញ្ចូលប្រាក់
-        អ្នកប្រើ: ${user.name} (${user.phone})
+        អ្នកប្រើ: ${user.name} (ID: ${user.memberId})
+        ទូរសព្ទ: ${user.phone}
         ធនាគារ: ${bank}
         អ្នកផ្ញើ: ${sender}
         ចំនួន: ${formatMoney(amount)}`);
@@ -609,11 +681,26 @@
             if (!user) { renderPage('login'); return; }
             container.innerHTML = `
             <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-hand-holding-usd text-purple-500 mr-2"></i>ដកប្រាក់</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-hand-holding-usd text-purple-500 mr-2"></i>ដកប្រាក់</h2>
+                    <button onclick="renderPage('dashboard')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
                 <p class="text-gray-500 text-sm mb-4">សមតុល្យបច្ចុប្បន្ន: <strong>${formatMoney(user.balance)}</strong></p>
 
                 <form id="withdrawForm">
-                    <div class="mb-4">
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID</label>
+                        <input type="text" id="wdMemberId" value="${user.memberId || ''}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
+                        <input type="text" id="wdPhone" value="${user.phone}" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះ</label>
+                        <input type="text" id="wdName" value="${user.name}" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
+                    </div>
+                    <div class="mb-3">
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ធនាគារទទួល</label>
                         <select id="wdBank" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none">
                             <option value="ABA">ABA Bank</option>
@@ -622,15 +709,11 @@
                             <option value="TRUE">True Money</option>
                         </select>
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះគណនី</label>
-                        <input type="text" id="wdName" placeholder="ឈ្មោះពេញ" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
-                    </div>
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-hashtag text-blue-500 mr-2"></i>លេខគណនី</label>
                         <input type="text" id="wdAccount" placeholder="លេខគណនី" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនដក (៛)</label>
                         <input type="number" id="wdAmount" placeholder="50000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
                     </div>
@@ -658,8 +741,6 @@
                         `).join('');
                     })()}
                 </div>
-
-                <button onclick="renderPage('dashboard')" class="mt-4 text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
             </div>
             `;
 
@@ -683,6 +764,7 @@
                 withdraws.push({
                     id: genId(),
                     phone: user.phone,
+                    memberId: user.memberId,
                     name: user.name,
                     bank,
                     accName,
@@ -694,8 +776,10 @@
                 });
                 DB.setWithdraws(withdraws);
 
+                playNotificationSound();
                 sendTelegram(`📤 សំណើដកប្រាក់
-        អ្នកប្រើ: ${user.name} (${user.phone})
+        អ្នកប្រើ: ${user.name} (ID: ${user.memberId})
+        ទូរសព្ទ: ${user.phone}
         ធនាគារ: ${bank}
         គណនី: ${account}
         ឈ្មោះ: ${accName}
@@ -795,11 +879,12 @@
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 text-sm">
                         <thead class="bg-gray-50">
-                            <tr><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">សមតុល្យ</th><th class="px-4 py-2 text-left">ស្ថានភាព</th></tr>
+                            <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">សមតុល្យ</th><th class="px-4 py-2 text-left">ស្ថានភាព</th></tr>
                         </thead>
                         <tbody>
-                            ${users.map(u => `
+                            ${users.filter(u => u.role !== 'admin').map(u => `
                                 <tr class="border-b border-gray-100">
+                                    <td class="px-4 py-2 font-semibold text-blue-600">${u.memberId || 'N/A'}</td>
                                     <td class="px-4 py-2">${u.name}</td>
                                     <td class="px-4 py-2">${u.phone}</td>
                                     <td class="px-4 py-2">${formatMoney(u.balance)}</td>
@@ -880,13 +965,16 @@
 
             container.innerHTML = `
             <div class="bg-white rounded-2xl shadow p-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-check-circle text-green-500 mr-2"></i>អនុម័តបញ្ចូលប្រាក់</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-check-circle text-green-500 mr-2"></i>អនុម័តបញ្ចូលប្រាក់</h2>
+                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
                 ${pending.length === 0 ? '<p class="text-gray-400">មិនមានសំណើរង់ចាំទេ</p>' :
                     pending.map(d => `
                         <div class="border border-gray-200 rounded-xl p-4 mb-3 flex flex-wrap justify-between items-center">
                             <div>
-                                <p><strong>${d.name}</strong> (${d.phone})</p>
-                                <p class="text-sm text-gray-500">${d.bank} - ${d.sender || 'N/A'}</p>
+                                <p><strong>${d.name}</strong> (ID: ${d.memberId || 'N/A'})</p>
+                                <p class="text-sm text-gray-500">📱 ${d.phone} | ${d.bank} - ${d.sender || 'N/A'}</p>
                                 <p class="text-lg font-bold text-green-600">${formatMoney(d.amount)}</p>
                                 <p class="text-xs text-gray-400">${d.date}</p>
                                 ${d.note ? `<p class="text-xs text-gray-500">📝 ${d.note}</p>` : ''}
@@ -898,7 +986,6 @@
                         </div>
                     `).join('')
                 }
-                <button onclick="renderPage('admin')" class="mt-4 text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
             </div>
             `;
         }
@@ -912,13 +999,16 @@
 
             container.innerHTML = `
             <div class="bg-white rounded-2xl shadow p-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-check-circle text-purple-500 mr-2"></i>អនុម័តដកប្រាក់</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-check-circle text-purple-500 mr-2"></i>អនុម័តដកប្រាក់</h2>
+                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
                 ${pending.length === 0 ? '<p class="text-gray-400">មិនមានសំណើរង់ចាំទេ</p>' :
                     pending.map(w => `
                         <div class="border border-gray-200 rounded-xl p-4 mb-3 flex flex-wrap justify-between items-center">
                             <div>
-                                <p><strong>${w.name}</strong> (${w.phone})</p>
-                                <p class="text-sm text-gray-500">${w.bank} - ${w.account} (${w.accName})</p>
+                                <p><strong>${w.name}</strong> (ID: ${w.memberId || 'N/A'})</p>
+                                <p class="text-sm text-gray-500">📱 ${w.phone} | ${w.bank} - ${w.account} (${w.accName})</p>
                                 <p class="text-lg font-bold text-purple-600">${formatMoney(w.amount)}</p>
                                 <p class="text-xs text-gray-400">${w.date}</p>
                                 ${w.qrFile ? `<p class="text-xs text-blue-500">📷 QR: ${w.qrFile}</p>` : ''}
@@ -930,7 +1020,6 @@
                         </div>
                     `).join('')
                 }
-                <button onclick="renderPage('admin')" class="mt-4 text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
             </div>
             `;
         }
@@ -944,22 +1033,23 @@
 
             container.innerHTML = `
             <div class="bg-white rounded-2xl shadow p-6">
-                <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិប្រតិបត្តិការទាំងអស់</h2>
                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-gray-500">សរុប: ${allTx.length} ប្រតិបត្តិការ</span>
-                    <button onclick="renderPage('admin')" class="text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
+                    <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិប្រតិបត្តិការទាំងអស់</h2>
+                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
                 </div>
+                <span class="text-sm text-gray-500 mb-4 block">សរុប: ${allTx.length} ប្រតិបត្តិការ</span>
                 ${allTx.length === 0 ? '<p class="text-gray-400">មិនមានប្រតិបត្តិការទេ</p>' :
                     `<div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 text-sm">
                             <thead class="bg-gray-50">
-                                <tr><th class="px-4 py-2 text-left">អ្នកប្រើ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
+                                <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
                             </thead>
                             <tbody>
                                 ${allTx.map(t => {
                                     const user = DB.getUsers().find(u => u.phone === t.phone);
                                     return `
                                         <tr class="border-b border-gray-100">
+                                            <td class="px-4 py-2 font-semibold text-blue-600">${user ? user.memberId || 'N/A' : 'N/A'}</td>
                                             <td class="px-4 py-2">${user ? user.name : t.phone}</td>
                                             <td class="px-4 py-2">${t.phone}</td>
                                             <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${t.type === 'deposit' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${t.type === 'deposit' ? 'បញ្ចូល' : 'ដក'}</span></td>
@@ -1001,8 +1091,9 @@
                     DB.setUsers(users);
                 }
 
+                playNotificationSound();
                 sendTelegram(`✅ បញ្ចូលប្រាក់ជោគជ័យ!
-        អ្នកប្រើ: ${d.name} (${d.phone})
+        អ្នកប្រើ: ${d.name} (ID: ${d.memberId || 'N/A'})
         ចំនួន: ${formatMoney(d.amount)}`);
                 showToast(`✅ បានអនុម័តបញ្ចូល ${formatMoney(d.amount)}`, 'success');
             }
@@ -1041,8 +1132,9 @@
                         DB.setUsers(users);
                     }
 
+                    playNotificationSound();
                     sendTelegram(`✅ ដកប្រាក់ជោគជ័យ!
-        អ្នកប្រើ: ${w.name} (${w.phone})
+        អ្នកប្រើ: ${w.name} (ID: ${w.memberId || 'N/A'})
         ចំនួន: ${formatMoney(w.amount)}`);
                     showToast(`✅ បានអនុម័តដក ${formatMoney(w.amount)}`, 'success');
                 } else {
@@ -1075,7 +1167,8 @@
                     password: 'admin123',
                     balance: 0,
                     status: 'active',
-                    role: 'admin'
+                    role: 'admin',
+                    memberId: 0
                 });
                 DB.setUsers(users);
             }
@@ -1096,6 +1189,7 @@
         window.showModal = showModal;
         window.closeModal = closeModal;
         window.showToast = showToast;
+        window.playNotificationSound = playNotificationSound;
     </script>
 </body>
 </html>
