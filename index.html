@@ -257,6 +257,48 @@
                 font-size: 1.8rem;
             }
         }
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+        .btn-with-badge {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #0088cc;
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .telegram-btn:hover {
+            background: #006699;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -687,13 +729,16 @@
                 <span><i class="fas fa-phone text-blue-500 mr-2"></i><strong>${user.phone}</strong></span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <button onclick="renderPage('deposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
                 </button>
                 <button onclick="renderPage('withdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-arrow-right"></i> ដកប្រាក់
                 </button>
+                <a href="https://t.me/+855766437408" target="_blank" class="telegram-btn justify-center">
+                    <i class="fab fa-telegram-plane"></i> ទំនាក់ទំនង Admin
+                </a>
             </div>
 
             <div class="bg-white rounded-2xl shadow p-6">
@@ -959,6 +1004,9 @@
 
             const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qr: '' });
 
+            // Calculate total income given
+            const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
+
             container.innerHTML = `
             <!-- Admin Balance Box -->
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 mb-6 text-white">
@@ -966,6 +1014,7 @@
                     <div>
                         <p class="text-sm text-blue-100"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
                         <p class="text-3xl font-bold">${formatMoney(adminBalance)}</p>
+                        <p class="text-sm text-blue-200 mt-1">បានផ្ដល់ប្រាក់ចំណូលសរុប: ${formatMoney(totalIncomeGiven)}</p>
                     </div>
                     <div class="flex gap-2 flex-wrap">
                         <button onclick="showAdminDepositModal()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
@@ -984,21 +1033,32 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">អ្នកប្រើសរុប</p><p class="text-2xl font-bold">${users.length}</p></div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សំណើបញ្ចូល</p><p class="text-2xl font-bold text-green-600">${deposits.length}</p></div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សំណើដក</p><p class="text-2xl font-bold text-purple-600">${withdraws.length}</p></div>
+                <div class="bg-white rounded-2xl shadow p-4 card-hover relative">
+                    <p class="text-gray-400 text-sm">សំណើបញ្ចូល</p>
+                    <p class="text-2xl font-bold text-green-600">${deposits.length}</p>
+                    ${deposits.length > 0 ? `<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${deposits.length}</span>` : ''}
+                </div>
+                <div class="bg-white rounded-2xl shadow p-4 card-hover relative">
+                    <p class="text-gray-400 text-sm">សំណើដក</p>
+                    <p class="text-2xl font-bold text-purple-600">${withdraws.length}</p>
+                    ${withdraws.length > 0 ? `<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${withdraws.length}</span>` : ''}
+                </div>
+                <div class="bg-white rounded-2xl shadow p-4 card-hover">
+                    <p class="text-gray-400 text-sm">បានផ្ដល់ប្រាក់ចំណូល</p>
+                    <p class="text-2xl font-bold text-blue-600">${formatMoney(totalIncomeGiven)}</p>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <button onclick="renderPage('adminDeposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <button onclick="renderPage('adminDeposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2 relative btn-with-badge">
                     <i class="fas fa-plus-circle"></i> អនុម័តបញ្ចូល
+                    ${deposits.length > 0 ? `<span class="notification-badge">${deposits.length}</span>` : ''}
                 </button>
-                <button onclick="renderPage('adminWithdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
+                <button onclick="renderPage('adminWithdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2 relative btn-with-badge">
                     <i class="fas fa-arrow-right"></i> អនុម័តដក
-                </button>
-                <button onclick="renderPage('adminIncome')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
-                    <i class="fas fa-hand-holding-usd"></i> ផ្ដល់ប្រាក់ចំណូល
+                    ${withdraws.length > 0 ? `<span class="notification-badge">${withdraws.length}</span>` : ''}
                 </button>
             </div>
 
@@ -1085,7 +1145,7 @@
         }
 
         // ============================================================
-        //  14. ADMIN DEPOSIT MODAL (with password)
+        //  14. ADMIN DEPOSIT MODAL (with password) - FIXED
         // ============================================================
         window.showAdminDepositModal = function() {
             showModal(
@@ -1196,7 +1256,6 @@
             </div>
             `;
 
-            // Search filter function
             window.filterRewardMembers = function() {
                 const search = document.getElementById('rewardSearch').value.toLowerCase().trim();
                 const select = document.getElementById('rewardMember');
@@ -1209,17 +1268,6 @@
                         opt.style.display = 'none';
                     }
                 });
-                // Select first visible
-                const firstVisible = select.querySelector('option[style*="display: none"]');
-                if (firstVisible) {
-                    // Find first not hidden
-                    for (let opt of select.options) {
-                        if (opt.style.display !== 'none') {
-                            select.value = opt.value;
-                            break;
-                        }
-                    }
-                }
             };
 
             document.getElementById('rewardForm').onsubmit = (e) => {
@@ -1326,7 +1374,6 @@
             </div>
             `;
 
-            // Search filter function
             window.filterIncomeMembers = function() {
                 const search = document.getElementById('incomeSearch').value.toLowerCase().trim();
                 const select = document.getElementById('incomeMember');
@@ -1405,6 +1452,7 @@
                                 <p class="text-lg font-bold text-green-600">${formatMoney(d.amount)}</p>
                                 <p class="text-xs text-gray-400">${d.date}</p>
                                 ${d.note ? `<p class="text-xs text-gray-500">📝 ${d.note}</p>` : ''}
+                                <span class="text-xs text-yellow-500">⏳ រង់ចាំអនុម័ត</span>
                             </div>
                             <div class="flex gap-2 mt-2 sm:mt-0">
                                 <button onclick="approveDeposit('${d.id}')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">យល់ព្រម</button>
@@ -1439,6 +1487,7 @@
                                 <p class="text-lg font-bold text-purple-600">${formatMoney(w.amount)}</p>
                                 <p class="text-xs text-gray-400">${w.date}</p>
                                 ${w.qrFile ? `<p class="text-xs text-blue-500">📷 QR: ${w.qrFile}</p>` : ''}
+                                <span class="text-xs text-yellow-500">⏳ រង់ចាំអនុម័ត</span>
                             </div>
                             <div class="flex gap-2 mt-2 sm:mt-0">
                                 <button onclick="approveWithdraw('${w.id}')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm">យល់ព្រម</button>
