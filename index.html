@@ -58,6 +58,48 @@
             padding: 16px;
             margin-top: 16px;
         }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            animation: slideUp 0.4s ease;
+            max-width: 400px;
+        }
+        .toast-success { background: #10b981; }
+        .toast-error { background: #ef4444; }
+        .toast-info { background: #3b82f6; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -79,6 +121,12 @@
         <div class="flex-1 max-w-7xl mx-auto w-full p-4">
             <div id="pageContent"></div>
         </div>
+
+        <!-- Modal Container -->
+        <div id="modalContainer"></div>
+
+        <!-- Toast Container -->
+        <div id="toastContainer"></div>
 
         <!-- FOOTER -->
         <footer class="bg-white border-t border-gray-200 text-center text-sm text-gray-400 py-4">
@@ -128,11 +176,47 @@
 
         function sendTelegram(msg) {
             console.log('📱 [Telegram] ' + msg);
-            alert('📱 បានផ្ញើទៅ Telegram:\n' + msg);
+            showToast('📱 បានផ្ញើទៅ Telegram', 'info');
         }
 
         // ============================================================
-        //  3. AUTH
+        //  3. TOAST & MODAL
+        // ============================================================
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
+        }
+
+        function showModal(title, message, onConfirm = null, onCancel = null) {
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+                    <div class="modal-box">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">${title}</h3>
+                        <p class="text-gray-600 mb-4">${message}</p>
+                        <div class="flex gap-3 justify-end">
+                            ${onCancel ? `<button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">បោះបង់</button>` : ''}
+                            ${onConfirm ? `<button onclick="closeModal(); ${onConfirm}()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">យល់ព្រម</button>` : `<button onclick="closeModal()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">យល់ព្រម</button>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('modalContainer').innerHTML = '';
+        }
+
+        // ============================================================
+        //  4. AUTH
         // ============================================================
         function registerUser(phone, name, password) {
             let users = DB.getUsers();
@@ -164,7 +248,7 @@
         }
 
         // ============================================================
-        //  4. TRANSACTIONS
+        //  5. TRANSACTIONS
         // ============================================================
         function addTransaction(phone, type, amount, note = '') {
             let tx = DB.getTx();
@@ -188,7 +272,7 @@
         }
 
         // ============================================================
-        //  5. RENDER ENGINE
+        //  6. RENDER ENGINE
         // ============================================================
         function renderPage(page, data = null) {
             const container = document.getElementById('pageContent');
@@ -220,7 +304,7 @@
         }
 
         // ============================================================
-        //  6. PAGE: LOGIN / REGISTER
+        //  7. PAGE: LOGIN / REGISTER
         // ============================================================
         function renderLogin(container) {
             container.innerHTML = `
@@ -297,8 +381,9 @@
                     const user = getCurrentUser();
                     if (user.role === 'admin') renderPage('admin');
                     else renderPage('dashboard');
+                    showToast('✅ ចូលប្រើជោគជ័យ!', 'success');
                 } else {
-                    alert('❌ ' + result.msg);
+                    showToast('❌ ' + result.msg, 'error');
                 }
             };
 
@@ -307,19 +392,22 @@
                 const name = document.getElementById('regName').value.trim();
                 const phone = document.getElementById('regPhone').value.trim();
                 const pass = document.getElementById('regPass').value.trim();
-                if (!name || !phone || !pass) return alert('សូមបំពេញព័ត៌មានឲ្យពេញលេញ!');
+                if (!name || !phone || !pass) {
+                    showToast('សូមបំពេញព័ត៌មានឲ្យពេញលេញ!', 'error');
+                    return;
+                }
                 const result = registerUser(phone, name, pass);
                 if (result.ok) {
-                    alert('✅ ចុះឈ្មោះជោគជ័យ! សូមចូលប្រើ។');
+                    showToast('✅ ចុះឈ្មោះជោគជ័យ! សូមចូលប្រើ។', 'success');
                     loginTab.click();
                 } else {
-                    alert('❌ ' + result.msg);
+                    showToast('❌ ' + result.msg, 'error');
                 }
             };
         }
 
         // ============================================================
-        //  7. PAGE: DASHBOARD (User)
+        //  8. PAGE: DASHBOARD (User)
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -341,6 +429,11 @@
                     <p class="text-gray-400 text-sm">បានដកសរុប</p>
                     <p class="text-2xl font-bold text-purple-600">${formatMoney(totalWithdraw)}</p>
                 </div>
+            </div>
+
+            <!-- Member Phone Display -->
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4 text-center">
+                <p class="text-sm text-gray-600"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទរបស់អ្នក: <strong class="text-blue-700">${user.phone}</strong></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -368,26 +461,27 @@
         }
 
         // ============================================================
-        //  8. PAGE: DEPOSIT (User)
+        //  9. PAGE: DEPOSIT (User)
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
+            const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qr: '' });
+
             container.innerHTML = `
             <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-money-bill-wave text-green-500 mr-2"></i>បញ្ចូលប្រាក់</h2>
 
-                <!-- Admin Bank Info -->
+                <!-- Admin Bank Info Display -->
                 <div class="deposit-info mb-6">
                     <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ព័ត៌មានធនាគារ Admin</h4>
                     <p><strong>ឈ្មោះគណនី៖</strong> អាជីវករខ្មែរ</p>
-                    <p><strong>លេខគណនី៖</strong> 001 234 567</p>
-                    <p><strong>ធនាគារ៖</strong> ABA Bank</p>
+                    <p><strong>ធនាគារ៖</strong> ${adminInfo.bank || 'ABA Bank'}</p>
+                    <p><strong>លេខគណនី៖</strong> ${adminInfo.account || '001 234 567'}</p>
                     <div class="flex items-center gap-4 mt-3">
                         <div class="qr-placeholder">
-                            <div>
-                                <i class="fas fa-qrcode text-4xl text-gray-400"></i>
-                                <p class="text-xs">QR Code Admin</p>
-                            </div>
+                            ${adminInfo.qr ? `<img src="#" alt="QR" class="w-full h-full object-cover rounded-lg" />` :
+                                `<div><i class="fas fa-qrcode text-4xl text-gray-400"></i><p class="text-xs">QR Code Admin</p></div>`
+                            }
                         </div>
                         <span class="text-xs text-gray-500">សូមស្កេន QR ដើម្បីបង់ប្រាក់</span>
                     </div>
@@ -446,7 +540,10 @@
                 const sender = document.getElementById('depSender').value.trim();
                 const amount = parseInt(document.getElementById('depAmount').value.trim());
                 const note = document.getElementById('depNote').value.trim();
-                if (!sender || !amount || amount <= 0) return alert('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!');
+                if (!sender || !amount || amount <= 0) {
+                    showToast('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!', 'error');
+                    return;
+                }
 
                 let deposits = DB.getDeposits();
                 deposits.push({
@@ -467,16 +564,15 @@
         ធនាគារ: ${bank}
         អ្នកផ្ញើ: ${sender}
         ចំនួន: ${formatMoney(amount)}
-        កំណត់សម្គាល់: ${note || 'គ្មាន'}
-        ស្ថានភាព: រង់ចាំអនុម័ត`);
+        កំណត់សម្គាល់: ${note || 'គ្មាន'}`);
 
-                alert('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!');
+                showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
                 renderPage('deposit');
             };
         }
 
         // ============================================================
-        //  9. PAGE: WITHDRAW (User)
+        //  10. PAGE: WITHDRAW (User)
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -544,8 +640,14 @@
                 const account = document.getElementById('wdAccount').value.trim();
                 const amount = parseInt(document.getElementById('wdAmount').value.trim());
                 const qrFile = document.getElementById('wdQR').files[0];
-                if (!accName || !account || !amount || amount <= 0) return alert('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!');
-                if (amount > user.balance) return alert('❌ សមតុល្យមិនគ្រប់គ្រាន់!');
+                if (!accName || !account || !amount || amount <= 0) {
+                    showToast('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!', 'error');
+                    return;
+                }
+                if (amount > user.balance) {
+                    showToast('❌ សមតុល្យមិនគ្រប់គ្រាន់!', 'error');
+                    return;
+                }
 
                 let withdraws = DB.getWithdraws();
                 withdraws.push({
@@ -567,17 +669,15 @@
         ធនាគារ: ${bank}
         គណនី: ${account}
         ឈ្មោះ: ${accName}
-        ចំនួន: ${formatMoney(amount)}
-        QR: ${qrFile ? qrFile.name : 'គ្មាន'}
-        ស្ថានភាព: រង់ចាំអនុម័ត`);
+        ចំនួន: ${formatMoney(amount)}`);
 
-                alert('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!');
+                showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
                 renderPage('withdraw');
             };
         }
 
         // ============================================================
-        //  10. PAGE: ADMIN DASHBOARD
+        //  11. PAGE: ADMIN DASHBOARD
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -585,7 +685,10 @@
             const deposits = DB.getDeposits().filter(d => d.status === 'pending');
             const withdraws = DB.getWithdraws().filter(w => w.status === 'pending');
             const totalBalance = users.reduce((s, u) => s + u.balance, 0);
-            const allTx = DB.getTx().slice(-5).reverse();
+            const adminBalance = user.balance || 0;
+
+            // Admin Bank Info
+            const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qr: '' });
 
             container.innerHTML = `
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -595,15 +698,30 @@
                 <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សមតុល្យសរុប</p><p class="text-2xl font-bold text-blue-600">${formatMoney(totalBalance)}</p></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <!-- Admin Balance -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow p-4 mb-6 border border-blue-200">
+                <div class="flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                        <p class="text-sm text-gray-500"><i class="fas fa-user-shield text-blue-500 mr-2"></i>សមតុល្យ Admin</p>
+                        <p class="text-2xl font-bold text-blue-700">${formatMoney(adminBalance)}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="showAdminDepositModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2">
+                            <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
+                        </button>
+                        <button onclick="renderPage('adminHistory')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2">
+                            <i class="fas fa-history"></i> ប្រវត្តិ
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <button onclick="renderPage('adminDeposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-plus-circle"></i> អនុម័តបញ្ចូល
                 </button>
                 <button onclick="renderPage('adminWithdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-arrow-right"></i> អនុម័តដក
-                </button>
-                <button onclick="renderPage('adminHistory')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
-                    <i class="fas fa-history"></i> ប្រវត្តិប្រតិបត្តិការ
                 </button>
             </div>
 
@@ -614,20 +732,21 @@
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-2">ឈ្មោះធនាគារ</label>
                         <select id="adminBankName" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
-                            <option value="ABA">ABA Bank</option>
-                            <option value="ACLEDA">ACLEDA</option>
-                            <option value="WING">Wing</option>
-                            <option value="TRUE">True Money</option>
+                            <option value="ABA" ${adminInfo.bank === 'ABA' ? 'selected' : ''}>ABA Bank</option>
+                            <option value="ACLEDA" ${adminInfo.bank === 'ACLEDA' ? 'selected' : ''}>ACLEDA</option>
+                            <option value="WING" ${adminInfo.bank === 'WING' ? 'selected' : ''}>Wing</option>
+                            <option value="TRUE" ${adminInfo.bank === 'TRUE' ? 'selected' : ''}>True Money</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-gray-700 text-sm font-medium mb-2">លេខគណនី</label>
-                        <input type="text" id="adminAccount" placeholder="លេខគណនី" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                        <input type="text" id="adminAccount" placeholder="លេខគណនី" value="${adminInfo.account || ''}" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-gray-700 text-sm font-medium mb-2">រូបភាព QR Code</label>
                         <input type="file" id="adminQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
                         <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR Code របស់ Admin</p>
+                        ${adminInfo.qr ? `<p class="text-xs text-green-600 mt-1">✅ បច្ចុប្បន្ន: ${adminInfo.qr}</p>` : ''}
                     </div>
                     <div class="md:col-span-2">
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">
@@ -635,6 +754,14 @@
                         </button>
                     </div>
                 </form>
+
+                <!-- Display Saved Admin Info -->
+                <div class="mt-4 p-4 bg-gray-50 rounded-xl">
+                    <h4 class="font-semibold text-gray-600 text-sm mb-2">📋 ព័ត៌មានដែលបានរក្សាទុក</h4>
+                    <p><strong>ធនាគារ:</strong> ${adminInfo.bank || 'មិនទាន់កំណត់'}</p>
+                    <p><strong>លេខគណនី:</strong> ${adminInfo.account || 'មិនទាន់កំណត់'}</p>
+                    <p><strong>QR Code:</strong> ${adminInfo.qr ? '✅ មាន' : '❌ មិនមាន'}</p>
+                </div>
             </div>
 
             <div class="bg-white rounded-2xl shadow overflow-hidden">
@@ -659,30 +786,68 @@
             </div>
             `;
 
-            // Load saved admin bank info
-            const saved = DB.get('adminBankInfo', { bank: 'ABA', account: '', qr: '' });
-            document.getElementById('adminBankName').value = saved.bank || 'ABA';
-            document.getElementById('adminAccount').value = saved.account || '';
-
             document.getElementById('adminBankForm').onsubmit = (e) => {
                 e.preventDefault();
                 const bank = document.getElementById('adminBankName').value;
                 const account = document.getElementById('adminAccount').value.trim();
                 const qrFile = document.getElementById('adminQR').files[0];
-                if (!account) return alert('សូមបញ្ចូលលេខគណនី!');
+                if (!account) {
+                    showToast('សូមបញ្ចូលលេខគណនី!', 'error');
+                    return;
+                }
 
+                const currentInfo = DB.get('adminBankInfo', {});
                 DB.set('adminBankInfo', {
                     bank: bank,
                     account: account,
-                    qr: qrFile ? qrFile.name : DB.get('adminBankInfo', {}).qr || ''
+                    qr: qrFile ? qrFile.name : (currentInfo.qr || '')
                 });
-                alert('✅ បានរក្សាទុកព័ត៌មានធនាគារ Admin ដោយជោគជ័យ!');
+                showToast('✅ បានរក្សាទុកព័ត៌មានធនាគារ Admin ដោយជោគជ័យ!', 'success');
                 renderPage('admin');
             };
         }
 
         // ============================================================
-        //  11. PAGE: ADMIN DEPOSIT APPROVAL
+        //  12. ADMIN DEPOSIT MODAL
+        // ============================================================
+        window.showAdminDepositModal = function() {
+            const admin = getCurrentUser();
+            if (!admin) return;
+            showModal(
+                'បញ្ចូលប្រាក់ទៅ Admin',
+                `
+                <div class="mb-3">
+                    <label class="block text-gray-600 text-sm">ចំនួនទឹកប្រាក់ (៛)</label>
+                    <input type="number" id="adminDepositAmount" placeholder="100000" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                </div>
+                <div class="mb-2">
+                    <label class="block text-gray-600 text-sm">កំណត់សម្គាល់ (ស្រេចចិត្ត)</label>
+                    <input type="text" id="adminDepositNote" placeholder="បញ្ចូលដោយខ្លួនឯង" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                </div>
+                `,
+                function() {
+                    const amount = parseInt(document.getElementById('adminDepositAmount').value.trim());
+                    const note = document.getElementById('adminDepositNote').value.trim() || 'បញ្ចូលដោយខ្លួនឯង';
+                    if (!amount || amount <= 0) {
+                        showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ឲ្យបានត្រឹមត្រូវ!', 'error');
+                        return;
+                    }
+                    let users = DB.getUsers();
+                    const admin = users.find(u => u.role === 'admin');
+                    if (admin) {
+                        admin.balance += amount;
+                        DB.setUsers(users);
+                        addTransaction(admin.phone, 'deposit', amount, note);
+                        showToast(`✅ បានបញ្ចូល ${formatMoney(amount)} ទៅ Admin`, 'success');
+                        renderPage('admin');
+                    }
+                },
+                function() { closeModal(); }
+            );
+        };
+
+        // ============================================================
+        //  13. PAGE: ADMIN DEPOSIT APPROVAL
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -714,7 +879,7 @@
         }
 
         // ============================================================
-        //  12. PAGE: ADMIN WITHDRAW APPROVAL
+        //  14. PAGE: ADMIN WITHDRAW APPROVAL
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -746,15 +911,19 @@
         }
 
         // ============================================================
-        //  13. PAGE: ADMIN HISTORY
+        //  15. PAGE: ADMIN HISTORY
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
-            const allTx = DB.getTx().slice(-20).reverse();
+            const allTx = DB.getTx().slice(-30).reverse();
 
             container.innerHTML = `
             <div class="bg-white rounded-2xl shadow p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិប្រតិបត្តិការទាំងអស់</h2>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm text-gray-500">សរុប: ${allTx.length} ប្រតិបត្តិការ</span>
+                    <button onclick="renderPage('admin')" class="text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
+                </div>
                 ${allTx.length === 0 ? '<p class="text-gray-400">មិនមានប្រតិបត្តិការទេ</p>' :
                     `<div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 text-sm">
@@ -778,13 +947,12 @@
                         </table>
                     </div>`
                 }
-                <button onclick="renderPage('admin')" class="mt-4 text-blue-600 text-sm hover:underline">← ត្រឡប់</button>
             </div>
             `;
         }
 
         // ============================================================
-        //  14. ADMIN ACTIONS
+        //  16. ADMIN ACTIONS
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
@@ -800,12 +968,19 @@
                 u.balance += d.amount;
                 DB.setUsers(users);
                 addTransaction(d.phone, 'deposit', d.amount, `បញ្ចូលតាម Admin (${d.bank})`);
+                
+                // Add to admin balance too
+                const admin = users.find(u => u.role === 'admin');
+                if (admin) {
+                    admin.balance += d.amount;
+                    DB.setUsers(users);
+                }
+                
                 sendTelegram(`✅ បញ្ចូលប្រាក់ជោគជ័យ!
         អ្នកប្រើ: ${d.name} (${d.phone})
-        ចំនួន: ${formatMoney(d.amount)}
-        សមតុល្យថ្មី: ${formatMoney(u.balance)}`);
+        ចំនួន: ${formatMoney(d.amount)}`);
+                showToast(`✅ បានអនុម័តបញ្ចូល ${formatMoney(d.amount)}`, 'success');
             }
-            alert('✅ បានអនុម័តបញ្ចូលប្រាក់!');
             renderPage('adminDeposit');
         };
 
@@ -815,7 +990,7 @@
             if (idx === -1) return;
             deposits[idx].status = 'rejected';
             DB.setDeposits(deposits);
-            alert('❌ បានបដិសេធ');
+            showToast('❌ បានបដិសេធ', 'error');
             renderPage('adminDeposit');
         };
 
@@ -834,16 +1009,23 @@
                     u.balance -= w.amount;
                     DB.setUsers(users);
                     addTransaction(w.phone, 'withdraw', w.amount, `ដកតាម Admin (${w.bank})`);
+                    
+                    // Deduct from admin balance too
+                    const admin = users.find(u => u.role === 'admin');
+                    if (admin) {
+                        admin.balance -= w.amount;
+                        DB.setUsers(users);
+                    }
+                    
                     sendTelegram(`✅ ដកប្រាក់ជោគជ័យ!
         អ្នកប្រើ: ${w.name} (${w.phone})
-        ចំនួន: ${formatMoney(w.amount)}
-        សមតុល្យថ្មី: ${formatMoney(u.balance)}`);
+        ចំនួន: ${formatMoney(w.amount)}`);
+                    showToast(`✅ បានអនុម័តដក ${formatMoney(w.amount)}`, 'success');
                 } else {
-                    alert('❌ សមតុល្យមិនគ្រប់!');
+                    showToast('❌ សមតុល្យមិនគ្រប់!', 'error');
                     return;
                 }
             }
-            alert('✅ បានអនុម័តដកប្រាក់!');
             renderPage('adminWithdraw');
         };
 
@@ -853,12 +1035,12 @@
             if (idx === -1) return;
             withdraws[idx].status = 'rejected';
             DB.setWithdraws(withdraws);
-            alert('❌ បានបដិសេធ');
+            showToast('❌ បានបដិសេធ', 'error');
             renderPage('adminWithdraw');
         };
 
         // ============================================================
-        //  15. INIT
+        //  17. INIT
         // ============================================================
         (function init() {
             let users = DB.getUsers();
@@ -887,6 +1069,9 @@
 
         window.renderPage = renderPage;
         window.logout = logout;
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+        window.showToast = showToast;
     </script>
 </body>
 </html>
