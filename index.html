@@ -336,6 +336,21 @@
             flex-wrap: wrap;
             margin-top: 8px;
         }
+        .yellow-btn {
+            background: #eab308;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+        .yellow-btn:hover {
+            background: #ca8a04;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -755,11 +770,11 @@
         }
 
         // ============================================================
-        //  10. PAGE: DASHBOARD (User)
+        //  10. PAGE: DASHBOARD (User) - WITH ACCOUNT DISPLAY
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
-            const tx = DB.getTx().filter(t => t.phone === user.phone).slice(-5).reverse();
+            const tx = DB.getTx().filter(t => t.phone === user.phone).slice(-10).reverse();
             const totalIn = DB.getTx().filter(t => t.phone === user.phone && t.type === 'deposit').reduce((s, t) => s + t.amount, 0);
             const totalWithdraw = DB.getTx().filter(t => t.phone === user.phone && t.type === 'withdraw').reduce((s, t) => s + t.amount, 0);
             const rewards = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់រង្វាន់')).reduce((s, t) => s + t.amount, 0);
@@ -796,12 +811,15 @@
                 <span><i class="fas fa-phone text-blue-500 mr-2"></i><strong>${user.phone}</strong></span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <button onclick="renderPage('deposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
                 </button>
                 <button onclick="renderPage('withdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-arrow-right"></i> ដកប្រាក់
+                </button>
+                <button onclick="showMemberDeleteTransaction()" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
+                    <i class="fas fa-trash"></i> លុបប្រវត្តិ
                 </button>
                 <a href="https://t.me/+855766437408" target="_blank" class="telegram-btn justify-center">
                     <i class="fab fa-telegram-plane"></i> ទំនាក់ទំនង Admin
@@ -811,20 +829,74 @@
             <div class="bg-white rounded-2xl shadow p-6">
                 <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រតិបត្តិការថ្មីៗ</h3>
                 ${tx.length === 0 ? '<p class="text-gray-400 text-sm">មិនមានប្រតិបត្តិការទេ</p>' :
-                    tx.map(t => `
-                        <div class="flex justify-between border-b border-gray-100 py-2 text-sm">
-                            <span>${t.note || (t.type === 'deposit' ? 'បញ្ចូល' : 'ដក')}</span>
-                            <span class="${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${t.type === 'deposit' ? '➕' : '➡️'} ${formatMoney(t.amount)}</span>
-                            <span class="text-gray-400 text-xs">${t.date}</span>
-                        </div>
-                    `).join('')
+                    tx.map(t => {
+                        // Find deposit record for this transaction to get account number
+                        const deposit = DB.getDeposits().find(d => d.id === t.id || (d.phone === t.phone && d.amount === t.amount && d.date === t.date));
+                        return `
+                            <div class="flex justify-between border-b border-gray-100 py-2 text-sm">
+                                <span>${t.note || (t.type === 'deposit' ? 'បញ្ចូល' : 'ដក')} ${deposit && deposit.account ? '| គណនី: '+deposit.account : ''}</span>
+                                <span class="${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${t.type === 'deposit' ? '➕' : '➡️'} ${formatMoney(t.amount)}</span>
+                                <span class="text-gray-400 text-xs">${t.date}</span>
+                            </div>
+                        `;
+                    }).join('')
                 }
             </div>
             `;
         }
 
         // ============================================================
-        //  11. PAGE: DEPOSIT (User) - WITH ACCOUNT NUMBER
+        //  11. MEMBER DELETE TRANSACTION
+        // ============================================================
+        window.showMemberDeleteTransaction = function() {
+            const user = getCurrentUser();
+            if (!user) return;
+            showModal(
+                'លុបប្រវត្តិប្រតិបត្តិការ',
+                `
+                <div class="mb-3">
+                    <label class="block text-gray-600 text-sm font-medium mb-1">ពាក្យសម្ងាត់</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="memberDeletePassword" placeholder="បញ្ចូលពាក្យសម្ងាត់" 
+                               class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-400 outline-none" />
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('memberDeletePassword', this)"></i>
+                    </div>
+                </div>
+                <p class="text-sm text-red-500">⚠️ ការលុបនេះនឹងលុបប្រវត្តិប្រតិបត្តិការទាំងអស់របស់អ្នក!</p>
+                `,
+                function() {
+                    const password = document.getElementById('memberDeletePassword').value.trim();
+                    if (password !== 'Qq128080') {
+                        showToast('❌ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!', 'error');
+                        return;
+                    }
+                    // Delete all transactions for this member
+                    let tx = DB.getTx();
+                    tx = tx.filter(t => t.phone !== user.phone);
+                    DB.setTx(tx);
+                    let deposits = DB.getDeposits();
+                    deposits = deposits.filter(d => d.phone !== user.phone);
+                    DB.setDeposits(deposits);
+                    let withdraws = DB.getWithdraws();
+                    withdraws = withdraws.filter(w => w.phone !== user.phone);
+                    DB.setWithdraws(withdraws);
+                    // Reset balance to 0
+                    let users = DB.getUsers();
+                    const u = users.find(u => u.phone === user.phone);
+                    if (u) {
+                        u.balance = 0;
+                        DB.setUsers(users);
+                    }
+                    showToast('✅ បានលុបប្រវត្តិប្រតិបត្តិការទាំងអស់!', 'success');
+                    renderPage('dashboard');
+                    closeModal();
+                },
+                function() { closeModal(); }
+            );
+        };
+
+        // ============================================================
+        //  12. PAGE: DEPOSIT (User) - WITH ACCOUNT NUMBER
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -952,7 +1024,7 @@
         }
 
         // ============================================================
-        //  12. PAGE: WITHDRAW (User)
+        //  13. PAGE: WITHDRAW (User)
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1067,7 +1139,7 @@
             };
         }
         // ============================================================
-        //  13. PAGE: ADMIN DASHBOARD
+        //  14. PAGE: ADMIN DASHBOARD
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1195,6 +1267,7 @@
                                     <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${u.status === 'active' ? 'សកម្ម' : 'ផ្អាក'}</span></td>
                                     <td class="px-4 py-2">
                                         <button onclick="confirmDeleteMember('${u.phone}')" class="danger-btn"><i class="fas fa-trash"></i> លុប</button>
+                                        <button onclick="showAdminDeleteTransaction('${u.phone}')" class="yellow-btn"><i class="fas fa-history"></i> លុបប្រវត្តិ</button>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -1252,8 +1325,9 @@
                 reader.readAsDataURL(input.files[0]);
             }
         };
+
         // ============================================================
-        //  14. ADMIN DEPOSIT MODAL - FIXED (Manual Deposit)
+        //  15. ADMIN DEPOSIT MODAL - FIXED
         // ============================================================
         window.showAdminDepositModal = function() {
             const overlay = document.createElement('div');
@@ -1319,7 +1393,45 @@
         };
 
         // ============================================================
-        //  15. ADMIN ACTIONS - Delete Member & Reset
+        //  16. ADMIN DELETE TRANSACTION
+        // ============================================================
+        window.showAdminDeleteTransaction = function(phone) {
+            const user = DB.getUsers().find(u => u.phone === phone);
+            if (!user) return;
+            showModal(
+                'លុបប្រវត្តិប្រតិបត្តិការសមាជិក',
+                `
+                <p>តើអ្នកចង់លុបប្រវត្តិប្រតិបត្តិការទាំងអស់របស់ <strong>${user.name}</strong> (ID: ${user.memberId}) មែនទេ?</p>
+                <p class="text-sm text-red-500 mt-2">⚠️ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
+                `,
+                function() {
+                    // Delete all transactions for this member
+                    let tx = DB.getTx();
+                    tx = tx.filter(t => t.phone !== phone);
+                    DB.setTx(tx);
+                    let deposits = DB.getDeposits();
+                    deposits = deposits.filter(d => d.phone !== phone);
+                    DB.setDeposits(deposits);
+                    let withdraws = DB.getWithdraws();
+                    withdraws = withdraws.filter(w => w.phone !== phone);
+                    DB.setWithdraws(withdraws);
+                    // Reset balance to 0
+                    let users = DB.getUsers();
+                    const u = users.find(u => u.phone === phone);
+                    if (u) {
+                        u.balance = 0;
+                        DB.setUsers(users);
+                    }
+                    showToast(`✅ បានលុបប្រវត្តិប្រតិបត្តិការរបស់ ${user.name} ទាំងអស់!`, 'success');
+                    renderPage('admin');
+                    closeModal();
+                },
+                function() { closeModal(); }
+            );
+        };
+
+        // ============================================================
+        //  17. ADMIN ACTIONS - Delete Member & Reset
         // ============================================================
         window.confirmDeleteMember = function(phone) {
             const user = DB.getUsers().find(u => u.phone === phone);
@@ -1360,7 +1472,7 @@
         };
 
         // ============================================================
-        //  16. PAGE: ADMIN DEPOSIT APPROVAL (with account number)
+        //  18. PAGE: ADMIN DEPOSIT APPROVAL (with account number)
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1395,7 +1507,7 @@
         }
 
         // ============================================================
-        //  17. PAGE: ADMIN WITHDRAW APPROVAL
+        //  19. PAGE: ADMIN WITHDRAW APPROVAL
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1430,7 +1542,7 @@
         }
 
         // ============================================================
-        //  18. PAGE: ADMIN HISTORY
+        //  20. PAGE: ADMIN HISTORY
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1473,7 +1585,7 @@
         }
 
         // ============================================================
-        //  19. PAGE: ADMIN REWARD
+        //  21. PAGE: ADMIN REWARD
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1591,7 +1703,7 @@
         }
 
         // ============================================================
-        //  20. PAGE: ADMIN INCOME
+        //  22. PAGE: ADMIN INCOME
         // ============================================================
         function renderAdminIncome(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1709,7 +1821,7 @@
         }
 
         // ============================================================
-        //  21. ADMIN ACTIONS - Approve/Reject
+        //  23. ADMIN ACTIONS - Approve/Reject
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
@@ -1797,7 +1909,7 @@
         };
 
         // ============================================================
-        //  22. INIT
+        //  24. INIT
         // ============================================================
         (function init() {
             let users = DB.getUsers();
@@ -1838,6 +1950,8 @@
         window.filterIncomeMembers = function() {};
         window.closeAdminDepositModal = closeAdminDepositModal;
         window.processAdminDeposit = processAdminDeposit;
+        window.showAdminDeleteTransaction = showAdminDeleteTransaction;
+        window.showMemberDeleteTransaction = showMemberDeleteTransaction;
     </script>
 </body>
 </html>
