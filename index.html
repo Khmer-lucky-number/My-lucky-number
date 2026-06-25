@@ -100,6 +100,23 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .password-toggle:hover {
+            color: #3b82f6;
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 44px;
+        }
     </style>
 </head>
 <body>
@@ -201,7 +218,7 @@
                 <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
                     <div class="modal-box">
                         <h3 class="text-xl font-bold text-gray-800 mb-2">${title}</h3>
-                        <p class="text-gray-600 mb-4">${message}</p>
+                        <div class="text-gray-600 mb-4">${message}</div>
                         <div class="flex gap-3 justify-end">
                             ${onCancel ? `<button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">បោះបង់</button>` : ''}
                             ${onConfirm ? `<button onclick="closeModal(); ${onConfirm}()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">យល់ព្រម</button>` : `<button onclick="closeModal()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">យល់ព្រម</button>`}
@@ -282,7 +299,7 @@
             if (user) {
                 navUser.innerHTML = `
                     <span class="text-sm text-gray-600 hidden sm:inline"><i class="fas fa-user-circle mr-1"></i> ${user.name}</span>
-                    <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">${user.role === 'admin' ? 'Admin' : 'សមាជិក'}</span>
+                    <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">${user.role === 'admin' ? 'Admin' : user.phone}</span>
                     <span class="text-sm font-bold text-green-600">${formatMoney(user.balance)}</span>
                     <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-sign-out-alt"></i></button>
                 `;
@@ -330,7 +347,10 @@
                         </div>
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-lock text-blue-500 mr-2"></i>ពាក្យសម្ងាត់</label>
-                            <input type="password" id="loginPass" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                            <div class="password-wrapper">
+                                <input type="password" id="loginPass" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('loginPass', this)"></i>
+                            </div>
                         </div>
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">ចូលប្រើ</button>
                     </form>
@@ -346,7 +366,10 @@
                         </div>
                         <div class="mb-3">
                             <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-lock text-blue-500 mr-2"></i>ពាក្យសម្ងាត់</label>
-                            <input type="password" id="regPass" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                            <div class="password-wrapper">
+                                <input type="password" id="regPass" placeholder="••••••••" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                                <i class="fas fa-eye password-toggle" onclick="togglePassword('regPass', this)"></i>
+                            </div>
                         </div>
                         <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition">ចុះឈ្មោះ</button>
                     </form>
@@ -407,7 +430,23 @@
         }
 
         // ============================================================
-        //  8. PAGE: DASHBOARD (User)
+        //  8. TOGGLE PASSWORD
+        // ============================================================
+        window.togglePassword = function(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        };
+
+        // ============================================================
+        //  9. PAGE: DASHBOARD (User)
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -429,11 +468,6 @@
                     <p class="text-gray-400 text-sm">បានដកសរុប</p>
                     <p class="text-2xl font-bold text-purple-600">${formatMoney(totalWithdraw)}</p>
                 </div>
-            </div>
-
-            <!-- Member Phone Display -->
-            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-4 text-center">
-                <p class="text-sm text-gray-600"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទរបស់អ្នក: <strong class="text-blue-700">${user.phone}</strong></p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -461,7 +495,7 @@
         }
 
         // ============================================================
-        //  9. PAGE: DEPOSIT (User)
+        //  10. PAGE: DEPOSIT (User)
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -471,7 +505,6 @@
             <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4"><i class="fas fa-money-bill-wave text-green-500 mr-2"></i>បញ្ចូលប្រាក់</h2>
 
-                <!-- Admin Bank Info Display -->
                 <div class="deposit-info mb-6">
                     <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ព័ត៌មានធនាគារ Admin</h4>
                     <p><strong>ឈ្មោះគណនី៖</strong> អាជីវករខ្មែរ</p>
@@ -514,7 +547,6 @@
                     </button>
                 </form>
 
-                <!-- Deposit History Box -->
                 <div class="success-box mt-6">
                     <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-green-600 mr-2"></i>ប្រវត្តិបញ្ចូលប្រាក់របស់អ្នក</h4>
                     ${(() => {
@@ -563,8 +595,7 @@
         អ្នកប្រើ: ${user.name} (${user.phone})
         ធនាគារ: ${bank}
         អ្នកផ្ញើ: ${sender}
-        ចំនួន: ${formatMoney(amount)}
-        កំណត់សម្គាល់: ${note || 'គ្មាន'}`);
+        ចំនួន: ${formatMoney(amount)}`);
 
                 showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
                 renderPage('deposit');
@@ -572,7 +603,7 @@
         }
 
         // ============================================================
-        //  10. PAGE: WITHDRAW (User)
+        //  11. PAGE: WITHDRAW (User)
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -613,7 +644,6 @@
                     </button>
                 </form>
 
-                <!-- Withdraw History -->
                 <div class="withdraw-box mt-6">
                     <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-purple-600 mr-2"></i>ប្រវត្តិដកប្រាក់</h4>
                     ${(() => {
@@ -677,43 +707,40 @@
         }
 
         // ============================================================
-        //  11. PAGE: ADMIN DASHBOARD
+        //  12. PAGE: ADMIN DASHBOARD
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
             const users = DB.getUsers();
             const deposits = DB.getDeposits().filter(d => d.status === 'pending');
             const withdraws = DB.getWithdraws().filter(w => w.status === 'pending');
-            const totalBalance = users.reduce((s, u) => s + u.balance, 0);
             const adminBalance = user.balance || 0;
 
-            // Admin Bank Info
             const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qr: '' });
 
             container.innerHTML = `
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">អ្នកប្រើសរុប</p><p class="text-2xl font-bold">${users.length}</p></div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សំណើបញ្ចូល</p><p class="text-2xl font-bold text-green-600">${deposits.length}</p></div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សំណើដក</p><p class="text-2xl font-bold text-purple-600">${withdraws.length}</p></div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សមតុល្យសរុប</p><p class="text-2xl font-bold text-blue-600">${formatMoney(totalBalance)}</p></div>
-            </div>
-
-            <!-- Admin Balance -->
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow p-4 mb-6 border border-blue-200">
+            <!-- Admin Balance Box -->
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 mb-6 text-white">
                 <div class="flex items-center justify-between flex-wrap gap-3">
                     <div>
-                        <p class="text-sm text-gray-500"><i class="fas fa-user-shield text-blue-500 mr-2"></i>សមតុល្យ Admin</p>
-                        <p class="text-2xl font-bold text-blue-700">${formatMoney(adminBalance)}</p>
+                        <p class="text-sm text-blue-100"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
+                        <p class="text-3xl font-bold">${formatMoney(adminBalance)}</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="showAdminDepositModal()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2">
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="showAdminDepositModal()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
                             <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
                         </button>
-                        <button onclick="renderPage('adminHistory')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2">
+                        <button onclick="renderPage('adminHistory')" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
                             <i class="fas fa-history"></i> ប្រវត្តិ
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">អ្នកប្រើសរុប</p><p class="text-2xl font-bold">${users.length}</p></div>
+                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សំណើបញ្ចូល</p><p class="text-2xl font-bold text-green-600">${deposits.length}</p></div>
+                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សំណើដក</p><p class="text-2xl font-bold text-purple-600">${withdraws.length}</p></div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -755,7 +782,6 @@
                     </div>
                 </form>
 
-                <!-- Display Saved Admin Info -->
                 <div class="mt-4 p-4 bg-gray-50 rounded-xl">
                     <h4 class="font-semibold text-gray-600 text-sm mb-2">📋 ព័ត៌មានដែលបានរក្សាទុក</h4>
                     <p><strong>ធនាគារ:</strong> ${adminInfo.bank || 'មិនទាន់កំណត់'}</p>
@@ -808,11 +834,9 @@
         }
 
         // ============================================================
-        //  12. ADMIN DEPOSIT MODAL
+        //  13. ADMIN DEPOSIT MODAL
         // ============================================================
         window.showAdminDepositModal = function() {
-            const admin = getCurrentUser();
-            if (!admin) return;
             showModal(
                 'បញ្ចូលប្រាក់ទៅ Admin',
                 `
@@ -840,6 +864,7 @@
                         addTransaction(admin.phone, 'deposit', amount, note);
                         showToast(`✅ បានបញ្ចូល ${formatMoney(amount)} ទៅ Admin`, 'success');
                         renderPage('admin');
+                        closeModal();
                     }
                 },
                 function() { closeModal(); }
@@ -847,7 +872,7 @@
         };
 
         // ============================================================
-        //  13. PAGE: ADMIN DEPOSIT APPROVAL
+        //  14. PAGE: ADMIN DEPOSIT APPROVAL
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -879,7 +904,7 @@
         }
 
         // ============================================================
-        //  14. PAGE: ADMIN WITHDRAW APPROVAL
+        //  15. PAGE: ADMIN WITHDRAW APPROVAL
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -911,7 +936,7 @@
         }
 
         // ============================================================
-        //  15. PAGE: ADMIN HISTORY
+        //  16. PAGE: ADMIN HISTORY
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -928,7 +953,7 @@
                     `<div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 text-sm">
                             <thead class="bg-gray-50">
-                                <tr><th class="px-4 py-2 text-left">អ្នកប្រើ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
+                                <tr><th class="px-4 py-2 text-left">អ្នកប្រើ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
                             </thead>
                             <tbody>
                                 ${allTx.map(t => {
@@ -936,6 +961,7 @@
                                     return `
                                         <tr class="border-b border-gray-100">
                                             <td class="px-4 py-2">${user ? user.name : t.phone}</td>
+                                            <td class="px-4 py-2">${t.phone}</td>
                                             <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${t.type === 'deposit' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${t.type === 'deposit' ? 'បញ្ចូល' : 'ដក'}</span></td>
                                             <td class="px-4 py-2 ${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${formatMoney(t.amount)}</td>
                                             <td class="px-4 py-2 text-xs text-gray-500">${t.note || '-'}</td>
@@ -952,7 +978,7 @@
         }
 
         // ============================================================
-        //  16. ADMIN ACTIONS
+        //  17. ADMIN ACTIONS
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
@@ -968,14 +994,13 @@
                 u.balance += d.amount;
                 DB.setUsers(users);
                 addTransaction(d.phone, 'deposit', d.amount, `បញ្ចូលតាម Admin (${d.bank})`);
-                
-                // Add to admin balance too
+
                 const admin = users.find(u => u.role === 'admin');
                 if (admin) {
                     admin.balance += d.amount;
                     DB.setUsers(users);
                 }
-                
+
                 sendTelegram(`✅ បញ្ចូលប្រាក់ជោគជ័យ!
         អ្នកប្រើ: ${d.name} (${d.phone})
         ចំនួន: ${formatMoney(d.amount)}`);
@@ -1009,14 +1034,13 @@
                     u.balance -= w.amount;
                     DB.setUsers(users);
                     addTransaction(w.phone, 'withdraw', w.amount, `ដកតាម Admin (${w.bank})`);
-                    
-                    // Deduct from admin balance too
+
                     const admin = users.find(u => u.role === 'admin');
                     if (admin) {
                         admin.balance -= w.amount;
                         DB.setUsers(users);
                     }
-                    
+
                     sendTelegram(`✅ ដកប្រាក់ជោគជ័យ!
         អ្នកប្រើ: ${w.name} (${w.phone})
         ចំនួន: ${formatMoney(w.amount)}`);
@@ -1040,7 +1064,7 @@
         };
 
         // ============================================================
-        //  17. INIT
+        //  18. INIT
         // ============================================================
         (function init() {
             let users = DB.getUsers();
