@@ -140,6 +140,9 @@
         .btn-payment:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px rgba(245,158,11,0.6); }
         @keyframes shimmer { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
+        .modal-close { position: absolute; top: 12px; right: 12px; color: #94a3b8; font-size: 28px; cursor: pointer; transition: all 0.3s ease; background: rgba(255,255,255,0.05); border: none; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; }
+        .modal-close:hover { background: rgba(239,68,68,0.2); color: #ef4444; transform: rotate(90deg); }
+        
         .timeline-container { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px 16px; border-left: 4px solid #fbbf24; margin-top: 12px; }
         .timeline-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.7rem; }
         .timeline-item:last-child { border-bottom: none; }
@@ -276,7 +279,7 @@
             100% { transform: translateY(0px) rotate(0deg) scale(1); }
         }
         
-        /* ====== ADMIN PANEL ====== */
+        /* ====== ADMIN PANEL - FROM MESSAGE 29 ====== */
         .admin-modal-overlay {
             position: fixed;
             inset: 0;
@@ -877,7 +880,7 @@
             box-shadow: 0 8px 30px rgba(239,68,68,0.4);
         }
         
-        /* ====== DESKTOP LAYOUT ====== */
+        /* ====== DESKTOP LAYOUT (2 columns) - 45% / 55% ====== */
         @media (min-width: 1024px) {
             .zodiac-page-container {
                 max-width: 100% !important;
@@ -1447,19 +1450,19 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 8px;
             }
-            .mobile-bet-section {
+            .zodiac-mobile-only .mobile-bet-section {
                 background: rgba(255,255,255,0.03);
                 border-radius: 18px;
                 padding: 14px 16px;
                 margin-bottom: 16px;
             }
-            .mobile-bet-title {
+            .zodiac-mobile-only .mobile-bet-title {
                 font-size: 0.85rem;
                 color: #fbd38d;
                 margin-bottom: 10px;
                 text-align: left;
             }
-            .mobile-selected-zodiac {
+            .zodiac-mobile-only .mobile-selected-zodiac {
                 background: rgba(74,222,128,0.08);
                 border: 1px solid rgba(74,222,128,0.2);
                 border-radius: 50px;
@@ -1473,17 +1476,17 @@
                 gap: 6px;
                 color: #e2e8f0;
             }
-            .mobile-selected-zodiac span:last-child {
+            .zodiac-mobile-only .mobile-selected-zodiac span:last-child {
                 color: #4ade80;
                 font-weight: 600;
             }
-            .mobile-bet-input {
+            .zodiac-mobile-only .mobile-bet-input {
                 display: flex;
                 gap: 8px;
                 margin-bottom: 10px;
                 flex-wrap: wrap;
             }
-            .bet-input-field {
+            .zodiac-mobile-only .bet-input-field {
                 flex: 2;
                 min-width: 120px;
                 background: #0f0f2a;
@@ -1496,17 +1499,17 @@
                 outline: none;
                 transition: border-color 0.3s;
             }
-            .bet-input-field:focus {
+            .zodiac-mobile-only .bet-input-field:focus {
                 border-color: #4ade80;
             }
-            .mobile-bet-shortcuts {
+            .zodiac-mobile-only .mobile-bet-shortcuts {
                 display: flex;
                 gap: 6px;
                 margin-bottom: 10px;
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            .mobile-bet-shortcut {
+            .zodiac-mobile-only .mobile-bet-shortcut {
                 background: #2a2a4a;
                 border: none;
                 padding: 5px 12px;
@@ -1517,16 +1520,16 @@
                 font-size: 0.75rem;
                 transition: background 0.2s;
             }
-            .mobile-bet-shortcut:hover {
+            .zodiac-mobile-only .mobile-bet-shortcut:hover {
                 background: #3a3a5a;
             }
-            .mobile-preview-box {
+            .zodiac-mobile-only .mobile-preview-box {
                 background: rgba(0,0,0,0.25);
                 border-radius: 12px;
                 padding: 10px 14px;
                 margin-bottom: 10px;
             }
-            .mobile-preview-row {
+            .zodiac-mobile-only .mobile-preview-row {
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 3px;
@@ -1535,14 +1538,14 @@
                 gap: 4px;
                 color: #cbd5e1;
             }
-            .mobile-preview-row .negative {
+            .zodiac-mobile-only .mobile-preview-row .negative {
                 color: #fc8181;
             }
-            .mobile-preview-row .mobile-preview-value {
+            .zodiac-mobile-only .mobile-preview-row .mobile-preview-value {
                 font-weight: 600;
                 color: #e2e8f0;
             }
-            .mobile-bet-confirm {
+            .zodiac-mobile-only .mobile-bet-confirm {
                 background: linear-gradient(135deg, #4ade80, #22c55e);
                 width: 100%;
                 border: none;
@@ -1554,7 +1557,7 @@
                 cursor: pointer;
                 transition: transform 0.2s, box-shadow 0.2s;
             }
-            .mobile-bet-confirm:hover {
+            .zodiac-mobile-only .mobile-bet-confirm:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 5px 20px rgba(74,222,128,0.3);
             }
@@ -2104,7 +2107,6 @@
             </div>
         </div>
     </nav>
-    
     <!-- ============================================================ -->
     <!-- ===================== PAGE: SHOP ============================ -->
     <!-- ============================================================ -->
@@ -2585,6 +2587,7 @@
                             <button class="player-admin-btn" id="playerClearBalanceBtnZodiac">💰 លុបទឹកប្រាក់អ្នកលេង</button>
                             <button class="player-admin-btn" id="playerClearDepositHistoryBtnZodiac">🗑️ លុបប្រវត្តិបញ្ចូលលុយ</button>
                             <button class="player-admin-btn" id="playerClearBetHistoryBtnZodiac">🗑️ លុបប្រវត្តិទស្សន៍ទាយ</button>
+                            <button class="player-admin-btn" id="playerViewHistoryBtnZodiac">📜 មើលប្រវត្តិអ្នកលេង</button>
                         </div>
                     </div>
                 </div>
@@ -2606,78 +2609,8 @@
             </div>
         </div>
     </div>
-    
-    <!-- ====== DEPOSIT MODAL ====== -->
-    <div class="modal" id="depositModalZodiac">
-        <div class="modal-content">
-            <div id="pinStepZodiac">
-                <div class="modal-title">🔐 បញ្ចូលកូដសម្ងាត់</div>
-                <div class="password-wrapper">
-                    <input type="password" class="password-input" id="pinInputZodiac" placeholder="កូដសម្ងាត់" maxlength="10">
-                    <button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInputZodiac', this)">👁️</button>
-                </div>
-                <div class="modal-buttons">
-                    <button class="modal-btn btn-cancel" id="closeDepositModalZodiac">បោះបង់</button>
-                    <button class="modal-btn btn-confirm" id="confirmPinBtnZodiac">ផ្ទៀងផ្ទាត់</button>
-                </div>
-            </div>
-            <div id="amountStepZodiac" style="display:none;">
-                <div class="modal-title">💵 បញ្ចូលចំនួនទឹកប្រាក់</div>
-                <input type="number" class="form-input" id="amountInputZodiac" placeholder="ចំនួនទឹកប្រាក់" min="0.01" step="0.01" style="margin-bottom:15px;">
-                <div class="modal-buttons">
-                    <button class="modal-btn btn-cancel" id="backToPinBtnZodiac">ត្រឡប់</button>
-                    <button class="modal-btn btn-confirm" id="submitDepositBtnZodiac">បញ្ចូល</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- ====== CONFIRM MODALS ====== -->
-    <div class="confirm-modal" id="confirmPredictModalZodiac">
-        <div class="confirm-box">
-            <div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div>
-            <div class="confirm-message" id="confirmPredictMsgZodiac"></div>
-            <div class="confirm-buttons">
-                <button class="confirm-btn confirm-no" id="cancelPredictConfirmZodiac">បោះបង់</button>
-                <button class="confirm-btn confirm-yes" id="yesPredictConfirmZodiac">យល់ព្រម</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="confirm-modal" id="confirmAdminModalZodiac">
-        <div class="confirm-box">
-            <div class="confirm-title" id="confirmAdminTitleZodiac">⚠️ បញ្ជាក់សកម្មភាព</div>
-            <div class="confirm-message" id="confirmAdminMsgZodiac"></div>
-            <div class="confirm-buttons">
-                <button class="confirm-btn confirm-no" id="cancelAdminConfirmZodiac">បោះបង់</button>
-                <button class="confirm-btn confirm-yes" id="yesAdminConfirmZodiac">យល់ព្រម</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="confirm-modal" id="confirmResetModalZodiac">
-        <div class="confirm-box">
-            <div class="confirm-title">⚠️ កំណត់ប្រព័ន្ធឡើងវិញទាំងស្រុង</div>
-            <div class="confirm-message">តើអ្នកពិតជាចង់លុបទិន្នន័យទាំងអស់មែនទេ?<br>(ប្រវត្តិភ្នាល់, ប្រវត្តិដាក់លុយ, សមតុល្យ, ការកំណត់ទាំងអស់នឹងត្រូវលុប)</div>
-            <div class="confirm-buttons">
-                <button class="confirm-btn confirm-no" id="cancelResetConfirmZodiac">បោះបង់</button>
-                <button class="confirm-btn confirm-yes" id="yesResetConfirmZodiac">យល់ព្រម</button>
-            </div>
-        </div>
-    </div>
-    
-    <div class="modal" id="adminHistoryModalZodiac">
-        <div class="modal-content">
-            <div class="modal-title">📜 ប្រវត្តិបញ្ចូលលុយរបស់ Admin</div>
-            <div class="history-modal-list" id="adminHistoryListZodiac"></div>
-            <div class="modal-buttons">
-                <button class="modal-btn btn-cancel" id="closeAdminHistoryModalZodiac">បិទ</button>
-            </div>
-        </div>
-    </div>
-    
     <!-- ============================================================ -->
-    <!-- ====== SHOP MODALS ====== -->
+    <!-- ===================== MODALS ================================ -->
     <!-- ============================================================ -->
     
     <!-- REGISTER MODAL -->
@@ -2916,6 +2849,21 @@
         </div>
     </div>
     
+    <!-- ====== ZODIAC MODALS ====== -->
+    <div class="modal" id="depositModalZodiac"><div class="modal-content"><div id="pinStepZodiac"><div class="modal-title">🔐 បញ្ចូលកូដសម្ងាត់</div><div class="password-wrapper"><input type="password" class="password-input" id="pinInputZodiac" placeholder="កូដសម្ងាត់" maxlength="10"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('pinInputZodiac', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeDepositModalZodiac">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPinBtnZodiac">ផ្ទៀងផ្ទាត់</button></div></div><div id="amountStepZodiac" style="display:none;"><div class="modal-title">💵 បញ្ចូលចំនួនទឹកប្រាក់</div><input type="number" class="modal-input" id="amountInputZodiac" placeholder="ចំនួនទឹកប្រាក់" min="0.01" step="0.01"><div class="modal-buttons"><button class="modal-btn btn-cancel" id="backToPinBtnZodiac">ត្រឡប់</button><button class="modal-btn btn-confirm" id="submitDepositBtnZodiac">បញ្ចូល</button></div></div></div></div>
+    
+    <div class="modal" id="adminEntryPinModalZodiac"><div class="modal-content"><div class="modal-title">🔐 បញ្ចូលពាក្យសម្ងាត់ Admin</div><div class="password-wrapper"><input type="password" class="password-input" id="adminEntryPinInputZodiac" placeholder="ពាក្យសម្ងាត់"><button type="button" class="toggle-password" onclick="togglePasswordVisibility('adminEntryPinInputZodiac', this)">👁️</button></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminEntryModalZodiac">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmAdminEntryBtnZodiac">ផ្ទៀងផ្ទាត់</button></div></div></div>
+    
+    <div class="modal" id="predictModalZodiac"><div class="modal-content"><div class="modal-title">🎲 ទស្សន៍ទាយ</div><div class="preview-box"><div class="preview-row"><span id="preCurrentLabelZodiac">ទឹកប្រាក់បច្ចុប្បន្ន:</span><span>$<span id="preCurrentZodiac">0.00</span></span></div><div class="preview-row"><span id="preCostLabelZodiac">ត្រូវកាត់:</span><span>$<span id="preCostZodiac">0.00</span></span></div><div class="preview-row"><span id="preRemainLabelZodiac">នៅសល់:</span><span>$<span id="preRemainZodiac">0.00</span></span></div></div><input type="number" class="modal-input" id="betAmountZodiac" placeholder="បញ្ចូលទឹកប្រាក់" min="0.01" step="0.01" value="0"><div class="shortcut-grid"><button class="shortcut" data-amount="1">$1</button><button class="shortcut" data-amount="5">$5</button><button class="shortcut" data-amount="10">$10</button><button class="shortcut" data-amount="20">$20</button><button class="shortcut" data-amount="50">$50</button></div><div class="zodiac-select-title" id="selectZodiacTitleZodiac">ជ្រើសរើសឆ្នាំ (រង្វាន់ x10)៖</div><div class="zodiac-select-grid" id="zodiacSelectGridZodiac"></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closePredictModalZodiac">បោះបង់</button><button class="modal-btn btn-confirm" id="confirmPredictBtnZodiac">ទស្សន៍ទាយ</button></div></div></div>
+    
+    <div class="confirm-modal" id="confirmPredictModalZodiac"><div class="confirm-box"><div class="confirm-title">⚠️ បញ្ជាក់ការទស្សន៍ទាយ</div><div class="confirm-message" id="confirmPredictMsgZodiac"></div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelPredictConfirmZodiac">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesPredictConfirmZodiac">យល់ព្រម</button></div></div></div>
+    
+    <div class="confirm-modal" id="confirmAdminModalZodiac"><div class="confirm-box"><div class="confirm-title" id="confirmAdminTitleZodiac">⚠️ បញ្ជាក់សកម្មភាព</div><div class="confirm-message" id="confirmAdminMsgZodiac"></div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelAdminConfirmZodiac">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesAdminConfirmZodiac">យល់ព្រម</button></div></div></div>
+    
+    <div class="confirm-modal" id="confirmResetModalZodiac"><div class="confirm-box"><div class="confirm-title">⚠️ កំណត់ប្រព័ន្ធឡើងវិញទាំងស្រុង</div><div class="confirm-message">តើអ្នកពិតជាចង់លុបទិន្នន័យទាំងអស់មែនទេ?<br>(ប្រវត្តិភ្នាល់, ប្រវត្តិដាក់លុយ, សមតុល្យ, ការកំណត់ទាំងអស់នឹងត្រូវលុប)</div><div class="confirm-buttons"><button class="confirm-btn confirm-no" id="cancelResetConfirmZodiac">បោះបង់</button><button class="confirm-btn confirm-yes" id="yesResetConfirmZodiac">យល់ព្រម</button></div></div></div>
+    
+    <div class="modal" id="adminHistoryModalZodiac"><div class="modal-content"><div class="modal-title">📜 ប្រវត្តិបញ្ចូលលុយរបស់ Admin</div><div class="history-modal-list" id="adminHistoryListZodiac"></div><div class="modal-buttons"><button class="modal-btn btn-cancel" id="closeAdminHistoryModalZodiac">បិទ</button></div></div></div>
+    
     <!-- ============================================================ -->
     <!-- ===================== FOOTER ================================ -->
     <!-- ============================================================ -->
@@ -2986,16 +2934,6 @@
         const numCache = {};
         
         // ================================================================
-        // ====== GET ZODIAC DISPLAY ======
-        // ================================================================
-        function getZodiacDisplay(z) {
-            if (!z) return '?';
-            return currentLang === 'en' ? 
-                `${z.icon} ${z.nameEn} (${z.orderEn})` : 
-                `${z.icon} ${z.name} (${z.order})`;
-        }
-        
-        // ================================================================
         // ====== PRODUCT ID COUNTER ======
         // ================================================================
         function generateProductId() {
@@ -3014,7 +2952,7 @@
             const icons = { 
                 success: 'fa-regular fa-circle-check', 
                 error: 'fa-regular fa-circle-xmark', 
-                info: 'fa-regular fa-circle-info',
+                info: 'fa-regular fa-circle-info', 
                 warning: 'fa-regular fa-triangle-exclamation'
             };
             toast.innerHTML = `<i class="${icons[type] || icons.info}"></i> ${message}`;
@@ -4142,6 +4080,12 @@
         // ================================================================
         // ====== ZODIAC HELPER FUNCTIONS ======
         // ================================================================
+        function getZodiacDisplay(z) {
+            if (!z) return '?';
+            return currentLang === 'en' ? 
+                `${z.icon} ${z.nameEn} (${z.orderEn})` : 
+                `${z.icon} ${z.name} (${z.order})`;
+        }
         function formatDateTime(d) {
             return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}:${d.getSeconds().toString().padStart(2,'0')}`;
         }
@@ -4202,10 +4146,9 @@
                 c.addEventListener('click', function() {
                     document.querySelectorAll('#zodiacGridZodiac .zodiac-card').forEach(c => c.classList.remove('selected'));
                     this.classList.add('selected');
-                    const name = this.getAttribute('data-name');
-                    selectedZodiac = name;
-                    document.getElementById('selectedZodiacName').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${name} (${this.getAttribute('data-order')})`;
-                    document.getElementById('selectedZodiacNameMobile').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${name} (${this.getAttribute('data-order')})`;
+                    selectedZodiac = this.getAttribute('data-name');
+                    document.getElementById('selectedZodiacName').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${selectedZodiac} (${this.getAttribute('data-order')})`;
+                    document.getElementById('selectedZodiacNameMobile').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${selectedZodiac} (${this.getAttribute('data-order')})`;
                 });
             });
             
@@ -4214,10 +4157,23 @@
                 c.addEventListener('click', function() {
                     document.querySelectorAll('#zodiacGridZodiacMobile .zodiac-card').forEach(c => c.classList.remove('selected'));
                     this.classList.add('selected');
-                    const name = this.getAttribute('data-name');
-                    selectedZodiac = name;
-                    document.getElementById('selectedZodiacName').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${name} (${this.getAttribute('data-order')})`;
-                    document.getElementById('selectedZodiacNameMobile').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${name} (${this.getAttribute('data-order')})`;
+                    selectedZodiac = this.getAttribute('data-name');
+                    document.getElementById('selectedZodiacName').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${selectedZodiac} (${this.getAttribute('data-order')})`;
+                    document.getElementById('selectedZodiacNameMobile').innerHTML = `${this.querySelector('.zodiac-icon').innerHTML} ${selectedZodiac} (${this.getAttribute('data-order')})`;
+                });
+            });
+            
+            let selectGrid = '';
+            zodiacs.forEach(z => {
+                const name = currentLang === 'km' ? z.name : z.nameEn;
+                selectGrid += `<div class="zodiac-option" data-name="${name}"><div>${z.icon}</div><div style="font-size:0.6rem">${name}</div></div>`;
+            });
+            document.getElementById('zodiacSelectGridZodiac').innerHTML = selectGrid;
+            document.querySelectorAll('.zodiac-option').forEach(opt => {
+                opt.addEventListener('click', function() {
+                    document.querySelectorAll('.zodiac-option').forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedZodiac = this.getAttribute('data-name');
                 });
             });
         }
@@ -4554,9 +4510,7 @@
                     gain.gain.exponentialRampToValueAtTime(0.00001, audioContext.currentTime + 0.3);
                     setTimeout(() => osc.stop(), 300);
                 }
-            } catch (e) {
-                console.warn('Sound error:', e);
-            }
+            } catch (e) {}
         }
         
         // ================================================================
@@ -4751,13 +4705,9 @@
             renderUsersTableZodiac();
             updateOnlineCountZodiac();
             
-            // Update user session
-            updateUserSession();
-            
             setInterval(updateDisplayZodiac, 1000);
             setInterval(() => { renderUsersTableZodiac(); updateOnlineCountZodiac(); }, 10000);
             setInterval(() => { renderAdminBetsTableZodiac(); }, 15000);
-            setInterval(() => { updateUserSession(); markOfflineSessions(); }, 15000);
             
             document.getElementById('langToggleBtnZodiac').addEventListener('click', toggleLanguageZodiac);
             document.getElementById('langToggleBtnZodiacMobile').addEventListener('click', toggleLanguageZodiac);
@@ -5062,7 +5012,7 @@
             }
             
             window.addEventListener('click', (e) => {
-                const modals = ['depositModalZodiac', 'adminEntryPinModalZodiac', 'confirmPredictModalZodiac', 'confirmAdminModalZodiac', 'adminHistoryModalZodiac', 'confirmResetModalZodiac'];
+                const modals = ['depositModalZodiac', 'adminEntryPinModalZodiac', 'confirmPredictModalZodiac', 'confirmAdminModalZodiac', 'adminHistoryModalZodiac', 'confirmResetModalZodiac', 'predictModalZodiac'];
                 modals.forEach(id => {
                     if (e.target === document.getElementById(id)) document.getElementById(id).classList.remove('show');
                 });
@@ -5111,12 +5061,8 @@
             
             renderProducts(); renderHR(); updateStats(); updateWishlistBadge(); updateIdDisplay();
             switchPage('shop');
-            
-            // Auto update every 10 seconds for zodiac
             setInterval(() => {
-                if (document.getElementById('zodiacPage').style.display !== 'none') {
-                    updateDisplayZodiac();
-                }
+                if (document.getElementById('zodiacPage').style.display !== 'none') { updateDisplayZodiac(); }
                 updateClock();
             }, 10000);
         }
