@@ -174,6 +174,9 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            background: white;
+            padding: 8px 0;
+            border-radius: 12px;
         }
         .page-header h2 {
             font-size: 1.25rem;
@@ -184,6 +187,13 @@
         .reward-box {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
             border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .income-box {
+            background: linear-gradient(135deg, #dbeafe, #93c5fd);
+            border: 2px solid #3b82f6;
             border-radius: 16px;
             padding: 16px;
             margin-top: 16px;
@@ -224,6 +234,28 @@
         .image-viewer .close-btn:hover {
             background: rgba(255,255,255,0.2);
             transform: rotate(90deg);
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box input {
+            padding-left: 40px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .balance-big {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+        @media (max-width: 640px) {
+            .balance-big {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -379,10 +411,10 @@
         // ============================================================
         //  5. AUTH
         // ============================================================
-        function registerUser(phone, name, password) {
+        function registerUser(phone, name, password, memberId) {
             let users = DB.getUsers();
             if (users.find(u => u.phone === phone)) return { ok: false, msg: 'លេខទូរសព្ទមានរួចហើយ!' };
-            const memberId = DB.getNextId();
+            if (users.find(u => u.memberId === parseInt(memberId))) return { ok: false, msg: 'លេខ ID នេះមានរួចហើយ!' };
             users.push({ 
                 phone, 
                 name, 
@@ -390,7 +422,7 @@
                 balance: 0, 
                 status: 'active', 
                 role: 'user',
-                memberId: memberId
+                memberId: parseInt(memberId)
             });
             DB.setUsers(users);
             return { ok: true, memberId };
@@ -472,6 +504,7 @@
                 case 'adminWithdraw': renderAdminWithdraw(container, user); break;
                 case 'adminHistory': renderAdminHistory(container, user); break;
                 case 'adminReward': renderAdminReward(container, user); break;
+                case 'adminIncome': renderAdminIncome(container, user); break;
                 default: renderLogin(container);
             }
         }
@@ -512,6 +545,10 @@
                     </form>
 
                     <form id="registerForm" class="hidden mt-4">
+                        <div class="mb-3">
+                            <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID (៥ខ្ទង់)</label>
+                            <input type="number" id="regMemberId" placeholder="10001" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                        </div>
                         <div class="mb-3">
                             <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user text-blue-500 mr-2"></i>ឈ្មោះពេញ</label>
                             <input type="text" id="regName" placeholder="សុខ សុខា" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
@@ -568,14 +605,19 @@
 
             registerForm.onsubmit = (e) => {
                 e.preventDefault();
+                const memberId = document.getElementById('regMemberId').value.trim();
                 const name = document.getElementById('regName').value.trim();
                 const phone = document.getElementById('regPhone').value.trim();
                 const pass = document.getElementById('regPass').value.trim();
-                if (!name || !phone || !pass) {
+                if (!memberId || !name || !phone || !pass) {
                     showToast('សូមបំពេញព័ត៌មានឲ្យពេញលេញ!', 'error');
                     return;
                 }
-                const result = registerUser(phone, name, pass);
+                if (memberId.length !== 5) {
+                    showToast('លេខ ID ត្រូវមាន ៥ខ្ទង់!', 'error');
+                    return;
+                }
+                const result = registerUser(phone, name, pass, memberId);
                 if (result.ok) {
                     showToast(`✅ ចុះឈ្មោះជោគជ័យ! ID: ${result.memberId} សូមចូលប្រើ។`, 'success');
                     loginTab.click();
@@ -610,24 +652,31 @@
             const totalIn = DB.getTx().filter(t => t.phone === user.phone && t.type === 'deposit').reduce((s, t) => s + t.amount, 0);
             const totalWithdraw = DB.getTx().filter(t => t.phone === user.phone && t.type === 'withdraw').reduce((s, t) => s + t.amount, 0);
             const rewards = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់រង្វាន់')).reduce((s, t) => s + t.amount, 0);
+            const income = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
             container.innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-blue-500 card-hover">
-                    <p class="text-gray-400 text-sm">សមតុល្យ</p>
-                    <p class="text-2xl font-bold text-gray-800">${formatMoney(user.balance)}</p>
+            <!-- Big Balance Box -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-6 mb-6 text-white">
+                <p class="text-sm text-blue-100"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
+                <p class="balance-big">${formatMoney(user.balance)}</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-2xl shadow p-4 card-hover">
+                    <p class="text-gray-400 text-sm">ការបញ្ចូលទឹកប្រាក់</p>
+                    <p class="text-xl font-bold text-green-600">${formatMoney(totalIn)}</p>
                 </div>
-                <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-green-500 card-hover">
-                    <p class="text-gray-400 text-sm">ចំណូលសរុប</p>
-                    <p class="text-2xl font-bold text-green-600">${formatMoney(totalIn)}</p>
-                </div>
-                <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-purple-500 card-hover">
+                <div class="bg-white rounded-2xl shadow p-4 card-hover">
                     <p class="text-gray-400 text-sm">បានដកសរុប</p>
-                    <p class="text-2xl font-bold text-purple-600">${formatMoney(totalWithdraw)}</p>
+                    <p class="text-xl font-bold text-purple-600">${formatMoney(totalWithdraw)}</p>
                 </div>
-                <div class="bg-white rounded-2xl shadow p-5 border-l-4 border-yellow-500 card-hover">
+                <div class="bg-white rounded-2xl shadow p-4 card-hover">
                     <p class="text-gray-400 text-sm">ប្រាក់រង្វាន់</p>
-                    <p class="text-2xl font-bold text-yellow-600">${formatMoney(rewards)}</p>
+                    <p class="text-xl font-bold text-yellow-600">${formatMoney(rewards)}</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow p-4 card-hover">
+                    <p class="text-gray-400 text-sm">ប្រាក់ចំណូល</p>
+                    <p class="text-xl font-bold text-blue-600">${formatMoney(income)}</p>
                 </div>
             </div>
 
@@ -925,6 +974,9 @@
                         <button onclick="renderPage('adminReward')" class="bg-yellow-500/30 hover:bg-yellow-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
                             <i class="fas fa-gift"></i> ប្រាក់រង្វាន់
                         </button>
+                        <button onclick="renderPage('adminIncome')" class="bg-blue-400/30 hover:bg-blue-400/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
+                            <i class="fas fa-hand-holding-usd"></i> ប្រាក់ចំណូល
+                        </button>
                         <button onclick="renderPage('adminHistory')" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
                             <i class="fas fa-history"></i> ប្រវត្តិ
                         </button>
@@ -938,12 +990,15 @@
                 <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">សំណើដក</p><p class="text-2xl font-bold text-purple-600">${withdraws.length}</p></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <button onclick="renderPage('adminDeposit')" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-plus-circle"></i> អនុម័តបញ្ចូល
                 </button>
                 <button onclick="renderPage('adminWithdraw')" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-arrow-right"></i> អនុម័តដក
+                </button>
+                <button onclick="renderPage('adminIncome')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
+                    <i class="fas fa-hand-holding-usd"></i> ផ្ដល់ប្រាក់ចំណូល
                 </button>
             </div>
 
@@ -1030,12 +1085,19 @@
         }
 
         // ============================================================
-        //  14. ADMIN DEPOSIT MODAL
+        //  14. ADMIN DEPOSIT MODAL (with password)
         // ============================================================
         window.showAdminDepositModal = function() {
             showModal(
                 'បញ្ចូលប្រាក់ទៅ Admin',
                 `
+                <div class="mb-3">
+                    <label class="block text-gray-600 text-sm">ពាក្យសម្ងាត់</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="adminDepositPassword" placeholder="បញ្ចូលពាក្យសម្ងាត់" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                        <i class="fas fa-eye password-toggle" onclick="togglePassword('adminDepositPassword', this)"></i>
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label class="block text-gray-600 text-sm">ចំនួនទឹកប្រាក់ (៛)</label>
                     <input type="number" id="adminDepositAmount" placeholder="100000" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
@@ -1046,6 +1108,11 @@
                 </div>
                 `,
                 function() {
+                    const password = document.getElementById('adminDepositPassword').value.trim();
+                    if (password !== 'Qq128080') {
+                        showToast('❌ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!', 'error');
+                        return;
+                    }
                     const amount = parseInt(document.getElementById('adminDepositAmount').value.trim());
                     const note = document.getElementById('adminDepositNote').value.trim() || 'បញ្ចូលដោយខ្លួនឯង';
                     if (!amount || amount <= 0) {
@@ -1068,11 +1135,11 @@
         };
 
         // ============================================================
-        //  15. PAGE: ADMIN REWARD
+        //  15. PAGE: ADMIN REWARD (with search)
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
-            const users = DB.getUsers().filter(u => u.role !== 'admin');
+            const allUsers = DB.getUsers().filter(u => u.role !== 'admin');
 
             container.innerHTML = `
             <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
@@ -1082,12 +1149,17 @@
                 </div>
                 <p class="text-gray-500 text-sm mb-4">សូមបំពេញព័ត៌មានខាងក្រោមដើម្បីផ្ដល់ប្រាក់រង្វាន់ដល់សមាជិក</p>
 
+                <div class="search-box mb-3">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="rewardSearch" placeholder="ស្វែងរកសមាជិក (ឈ្មោះ, ID, ទូរសព្ទ)..." class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none" oninput="filterRewardMembers()" />
+                </div>
+
                 <form id="rewardForm">
                     <div class="mb-3">
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user text-blue-500 mr-2"></i>ជ្រើសរើសសមាជិក</label>
                         <select id="rewardMember" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none">
-                            ${users.map(u => `
-                                <option value="${u.phone}">${u.name} (ID: ${u.memberId}) - ${formatMoney(u.balance)}</option>
+                            ${allUsers.map(u => `
+                                <option value="${u.phone}" data-name="${u.name}" data-id="${u.memberId}" data-phone="${u.phone}">${u.name} (ID: ${u.memberId}) - ${formatMoney(u.balance)}</option>
                             `).join('')}
                         </select>
                     </div>
@@ -1124,6 +1196,32 @@
             </div>
             `;
 
+            // Search filter function
+            window.filterRewardMembers = function() {
+                const search = document.getElementById('rewardSearch').value.toLowerCase().trim();
+                const select = document.getElementById('rewardMember');
+                const options = select.querySelectorAll('option');
+                options.forEach(opt => {
+                    const text = opt.getAttribute('data-name') + opt.getAttribute('data-id') + opt.getAttribute('data-phone');
+                    if (text.toLowerCase().includes(search) || search === '') {
+                        opt.style.display = '';
+                    } else {
+                        opt.style.display = 'none';
+                    }
+                });
+                // Select first visible
+                const firstVisible = select.querySelector('option[style*="display: none"]');
+                if (firstVisible) {
+                    // Find first not hidden
+                    for (let opt of select.options) {
+                        if (opt.style.display !== 'none') {
+                            select.value = opt.value;
+                            break;
+                        }
+                    }
+                }
+            };
+
             document.getElementById('rewardForm').onsubmit = (e) => {
                 e.preventDefault();
                 const phone = document.getElementById('rewardMember').value;
@@ -1149,13 +1247,9 @@
                     return;
                 }
 
-                // Deduct from admin
                 admin.balance -= amount;
-                // Add to member
                 member.balance += amount;
                 DB.setUsers(users);
-
-                // Add transaction for member
                 addTransaction(member.phone, 'deposit', amount, `ប្រាក់រង្វាន់: ${note}`);
 
                 playNotificationSound();
@@ -1171,7 +1265,126 @@
         }
 
         // ============================================================
-        //  16. PAGE: ADMIN DEPOSIT APPROVAL
+        //  16. PAGE: ADMIN INCOME
+        // ============================================================
+        function renderAdminIncome(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            const allUsers = DB.getUsers().filter(u => u.role !== 'admin');
+
+            container.innerHTML = `
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">
+                <div class="page-header">
+                    <h2><i class="fas fa-hand-holding-usd text-blue-500 mr-2"></i>ផ្ដល់ប្រាក់ចំណូល</h2>
+                    <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>
+                </div>
+                <p class="text-gray-500 text-sm mb-4">សូមបំពេញព័ត៌មានខាងក្រោមដើម្បីផ្ដល់ប្រាក់ចំណូលដល់សមាជិក</p>
+
+                <div class="search-box mb-3">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="incomeSearch" placeholder="ស្វែងរកសមាជិក (ឈ្មោះ, ID, ទូរសព្ទ)..." class="w-full px-4 py-3 pl-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" oninput="filterIncomeMembers()" />
+                </div>
+
+                <form id="incomeForm">
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user text-blue-500 mr-2"></i>ជ្រើសរើសសមាជិក</label>
+                        <select id="incomeMember" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
+                            ${allUsers.map(u => `
+                                <option value="${u.phone}" data-name="${u.name}" data-id="${u.memberId}" data-phone="${u.phone}">${u.name} (ID: ${u.memberId}) - ${formatMoney(u.balance)}</option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនប្រាក់ចំណូល (៛)</label>
+                        <input type="number" id="incomeAmount" placeholder="50000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-pen text-blue-500 mr-2"></i>កំណត់សម្គាល់ (ស្រេចចិត្ត)</label>
+                        <input type="text" id="incomeNote" placeholder="ឧទាហរណ៍: ចំណូលប្រចាំខែ" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">
+                        <i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល
+                    </button>
+                </form>
+
+                <div class="income-box mt-6">
+                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-blue-600 mr-2"></i>ប្រវត្តិប្រាក់ចំណូល</h4>
+                    ${(() => {
+                        const incomes = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).slice(-5).reverse();
+                        if (incomes.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់ចំណូលទេ</p>';
+                        return incomes.map(t => {
+                            const member = DB.getUsers().find(u => u.phone === t.phone);
+                            return `
+                                <div class="flex justify-between items-center border-b border-blue-200 py-2 text-sm">
+                                    <span>${member ? member.name : t.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
+                                    <span class="text-blue-600">➕ ${formatMoney(t.amount)}</span>
+                                    <span class="text-xs text-gray-400">${t.date}</span>
+                                </div>
+                            `;
+                        }).join('');
+                    })()}
+                </div>
+            </div>
+            `;
+
+            // Search filter function
+            window.filterIncomeMembers = function() {
+                const search = document.getElementById('incomeSearch').value.toLowerCase().trim();
+                const select = document.getElementById('incomeMember');
+                const options = select.querySelectorAll('option');
+                options.forEach(opt => {
+                    const text = opt.getAttribute('data-name') + opt.getAttribute('data-id') + opt.getAttribute('data-phone');
+                    if (text.toLowerCase().includes(search) || search === '') {
+                        opt.style.display = '';
+                    } else {
+                        opt.style.display = 'none';
+                    }
+                });
+            };
+
+            document.getElementById('incomeForm').onsubmit = (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('incomeMember').value;
+                const amount = parseInt(document.getElementById('incomeAmount').value.trim());
+                const note = document.getElementById('incomeNote').value.trim() || 'ប្រាក់ចំណូលពី Admin';
+
+                if (!amount || amount <= 0) {
+                    showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ឲ្យបានត្រឹមត្រូវ!', 'error');
+                    return;
+                }
+
+                let users = DB.getUsers();
+                const admin = users.find(u => u.role === 'admin');
+                const member = users.find(u => u.phone === phone);
+
+                if (!member) {
+                    showToast('មិនរកឃើញសមាជិក!', 'error');
+                    return;
+                }
+
+                if (admin.balance < amount) {
+                    showToast('❌ សមតុល្យ Admin មិនគ្រប់គ្រាន់!', 'error');
+                    return;
+                }
+
+                admin.balance -= amount;
+                member.balance += amount;
+                DB.setUsers(users);
+                addTransaction(member.phone, 'deposit', amount, `ប្រាក់ចំណូល: ${note}`);
+
+                playNotificationSound();
+                sendTelegram(`💰 ផ្ដល់ប្រាក់ចំណូល!
+        សមាជិក: ${member.name} (ID: ${member.memberId})
+        ទូរសព្ទ: ${member.phone}
+        ចំនួន: ${formatMoney(amount)}
+        កំណត់សម្គាល់: ${note}`);
+
+                showToast(`✅ បានផ្ដល់ប្រាក់ចំណូល ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
+                renderPage('adminIncome');
+            };
+        }
+
+        // ============================================================
+        //  17. PAGE: ADMIN DEPOSIT APPROVAL
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1205,7 +1418,7 @@
         }
 
         // ============================================================
-        //  17. PAGE: ADMIN WITHDRAW APPROVAL
+        //  18. PAGE: ADMIN WITHDRAW APPROVAL
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1239,7 +1452,7 @@
         }
 
         // ============================================================
-        //  18. PAGE: ADMIN HISTORY
+        //  19. PAGE: ADMIN HISTORY
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1282,7 +1495,7 @@
         }
 
         // ============================================================
-        //  19. ADMIN ACTIONS
+        //  20. ADMIN ACTIONS
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
@@ -1370,7 +1583,7 @@
         };
 
         // ============================================================
-        //  20. INIT
+        //  21. INIT
         // ============================================================
         (function init() {
             let users = DB.getUsers();
@@ -1406,6 +1619,8 @@
         window.playNotificationSound = playNotificationSound;
         window.showImageViewer = showImageViewer;
         window.closeImageViewer = closeImageViewer;
+        window.filterRewardMembers = function() {};
+        window.filterIncomeMembers = function() {};
     </script>
 </body>
 </html>
