@@ -210,8 +210,7 @@
             © 2026 អាជីវករខ្មែរឆ្លាតវៃ — ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុឆ្លាតវៃ
         </footer>
     </div>
-
-    <script>
+<script>
         // ============================================================
         //  DATA LAYER
         // ============================================================
@@ -283,6 +282,7 @@
         // ============================================================
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toastContainer');
+            if (!container) return;
             const toast = document.createElement('div');
             toast.className = `toast toast-${type}`;
             toast.textContent = msg;
@@ -346,24 +346,12 @@
         }
 
         // ============================================================
-        //  TRANSACTIONS - UPDATES BOTH MEMBER AND ADMIN BALANCE
+        //  TRANSACTIONS - ONLY RECORDS LOGS NOW (FIXED DUP BUG)
         // ============================================================
         function addTransaction(phone, type, amount, note = '', account = '') {
             let tx = DB.getTx();
             tx.push({ id: genId(), phone, type, amount, status: 'completed', date: getDate(), note, account });
             DB.setTx(tx);
-
-            let users = DB.getUsers();
-            let member = users.find(u => u.phone === phone);
-            let admin = users.find(u => u.role === 'admin');
-
-            if (member) {
-                member.balance = (member.balance || 0) + (type === 'deposit' ? amount : -amount);
-            }
-            if (admin) {
-                admin.balance = (admin.balance || 0) + (type === 'deposit' ? amount : -amount);
-            }
-            DB.setUsers(users);
         }
 
         // ============================================================
@@ -515,6 +503,7 @@
 
         window.togglePassword = function(inputId, icon) {
             const input = document.getElementById(inputId);
+            if (!input) return;
             if (input.type === 'password') {
                 input.type = 'text';
                 icon.classList.replace('fa-eye', 'fa-eye-slash');
@@ -689,17 +678,6 @@
             </div>
             `;
 
-            window.previewDepositScreenshot = function(input) {
-                const container = document.getElementById('depositScreenshotPreview');
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        container.innerHTML = `<img src="${e.target.result}" class="screenshot-preview" />`;
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            };
-
             document.getElementById('depositForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const btn = document.getElementById('depositSubmitBtn');
@@ -754,6 +732,18 @@
                 renderPage('deposit');
             };
         }
+
+        window.previewDepositScreenshot = function(input) {
+            const container = document.getElementById('depositScreenshotPreview');
+            if (!container) return;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    container.innerHTML = `<img src="${e.target.result}" class="screenshot-preview" />`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
 
         // ============================================================
         //  PAGE: WITHDRAW
@@ -833,17 +823,6 @@
             </div>
             `;
 
-            window.previewWithdrawScreenshot = function(input) {
-                const container = document.getElementById('withdrawScreenshotPreview');
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        container.innerHTML = `<img src="${e.target.result}" class="screenshot-preview" />`;
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            };
-
             document.getElementById('withdrawForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const btn = document.getElementById('withdrawSubmitBtn');
@@ -908,6 +887,18 @@
                 renderPage('withdraw');
             };
         }
+
+        window.previewWithdrawScreenshot = function(input) {
+            const container = document.getElementById('withdrawScreenshotPreview');
+            if (!container) return;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    container.innerHTML = `<img src="${e.target.result}" class="screenshot-preview" />`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
 
         // ============================================================
         //  IMAGE VIEWER
@@ -1127,6 +1118,7 @@
 
         window.previewAdminQR = function(input) {
             const container = document.getElementById('qrPreviewContainer');
+            if (!container) return;
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -1423,7 +1415,6 @@
 
             document.getElementById('rewardForm').onsubmit = (e) => {
                 e.preventDefault();
-                const btn = document.getElementById('rewardSubmitBtn');
                 const phone = document.getElementById('rewardMember').value;
                 const amount = parseInt(document.getElementById('rewardAmount').value.trim());
                 const note = document.getElementById('rewardNote').value.trim() || 'ប្រាក់រង្វាន់ពី Admin';
@@ -1491,7 +1482,6 @@
 
             document.getElementById('incomeForm').onsubmit = (e) => {
                 e.preventDefault();
-                const btn = document.getElementById('incomeSubmitBtn');
                 const phone = document.getElementById('incomeMember').value;
                 const amount = parseInt(document.getElementById('incomeAmount').value.trim());
                 const note = document.getElementById('incomeNote').value.trim() || 'ប្រាក់ចំណូលពី Admin';
@@ -1516,7 +1506,7 @@
         }
 
         // ============================================================
-        //  ADMIN ACTIONS - Approve/Reject
+        //  ADMIN ACTIONS - Approve/Reject (CORRECTFLOW - NO DUP BALANCE)
         // ============================================================
         window.approveDeposit = function(id) {
             const deposits = DB.getDeposits();
@@ -1633,9 +1623,6 @@
         window.approveWithdraw = approveWithdraw;
         window.rejectWithdraw = rejectWithdraw;
         window.togglePassword = togglePassword;
-        window.previewDepositScreenshot = function() {};
-        window.previewWithdrawScreenshot = function() {};
-        window.previewAdminQR = function() {};
     </script>
 </body>
 </html>
