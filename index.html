@@ -435,6 +435,12 @@
             transform: scale(1.05);
             border-color: #3b82f6;
         }
+        .balance-zero {
+            color: #ef4444;
+        }
+        .balance-amount {
+            font-weight: 800;
+        }
     </style>
 </head>
 <body>
@@ -542,7 +548,9 @@
         function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
         function formatMoney(n) {
-            return n.toLocaleString('km-KH') + ' ៛';
+            // Format with 2 decimal places and show .00 when zero
+            if (n === 0) return '0.00 ៛';
+            return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ៛';
         }
 
         function getDate() {
@@ -550,50 +558,76 @@
         }
 
         // ============================================================
-        //  2.1 TELEGRAM HELPERS
+        //  2.1 TELEGRAM HELPERS - FIXED with proper async/await
         // ============================================================
         // Deposit Telegram: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw , -5410896989
         // Withdraw Telegram: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc , -5338881653
 
-        function sendToTelegram(botToken, chatId, message) {
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-            const payload = {
-                chat_id: chatId,
-                text: message,
-                parse_mode: 'HTML'
-            };
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(err => console.log('Telegram send error:', err));
-        }
-
-        function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
-            // Convert base64 to blob
-            const byteString = atob(photoBase64.split(',')[1]);
-            const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
+        async function sendToTelegram(botToken, chatId, message) {
+            try {
+                const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                const payload = {
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                };
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (data.ok) {
+                    console.log('✅ Telegram sent successfully to', chatId);
+                    return true;
+                } else {
+                    console.error('❌ Telegram error:', data.description);
+                    return false;
+                }
+            } catch (err) {
+                console.error('❌ Telegram send error:', err);
+                return false;
             }
-            const blob = new Blob([ab], { type: mimeString });
-            const formData = new FormData();
-            formData.append('chat_id', chatId);
-            formData.append('photo', blob, 'screenshot.jpg');
-            formData.append('caption', caption);
-            formData.append('parse_mode', 'HTML');
-
-            fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-                method: 'POST',
-                body: formData
-            }).catch(err => console.log('Telegram photo send error:', err));
         }
 
-        function sendDepositTelegram(depositData, screenshotBase64) {
+        async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
+            try {
+                // Convert base64 to blob
+                const byteString = atob(photoBase64.split(',')[1]);
+                const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                const blob = new Blob([ab], { type: mimeString });
+                const formData = new FormData();
+                formData.append('chat_id', chatId);
+                formData.append('photo', blob, 'screenshot.jpg');
+                formData.append('caption', caption);
+                formData.append('parse_mode', 'HTML');
+
+                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.ok) {
+                    console.log('✅ Photo sent successfully to', chatId);
+                    return true;
+                } else {
+                    console.error('❌ Photo error:', data.description);
+                    return false;
+                }
+            } catch (err) {
+                console.error('❌ Photo send error:', err);
+                return false;
+            }
+        }
+
+        async function sendDepositTelegram(depositData, screenshotBase64) {
             const botToken = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
-            const chatId = '-5410896989';
+            const chatIds = ['-5410896989'];
             
             const message = `
 📥 <b>សំណើបញ្ចូលប្រាក់</b>
@@ -610,21 +644,28 @@
 ✅ សូមពិនិត្យ និងអនុម័ត!
             `;
 
-            if (screenshotBase64) {
-                sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
+            let success = true;
+            for (const chatId of chatIds) {
+                if (screenshotBase64) {
+                    const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
+                    if (!result) success = false;
+                } else {
+                    const result = await sendToTelegram(botToken, chatId, message);
+                    if (!result) success = false;
+                }
+            }
+            
+            if (success) {
+                showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
             } else {
-                sendToTelegram(botToken, chatId, message);
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
             }
-            // Also send to second chat
-            sendToTelegram(botToken, '-5410896989', message);
-            if (screenshotBase64) {
-                sendPhotoToTelegram(botToken, '-5410896989', screenshotBase64, message);
-            }
+            return success;
         }
 
-        function sendWithdrawTelegram(withdrawData) {
+        async function sendWithdrawTelegram(withdrawData, screenshotBase64) {
             const botToken = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
-            const chatId = '-5338881653';
+            const chatIds = ['-5338881653'];
             
             const message = `
 📤 <b>សំណើដកប្រាក់</b>
@@ -641,8 +682,23 @@
 ✅ សូមពិនិត្យ និងអនុម័ត!
             `;
 
-            sendToTelegram(botToken, chatId, message);
-            sendToTelegram(botToken, '-5338881653', message);
+            let success = true;
+            for (const chatId of chatIds) {
+                if (screenshotBase64) {
+                    const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
+                    if (!result) success = false;
+                } else {
+                    const result = await sendToTelegram(botToken, chatId, message);
+                    if (!result) success = false;
+                }
+            }
+            
+            if (success) {
+                showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+            } else {
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+            }
+            return success;
         }
 
         // ============================================================
@@ -658,7 +714,7 @@
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateY(20px)';
                 setTimeout(() => toast.remove(), 400);
-            }, 3500);
+            }, 4000);
         }
 
         function showModal(title, message, onConfirm = null, onCancel = null) {
@@ -800,7 +856,7 @@
                     <span class="text-sm text-gray-600 hidden sm:inline"><i class="fas fa-user-circle mr-1"></i> ${user.name}</span>
                     <span class="member-id-badge">ID: ${memberId}</span>
                     <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">${user.role === 'admin' ? 'Admin' : user.phone}</span>
-                    <span class="text-sm font-bold text-green-600">${formatMoney(user.balance)}</span>
+                    <span class="text-sm font-bold ${user.balance === 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(user.balance)}</span>
                     <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-sign-out-alt"></i></button>
                 `;
             } else {
@@ -953,7 +1009,7 @@
             container.innerHTML = `
             <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-6 mb-6 text-white">
                 <p class="text-sm text-blue-100"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
-                <p class="balance-big">${formatMoney(user.balance)}</p>
+                <p class="balance-big ${user.balance === 0 ? 'text-yellow-300' : ''}">${formatMoney(user.balance)}</p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -1051,7 +1107,7 @@
         };
 
         // ============================================================
-        //  12. PAGE: DEPOSIT (User) - WITH SCREENSHOT UPLOAD
+        //  12. PAGE: DEPOSIT (User) - WITH SCREENSHOT UPLOAD & TELEGRAM FIXED
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1154,7 +1210,7 @@
                 }
             };
 
-            document.getElementById('depositForm').onsubmit = (e) => {
+            document.getElementById('depositForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const bank = document.getElementById('depBank').value;
                 const sender = document.getElementById('depSender').value.trim();
@@ -1169,47 +1225,44 @@
                 }
 
                 let screenshotBase64 = null;
-                const processDeposit = () => {
-                    let deposits = DB.getDeposits();
-                    const depositData = {
-                        id: genId(),
-                        phone: user.phone,
-                        memberId: user.memberId,
-                        name: user.name,
-                        bank,
-                        sender,
-                        account: account || 'N/A',
-                        amount,
-                        note,
-                        status: 'pending',
-                        date: getDate(),
-                        screenshot: screenshotBase64
-                    };
-                    deposits.push(depositData);
-                    DB.setDeposits(deposits);
-
-                    // Send to Telegram with screenshot
-                    sendDepositTelegram(depositData, screenshotBase64);
-
-                    showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
-                    renderPage('deposit');
-                };
-
                 if (screenshotFile) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        screenshotBase64 = e.target.result;
-                        processDeposit();
-                    };
-                    reader.readAsDataURL(screenshotFile);
-                } else {
-                    processDeposit();
+                    screenshotBase64 = await new Promise((resolve) => {
+                        reader.onload = function(e) {
+                            resolve(e.target.result);
+                        };
+                        reader.readAsDataURL(screenshotFile);
+                    });
                 }
+
+                let deposits = DB.getDeposits();
+                const depositData = {
+                    id: genId(),
+                    phone: user.phone,
+                    memberId: user.memberId,
+                    name: user.name,
+                    bank,
+                    sender,
+                    account: account || 'N/A',
+                    amount,
+                    note,
+                    status: 'pending',
+                    date: getDate(),
+                    screenshot: screenshotBase64
+                };
+                deposits.push(depositData);
+                DB.setDeposits(deposits);
+
+                // Send to Telegram - NOW WITH PROPER AWAIT
+                await sendDepositTelegram(depositData, screenshotBase64);
+
+                showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
+                renderPage('deposit');
             };
         }
 
         // ============================================================
-        //  13. PAGE: WITHDRAW (User)
+        //  13. PAGE: WITHDRAW (User) - WITH SCREENSHOT & TELEGRAM FIXED
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1251,10 +1304,11 @@
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-dollar-sign text-blue-500 mr-2"></i>ចំនួនដក (៛)</label>
                         <input type="number" id="wdAmount" placeholder="50000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-image text-blue-500 mr-2"></i>QR Code ទូទាត់ (ភ្ជាប់រូបភាព)</label>
-                        <input type="file" id="wdQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
-                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR code របស់អ្នក</p>
+                    <div class="mb-3">
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-image text-blue-500 mr-2"></i>រូបភាពថតអេក្រង់ (Screenshot)</label>
+                        <input type="file" id="wdScreenshot" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" onchange="previewWithdrawScreenshot(this)" />
+                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាពថតអេក្រង់នៃ QR code របស់អ្នក</p>
+                        <div id="withdrawScreenshotPreview" class="mt-2"></div>
                     </div>
                     <button type="submit" class="w-full btn-purple text-white font-semibold py-3 rounded-xl transition">
                         <i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់
@@ -1269,6 +1323,7 @@
                         return myWd.map(w => `
                             <div class="flex justify-between items-center border-b border-purple-200 py-2 text-sm">
                                 <span>${w.amount.toLocaleString()} ៛</span>
+                                ${w.screenshot ? `<img src="${w.screenshot}" class="screenshot-thumb" onclick="showImageViewer('${w.screenshot}')" title="ចុចដើម្បីមើលរូបភាព" />` : ''}
                                 <span class="text-xs ${w.status === 'pending' ? 'text-yellow-600' : 'text-green-600'}">${w.status === 'pending' ? '⏳ រង់ចាំ' : '✅ បានដក'}</span>
                                 <span class="text-xs text-gray-400">${w.date}</span>
                             </div>
@@ -1278,13 +1333,25 @@
             </div>
             `;
 
-            document.getElementById('withdrawForm').onsubmit = (e) => {
+            window.previewWithdrawScreenshot = function(input) {
+                const container = document.getElementById('withdrawScreenshotPreview');
+                if (input.files && input.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        container.innerHTML = `<img src="${e.target.result}" class="screenshot-preview" alt="Screenshot Preview" />`;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            };
+
+            document.getElementById('withdrawForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const bank = document.getElementById('wdBank').value;
                 const accName = document.getElementById('wdName').value.trim();
                 const account = document.getElementById('wdAccount').value.trim();
                 const amount = parseInt(document.getElementById('wdAmount').value.trim());
-                const qrFile = document.getElementById('wdQR').files[0];
+                const screenshotFile = document.getElementById('wdScreenshot').files[0];
+
                 if (!accName || !account || !amount || amount <= 0) {
                     showToast('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!', 'error');
                     return;
@@ -1292,6 +1359,17 @@
                 if (amount > user.balance) {
                     showToast('❌ សមតុល្យមិនគ្រប់គ្រាន់!', 'error');
                     return;
+                }
+
+                let screenshotBase64 = null;
+                if (screenshotFile) {
+                    const reader = new FileReader();
+                    screenshotBase64 = await new Promise((resolve) => {
+                        reader.onload = function(e) {
+                            resolve(e.target.result);
+                        };
+                        reader.readAsDataURL(screenshotFile);
+                    });
                 }
 
                 let withdraws = DB.getWithdraws();
@@ -1304,15 +1382,15 @@
                     accName,
                     account,
                     amount,
-                    qrFile: qrFile ? qrFile.name : 'មិនមាន',
                     status: 'pending',
-                    date: getDate()
+                    date: getDate(),
+                    screenshot: screenshotBase64
                 };
                 withdraws.push(withdrawData);
                 DB.setWithdraws(withdraws);
 
-                // Send to Telegram
-                sendWithdrawTelegram(withdrawData);
+                // Send to Telegram - NOW WITH PROPER AWAIT
+                await sendWithdrawTelegram(withdrawData, screenshotBase64);
 
                 showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
                 renderPage('withdraw');
@@ -1336,7 +1414,7 @@
                 <div class="flex items-center justify-between flex-wrap gap-3">
                     <div>
                         <p class="text-sm text-blue-100"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
-                        <p class="text-3xl font-bold">${formatMoney(adminBalance)}</p>
+                        <p class="text-3xl font-bold ${adminBalance === 0 ? 'text-yellow-300' : ''}">${formatMoney(adminBalance)}</p>
                         <p class="text-sm text-blue-200 mt-1">បានផ្ដល់ប្រាក់ចំណូលសរុប: ${formatMoney(totalIncomeGiven)}</p>
                     </div>
                     <div class="flex gap-2 flex-wrap">
@@ -1447,7 +1525,7 @@
                                     <td class="px-4 py-2 font-semibold text-blue-600">${u.memberId || 'N/A'}</td>
                                     <td class="px-4 py-2">${u.name}</td>
                                     <td class="px-4 py-2">${u.phone}</td>
-                                    <td class="px-4 py-2">${formatMoney(u.balance)}</td>
+                                    <td class="px-4 py-2 ${u.balance === 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(u.balance)}</td>
                                     <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${u.status === 'active' ? 'សកម្ម' : 'ផ្អាក'}</span></td>
                                     <td class="px-4 py-2">
                                         <button onclick="confirmDeleteMember('${u.phone}')" class="danger-btn"><i class="fas fa-trash"></i> លុប</button>
@@ -1577,7 +1655,7 @@
         };
 
         // ============================================================
-        //  16. ADMIN DELETE BALANCE MODAL - FIXED
+        //  16. ADMIN DELETE BALANCE MODAL - FIXED with proper zero display
         // ============================================================
         window.showAdminDeleteBalanceModal = function() {
             const users = DB.getUsers();
@@ -1768,7 +1846,7 @@
         }
 
         // ============================================================
-        //  20. PAGE: ADMIN WITHDRAW APPROVAL
+        //  20. PAGE: ADMIN WITHDRAW APPROVAL - WITH SCREENSHOT DISPLAY
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1788,7 +1866,7 @@
                                 <p class="text-sm text-gray-500">📱 ${w.phone} | ${w.bank} - ${w.account} (${w.accName})</p>
                                 <p class="text-lg font-bold text-purple-600">${formatMoney(w.amount)}</p>
                                 <p class="text-xs text-gray-400">${w.date}</p>
-                                ${w.qrFile ? `<p class="text-xs text-blue-500">📷 QR: ${w.qrFile}</p>` : ''}
+                                ${w.screenshot ? `<div class="mt-2"><img src="${w.screenshot}" class="screenshot-thumb" onclick="showImageViewer('${w.screenshot}')" title="ចុចដើម្បីមើលរូបភាព" /></div>` : ''}
                                 <span class="text-xs text-yellow-500">⏳ រង់ចាំអនុម័ត</span>
                             </div>
                             <div class="flex gap-2 mt-2 sm:mt-0">
@@ -1921,7 +1999,7 @@
                 });
             };
 
-            document.getElementById('rewardForm').onsubmit = (e) => {
+            document.getElementById('rewardForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const phone = document.getElementById('rewardMember').value;
                 const amount = parseInt(document.getElementById('rewardAmount').value.trim());
@@ -1962,7 +2040,7 @@
                     note: note,
                     date: getDate()
                 };
-                sendDepositTelegram(depositData, null);
+                await sendDepositTelegram(depositData, null);
 
                 showToast(`✅ បានផ្ដល់ប្រាក់រង្វាន់ ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
                 renderPage('adminReward');
@@ -2045,7 +2123,7 @@
                 });
             };
 
-            document.getElementById('incomeForm').onsubmit = (e) => {
+            document.getElementById('incomeForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const phone = document.getElementById('incomeMember').value;
                 const amount = parseInt(document.getElementById('incomeAmount').value.trim());
@@ -2086,7 +2164,7 @@
                     note: note,
                     date: getDate()
                 };
-                sendDepositTelegram(depositData, null);
+                await sendDepositTelegram(depositData, null);
 
                 showToast(`✅ បានផ្ដល់ប្រាក់ចំណូល ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
                 renderPage('adminIncome');
@@ -2220,6 +2298,7 @@
         window.closeAdminDeleteBalanceModal = closeAdminDeleteBalanceModal;
         window.processAdminDeleteBalance = processAdminDeleteBalance;
         window.previewDepositScreenshot = function() {};
+        window.previewWithdrawScreenshot = function() {};
     </script>
 </body>
 </html>
