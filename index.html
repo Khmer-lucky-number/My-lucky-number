@@ -647,53 +647,46 @@
         }
 
         // ============================================================
-        //  2.1 TELEGRAM HELPERS - FIXED WITH NO-CORS
+        //  2.1 TELEGRAM HELPERS - UPDATED WITH YOUR TOKENS
         // ============================================================
-        // Deposit Telegram: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw , -5410896989
-        // Withdraw Telegram: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc , -5338881653
+        // Deposit Group: Token: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw, Chat ID: -5410896989
+        // Withdraw Group: Token: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc, Chat ID: -5338881653
+
+        const DEPOSIT_BOT_TOKEN = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
+        const DEPOSIT_CHAT_ID = '-5410896989';
+        const WITHDRAW_BOT_TOKEN = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
+        const WITHDRAW_CHAT_ID = '-5338881653';
 
         async function sendToTelegram(botToken, chatId, message) {
             try {
-                console.log(`📤 Sending to Telegram: bot=${botToken.substring(0,10)}..., chat=${chatId}`);
+                console.log(`📤 Sending to Telegram: chat=${chatId}`);
                 const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-                const payload = {
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'HTML'
-                };
                 
-                // Try with no-cors mode to avoid CORS issues
+                // Try with no-cors
                 await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload),
-                    mode: 'no-cors'
-                });
-                console.log('✅ Telegram request sent (no-cors mode)');
-                return true;
-            } catch (err) {
-                console.error('❌ Telegram send error:', err);
-                // Try fallback with regular mode
-                try {
-                    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-                    const payload = {
+                    body: JSON.stringify({
                         chat_id: chatId,
                         text: message,
                         parse_mode: 'HTML'
-                    };
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const data = await response.json();
-                    if (data.ok) {
-                        console.log('✅ Telegram sent successfully (fallback)');
-                        return true;
-                    } else {
-                        console.error('❌ Telegram error:', data.description);
-                        return false;
-                    }
+                    }),
+                    mode: 'no-cors'
+                });
+                console.log('✅ Telegram request sent (no-cors)');
+                return true;
+            } catch (err) {
+                console.error('❌ Telegram send error:', err);
+                // Try fallback with img
+                try {
+                    const encoded = encodeURIComponent(message);
+                    const img = document.createElement('img');
+                    img.src = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encoded}&parse_mode=HTML`;
+                    img.style.display = 'none';
+                    document.body.appendChild(img);
+                    setTimeout(() => img.remove(), 3000);
+                    console.log('✅ Telegram sent via img fallback');
+                    return true;
                 } catch (fallbackErr) {
                     console.error('❌ Telegram fallback error:', fallbackErr);
                     return false;
@@ -703,7 +696,7 @@
 
         async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
             try {
-                console.log(`📤 Sending photo to Telegram: bot=${botToken.substring(0,10)}..., chat=${chatId}`);
+                console.log(`📤 Sending photo to Telegram: chat=${chatId}`);
                 const byteString = atob(photoBase64.split(',')[1]);
                 const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
                 const ab = new ArrayBuffer(byteString.length);
@@ -723,49 +716,15 @@
                     body: formData,
                     mode: 'no-cors'
                 });
-                console.log('✅ Photo request sent (no-cors mode)');
+                console.log('✅ Photo request sent (no-cors)');
                 return true;
             } catch (err) {
                 console.error('❌ Photo send error:', err);
-                // Try fallback
-                try {
-                    const byteString = atob(photoBase64.split(',')[1]);
-                    const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
-                    const ab = new ArrayBuffer(byteString.length);
-                    const ia = new Uint8Array(ab);
-                    for (let i = 0; i < byteString.length; i++) {
-                        ia[i] = byteString.charCodeAt(i);
-                    }
-                    const blob = new Blob([ab], { type: mimeString });
-                    const formData = new FormData();
-                    formData.append('chat_id', chatId);
-                    formData.append('photo', blob, 'screenshot.jpg');
-                    formData.append('caption', caption);
-                    formData.append('parse_mode', 'HTML');
-
-                    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const data = await response.json();
-                    if (data.ok) {
-                        console.log('✅ Photo sent successfully (fallback)');
-                        return true;
-                    } else {
-                        console.error('❌ Photo error:', data.description);
-                        return false;
-                    }
-                } catch (fallbackErr) {
-                    console.error('❌ Photo fallback error:', fallbackErr);
-                    return false;
-                }
+                return false;
             }
         }
 
         async function sendDepositTelegram(depositData, screenshotBase64) {
-            const botToken = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
-            const chatIds = ['-5410896989'];
-            
             const message = `
 📥 <b>សំណើបញ្ចូលប្រាក់</b>
 ━━━━━━━━━━━━━━━
@@ -781,34 +740,22 @@
 ✅ សូមពិនិត្យ និងអនុម័ត!
             `;
 
-            let success = true;
-            for (const chatId of chatIds) {
-                try {
-                    if (screenshotBase64) {
-                        const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
-                        if (!result) success = false;
-                    } else {
-                        const result = await sendToTelegram(botToken, chatId, message);
-                        if (!result) success = false;
-                    }
-                } catch (err) {
-                    console.error('Telegram send error:', err);
-                    success = false;
+            try {
+                if (screenshotBase64) {
+                    await sendPhotoToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, screenshotBase64, message);
+                } else {
+                    await sendToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, message);
                 }
-            }
-            
-            if (success) {
                 showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
-            } else {
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram (សូមពិនិត្យ Console)', 'error');
+                return true;
+            } catch (err) {
+                console.error('Deposit Telegram error:', err);
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                return false;
             }
-            return success;
         }
 
         async function sendWithdrawTelegram(withdrawData, screenshotBase64) {
-            const botToken = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
-            const chatIds = ['-5338881653'];
-            
             const message = `
 📤 <b>សំណើដកប្រាក់</b>
 ━━━━━━━━━━━━━━━
@@ -824,28 +771,19 @@
 ✅ សូមពិនិត្យ និងអនុម័ត!
             `;
 
-            let success = true;
-            for (const chatId of chatIds) {
-                try {
-                    if (screenshotBase64) {
-                        const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
-                        if (!result) success = false;
-                    } else {
-                        const result = await sendToTelegram(botToken, chatId, message);
-                        if (!result) success = false;
-                    }
-                } catch (err) {
-                    console.error('Telegram send error:', err);
-                    success = false;
+            try {
+                if (screenshotBase64) {
+                    await sendPhotoToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, screenshotBase64, message);
+                } else {
+                    await sendToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, message);
                 }
-            }
-            
-            if (success) {
                 showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
-            } else {
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram (សូមពិនិត្យ Console)', 'error');
+                return true;
+            } catch (err) {
+                console.error('Withdraw Telegram error:', err);
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                return false;
             }
-            return success;
         }
 
         // ============================================================
@@ -1145,7 +1083,7 @@
         }
 
         // ============================================================
-        //  10. PAGE: DASHBOARD (User) - WITH SCROLLABLE HISTORY
+        //  10. PAGE: DASHBOARD (User)
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1273,7 +1211,7 @@
         };
 
         // ============================================================
-        //  12. PAGE: DEPOSIT (User) - WITH SCROLLABLE HISTORY
+        //  12. PAGE: DEPOSIT (User)
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1427,7 +1365,7 @@
         }
 
         // ============================================================
-        //  13. PAGE: WITHDRAW (User) - WITH SCROLLABLE HISTORY
+        //  13. PAGE: WITHDRAW (User)
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1562,7 +1500,7 @@
         }
 
         // ============================================================
-        //  14. PAGE: ADMIN DASHBOARD - WITH SCROLLABLE HISTORIES
+        //  14. PAGE: ADMIN DASHBOARD - REMOVED REWARD CARD
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1619,8 +1557,11 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div class="bg-white rounded-2xl shadow p-4 card-hover"><p class="text-gray-400 text-sm">អ្នកប្រើសរុប</p><p class="text-2xl font-bold">${users.length}</p></div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white rounded-2xl shadow p-4 card-hover">
+                    <p class="text-gray-400 text-sm">អ្នកប្រើសរុប</p>
+                    <p class="text-2xl font-bold">${users.length}</p>
+                </div>
                 <div class="bg-white rounded-2xl shadow p-4 card-hover relative">
                     <p class="text-gray-400 text-sm">សំណើបញ្ចូល</p>
                     <p class="text-2xl font-bold text-green-600">${deposits.length}</p>
@@ -1630,10 +1571,6 @@
                     <p class="text-gray-400 text-sm">សំណើដក</p>
                     <p class="text-2xl font-bold text-purple-600">${withdraws.length}</p>
                     ${withdraws.length > 0 ? `<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${withdraws.length}</span>` : ''}
-                </div>
-                <div class="bg-white rounded-2xl shadow p-4 card-hover">
-                    <p class="text-gray-400 text-sm">ប្រាក់រង្វាន់បានផ្ដល់</p>
-                    <p class="text-2xl font-bold text-yellow-600">${formatMoney(DB.getRewards().reduce((s, r) => s + r.amount, 0))}</p>
                 </div>
             </div>
 
@@ -1868,7 +1805,7 @@
         };
 
         // ============================================================
-        //  16. ADMIN DELETE BALANCE MODAL - FIXED
+        //  16. ADMIN DELETE BALANCE MODAL
         // ============================================================
         window.showAdminDeleteBalanceModal = function() {
             const users = DB.getUsers();
@@ -2369,7 +2306,7 @@
         }
 
         // ============================================================
-        //  24. ADMIN ACTIONS - Approve/Reject WITH TELEGRAM NOTIFICATION
+        //  24. ADMIN ACTIONS - Approve/Reject WITH TELEGRAM
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
