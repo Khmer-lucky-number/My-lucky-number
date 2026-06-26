@@ -647,81 +647,107 @@
         }
 
         // ============================================================
-        //  2.1 TELEGRAM HELPERS - UPDATED WITH YOUR TOKENS
+        //  2.1 TELEGRAM HELPERS - FIXED WITH XMLHttpRequest
         // ============================================================
-        // Deposit Group: Token: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw, Chat ID: -5410896989
-        // Withdraw Group: Token: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc, Chat ID: -5338881653
-
         const DEPOSIT_BOT_TOKEN = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
         const DEPOSIT_CHAT_ID = '-5410896989';
         const WITHDRAW_BOT_TOKEN = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
         const WITHDRAW_CHAT_ID = '-5338881653';
 
-        async function sendToTelegram(botToken, chatId, message) {
-            try {
-                console.log(`📤 Sending to Telegram: chat=${chatId}`);
-                const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-                
-                // Try with no-cors
-                await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
+        function sendToTelegramViaXHR(botToken, chatId, message) {
+            return new Promise((resolve) => {
+                try {
+                    console.log(`📤 Sending to Telegram via XHR: chat=${chatId}`);
+                    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.ok) {
+                                    console.log('✅ Telegram sent successfully');
+                                    resolve(true);
+                                } else {
+                                    console.error('❌ Telegram error:', response.description);
+                                    resolve(false);
+                                }
+                            } catch (e) {
+                                console.error('❌ Parse error:', e);
+                                resolve(false);
+                            }
+                        } else {
+                            console.error('❌ HTTP error:', xhr.status);
+                            resolve(false);
+                        }
+                    };
+                    xhr.onerror = function() {
+                        console.error('❌ XHR error');
+                        resolve(false);
+                    };
+                    xhr.send(JSON.stringify({
                         chat_id: chatId,
                         text: message,
                         parse_mode: 'HTML'
-                    }),
-                    mode: 'no-cors'
-                });
-                console.log('✅ Telegram request sent (no-cors)');
-                return true;
-            } catch (err) {
-                console.error('❌ Telegram send error:', err);
-                // Try fallback with img
-                try {
-                    const encoded = encodeURIComponent(message);
-                    const img = document.createElement('img');
-                    img.src = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encoded}&parse_mode=HTML`;
-                    img.style.display = 'none';
-                    document.body.appendChild(img);
-                    setTimeout(() => img.remove(), 3000);
-                    console.log('✅ Telegram sent via img fallback');
-                    return true;
-                } catch (fallbackErr) {
-                    console.error('❌ Telegram fallback error:', fallbackErr);
-                    return false;
+                    }));
+                } catch (err) {
+                    console.error('❌ Telegram send error:', err);
+                    resolve(false);
                 }
-            }
+            });
         }
 
-        async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
-            try {
-                console.log(`📤 Sending photo to Telegram: chat=${chatId}`);
-                const byteString = atob(photoBase64.split(',')[1]);
-                const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
-                const ab = new ArrayBuffer(byteString.length);
-                const ia = new Uint8Array(ab);
-                for (let i = 0; i < byteString.length; i++) {
-                    ia[i] = byteString.charCodeAt(i);
-                }
-                const blob = new Blob([ab], { type: mimeString });
-                const formData = new FormData();
-                formData.append('chat_id', chatId);
-                formData.append('photo', blob, 'screenshot.jpg');
-                formData.append('caption', caption);
-                formData.append('parse_mode', 'HTML');
+        function sendPhotoToTelegramViaXHR(botToken, chatId, photoBase64, caption) {
+            return new Promise((resolve) => {
+                try {
+                    console.log(`📤 Sending photo to Telegram via XHR: chat=${chatId}`);
+                    const byteString = atob(photoBase64.split(',')[1]);
+                    const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) {
+                        ia[i] = byteString.charCodeAt(i);
+                    }
+                    const blob = new Blob([ab], { type: mimeString });
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', blob, 'screenshot.jpg');
+                    formData.append('caption', caption);
+                    formData.append('parse_mode', 'HTML');
 
-                await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors'
-                });
-                console.log('✅ Photo request sent (no-cors)');
-                return true;
-            } catch (err) {
-                console.error('❌ Photo send error:', err);
-                return false;
-            }
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', `https://api.telegram.org/bot${botToken}/sendPhoto`, true);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.ok) {
+                                    console.log('✅ Photo sent successfully');
+                                    resolve(true);
+                                } else {
+                                    console.error('❌ Photo error:', response.description);
+                                    resolve(false);
+                                }
+                            } catch (e) {
+                                console.error('❌ Parse error:', e);
+                                resolve(false);
+                            }
+                        } else {
+                            console.error('❌ HTTP error:', xhr.status);
+                            resolve(false);
+                        }
+                    };
+                    xhr.onerror = function() {
+                        console.error('❌ XHR error');
+                        resolve(false);
+                    };
+                    xhr.send(formData);
+                } catch (err) {
+                    console.error('❌ Photo send error:', err);
+                    resolve(false);
+                }
+            });
         }
 
         async function sendDepositTelegram(depositData, screenshotBase64) {
@@ -741,13 +767,18 @@
             `;
 
             try {
+                let result;
                 if (screenshotBase64) {
-                    await sendPhotoToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, screenshotBase64, message);
+                    result = await sendPhotoToTelegramViaXHR(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, screenshotBase64, message);
                 } else {
-                    await sendToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, message);
+                    result = await sendToTelegramViaXHR(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, message);
                 }
-                showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
-                return true;
+                if (result) {
+                    showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                } else {
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                }
+                return result;
             } catch (err) {
                 console.error('Deposit Telegram error:', err);
                 showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
@@ -772,13 +803,18 @@
             `;
 
             try {
+                let result;
                 if (screenshotBase64) {
-                    await sendPhotoToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, screenshotBase64, message);
+                    result = await sendPhotoToTelegramViaXHR(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, screenshotBase64, message);
                 } else {
-                    await sendToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, message);
+                    result = await sendToTelegramViaXHR(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, message);
                 }
-                showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
-                return true;
+                if (result) {
+                    showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                } else {
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                }
+                return result;
             } catch (err) {
                 console.error('Withdraw Telegram error:', err);
                 showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
@@ -1083,7 +1119,7 @@
         }
 
         // ============================================================
-        //  10. PAGE: DASHBOARD (User)
+        //  10. PAGE: DASHBOARD (User) - REMOVED DELETE HISTORY BUTTON
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1136,15 +1172,12 @@
                 <span><i class="fas fa-phone text-blue-500 mr-2"></i><strong>${user.phone}</strong></span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <button onclick="renderPage('deposit')" class="btn-success text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
                 </button>
                 <button onclick="renderPage('withdraw')" class="btn-purple text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
                     <i class="fas fa-arrow-right"></i> ដកប្រាក់
-                </button>
-                <button onclick="showMemberDeleteTransaction()" class="btn-danger-gradient text-white font-semibold py-4 rounded-2xl shadow transition flex items-center justify-center gap-2">
-                    <i class="fas fa-trash"></i> លុបប្រវត្តិ
                 </button>
                 <a href="https://t.me/+855766437408" target="_blank" class="telegram-btn justify-center">
                     <i class="fab fa-telegram-plane"></i> ទំនាក់ទំនង Admin
@@ -1172,46 +1205,7 @@
         }
 
         // ============================================================
-        //  11. MEMBER DELETE TRANSACTION
-        // ============================================================
-        window.showMemberDeleteTransaction = function() {
-            const user = getCurrentUser();
-            if (!user) return;
-            showModal(
-                'លុបប្រវត្តិប្រតិបត្តិការ',
-                `
-                <p>តើអ្នកពិតជាចង់លុបប្រវត្តិប្រតិបត្តិការទាំងអស់របស់អ្នកមែនទេ?</p>
-                <p class="text-sm text-red-500 mt-2">⚠️ ការលុបនេះមិនអាចត្រឡប់វិញបានទេ!</p>
-                `,
-                function() {
-                    let tx = DB.getTx();
-                    tx = tx.filter(t => t.phone !== user.phone);
-                    DB.setTx(tx);
-                    let deposits = DB.getDeposits();
-                    deposits = deposits.filter(d => d.phone !== user.phone);
-                    DB.setDeposits(deposits);
-                    let withdraws = DB.getWithdraws();
-                    withdraws = withdraws.filter(w => w.phone !== user.phone);
-                    DB.setWithdraws(withdraws);
-                    let rewards = DB.getRewards();
-                    rewards = rewards.filter(r => r.phone !== user.phone);
-                    DB.setRewards(rewards);
-                    let users = DB.getUsers();
-                    const u = users.find(u => u.phone === user.phone);
-                    if (u) {
-                        u.balance = 0;
-                        DB.setUsers(users);
-                    }
-                    showToast('✅ បានលុបប្រវត្តិប្រតិបត្តិការទាំងអស់!', 'success');
-                    renderPage('dashboard');
-                    closeModal();
-                },
-                function() { closeModal(); }
-            );
-        };
-
-        // ============================================================
-        //  12. PAGE: DEPOSIT (User)
+        //  11. PAGE: DEPOSIT (User)
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1365,7 +1359,7 @@
         }
 
         // ============================================================
-        //  13. PAGE: WITHDRAW (User)
+        //  12. PAGE: WITHDRAW (User)
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1500,7 +1494,7 @@
         }
 
         // ============================================================
-        //  14. PAGE: ADMIN DASHBOARD - REMOVED REWARD CARD
+        //  13. PAGE: ADMIN DASHBOARD - REMOVED "បានផ្ដល់ប្រាក់ចំណូលសរុប"
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1510,7 +1504,6 @@
             const adminBalance = user.balance || 0;
             const rewardsHistory = DB.getRewards().slice(-5).reverse();
             const incomeHistory = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).slice(-5).reverse();
-            const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
             const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
 
@@ -1531,7 +1524,6 @@
                         <div>
                             <p class="text-sm text-blue-200"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
                             <p class="text-3xl font-bold ${adminBalance === 0 ? 'text-yellow-300' : ''}">${formatMoney(adminBalance)}</p>
-                            <p class="text-sm text-blue-200 mt-1">បានផ្ដល់ប្រាក់ចំណូលសរុប: ${formatMoney(totalIncomeGiven)}</p>
                         </div>
                         <div class="flex gap-2 flex-wrap">
                             <button onclick="showAdminDepositModal()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
@@ -1679,7 +1671,6 @@
                                     <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">${u.status === 'active' ? 'សកម្ម' : 'ផ្អាក'}</span></td>
                                     <td class="px-4 py-2">
                                         <button onclick="confirmDeleteMember('${u.phone}')" class="danger-btn"><i class="fas fa-trash"></i> លុប</button>
-                                        <button onclick="showAdminDeleteTransaction('${u.phone}')" class="yellow-btn"><i class="fas fa-history"></i> លុបប្រវត្តិ</button>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -1739,7 +1730,7 @@
         };
 
         // ============================================================
-        //  15. ADMIN DEPOSIT MODAL
+        //  14. ADMIN DEPOSIT MODAL
         // ============================================================
         window.showAdminDepositModal = function() {
             const overlay = document.createElement('div');
@@ -1805,7 +1796,7 @@
         };
 
         // ============================================================
-        //  16. ADMIN DELETE BALANCE MODAL
+        //  15. ADMIN DELETE BALANCE MODAL
         // ============================================================
         window.showAdminDeleteBalanceModal = function() {
             const users = DB.getUsers();
@@ -1883,46 +1874,7 @@
         };
 
         // ============================================================
-        //  17. ADMIN DELETE TRANSACTION
-        // ============================================================
-        window.showAdminDeleteTransaction = function(phone) {
-            const user = DB.getUsers().find(u => u.phone === phone);
-            if (!user) return;
-            showModal(
-                'លុបប្រវត្តិប្រតិបត្តិការសមាជិក',
-                `
-                <p>តើអ្នកចង់លុបប្រវត្តិប្រតិបត្តិការទាំងអស់របស់ <strong>${user.name}</strong> (ID: ${user.memberId}) មែនទេ?</p>
-                <p class="text-sm text-red-500 mt-2">⚠️ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
-                `,
-                function() {
-                    let tx = DB.getTx();
-                    tx = tx.filter(t => t.phone !== phone);
-                    DB.setTx(tx);
-                    let deposits = DB.getDeposits();
-                    deposits = deposits.filter(d => d.phone !== phone);
-                    DB.setDeposits(deposits);
-                    let withdraws = DB.getWithdraws();
-                    withdraws = withdraws.filter(w => w.phone !== phone);
-                    DB.setWithdraws(withdraws);
-                    let rewards = DB.getRewards();
-                    rewards = rewards.filter(r => r.phone !== phone);
-                    DB.setRewards(rewards);
-                    let users = DB.getUsers();
-                    const u = users.find(u => u.phone === phone);
-                    if (u) {
-                        u.balance = 0;
-                        DB.setUsers(users);
-                    }
-                    showToast(`✅ បានលុបប្រវត្តិប្រតិបត្តិការរបស់ ${user.name} ទាំងអស់!`, 'success');
-                    renderPage('admin');
-                    closeModal();
-                },
-                function() { closeModal(); }
-            );
-        };
-
-        // ============================================================
-        //  18. ADMIN ACTIONS - Delete Member & Reset
+        //  16. ADMIN DELETE MEMBER (Removed delete history from member)
         // ============================================================
         window.confirmDeleteMember = function(phone) {
             const user = DB.getUsers().find(u => u.phone === phone);
@@ -1963,7 +1915,7 @@
         };
 
         // ============================================================
-        //  19. PAGE: ADMIN DEPOSIT APPROVAL
+        //  17. PAGE: ADMIN DEPOSIT APPROVAL
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1999,7 +1951,7 @@
         }
 
         // ============================================================
-        //  20. PAGE: ADMIN WITHDRAW APPROVAL
+        //  18. PAGE: ADMIN WITHDRAW APPROVAL
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2034,7 +1986,7 @@
         }
 
         // ============================================================
-        //  21. PAGE: ADMIN HISTORY - WITH ACCOUNT DISPLAY
+        //  19. PAGE: ADMIN HISTORY - WITH ACCOUNT DISPLAY
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2084,7 +2036,7 @@
         }
 
         // ============================================================
-        //  22. PAGE: ADMIN REWARD
+        //  20. PAGE: ADMIN REWARD
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2201,7 +2153,7 @@
         }
 
         // ============================================================
-        //  23. PAGE: ADMIN INCOME
+        //  21. PAGE: ADMIN INCOME
         // ============================================================
         function renderAdminIncome(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2306,7 +2258,7 @@
         }
 
         // ============================================================
-        //  24. ADMIN ACTIONS - Approve/Reject WITH TELEGRAM
+        //  22. ADMIN ACTIONS - Approve/Reject WITH TELEGRAM
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
@@ -2329,7 +2281,6 @@
                     DB.setUsers(users);
                 }
 
-                // Send Telegram notification
                 const depositData = {
                     name: u.name,
                     memberId: u.memberId,
@@ -2379,7 +2330,6 @@
                         DB.setUsers(users);
                     }
 
-                    // Send Telegram notification
                     const withdrawData = {
                         name: u.name,
                         memberId: u.memberId,
@@ -2412,7 +2362,7 @@
         };
 
         // ============================================================
-        //  25. INIT
+        //  23. INIT
         // ============================================================
         (function init() {
             let users = DB.getUsers();
@@ -2452,13 +2402,19 @@
         window.filterIncomeMembers = function() {};
         window.closeAdminDepositModal = closeAdminDepositModal;
         window.processAdminDeposit = processAdminDeposit;
-        window.showAdminDeleteTransaction = showAdminDeleteTransaction;
-        window.showMemberDeleteTransaction = showMemberDeleteTransaction;
         window.showAdminDeleteBalanceModal = showAdminDeleteBalanceModal;
         window.closeAdminDeleteBalanceModal = closeAdminDeleteBalanceModal;
         window.processAdminDeleteBalance = processAdminDeleteBalance;
         window.previewDepositScreenshot = function() {};
         window.previewWithdrawScreenshot = function() {};
+        window.confirmDeleteMember = confirmDeleteMember;
+        window.deleteMember = deleteMember;
+        window.confirmReset = confirmReset;
+        window.resetSystem = resetSystem;
+        window.approveDeposit = approveDeposit;
+        window.rejectDeposit = rejectDeposit;
+        window.approveWithdraw = approveWithdraw;
+        window.rejectWithdraw = rejectWithdraw;
     </script>
 </body>
 </html>
