@@ -4,54 +4,69 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>អាជីវករខ្មែរឆ្លាតវៃ - ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុ</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Khmer&family=Battambang:wght@400;700&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
     <style>
         * { font-family: 'Battambang', 'Khmer', sans-serif; }
         body { background: #f8fafc; color: #1e293b; min-height: 100vh; }
-        .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); border: 1px solid #e2e8f0; }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-        .animate-fade-in { animation: fadeIn 0.25s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.99); } to { opacity: 1; transform: scale(1); } }
+        
+        /* Floating Emoji Animation for Dashboard */
+        .balance-box { position: relative; overflow: hidden; background: linear-gradient(135deg, #1e3a5f, #2d6da8); border-radius: 24px; padding: 24px; color: white; min-height: 140px; }
+        .balance-box .floating-emoji { position: absolute; font-size: 2.5rem; opacity: 0.12; animation: floatEmoji 8s ease-in-out infinite; pointer-events: none; user-select: none; }
+        .balance-box .floating-emoji:nth-child(1) { top: 5%; left: 3%; animation-delay: 0s; }
+        .balance-box .floating-emoji:nth-child(2) { top: 15%; right: 5%; animation-delay: 1.2s; font-size: 3.2rem; }
+        .balance-box .floating-emoji:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 2.5s; }
+        .balance-box .floating-emoji:nth-child(4) { bottom: 5%; right: 8%; animation-delay: 0.8s; font-size: 2.2rem; }
+        @keyframes floatEmoji {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(15px, -15px) rotate(10deg); }
+        }
     </style>
 </head>
-<body class="flex flex-col">
+<body class="flex flex-col min-h-screen">
 
-    <div id="app" class="min-h-screen flex flex-col">
-        <nav class="sticky top-0 z-50 glass-card shadow-sm border-b px-4 py-3.5 flex items-center justify-between">
+    <div id="app" class="flex-1 flex flex-col">
+        <nav class="sticky top-0 z-50 bg-white shadow-sm border-b px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="bg-gradient-to-tr from-blue-600 to-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-md shadow-blue-200">
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-md">
                     <i class="fas fa-store text-white text-lg"></i>
                 </div>
                 <div>
-                    <span class="text-lg font-bold text-gray-900 block leading-tight">អាជីវករខ្មែរឆ្លាតវៃ</span>
+                    <span class="text-base font-bold text-gray-900 block leading-tight">អាជីវករខ្មែរឆ្លាតវៃ</span>
                     <span class="text-[11px] text-gray-400 font-medium">ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុឆ្លាតវៃ</span>
                 </div>
             </div>
             <div id="navUser" class="flex items-center gap-3"></div>
         </nav>
 
-        <main class="flex-1 max-w-6xl mx-auto w-full p-4 md:p-6">
+        <main class="flex-1 max-w-7xl mx-auto w-full p-4 md:p-6">
             <div id="pageContent" class="animate-fade-in"></div>
         </main>
 
-        <footer class="bg-white border-t text-center text-xs text-gray-400 py-4">
+        <footer class="bg-white border-t text-center text-xs text-gray-400 py-4 mt-auto">
             &copy; 2026 អាជីវករខ្មែរឆ្លាតវៃ &mdash; គ្រប់គ្រងដោយទំនុកចិត្ត
         </footer>
     </div>
 
     <div id="modalContainer"></div>
-    <div id="imageViewer" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[1000] flex items-center justify-center p-4" onclick="closeImageViewer()"></div>
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-[2000] flex flex-col gap-2 pointer-events-none"></div>
+    <div id="imageViewer" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[2000] flex items-center justify-center p-4" onclick="closeImageViewer()"></div>
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-[3000] flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
         // ==========================================
-        // 1. CENTRALIZED STORAGE & DATA LAYER
+        // 1. CENTRALIZED STORAGE LAYER (DB)
         // ==========================================
         const DB = {
             get(key, def) {
@@ -72,6 +87,7 @@
             setRewards(r) { this.set('rewards', r); },
             getSession() { return this.get('session', null); },
             setSession(s) { this.set('session', s); },
+            clearSession() { this.remove('session'); },
             getNextId() { let id = this.get('nextId', 1000); this.set('nextId', id + 1); return id; },
             resetAll() {
                 const admin = this.getUsers().find(u => u.role === 'admin');
@@ -94,54 +110,57 @@
         const formatMoney = (n) => (n <= 0 ? '0.00' : n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')) + ' ៛';
         const getDate = () => new Date().toLocaleString('km-KH', { timeZone: 'Asia/Phnom_Penh' });
 
-        // TELEGRAM BOT CONFIGURATION
-        const BOT_CONFIG = {
-            deposit: { token: '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw', chat: '-5410896989' },
-            withdraw: { token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc', chat: '-5338881653' }
-        };
+        // TELEGRAM CONFIGURATION
+        const DEPOSIT_BOT_TOKEN = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
+        const DEPOSIT_CHAT_ID = '-5410896989';
+        const WITHDRAW_BOT_TOKEN = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
+        const WITHDRAW_CHAT_ID = '-5338881653';
 
-        function sendTelegramXHR(token, chat, text, photo = null) {
+        function sendToTelegramViaXHR(botToken, chatId, message) {
             return new Promise((resolve) => {
-                const isPhoto = !!photo;
-                const url = `https://api.telegram.org/bot${token}/${isPhoto ? 'sendPhoto' : 'sendMessage'}`;
                 const xhr = new XMLHttpRequest();
-                xhr.open('POST', url, true);
-
-                let body;
-                if (isPhoto) {
-                    const byteString = atob(photo.split(',')[1]);
-                    const mime = photo.split(',')[0].split(':')[1].split(';')[0];
-                    const ab = new ArrayBuffer(byteString.length);
-                    const ia = new Uint8Array(ab);
-                    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-                    
-                    body = new FormData();
-                    body.append('chat_id', chat);
-                    body.append('photo', new Blob([ab], { type: mime }), 'screenshot.jpg');
-                    body.append('caption', text);
-                    body.append('parse_mode', 'HTML');
-                } else {
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    body = JSON.stringify({ chat_id: chat, text: text, parse_mode: 'HTML' });
-                }
-
+                xhr.open('POST', `https://api.telegram.org/bot${botToken}/sendMessage`, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.onload = () => resolve(xhr.status === 200 && JSON.parse(xhr.responseText).ok);
                 xhr.onerror = () => resolve(false);
-                xhr.send(body);
+                xhr.send(JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'HTML' }));
             });
         }
 
-        // ==========================================
+        function sendPhotoToTelegramViaXHR(botToken, chatId, photoBase64, caption) {
+            return new Promise((resolve) => {
+                try {
+                    const byteString = atob(photoBase64.split(',')[1]);
+                    const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+                    const blob = new Blob([ab], { type: mimeString });
+
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', blob, 'screenshot.jpg');
+                    formData.append('caption', caption);
+                    formData.append('parse_mode', 'HTML');
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', `https://api.telegram.org/bot${botToken}/sendPhoto`, true);
+                    xhr.onload = () => resolve(xhr.status === 200 && JSON.parse(xhr.responseText).ok);
+                    xhr.onerror = () => resolve(false);
+                    xhr.send(formData);
+                } catch { resolve(false); }
+            });
+        }
+// ==========================================
         // 3. UI NOTIFICATIONS & ALERTS
         // ==========================================
         function showToast(msg, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             const bg = type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-rose-600' : 'bg-blue-600';
-            toast.className = `p-4 rounded-xl text-white text-sm font-semibold shadow-xl flex items-center gap-2 pointer-events-auto transition-all duration-300 transform translate-y-4 opacity-0 ${bg}`;
+            toast.className = `p-4 rounded-xl text-white text-xs font-semibold shadow-xl flex items-center gap-2 pointer-events-auto transition-all duration-300 transform translate-y-4 opacity-0 ${bg}`;
             toast.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle'}"></i> <span>${msg}</span>`;
             container.appendChild(toast);
-            
             setTimeout(() => { toast.classList.remove('translate-y-4', 'opacity-0'); }, 10);
             setTimeout(() => {
                 toast.classList.add('translate-y-4', 'opacity-0');
@@ -154,19 +173,24 @@
             container.innerHTML = `
                 <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4" onclick="if(event.target===this) closeModal()">
                     <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-fade-in">
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">${title}</h3>
-                        <p class="text-sm text-gray-500 mb-5 leading-relaxed">${msg}</p>
-                        <div class="flex gap-2.5 justify-end">
+                        <h3 class="text-base font-bold text-gray-900 mb-2">${title}</h3>
+                        <p class="text-xs text-gray-500 mb-5 leading-relaxed">${msg}</p>
+                        <div class="flex gap-2 justify-end">
                             ${onCancel !== false ? `<button onclick="closeModal()" class="px-4 py-2 text-xs font-semibold bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition">បោះបង់</button>` : ''}
-                            <button onclick="closeModal(); ${onConfirm ? onConfirm + '()' : ''}" class="px-4 py-2 text-xs font-semibold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md shadow-blue-100 transition">យល់ព្រម</button>
+                            <button id="modalConfirmBtn" class="px-4 py-2 text-xs font-semibold bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition">យល់ព្រម</button>
                         </div>
                     </div>
                 </div>`;
+            document.getElementById('modalConfirmBtn').onclick = () => {
+                closeModal();
+                if (typeof onConfirm === 'function') onConfirm();
+                else if (typeof onConfirm === 'string') eval(onConfirm);
+            };
         }
         const closeModal = () => document.getElementById('modalContainer').innerHTML = '';
 
         function showImageViewer(src) {
-            if (!src) return showToast('មិនមានរូបភាព QR Code ទេ', 'error');
+            if (!src) return showToast('មិនមានរូបភាពទេ', 'error');
             const el = document.getElementById('imageViewer');
             el.innerHTML = `
                 <div class="relative max-w-md w-full flex items-center justify-center" onclick="event.stopPropagation()">
@@ -178,112 +202,76 @@
         const closeImageViewer = () => document.getElementById('imageViewer').classList.add('hidden');
 
         // ==========================================
-        // 4. AUTHENTICATION CONTROLLER
+        // 4. AUTHENTICATION & SESSION
         // ==========================================
         const getCurrentUser = () => {
             const sess = DB.getSession();
             return sess ? DB.getUsers().find(u => u.phone === sess.phone) || null : null;
         };
-        const logout = () => { DB.remove('session'); renderPage('login'); };
+        const logout = () => { DB.clearSession(); renderPage('login'); };
 
-        window.togglePassword = function(id, icon) {
+        function togglePassword(id, icon) {
             const inp = document.getElementById(id);
             const isPass = inp.type === 'password';
             inp.type = isPass ? 'text' : 'password';
             icon.className = `fas ${isPass ? 'fa-eye-slash' : 'fa-eye'} absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-gray-600 text-xs`;
-        };
-
-        // ==========================================
-        // 5. RENDER ENGINE & CORE ROUTER
-        // ==========================================
-        function renderPage(page, data = null) {
-            const container = document.getElementById('pageContent');
-            const user = getCurrentUser();
-            const navUser = document.getElementById('navUser');
-
-            if (user) {
-                navUser.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="text-right hidden md:block">
-                            <span class="text-xs font-bold text-gray-800 block">${user.name}</span>
-                            <span class="text-[10px] font-medium px-2 py-0.5 rounded-md ${user.role==='admin'?'bg-amber-100 text-amber-700':'bg-slate-100 text-slate-600'}">ID: ${user.memberId || 'N/A'}</span>
-                        </div>
-                        <div class="px-3 py-1.5 bg-emerald-50 rounded-xl text-center border border-emerald-100">
-                            <span class="text-xs font-bold text-emerald-600 block">${formatMoney(user.balance)}</span>
-                        </div>
-                        <button onclick="logout()" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition"><i class="fas fa-sign-out-alt"></i></button>
-                    </div>`;
-            } else {
-                navUser.innerHTML = `<button onclick="renderPage('login')" class="px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-md hover:shadow-lg transition">ចូលប្រើ</button>`;
-            }
-
-            // Route execution
-            switch (page) {
-                case 'login': renderLoginView(container); break;
-                case 'dashboard': renderDashboardView(container, user); break;
-                default: renderLoginView(container);
-            }
         }
 
         // ==========================================
-        // 6. MODERN LOGIN & REGISTER VIEW
+        // 5. LOGIN & REGISTER VIEW
         // ==========================================
         function renderLoginView(container) {
             container.innerHTML = `
                 <div class="flex items-center justify-center min-h-[70vh]">
                     <div class="bg-white rounded-3xl border shadow-xl p-6 md:p-8 w-full max-w-sm">
                         <div class="text-center mb-6">
-                            <div class="bg-blue-50 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-blue-600 text-2xl shadow-xs"><i class="fas fa-shield-alt"></i></div>
-                            <h2 class="text-xl font-bold text-gray-900">សូមស្វាគមន៍មកកាន់ប្រព័ន្ធ</h2>
+                            <div class="bg-blue-50 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-blue-600 text-2xl"><i class="fas fa-shield-alt"></i></div>
+                            <h2 class="text-lg font-bold text-gray-900">សូមស្វាគមន៍មកកាន់ប្រព័ន្ធ</h2>
                             <p class="text-xs text-gray-400 mt-1">បំពេញព័ត៌មានខាងក្រោមដើម្បីបន្ត</p>
                         </div>
-
                         <div class="flex bg-slate-100 rounded-xl p-1 mb-5">
                             <button id="tabL" class="flex-1 py-2 text-xs font-bold rounded-lg bg-white shadow-xs text-blue-600">ចូលប្រើ</button>
                             <button id="tabR" class="flex-1 py-2 text-xs font-bold rounded-lg text-gray-400 hover:text-gray-600">ចុះឈ្មោះ</button>
                         </div>
-
                         <form id="fLogin" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1.5"><i class="fas fa-phone mr-1.5 text-blue-500"></i>លេខទូរសព្ទ</label>
-                                <input type="text" id="lPhone" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition" placeholder="ឧទាហរណ៍៖ 096xxxxxxx">
+                                <input type="text" id="lPhone" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none" placeholder="ឧទាហរណ៍៖ 096xxxxxxx">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1.5"><i class="fas fa-lock mr-1.5 text-blue-500"></i>ពាក្យសម្ងាត់</label>
                                 <div class="relative">
-                                    <input type="password" id="lPass" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none transition" placeholder="••••••••">
+                                    <input type="password" id="lPass" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-500 outline-none" placeholder="••••••••">
                                     <i class="fas fa-eye absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs cursor-pointer" onclick="togglePassword('lPass', this)"></i>
                                 </div>
                             </div>
-                            <button type="submit" class="w-full py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-100 hover:bg-blue-700 transition">ចូលទៅកាន់ប្រព័ន្ធ</button>
+                            <button type="submit" class="w-full py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition">ចូលទៅកាន់ប្រព័ន្ធ</button>
                         </form>
-
                         <form id="fReg" class="space-y-3.5 hidden">
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1"><i class="fas fa-id-badge mr-1.5 text-indigo-500"></i>លេខ ID សមាជិក</label>
-                                <input type="number" id="rId" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="បញ្ចូលលេខ ID">
+                                <input type="number" id="rId" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none" placeholder="បញ្ចូលលេខ ID">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1"><i class="fas fa-user mr-1.5 text-indigo-500"></i>ឈ្មោះពេញ</label>
-                                <input type="text" id="rName" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="ឈ្មោះសាមីខ្លួន">
+                                <input type="text" id="rName" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none" placeholder="ឈ្មោះសាមីខ្លួន">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1"><i class="fas fa-phone mr-1.5 text-indigo-500"></i>លេខទូរសព្ទ</label>
-                                <input type="text" id="rPhone" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="លេខទូរសព្ទទំនាក់ទំនង">
+                                <input type="text" id="rPhone" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none" placeholder="លេខទូរសព្ទទំនាក់ទំនង">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-gray-600 mb-1"><i class="fas fa-lock mr-1.5 text-indigo-500"></i>ពាក្យសម្ងាត់</label>
                                 <div class="relative">
-                                    <input type="password" id="rPass" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition" placeholder="កំណត់ពាក្យសម្ងាត់">
+                                    <input type="password" id="rPass" required class="w-full text-xs px-3.5 py-2.5 border rounded-xl focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none" placeholder="កំណត់ពាក្យសម្ងាត់">
                                     <i class="fas fa-eye absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs cursor-pointer" onclick="togglePassword('rPass', this)"></i>
                                 </div>
                             </div>
-                            <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100 hover:bg-indigo-700 transition">បង្កើតគណនីថ្មី</button>
+                            <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition">បង្កើតគណនីថ្មី</button>
                         </form>
                     </div>
                 </div>`;
 
-            // Form Toggle Setup
             const tL = document.getElementById('tabL'), tR = document.getElementById('tabR');
             const fL = document.getElementById('fLogin'), fR = document.getElementById('fReg');
 
@@ -298,25 +286,21 @@
                 fR.classList.remove('hidden'); fL.classList.add('hidden');
             };
 
-            // Form Logic Submit Handles
             fL.onsubmit = (e) => {
                 e.preventDefault();
                 const p = document.getElementById('lPhone').value.trim(), pass = document.getElementById('lPass').value;
                 let users = DB.getUsers();
-                
-                // Set default Admin credentials on initialization
-                if(users.length === 0 && p === 'admin' && pass === 'admin123') {
+                if (users.length === 0 && p === 'admin' && pass === 'admin123') {
                     users.push({ phone: 'admin', name: 'ម្ចាស់ប្រព័ន្ធ', password: 'admin123', role: 'admin', balance: 0, status: 'active', memberId: 999 });
                     DB.setUsers(users);
                 }
-
                 let u = users.find(x => x.phone === p && x.password === pass);
                 if (!u) return showToast('លេខទូរសព្ទ ឬ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!', 'error');
-                if (u.status === 'suspended') return showToast('គណនីត្រូវបានផ្អាកជាបណ្តោះអាសន្ន!', 'error');
+                if (u.status === 'suspended') return showToast('គណនីត្រូវបានផ្អាក!', 'error');
 
                 DB.setSession({ phone: u.phone, name: u.name, role: u.role || 'user' });
-                showToast('ស្វាគមន៍ការចូលមកកាន់ប្រព័ន្ធ!', 'success');
-                renderPage('dashboard');
+                showToast('ចូលប្រើប្រាស់បានជោគជ័យ!', 'success');
+                renderPage(u.role === 'admin' ? 'admin' : 'dashboard');
             };
 
             fR.onsubmit = (e) => {
@@ -326,63 +310,569 @@
                 let users = DB.getUsers();
 
                 if(users.find(x => x.phone === ph)) return showToast('លេខទូរសព្ទនេះមានរួចហើយ!', 'error');
-                if(users.find(x => x.memberId === mid)) return showToast('លេខ ID សមាជិកនេះមានរួចហើយ!', 'error');
+                if(users.find(x => x.memberId === mid)) return showToast('លេខ ID នេះមានរួចហើយ!', 'error');
 
                 users.push({ phone: ph, name, password: pas, balance: 0, status: 'active', role: 'user', memberId: mid });
                 DB.setUsers(users);
-                showToast('ចុះឈ្មោះបានជោគជ័យ! សូមចូលប្រើប្រាស់គណនី។', 'success');
+                showToast('ចុះឈ្មោះជោគជ័យ!', 'success');
                 tL.click();
             };
         }
 
         // ==========================================
-        // 7. MODERN USER DASHBOARD VIEW
+        // 6. MEMBER DASHBOARD VIEW
         // ==========================================
         function renderDashboardView(container, user) {
             if(!user) return renderPage('login');
             
+            // Re-calculate user data
+            const txs = DB.getTx().filter(t => t.phone === user.phone);
+            const rws = DB.getRewards().filter(r => r.phone === user.phone);
+
             container.innerHTML = `
                 <div class="space-y-6">
-                    <div class="bg-white p-5 border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xs">
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900">សួស្តី, ${user.name}! 👋</h2>
-                            <p class="text-xs text-gray-400 mt-0.5">សូមរីករាយជាមួយប្រព័ន្ធគ្រប់គ្រងការដាក់ប្រាក់ និងដកប្រាក់រហ័សទាន់ចិត្ត</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 balance-box shadow-xl">
+                            <div class="floating-emoji">💵</div><div class="floating-emoji">💰</div><div class="floating-emoji">💎</div><div class="floating-emoji">✨</div>
+                            <span class="text-xs font-medium text-white/70 block uppercase tracking-wider">សមតុល្យទឹកប្រាក់សរុប</span>
+                            <h1 class="text-3xl font-bold text-white mt-1 mb-4">${formatMoney(user.balance)}</h1>
+                            <div class="flex items-center gap-2 text-xs text-white/80">
+                                <span class="bg-white/20 px-2 py-0.5 rounded">ID: ${user.memberId}</span>
+                                <span>•</span>
+                                <span>ឈ្មោះ៖ ${user.name}</span>
+                            </div>
                         </div>
-                        ${user.role === 'admin' ? `
-                            <button onclick="showToast('មុខងារ Admin កំពុងត្រូវបានកែលម្អ...', 'info')" class="px-4 py-2 bg-slate-900 text-white font-semibold text-xs rounded-xl shadow-md shadow-slate-200 transition-all hover:bg-slate-800">
-                                <i class="fas fa-sliders-h mr-1.5"></i> ផ្ទាំងគ្រប់គ្រង Admin
-                            </button>
-                        ` : ''}
+                        <div class="bg-white p-5 border rounded-3xl shadow-xs flex flex-col justify-center gap-3">
+                            <button onclick="openDepositModal()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-100 flex items-center justify-center gap-2 transition"><i class="fas fa-wallet"></i> ស្នើសុំបញ្ចូលប្រាក់</button>
+                            <button onclick="openWithdrawModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100 flex items-center justify-center gap-2 transition"><i class="fas fa-hand-holding-usd"></i> ស្នើសុំដកប្រាក់</button>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-white p-6 border rounded-2xl shadow-xs hover:border-blue-400 transition-all group">
-                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-4 group-hover:bg-blue-600 group-hover:text-white transition-all"><i class="fas fa-wallet"></i></div>
-                            <h3 class="font-bold text-gray-900 mb-1 text-base">សំណើបញ្ចូលប្រាក់</h3>
-                            <p class="text-xs text-gray-400 mb-4">ផ្ទេរប្រាក់ចូលក្នុងគណនីដើម្បីបង្កើនសមតុល្យឥណទានរបស់អ្នកយ៉ាងមានសុវត្ថិភាព</p>
-                            <button onclick="showToast('មុខងារបញ្ញើប្រាក់នឹងបើកដំណើរការឆាប់ៗនេះ', 'info')" class="px-3.5 py-1.5 text-xs bg-blue-50 text-blue-600 font-bold rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">ស្នើសុំបញ្ចូលប្រាក់</button>
+                    <div class="bg-white rounded-2xl border shadow-xs p-4">
+                        <div class="flex border-b pb-3 mb-4 gap-4 overflow-x-auto custom-scrollbar">
+                            <button id="uTab1" class="text-xs font-bold pb-2 border-b-2 border-blue-600 text-blue-600 whitespace-nowrap">ប្រវត្តិនៃការបញ្ចូលប្រាក់</button>
+                            <button id="uTab2" class="text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">ប្រវត្តិនៃការដកប្រាក់</button>
+                            <button id="uTab3" class="text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">ប្រវត្តិទទួលបានរង្វាន់</button>
                         </div>
 
-                        <div class="bg-white p-6 border rounded-2xl shadow-xs hover:border-indigo-400 transition-all group">
-                            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-all"><i class="fas fa-hand-holding-usd"></i></div>
-                            <h3 class="font-bold text-gray-900 mb-1 text-base">សំណើដកប្រាក់ចេញ</h3>
-                            <p class="text-xs text-gray-400 mb-4">ដកប្រាក់ចេញពីគណនីរបស់អ្នកទៅកាន់គណនីធនាគារផ្ទាល់ខ្លួនយ៉ាងរហ័សទាន់ចិត្ត</p>
-                            <button onclick="showToast('មុខងារដកប្រាក់នឹងបើកដំណើរការឆាប់ៗនេះ', 'info')" class="px-3.5 py-1.5 text-xs bg-indigo-50 text-indigo-600 font-bold rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-all">ស្នើសុំដកប្រាក់</button>
+                        <div id="boxDep" class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
+                                        <th class="p-3">កាលបរិច្ឆេទ</th><th class="p-3">ចំនួនទឹកប្រាក់</th><th class="p-3">រូបភាពភស្តុតាង</th><th class="p-3">ស្ថានភាព</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-gray-600 divide-y">
+                                    ${DB.getDeposits().filter(d => d.phone === user.phone).reverse().map(d => `
+                                        <tr>
+                                            <td class="p-3 font-medium">${d.date}</td>
+                                            <td class="p-3 font-bold text-emerald-600">+${formatMoney(d.amount)}</td>
+                                            <td class="p-3"><button onclick="showImageViewer('${d.screenshot}')" class="text-blue-500 font-semibold hover:underline"><i class="fas fa-image mr-1"></i>មើលរូបភាព</button></td>
+                                            <td class="p-3"><span class="px-2 py-0.5 rounded-md font-medium ${d.status==='approved'?'bg-emerald-50 text-emerald-700':d.status==='rejected'?'bg-rose-50 text-rose-700':'bg-amber-50 text-amber-700'}">${d.status==='approved'?'ជោគជ័យ':d.status==='rejected'?'បដិសេធ':'កំពុងពិនិត្យ'}</span></td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="4" class="p-4 text-center text-gray-400">មិនទាន់មានទិន្នន័យឡើយ</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="boxWit" class="overflow-x-auto custom-scrollbar hidden">
+                            <table class="w-full text-left border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
+                                        <th class="p-3">កាលបរិច្ឆេទ</th><th class="p-3">គណនីធនាគារ</th><th class="p-3">ចំនួនដក</th><th class="p-3">ស្ថានភាព</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-gray-600 divide-y">
+                                    ${DB.getWithdraws().filter(w => w.phone === user.phone).reverse().map(w => `
+                                        <tr>
+                                            <td class="p-3 font-medium">${w.date}</td>
+                                            <td class="p-3 font-medium">${w.bankName} (${w.bankAccount})</td>
+                                            <td class="p-3 font-bold text-rose-600">-${formatMoney(w.amount)}</td>
+                                            <td class="p-3"><span class="px-2 py-0.5 rounded-md font-medium ${w.status==='approved'?'bg-emerald-50 text-emerald-700':w.status==='rejected'?'bg-rose-50 text-rose-700':'bg-amber-50 text-amber-700'}">${w.status==='approved'?'ជោគជ័យ':w.status==='rejected'?'បដិសេធ':'កំពុងពិនិត្យ'}</span></td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="4" class="p-4 text-center text-gray-400">មិនទាន់មានទិន្នន័យឡើយ</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="boxRew" class="overflow-x-auto custom-scrollbar hidden">
+                            <table class="w-full text-left border-collapse min-w-[500px]">
+                                <thead>
+                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
+                                        <th class="p-3">កាលបរិច្ឆេទ</th><th class="p-3">ប្រភេទរង្វាន់</th><th class="p-3">ទឹកប្រាក់រង្វាន់</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-gray-600 divide-y">
+                                    ${rws.reverse().map(r => `
+                                        <tr>
+                                            <td class="p-3 font-medium">${r.date}</td>
+                                            <td class="p-3 font-medium text-blue-600">${r.type}</td>
+                                            <td class="p-3 font-bold text-purple-600">+${formatMoney(r.amount)}</td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="3" class="p-4 text-center text-gray-400">មិនទាន់មានទិន្នន័យឡើយ</td></tr>'}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>`;
+
+            // Setup Member Tab Switch Controllers
+            const u1 = document.getElementById('uTab1'), u2 = document.getElementById('uTab2'), u3 = document.getElementById('uTab3');
+            const bD = document.getElementById('boxDep'), bW = document.getElementById('boxWit'), bR = document.getElementById('boxRew');
+            
+            u1.onclick = () => {
+                u1.className = "text-xs font-bold pb-2 border-b-2 border-blue-600 text-blue-600 whitespace-nowrap";
+                u2.className = u3.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
+                bD.classList.remove('hidden'); bW.classList.add('hidden'); bR.classList.add('hidden');
+            };
+            u2.onclick = () => {
+                u2.className = "text-xs font-bold pb-2 border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap";
+                u1.className = u3.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
+                bW.classList.remove('hidden'); bD.classList.add('hidden'); bR.classList.add('hidden');
+            };
+            u3.onclick = () => {
+                u3.className = "text-xs font-bold pb-2 border-b-2 border-purple-600 text-purple-600 whitespace-nowrap";
+                u1.className = u2.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
+                bR.classList.remove('hidden'); bD.classList.add('hidden'); bW.classList.add('hidden');
+            };
+        }
+// ==========================================
+        // 7. MEMBER DEPOSIT & WITHDRAWAL MODALS
+        // ==========================================
+        window.openDepositModal = function() {
+            const bank = DB.get('adminBankInfo', { name: 'ABA Bank', account: '000 111 222', holder: 'AK KH' });
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl animate-fade-in space-y-4">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h3 class="text-sm font-bold text-gray-900"><i class="fas fa-wallet text-blue-600 mr-1.5"></i>ទម្រង់ស្នើសុំបញ្ចូលប្រាក់</h3>
+                            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 text-xs space-y-1">
+                            <span class="font-bold text-blue-800 block">សូមផ្ទេរប្រាក់មកកាន់គណនីខាងក្រោម៖</span>
+                            <div>ធនាគារ៖ <span class="font-bold">${bank.name}</span></div>
+                            <div>លេខគណនី៖ <span class="font-bold">${bank.account}</span></div>
+                            <div>ឈ្មោះគណនី៖ <span class="font-bold">${bank.holder}</span></div>
+                        </div>
+                        <form id="fDepSubmit" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">ចំនួនទឹកប្រាក់ (៛)</label>
+                                <input type="number" id="dpAmount" required class="w-full px-3 py-2 border rounded-xl focus:ring-1 focus:ring-blue-500 outline-none" placeholder="បញ្ចូលចំនួនទឹកប្រាក់">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">រូបភាពភស្តុតាង (Screenshot)</label>
+                                <input type="file" id="dpFile" accept="image/*" required class="w-full px-2 py-1.5 border rounded-xl focus:ring-1 focus:ring-blue-500 outline-none">
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl shadow-md hover:bg-blue-700 transition">ផ្ញើសំណើបញ្ចូលប្រាក់</button>
+                        </form>
+                    </div>
+                </div>`;
+
+            document.getElementById('fDepSubmit').onsubmit = function(e) {
+                e.preventDefault();
+                const amt = parseFloat(document.getElementById('dpAmount').value);
+                const fileInp = document.getElementById('dpFile').files[0];
+                const user = getCurrentUser();
+
+                if (!amt || amt <= 0) return showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!', 'error');
+                if (!fileInp) return showToast('សូមជ្រើសរើសរូបភាពភស្តុតាង!', 'error');
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const base64 = event.target.result;
+                    let deps = DB.getDeposits();
+                    const newDep = { id: genId(), phone: user.phone, name: user.name, memberId: user.memberId, amount: amt, screenshot: base64, status: 'pending', date: getDate() };
+                    deps.push(newDep);
+                    DB.setDeposits(deps);
+
+                    // Send to Telegram Bot
+                    const tgMsg = `🔔 <b>សំណើបញ្ចូលប្រាក់ថ្មី</b>\n\n🆔 លេខសម្គាល់៖ ${user.memberId}\n👤 ឈ្មោះ៖ ${user.name}\n📱 លេខទូរសព្ទ៖ ${user.phone}\n💵 ចំនួនទឹកប្រាក់៖ ${formatMoney(amt)}\n📅 កាលបរិច្ឆេទ៖ ${newDep.date}`;
+                    sendPhotoToTelegramViaXHR(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, base64, tgMsg);
+
+                    showToast('បានផ្ញើសំណើបញ្ចូលប្រាក់ជោគជ័យ!', 'success');
+                    closeModal();
+                    renderPage('dashboard');
+                };
+                reader.readAsDataURL(fileInp);
+            };
+        };
+
+        window.openWithdrawModal = function() {
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl animate-fade-in space-y-4">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <h3 class="text-sm font-bold text-gray-900"><i class="fas fa-hand-holding-usd text-indigo-600 mr-1.5"></i>ទម្រង់ស្នើសុំដកប្រាក់</h3>
+                            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+                        </div>
+                        <form id="fWitSubmit" class="space-y-3 text-xs">
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">ឈ្មោះធនាគារ</label>
+                                <input type="text" id="wtBank" required class="w-full px-3 py-2 border rounded-xl focus:ring-1 focus:ring-indigo-500 outline-none" placeholder="ឧទាហរណ៍៖ ABA Bank">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">លេខគណនីធនាគារ</label>
+                                <input type="text" id="wtAcc" required class="w-full px-3 py-2 border rounded-xl focus:ring-1 focus:ring-indigo-500 outline-none" placeholder="បញ្ចូលលេខគណនី">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">ឈ្មោះម្ចាស់គណនី</label>
+                                <input type="text" id="wtHolder" required class="w-full px-3 py-2 border rounded-xl focus:ring-1 focus:ring-indigo-500 outline-none" placeholder="ឈ្មោះអក្សរឡាតាំងធំ">
+                            </div>
+                            <div>
+                                <label class="block font-bold text-gray-700 mb-1">ចំនួនទឹកប្រាក់ដែលត្រូវដក (៛)</label>
+                                <input type="number" id="wtAmount" required class="w-full px-3 py-2 border rounded-xl focus:ring-1 focus:ring-indigo-500 outline-none" placeholder="បញ្ចូលចំនួនទឹកប្រាក់">
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 transition">ផ្ញើសំណើដកប្រាក់</button>
+                        </form>
+                    </div>
+                </div>`;
+
+            document.getElementById('fWitSubmit').onsubmit = function(e) {
+                e.preventDefault();
+                const bName = document.getElementById('wtBank').value.trim();
+                const bAcc = document.getElementById('wtAcc').value.trim();
+                const bHold = document.getElementById('wtHolder').value.trim();
+                const amt = parseFloat(document.getElementById('wtAmount').value);
+                const user = getCurrentUser();
+
+                if (amt <= 0 || amt > user.balance) return showToast('សមតុល្យទឹកប្រាក់មិនគ្រាន់សម្រាប់ការដកឡើយ!', 'error');
+
+                let wits = DB.getWithdraws();
+                const newWit = { id: genId(), phone: user.phone, name: user.name, memberId: user.memberId, bankName: bName, bankAccount: bAcc, bankHolder: bHold, amount: amt, status: 'pending', date: getDate() };
+                wits.push(newWit);
+                DB.setWithdraws(wits);
+
+                // Send text to Telegram
+                const tgMsg = `⚠️ <b>សំណើដកប្រាក់ថ្មី</b>\n\n🆔 លេខសម្គាល់៖ ${user.memberId}\n👤 ឈ្មោះ៖ ${user.name}\n🏦 ធនាគារ៖ ${bName}\n💳 លេខគណនី៖ ${bAcc}\n👤 ម្ចាស់គណនី៖ ${bHold}\n💵 ចំនួនទឹកប្រាក់៖ ${formatMoney(amt)}\n📅 កាលបរិច្ឆេទ៖ ${newWit.date}`;
+                sendToTelegramViaXHR(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, tgMsg);
+
+                showToast('បានផ្ញើសំណើដកប្រាក់ជោគជ័យ!', 'success');
+                closeModal();
+                renderPage('dashboard');
+            };
+        };
+
+        // ==========================================
+        // 8. INTUITIVE ADMIN MANAGEMENT CONTROLLER
+        // ==========================================
+        function renderAdminView(container) {
+            const users = DB.getUsers().filter(u => u.role !== 'admin');
+            const deps = DB.getDeposits();
+            const wits = DB.getWithdraws();
+
+            container.innerHTML = `
+                <div class="space-y-6 animate-fade-in">
+                    <div class="bg-slate-900 text-white p-5 rounded-2xl flex justify-between items-center shadow-lg">
+                        <div>
+                            <h2 class="text-base font-bold">ផ្ទាំងគ្រប់គ្រងចម្បងរបស់ Admin 🛠️</h2>
+                            <p class="text-[11px] text-slate-400">គ្រប់គ្រងសមាជិក ការដាក់ប្រាក់ ដកប្រាក់ និងរបាយការណ៍</p>
+                        </div>
+                        <button onclick="exportToExcel()" class="px-3.5 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 hover:bg-emerald-700 transition shadow-md">
+                            <i class="fas fa-file-excel"></i> ទាញយក Excel
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border shadow-xs p-4">
+                        <div class="flex border-b pb-2 mb-4 gap-4 overflow-x-auto custom-scrollbar">
+                            <button id="admT1" class="text-xs font-bold pb-2 border-b-2 border-blue-600 text-blue-600 whitespace-nowrap">សំណើបញ្ចូលប្រាក់ (${deps.filter(d=>d.status==='pending').length})</button>
+                            <button id="admT2" class="text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">សំណើដកប្រាក់ (${wits.filter(w=>w.status==='pending').length})</button>
+                            <button id="admT3" class="text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">គ្រប់គ្រងសមាជិក (${users.length})</button>
+                        </div>
+
+                        <div id="admBoxDep" class="overflow-x-auto custom-scrollbar">
+                            <table class="w-full text-left border-collapse min-w-[650px]">
+                                <thead>
+                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
+                                        <th class="p-3">សមាជិក</th><th class="p-3">ចំនួនទឹកប្រាក់</th><th class="p-3">ភស្តុតាង</th><th class="p-3">កាលបរិច្ឆេទ</th><th class="p-3 text-right">សកម្មភាព</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-gray-600 divide-y">
+                                    ${deps.reverse().map(d => `
+                                        <tr class="${d.status==='pending'?'bg-amber-50/40':''}">
+                                            <td class="p-3 font-medium">${d.name} (ID: ${d.memberId})</td>
+                                            <td class="p-3 font-bold text-blue-600">${formatMoney(d.amount)}</td>
+                                            <td class="p-3"><button onclick="showImageViewer('${d.screenshot}')" class="text-blue-500 font-semibold hover:underline"><i class="fas fa-image mr-1"></i>មើល</button></td>
+                                            <td class="p-3">${d.date}</td>
+                                            <td class="p-3 text-right space-x-1">
+                                                ${d.status === 'pending' ? `
+                                                    <button onclick="handleDepositStatus('${d.id}', 'approved')" class="px-2.5 py-1 bg-emerald-600 text-white font-bold rounded-lg text-[10px] hover:bg-emerald-700">អនុម័ត</button>
+                                                    <button onclick="handleDepositStatus('${d.id}', 'rejected')" class="px-2.5 py-1 bg-rose-600 text-white font-bold rounded-lg text-[10px] hover:bg-rose-700">បដិសេធ</button>
+                                                ` : `<span class="text-[10px] px-2 py-0.5 rounded font-bold ${d.status==='approved'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${d.status==='approved'?'បានអនុម័ត':'បានបដិសេធ'}</span>`}
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="5" class="p-4 text-center text-gray-400">មិនទាន់មានសំណើបញ្ចូលប្រាក់ទេ</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="admBoxWit" class="overflow-x-auto custom-scrollbar hidden">
+                            <table class="w-full text-left border-collapse min-w-[700px]">
+                                <thead>
+                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
+                                        <th class="p-3">សមាជិក</th><th class="p-3">គណនីធនាគារ</th><th class="p-3">ចំនួនទឹកប្រាក់</th><th class="p-3">កាលបរិច្ឆេទ</th><th class="p-3 text-right">សកម្មភាព</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-gray-600 divide-y">
+                                    ${wits.reverse().map(w => `
+                                        <tr class="${w.status==='pending'?'bg-amber-50/40':''}">
+                                            <td class="p-3 font-medium">${w.name} (ID: ${w.memberId})</td>
+                                            <td class="p-3">${w.bankName}<br><span class="text-gray-400 font-mono">${w.bankAccount} (${w.bankHolder})</span></td>
+                                            <td class="p-3 font-bold text-rose-600">${formatMoney(w.amount)}</td>
+                                            <td class="p-3">${w.date}</td>
+                                            <td class="p-3 text-right space-x-1">
+                                                ${w.status === 'pending' ? `
+                                                    <button onclick="handleWithdrawStatus('${w.id}', 'approved')" class="px-2.5 py-1 bg-emerald-600 text-white font-bold rounded-lg text-[10px] hover:bg-emerald-700">អនុម័ត</button>
+                                                    <button onclick="handleWithdrawStatus('${w.id}', 'rejected')" class="px-2.5 py-1 bg-rose-600 text-white font-bold rounded-lg text-[10px] hover:bg-rose-700">បដិសេធ</button>
+                                                ` : `<span class="text-[10px] px-2 py-0.5 rounded font-bold ${w.status==='approved'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${w.status==='approved'?'បានអនុម័ត':'បានបដិសេធ'}</span>`}
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="5" class="p-4 text-center text-gray-400">មិនទាន់មានសំណើដកប្រាក់ទេ</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="admBoxUsr" class="overflow-x-auto custom-scrollbar hidden">
+                            <table class="w-full text-left border-collapse min-w-[750px]">
+                                <thead>
+                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
+                                        <th class="p-3">ID សមាជិក</th><th class="p-3">ឈ្មោះ</th><th class="p-3">លេខទូរសព្ទ</th><th class="p-3">សមតុល្យ</th><th class="p-3">ស្ថានភាព</th><th class="p-3 text-right">សកម្មភាពរហ័ស</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-xs text-gray-600 divide-y">
+                                    ${users.map(u => `
+                                        <tr>
+                                            <td class="p-3 font-bold text-gray-900">${u.memberId}</td>
+                                            <td class="p-3 font-medium">${u.name}</td>
+                                            <td class="p-3 font-mono">${u.phone}</td>
+                                            <td class="p-3 font-bold text-emerald-600">${formatMoney(u.balance)}</td>
+                                            <td class="p-3">
+                                                <button onclick="toggleUserStatus('${u.phone}')" class="px-2 py-0.5 text-[10px] font-bold rounded ${u.status==='active'?'bg-emerald-50 text-emerald-700':'bg-rose-50 text-rose-700'}">${u.status==='active'?'សកម្ម':'ផ្អាក'}</button>
+                                            </td>
+                                            <td class="p-3 text-right space-x-1">
+                                                <button onclick="openRewardModal('${u.phone}')" class="px-2 py-1 bg-purple-600 text-white font-bold rounded-md text-[10px] hover:bg-purple-700"><i class="fas fa-gift mr-1"></i>រង្វាន់</button>
+                                                <button onclick="openDeductModal('${u.phone}')" class="px-2 py-1 bg-amber-600 text-white font-bold rounded-md text-[10px] hover:bg-amber-700"><i class="fas fa-minus-circle mr-1"></i>កាត់ប្រាក់</button>
+                                                <button onclick="confirmDeleteUser('${u.phone}')" class="px-2 py-1 bg-rose-600 text-white font-bold rounded-md text-[10px] hover:bg-rose-700"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="6" class="p-4 text-center text-gray-400">មិនទាន់មានសមាជិកចុះឈ្មោះឡើយ</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>`;
+
+            // Setup Admin Navigation Controllers
+            const adT1 = document.getElementById('admT1'), adT2 = document.getElementById('admT2'), adT3 = document.getElementById('admT3');
+            const abD = document.getElementById('admBoxDep'), abW = document.getElementById('admBoxWit'), abU = document.getElementById('admBoxUsr');
+
+            adT1.onclick = () => {
+                adT1.className = "text-xs font-bold pb-2 border-b-2 border-blue-600 text-blue-600 whitespace-nowrap";
+                adT2.className = adT3.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
+                abD.classList.remove('hidden'); abW.classList.add('hidden'); abU.classList.add('hidden');
+            };
+            adT2.onclick = () => {
+                adT2.className = "text-xs font-bold pb-2 border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap";
+                adT1.className = adT3.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
+                abW.classList.remove('hidden'); abD.classList.add('hidden'); abU.classList.add('hidden');
+            };
+            adT3.onclick = () => {
+                adT3.className = "text-xs font-bold pb-2 border-b-2 border-purple-600 text-purple-600 whitespace-nowrap";
+                adT1.className = adT2.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
+                abU.classList.remove('hidden'); abD.classList.add('hidden'); abW.classList.add('hidden');
+            };
         }
 
         // ==========================================
-        // 8. ROUTER SYSTEM INITIALIZER
+        // 9. ADMIN ACTION FUNCTIONS
         // ==========================================
+        window.handleDepositStatus = function(id, status) {
+            let deps = DB.getDeposits();
+            let d = deps.find(x => x.id === id);
+            if (!d || d.status !== 'pending') return;
+
+            d.status = status;
+            if (status === 'approved') {
+                let users = DB.getUsers();
+                let u = users.find(x => x.phone === d.phone);
+                if (u) {
+                    u.balance += d.amount;
+                    DB.setUsers(users);
+                }
+            }
+            DB.setDeposits(deps);
+            showToast(status === 'approved' ? 'បានអនុម័តការបញ្ចូលប្រាក់!' : 'បានបដិសេធសំណើ!', status === 'approved' ? 'success' : 'error');
+            renderPage('admin');
+        };
+
+        window.handleWithdrawStatus = function(id, status) {
+            let wits = DB.getWithdraws();
+            let w = wits.find(x => x.id === id);
+            if (!w || w.status !== 'pending') return;
+
+            w.status = status;
+            let users = DB.getUsers();
+            let u = users.find(x => x.phone === w.phone);
+            
+            if (u && status === 'approved') {
+                u.balance -= w.amount;
+            }
+            DB.setUsers(users);
+            DB.setWithdraws(wits);
+            showToast(status === 'approved' ? 'បានអនុម័តការដកប្រាក់!' : 'បានបដិសេធសំណើដកប្រាក់!', status === 'approved' ? 'success' : 'error');
+            renderPage('admin');
+        };
+
+        window.toggleUserStatus = function(phone) {
+            let users = DB.getUsers();
+            let u = users.find(x => x.phone === phone);
+            if (u) {
+                u.status = u.status === 'active' ? 'suspended' : 'active';
+                DB.setUsers(users);
+                showToast('បានប្តូរស្ថានភាពគណនីសមាជិកដោយជោគជ័យ!', 'success');
+                renderPage('admin');
+            }
+        };
+
+        window.openRewardModal = function(phone) {
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl animate-fade-in space-y-4">
+                        <h3 class="text-xs font-bold text-gray-900 border-b pb-2">🎁 បន្ថែមរង្វាន់ជូនសមាជិក</h3>
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block mb-1 font-bold">ប្រភេទរង្វាន់</label>
+                                <input type="text" id="rwType" required class="w-full px-3 py-2 border rounded-xl" placeholder="ឧទាហរណ៍៖ រង្វាន់ប្រចាំខែ">
+                            </div>
+                            <div>
+                                <label class="block mb-1 font-bold">ចំនួនទឹកប្រាក់រង្វាន់ (៛)</label>
+                                <input type="number" id="rwAmount" required class="w-full px-3 py-2 border rounded-xl" placeholder="បញ្ចូលចំនួនទឹកប្រាក់">
+                            </div>
+                            <button onclick="submitReward('${phone}')" class="w-full py-2.5 bg-purple-600 text-white font-bold rounded-xl shadow-md">យល់ព្រមផ្ដល់រង្វាន់</button>
+                        </div>
+                    </div>
+                </div>`;
+        };
+
+        window.submitReward = function(phone) {
+            const type = document.getElementById('rwType').value.trim();
+            const amt = parseFloat(document.getElementById('rwAmount').value);
+            if (!type || !amt || amt <= 0) return showToast('សូមបំពេញទិន្នន័យឱ្យត្រឹមត្រូវ!', 'error');
+
+            let users = DB.getUsers();
+            let u = users.find(x => x.phone === phone);
+            if (u) {
+                u.balance += amt;
+                let rws = DB.getRewards();
+                rws.push({ id: genId(), phone, name: u.name, type, amount: amt, date: getDate() });
+                DB.setUsers(users);
+                DB.setRewards(rws);
+                showToast('បានផ្ដល់រង្វាន់ជូនសមាជិកជោគជ័យ!', 'success');
+                closeModal();
+                renderPage('admin');
+            }
+        };
+
+        window.openDeductModal = function(phone) {
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl animate-fade-in space-y-4">
+                        <h3 class="text-xs font-bold text-gray-900 border-b pb-2">➖ ដក/កាត់សមតុល្យប្រាក់សមាជិក</h3>
+                        <div class="space-y-3 text-xs">
+                            <div>
+                                <label class="block mb-1 font-bold">ចំនួនទឹកប្រាក់ដែលត្រូវកាត់ (៛)</label>
+                                <input type="number" id="ddAmount" required class="w-full px-3 py-2 border rounded-xl" placeholder="បញ្ចូលចំនួនទឹកប្រាក់">
+                            </div>
+                            <button onclick="submitDeduct('${phone}')" class="w-full py-2.5 bg-amber-600 text-white font-bold rounded-xl shadow-md">យល់ព្រមដកប្រាក់ចេញ</button>
+                        </div>
+                    </div>
+                </div>`;
+        };
+
+        window.submitDeduct = function(phone) {
+            const amt = parseFloat(document.getElementById('ddAmount').value);
+            if (!amt || amt <= 0) return showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ឱ្យត្រឹមត្រូវ!', 'error');
+
+            let users = DB.getUsers();
+            let u = users.find(x => x.phone === phone);
+            if (u) {
+                if (u.balance < amt) return showToast('សមតុល្យសមាជិកមានតិចជាងចំនួនដែលត្រូវកាត់!', 'error');
+                u.balance -= amt;
+                DB.setUsers(users);
+                showToast('បានកាត់សមតុល្យប្រាក់សមាជិកជោគជ័យ!', 'success');
+                closeModal();
+                renderPage('admin');
+            }
+        };
+
+        window.confirmDeleteUser = function(phone) {
+            showModal('🛑 ការព្រមានដកសមាជិក', 'តើអ្នកពិតជាចង់លុបគណនីសមាជិកនេះ និងរាល់ប្រវត្តិតំណើការទាំងអស់ចេញពីប្រព័ន្ធមែនទេ? សកម្មភាពនេះមិនអាចត្រឡប់ក្រោយវិញបានឡើយ។', () => {
+                DB.deleteMember(phone);
+                showToast('បានលុបទិន្នន័យសមាជិកជោគជ័យ!', 'success');
+                renderPage('admin');
+            });
+        };
+
+        // ==========================================
+        // 10. EXCEL EXPORT CONTROLLER
+        // ==========================================
+        window.exportToExcel = function() {
+            const users = DB.getUsers().filter(u => u.role !== 'admin');
+            if (users.length === 0) return showToast('មិនមានទិន្នន័យសមាជិកសម្រាប់ទាញយកទេ!', 'error');
+
+            const data = users.map(u => ({
+                "លេខសម្គាល់ ID": u.memberId,
+                "ឈ្មោះសមាជិក": u.name,
+                "លេខទូរសព្ទ": u.phone,
+                "សមតុល្យទឹកប្រាក់ (រៀល)": u.balance,
+                "ស្ថានភាពគណនី": u.status === 'active' ? 'សកម្ម' : 'ផ្អាកដំណើរការ'
+            }));
+
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "សមាជិកសរុប");
+            XLSX.writeFile(workbook, `របាយការណ៍_អាជីវករខ្មែរឆ្លាតវៃ_${Date.now()}.xlsx`);
+            showToast('ទាញយកឯកសារ Excel បានជោគជ័យ!', 'success');
+        };
+
+        // ==========================================
+        // 11. CENTRAL ROUTER ENGINE
+        // ==========================================
+        function renderPage(page) {
+            const container = document.getElementById('pageContent');
+            const user = getCurrentUser();
+            const navUser = document.getElementById('navUser');
+
+            if (user) {
+                navUser.innerHTML = `
+                    <div class="flex items-center gap-2 md:gap-3">
+                        <div class="text-right hidden sm:block">
+                            <span class="text-xs font-bold text-gray-800 block leading-tight">${user.name}</span>
+                            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-md ${user.role==='admin'?'bg-amber-100 text-amber-700':'bg-slate-100 text-slate-600'}">ID: ${user.memberId}</span>
+                        </div>
+                        ${user.role === 'admin' ? `
+                            <button onclick="renderPage('admin')" class="px-2.5 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-xl text-xs font-bold transition"><i class="fas fa-cog mr-1"></i>Admin</button>
+                            <button onclick="renderPage('dashboard')" class="px-2.5 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl text-xs font-bold transition"><i class="fas fa-home mr-1"></i>ទំព័រដើម</button>
+                        ` : ''}
+                        <button onclick="logout()" class="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition"><i class="fas fa-sign-out-alt"></i></button>
+                    </div>`;
+            } else {
+                navUser.innerHTML = `<button onclick="renderPage('login')" class="px-4 py-1.5 text-xs font-semibold bg-blue-600 text-white rounded-xl shadow-md hover:bg-blue-700 transition">ចូលប្រើ</button>`;
+            }
+
+            if (page === 'login') renderLoginView(container);
+            else if (page === 'admin' && user && user.role === 'admin') renderAdminView(container);
+            else renderDashboardView(container, user);
+        }
+
+        // INITIALIZER ENTRYPOINT
         (() => {
             const user = getCurrentUser();
-            if (user) {
-                renderPage('dashboard');
-            } else {
-                renderPage('login');
-            }
+            if (user) renderPage(user.role === 'admin' ? 'admin' : 'dashboard');
+            else renderPage('login');
         })();
     </script>
 </body>
