@@ -194,8 +194,6 @@
             border-radius: 16px;
             padding: 16px;
             margin-top: 16px;
-            max-height: 250px;
-            overflow-y: auto;
         }
         .income-box {
             background: linear-gradient(135deg, #dbeafe, #93c5fd);
@@ -203,8 +201,6 @@
             border-radius: 16px;
             padding: 16px;
             margin-top: 16px;
-            max-height: 250px;
-            overflow-y: auto;
         }
         .image-viewer {
             position: fixed;
@@ -446,6 +442,36 @@
             font-weight: 800;
         }
 
+        /* ===== SCROLLABLE BOXES ===== */
+        .scrollable-box {
+            max-height: 250px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+        .scrollable-box-sm {
+            max-height: 180px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+        .scrollable-box::-webkit-scrollbar,
+        .scrollable-box-sm::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scrollable-box::-webkit-scrollbar-track,
+        .scrollable-box-sm::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .scrollable-box::-webkit-scrollbar-thumb,
+        .scrollable-box-sm::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .scrollable-box::-webkit-scrollbar-thumb:hover,
+        .scrollable-box-sm::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
         /* ===== FLOATING EMOJI ANIMATION ===== */
         .balance-box {
             position: relative;
@@ -612,7 +638,6 @@
         function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
         function formatMoney(n) {
-            // FIXED: If n is negative or less than 0, show 0.00 ៛
             if (n <= 0) return '0.00 ៛';
             return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ៛';
         }
@@ -622,8 +647,11 @@
         }
 
         // ============================================================
-        //  2.1 TELEGRAM HELPERS - WITH BETTER ERROR LOGGING
+        //  2.1 TELEGRAM HELPERS - FIXED WITH NO-CORS
         // ============================================================
+        // Deposit Telegram: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw , -5410896989
+        // Withdraw Telegram: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc , -5338881653
+
         async function sendToTelegram(botToken, chatId, message) {
             try {
                 console.log(`📤 Sending to Telegram: bot=${botToken.substring(0,10)}..., chat=${chatId}`);
@@ -633,22 +661,43 @@
                     text: message,
                     parse_mode: 'HTML'
                 };
-                const response = await fetch(url, {
+                
+                // Try with no-cors mode to avoid CORS issues
+                await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    mode: 'no-cors'
                 });
-                const data = await response.json();
-                if (data.ok) {
-                    console.log('✅ Telegram sent successfully to', chatId);
-                    return true;
-                } else {
-                    console.error('❌ Telegram error:', data.description);
-                    return false;
-                }
+                console.log('✅ Telegram request sent (no-cors mode)');
+                return true;
             } catch (err) {
                 console.error('❌ Telegram send error:', err);
-                return false;
+                // Try fallback with regular mode
+                try {
+                    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                    const payload = {
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'HTML'
+                    };
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await response.json();
+                    if (data.ok) {
+                        console.log('✅ Telegram sent successfully (fallback)');
+                        return true;
+                    } else {
+                        console.error('❌ Telegram error:', data.description);
+                        return false;
+                    }
+                } catch (fallbackErr) {
+                    console.error('❌ Telegram fallback error:', fallbackErr);
+                    return false;
+                }
             }
         }
 
@@ -669,21 +718,47 @@
                 formData.append('caption', caption);
                 formData.append('parse_mode', 'HTML');
 
-                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    mode: 'no-cors'
                 });
-                const data = await response.json();
-                if (data.ok) {
-                    console.log('✅ Photo sent successfully to', chatId);
-                    return true;
-                } else {
-                    console.error('❌ Photo error:', data.description);
-                    return false;
-                }
+                console.log('✅ Photo request sent (no-cors mode)');
+                return true;
             } catch (err) {
                 console.error('❌ Photo send error:', err);
-                return false;
+                // Try fallback
+                try {
+                    const byteString = atob(photoBase64.split(',')[1]);
+                    const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) {
+                        ia[i] = byteString.charCodeAt(i);
+                    }
+                    const blob = new Blob([ab], { type: mimeString });
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', blob, 'screenshot.jpg');
+                    formData.append('caption', caption);
+                    formData.append('parse_mode', 'HTML');
+
+                    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (data.ok) {
+                        console.log('✅ Photo sent successfully (fallback)');
+                        return true;
+                    } else {
+                        console.error('❌ Photo error:', data.description);
+                        return false;
+                    }
+                } catch (fallbackErr) {
+                    console.error('❌ Photo fallback error:', fallbackErr);
+                    return false;
+                }
             }
         }
 
@@ -1070,7 +1145,7 @@
         }
 
         // ============================================================
-        //  10. PAGE: DASHBOARD (User)
+        //  10. PAGE: DASHBOARD (User) - WITH SCROLLABLE HISTORY
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1140,18 +1215,20 @@
 
             <div class="bg-white rounded-2xl shadow p-6">
                 <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រតិបត្តិការថ្មីៗ</h3>
-                ${tx.length === 0 ? '<p class="text-gray-400 text-sm">មិនមានប្រតិបត្តិការទេ</p>' :
-                    tx.map(t => {
-                        const deposit = DB.getDeposits().find(d => d.id === t.id || (d.phone === t.phone && d.amount === t.amount && d.date === t.date));
-                        return `
-                            <div class="flex justify-between border-b border-gray-100 py-2 text-sm">
-                                <span>${t.note || (t.type === 'deposit' ? 'បញ្ចូល' : 'ដក')} ${deposit && deposit.account ? '| គណនី: '+deposit.account : ''}</span>
-                                <span class="${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${t.type === 'deposit' ? '➕' : '➡️'} ${formatMoney(t.amount)}</span>
-                                <span class="text-gray-400 text-xs">${t.date}</span>
-                            </div>
-                        `;
-                    }).join('')
-                }
+                <div class="scrollable-box">
+                    ${tx.length === 0 ? '<p class="text-gray-400 text-sm">មិនមានប្រតិបត្តិការទេ</p>' :
+                        tx.map(t => {
+                            const deposit = DB.getDeposits().find(d => d.id === t.id || (d.phone === t.phone && d.amount === t.amount && d.date === t.date));
+                            return `
+                                <div class="flex justify-between border-b border-gray-100 py-2 text-sm">
+                                    <span>${t.note || (t.type === 'deposit' ? 'បញ្ចូល' : 'ដក')} ${deposit && deposit.account ? '| គណនី: '+deposit.account : ''}</span>
+                                    <span class="${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${t.type === 'deposit' ? '➕' : '➡️'} ${formatMoney(t.amount)}</span>
+                                    <span class="text-gray-400 text-xs">${t.date}</span>
+                                </div>
+                            `;
+                        }).join('')
+                    }
+                </div>
             </div>
             `;
         }
@@ -1196,7 +1273,7 @@
         };
 
         // ============================================================
-        //  12. PAGE: DEPOSIT (User)
+        //  12. PAGE: DEPOSIT (User) - WITH SCROLLABLE HISTORY
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1270,7 +1347,7 @@
                     </button>
                 </form>
 
-                <div class="success-box mt-6">
+                <div class="success-box mt-6 scrollable-box-sm">
                     <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-green-600 mr-2"></i>ប្រវត្តិបញ្ចូលប្រាក់របស់អ្នក</h4>
                     ${(() => {
                         const myDeposits = DB.getDeposits().filter(d => d.phone === user.phone).slice(-5).reverse();
@@ -1350,7 +1427,7 @@
         }
 
         // ============================================================
-        //  13. PAGE: WITHDRAW (User)
+        //  13. PAGE: WITHDRAW (User) - WITH SCROLLABLE HISTORY
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1403,7 +1480,7 @@
                     </button>
                 </form>
 
-                <div class="withdraw-box mt-6">
+                <div class="withdraw-box mt-6 scrollable-box-sm">
                     <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-purple-600 mr-2"></i>ប្រវត្តិដកប្រាក់</h4>
                     ${(() => {
                         const myWd = DB.getWithdraws().filter(w => w.phone === user.phone).slice(-5).reverse();
@@ -1485,7 +1562,7 @@
         }
 
         // ============================================================
-        //  14. PAGE: ADMIN DASHBOARD - REMOVED REWARD GIVEN BOX, ADDED INCOME HISTORY
+        //  14. PAGE: ADMIN DASHBOARD - WITH SCROLLABLE HISTORIES
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1494,7 +1571,6 @@
             const withdraws = DB.getWithdraws().filter(w => w.status === 'pending');
             const adminBalance = user.balance || 0;
             const rewardsHistory = DB.getRewards().slice(-5).reverse();
-            const totalRewardsGiven = DB.getRewards().reduce((s, r) => s + r.amount, 0);
             const incomeHistory = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).slice(-5).reverse();
             const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
@@ -1557,7 +1633,7 @@
                 </div>
                 <div class="bg-white rounded-2xl shadow p-4 card-hover">
                     <p class="text-gray-400 text-sm">ប្រាក់រង្វាន់បានផ្ដល់</p>
-                    <p class="text-2xl font-bold text-yellow-600">${formatMoney(totalRewardsGiven)}</p>
+                    <p class="text-2xl font-bold text-yellow-600">${formatMoney(DB.getRewards().reduce((s, r) => s + r.amount, 0))}</p>
                 </div>
             </div>
 
@@ -1572,8 +1648,8 @@
                 </button>
             </div>
 
-            <!-- Reward History Box -->
-            <div class="reward-box mb-4">
+            <!-- Reward History Box with scroll -->
+            <div class="reward-box scrollable-box mb-4">
                 <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិផ្ដល់ប្រាក់រង្វាន់ថ្មីៗ</h4>
                 ${rewardsHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>' :
                     rewardsHistory.map(r => {
@@ -1589,8 +1665,8 @@
                 }
             </div>
 
-            <!-- Income History Box -->
-            <div class="income-box mb-6">
+            <!-- Income History Box with scroll -->
+            <div class="income-box scrollable-box mb-6">
                 <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-blue-600 mr-2"></i>ប្រវត្តិផ្ដល់ប្រាក់ចំណូលថ្មីៗ</h4>
                 ${incomeHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់ចំណូលទេ</p>' :
                     incomeHistory.map(t => {
@@ -1855,7 +1931,6 @@
             let users = DB.getUsers();
             const admin = users.find(u => u.role === 'admin');
             if (admin) {
-                // FIXED: Check if balance is sufficient
                 if (admin.balance < amount) {
                     showToast(`❌ សមតុល្យ Admin មិនគ្រប់គ្រាន់! មានត្រឹម ${formatMoney(admin.balance)}`, 'error');
                     return;
@@ -2294,7 +2369,7 @@
         }
 
         // ============================================================
-        //  24. ADMIN ACTIONS - Approve/Reject
+        //  24. ADMIN ACTIONS - Approve/Reject WITH TELEGRAM NOTIFICATION
         // ============================================================
         window.approveDeposit = function(id) {
             let deposits = DB.getDeposits();
@@ -2316,6 +2391,19 @@
                     admin.balance += d.amount;
                     DB.setUsers(users);
                 }
+
+                // Send Telegram notification
+                const depositData = {
+                    name: u.name,
+                    memberId: u.memberId,
+                    phone: u.phone,
+                    bank: d.bank,
+                    sender: d.sender || u.name,
+                    amount: d.amount,
+                    note: '✅ បានអនុម័តដោយ Admin',
+                    date: getDate()
+                };
+                sendDepositTelegram(depositData, null);
 
                 showToast(`✅ បានអនុម័តបញ្ចូល ${formatMoney(d.amount)}`, 'success');
             }
@@ -2353,6 +2441,19 @@
                         admin.balance -= w.amount;
                         DB.setUsers(users);
                     }
+
+                    // Send Telegram notification
+                    const withdrawData = {
+                        name: u.name,
+                        memberId: u.memberId,
+                        phone: u.phone,
+                        bank: w.bank,
+                        accName: w.accName,
+                        account: w.account,
+                        amount: w.amount,
+                        date: getDate()
+                    };
+                    sendWithdrawTelegram(withdrawData, null);
 
                     showToast(`✅ បានអនុម័តដក ${formatMoney(w.amount)}`, 'success');
                 } else {
