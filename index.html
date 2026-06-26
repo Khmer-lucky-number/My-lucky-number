@@ -716,9 +716,36 @@
             }
         }
 
-        // Send deposit notification to Telegram
+        // ============================================================
+        //  2.2 TELEGRAM NOTIFICATION TO MEMBER
+        // ============================================================
+        async function sendNotificationToMember(memberPhone, message) {
+            const users = DB.getUsers();
+            const member = users.find(u => u.phone === memberPhone);
+            if (!member) {
+                console.log('មិនឃើញសមាជិក:', memberPhone);
+                return false;
+            }
+            
+            const adminMessage = `
+📱 <b>ការជូនដំណឹងទៅសមាជិក</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${member.name}
+🆔 ID: ${member.memberId || 'N/A'}
+📱 ទូរសព្ទ: ${member.phone}
+💬 សារ: ${message}
+━━━━━━━━━━━━━━━
+⏰ ${getDate()}
+            `;
+            
+            return await sendToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, adminMessage);
+        }
+
+        // ============================================================
+        //  2.3 SEND DEPOSIT & WITHDRAW NOTIFICATIONS
+        // ============================================================
         async function sendDepositTelegram(depositData, screenshotBase64) {
-            const message = `
+            const adminMessage = `
 📥 <b>សំណើបញ្ចូលប្រាក់</b>
 ━━━━━━━━━━━━━━━
 👤 ឈ្មោះ: ${depositData.name}
@@ -736,10 +763,24 @@
             try {
                 let result;
                 if (screenshotBase64) {
-                    result = await sendPhotoToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, screenshotBase64, message);
+                    result = await sendPhotoToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, screenshotBase64, adminMessage);
                 } else {
-                    result = await sendToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, message);
+                    result = await sendToTelegram(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, adminMessage);
                 }
+                
+                // ផ្ញើសារជូនដំណឹងទៅសមាជិក
+                const memberMessage = `
+📢 <b>ការជូនដំណឹងអំពីការបញ្ចូលប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${depositData.name}
+💰 ចំនួន: ${formatMoney(depositData.amount)}
+⏰ កាលបរិច្ឆេទ: ${depositData.date}
+📝 ស្ថានភាព: <b>⏳ រង់ចាំការអនុម័តពី Admin</b>
+━━━━━━━━━━━━━━━
+✅ សូមរង់ចាំការបញ្ជាក់ពី Admin!
+                `;
+                await sendNotificationToMember(depositData.phone, memberMessage);
+                
                 if (result) {
                     showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
                 } else {
@@ -753,9 +794,8 @@
             }
         }
 
-        // Send withdraw notification to Telegram
         async function sendWithdrawTelegram(withdrawData, screenshotBase64) {
-            const message = `
+            const adminMessage = `
 📤 <b>សំណើដកប្រាក់</b>
 ━━━━━━━━━━━━━━━
 👤 ឈ្មោះ: ${withdrawData.name}
@@ -773,10 +813,26 @@
             try {
                 let result;
                 if (screenshotBase64) {
-                    result = await sendPhotoToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, screenshotBase64, message);
+                    result = await sendPhotoToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, screenshotBase64, adminMessage);
                 } else {
-                    result = await sendToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, message);
+                    result = await sendToTelegram(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, adminMessage);
                 }
+                
+                // ផ្ញើសារជូនដំណឹងទៅសមាជិក
+                const memberMessage = `
+📢 <b>ការជូនដំណឹងអំពីការដកប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${withdrawData.name}
+💰 ចំនួន: ${formatMoney(withdrawData.amount)}
+🏦 ធនាគារ: ${withdrawData.bank}
+🏦 លេខគណនី: ${withdrawData.account}
+⏰ កាលបរិច្ឆេទ: ${withdrawData.date}
+📝 ស្ថានភាព: <b>⏳ រង់ចាំការអនុម័តពី Admin</b>
+━━━━━━━━━━━━━━━
+✅ សូមរង់ចាំការបញ្ជាក់ពី Admin!
+                `;
+                await sendNotificationToMember(withdrawData.phone, memberMessage);
+                
                 if (result) {
                     showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
                 } else {
@@ -1178,7 +1234,7 @@
         }
 
         // ============================================================
-        //  11. PAGE: DEPOSIT (User)
+        //  11. PAGE: DEPOSIT (User) - FIXED
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1247,7 +1303,7 @@
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-pen text-blue-500 mr-2"></i>បញ្ជាក់បន្ថែម (ស្រេចចិត្ត)</label>
                         <textarea id="depNote" rows="2" placeholder="បញ្ជាក់ពីការផ្ញើប្រាក់..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-400 outline-none"></textarea>
                     </div>
-                    <button type="submit" class="w-full btn-success text-white font-semibold py-3 rounded-xl transition">
+                    <button type="submit" id="depositSubmitBtn" class="w-full btn-success text-white font-semibold py-3 rounded-xl transition">
                         <i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើទៅ Admin
                     </button>
                 </form>
@@ -1281,8 +1337,13 @@
                 }
             };
 
+            // ====== FIXED: Deposit Form Submit ======
             document.getElementById('depositForm').onsubmit = async (e) => {
                 e.preventDefault();
+                const btn = document.getElementById('depositSubmitBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+
                 const bank = document.getElementById('depBank').value;
                 const sender = document.getElementById('depSender').value.trim();
                 const account = document.getElementById('depAccount').value.trim();
@@ -1292,6 +1353,8 @@
 
                 if (!sender || !amount || amount <= 0) {
                     showToast('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើទៅ Admin';
                     return;
                 }
 
@@ -1329,12 +1392,14 @@
                 showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
                 document.getElementById('depositForm').reset();
                 document.getElementById('depositScreenshotPreview').innerHTML = '';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើទៅ Admin';
                 renderPage('deposit');
             };
         }
 
         // ============================================================
-        //  12. PAGE: WITHDRAW (User)
+        //  12. PAGE: WITHDRAW (User) - FIXED
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1377,12 +1442,12 @@
                         <input type="number" id="wdAmount" placeholder="50000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" />
                     </div>
                     <div class="mb-3">
-                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-image text-blue-500 mr-2"></i>រូបភាពថតអេក្រង់ (Screenshot)</label>
+                        <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-qrcode text-purple-500 mr-2"></i>ប្រអប់បញ្ចូល QR Code ទូទាត់របស់អ្នក</label>
                         <input type="file" id="wdScreenshot" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-400 outline-none" onchange="previewWithdrawScreenshot(this)" />
-                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាពថតអេក្រង់នៃ QR code របស់អ្នក</p>
+                        <p class="text-xs text-gray-400 mt-1">សូមភ្ជាប់រូបភាព QR Code សម្រាប់ទទួលប្រាក់របស់អ្នក (ABA, Wing, True Money, ។ល។)</p>
                         <div id="withdrawScreenshotPreview" class="mt-2"></div>
                     </div>
-                    <button type="submit" class="w-full btn-purple text-white font-semibold py-3 rounded-xl transition">
+                    <button type="submit" id="withdrawSubmitBtn" class="w-full btn-purple text-white font-semibold py-3 rounded-xl transition">
                         <i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់
                     </button>
                 </form>
@@ -1416,8 +1481,13 @@
                 }
             };
 
+            // ====== FIXED: Withdraw Form Submit ======
             document.getElementById('withdrawForm').onsubmit = async (e) => {
                 e.preventDefault();
+                const btn = document.getElementById('withdrawSubmitBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+
                 const bank = document.getElementById('wdBank').value;
                 const accName = document.getElementById('wdName').value.trim();
                 const account = document.getElementById('wdAccount').value.trim();
@@ -1426,10 +1496,14 @@
 
                 if (!accName || !account || !amount || amount <= 0) {
                     showToast('សូមបំពេញព័ត៌មានឲ្យត្រឹមត្រូវ!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់';
                     return;
                 }
                 if (amount > user.balance) {
                     showToast('❌ សមតុល្យមិនគ្រប់គ្រាន់!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់';
                     return;
                 }
 
@@ -1466,6 +1540,8 @@
                 showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
                 document.getElementById('withdrawForm').reset();
                 document.getElementById('withdrawScreenshotPreview').innerHTML = '';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> ផ្ញើសំណើដកប្រាក់';
                 renderPage('withdraw');
             };
         }
@@ -1890,7 +1966,7 @@
         };
 
         // ============================================================
-        //  17. PAGE: ADMIN DEPOSIT APPROVAL
+        //  17. PAGE: ADMIN DEPOSIT APPROVAL (WITH NOTIFICATION)
         // ============================================================
         function renderAdminDeposit(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1926,7 +2002,7 @@
         }
 
         // ============================================================
-        //  18. PAGE: ADMIN WITHDRAW APPROVAL
+        //  18. PAGE: ADMIN WITHDRAW APPROVAL (WITH NOTIFICATION)
         // ============================================================
         function renderAdminWithdraw(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2011,7 +2087,7 @@
         }
 
         // ============================================================
-        //  20. PAGE: ADMIN REWARD
+        //  20. PAGE: ADMIN REWARD (WITH NOTIFICATION)
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2047,7 +2123,7 @@
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-pen text-blue-500 mr-2"></i>កំណត់សម្គាល់ (ស្រេចចិត្ត)</label>
                         <input type="text" id="rewardNote" placeholder="ឧទាហរណ៍: រង្វាន់ពិសេស" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none" />
                     </div>
-                    <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-xl transition">
+                    <button type="submit" id="rewardSubmitBtn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 rounded-xl transition">
                         <i class="fas fa-gift mr-2"></i> ផ្ដល់ប្រាក់រង្វាន់
                     </button>
                 </form>
@@ -2070,12 +2146,18 @@
 
             document.getElementById('rewardForm').onsubmit = async (e) => {
                 e.preventDefault();
+                const btn = document.getElementById('rewardSubmitBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+
                 const phone = document.getElementById('rewardMember').value;
                 const amount = parseInt(document.getElementById('rewardAmount').value.trim());
                 const note = document.getElementById('rewardNote').value.trim() || 'ប្រាក់រង្វាន់ពី Admin';
 
                 if (!amount || amount <= 0) {
                     showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ឲ្យបានត្រឹមត្រូវ!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-gift mr-2"></i> ផ្ដល់ប្រាក់រង្វាន់';
                     return;
                 }
 
@@ -2085,11 +2167,15 @@
 
                 if (!member) {
                     showToast('មិនរកឃើញសមាជិក!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-gift mr-2"></i> ផ្ដល់ប្រាក់រង្វាន់';
                     return;
                 }
 
                 if (admin.balance < amount) {
                     showToast('❌ សមតុល្យ Admin មិនគ្រប់គ្រាន់!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-gift mr-2"></i> ផ្ដល់ប្រាក់រង្វាន់';
                     return;
                 }
 
@@ -2110,25 +2196,28 @@
                 
                 addTransaction(member.phone, 'deposit', amount, `ប្រាក់រង្វាន់: ${note}`);
 
-                const depositData = {
-                    name: member.name,
-                    memberId: member.memberId,
-                    phone: member.phone,
-                    bank: 'ប្រាក់រង្វាន់',
-                    sender: 'Admin',
-                    amount: amount,
-                    note: note,
-                    date: getDate()
-                };
-                await sendDepositTelegram(depositData, null);
+                // ====== Send notification to member ======
+                const memberMessage = `
+🎁 <b>ប្រាក់រង្វាន់ពី Admin</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${member.name}
+💰 ចំនួន: ${formatMoney(amount)}
+📝 កំណត់សម្គាល់: ${note}
+⏰ ${getDate()}
+━━━━━━━━━━━━━━━
+🎉 សូមអបអរសាទរ! អ្នកបានទទួលប្រាក់រង្វាន់!
+                `;
+                await sendNotificationToMember(member.phone, memberMessage);
 
                 showToast(`✅ បានផ្ដល់ប្រាក់រង្វាន់ ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-gift mr-2"></i> ផ្ដល់ប្រាក់រង្វាន់';
                 renderPage('adminReward');
             };
         }
 
         // ============================================================
-        //  21. PAGE: ADMIN INCOME
+        //  21. PAGE: ADMIN INCOME (WITH NOTIFICATION)
         // ============================================================
         function renderAdminIncome(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2164,7 +2253,7 @@
                         <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-pen text-blue-500 mr-2"></i>កំណត់សម្គាល់ (ស្រេចចិត្ត)</label>
                         <input type="text" id="incomeNote" placeholder="ឧទាហរណ៍: ចំណូលប្រចាំខែ" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />
                     </div>
-                    <button type="submit" class="w-full btn-primary text-white font-semibold py-3 rounded-xl transition">
+                    <button type="submit" id="incomeSubmitBtn" class="w-full btn-primary text-white font-semibold py-3 rounded-xl transition">
                         <i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល
                     </button>
                 </form>
@@ -2187,12 +2276,18 @@
 
             document.getElementById('incomeForm').onsubmit = async (e) => {
                 e.preventDefault();
+                const btn = document.getElementById('incomeSubmitBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> កំពុងផ្ញើ...';
+
                 const phone = document.getElementById('incomeMember').value;
                 const amount = parseInt(document.getElementById('incomeAmount').value.trim());
                 const note = document.getElementById('incomeNote').value.trim() || 'ប្រាក់ចំណូលពី Admin';
 
                 if (!amount || amount <= 0) {
                     showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ឲ្យបានត្រឹមត្រូវ!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល';
                     return;
                 }
 
@@ -2202,11 +2297,15 @@
 
                 if (!member) {
                     showToast('មិនរកឃើញសមាជិក!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល';
                     return;
                 }
 
                 if (admin.balance < amount) {
                     showToast('❌ សមតុល្យ Admin មិនគ្រប់គ្រាន់!', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល';
                     return;
                 }
 
@@ -2215,27 +2314,30 @@
                 DB.setUsers(users);
                 addTransaction(member.phone, 'deposit', amount, `ប្រាក់ចំណូល: ${note}`);
 
-                const depositData = {
-                    name: member.name,
-                    memberId: member.memberId,
-                    phone: member.phone,
-                    bank: 'ប្រាក់ចំណូល',
-                    sender: 'Admin',
-                    amount: amount,
-                    note: note,
-                    date: getDate()
-                };
-                await sendDepositTelegram(depositData, null);
+                // ====== Send notification to member ======
+                const memberMessage = `
+💰 <b>ប្រាក់ចំណូលពី Admin</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${member.name}
+💰 ចំនួន: ${formatMoney(amount)}
+📝 កំណត់សម្គាល់: ${note}
+⏰ ${getDate()}
+━━━━━━━━━━━━━━━
+🎉 សូមអបអរសាទរ! អ្នកបានទទួលប្រាក់ចំណូល!
+                `;
+                await sendNotificationToMember(member.phone, memberMessage);
 
                 showToast(`✅ បានផ្ដល់ប្រាក់ចំណូល ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល';
                 renderPage('adminIncome');
             };
         }
 
         // ============================================================
-        //  22. ADMIN ACTIONS - Approve/Reject
+        //  22. ADMIN ACTIONS - Approve/Reject (WITH MEMBER NOTIFICATION)
         // ============================================================
-        window.approveDeposit = function(id) {
+        window.approveDeposit = async function(id) {
             let deposits = DB.getDeposits();
             const idx = deposits.findIndex(d => d.id === id);
             if (idx === -1) return;
@@ -2256,34 +2358,54 @@
                     DB.setUsers(users);
                 }
 
-                const depositData = {
-                    name: u.name,
-                    memberId: u.memberId,
-                    phone: u.phone,
-                    bank: d.bank,
-                    sender: d.sender || u.name,
-                    amount: d.amount,
-                    note: '✅ បានអនុម័តដោយ Admin',
-                    date: getDate()
-                };
-                sendDepositTelegram(depositData, null);
+                // ====== Send notification to member ======
+                const memberMessage = `
+✅ <b>ការបញ្ជាក់ពីការបញ្ចូលប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${u.name}
+💰 ចំនួន: ${formatMoney(d.amount)}
+📝 ស្ថានភាព: <b>✅ បានអនុម័តដោយ Admin</b>
+⏰ ${getDate()}
+━━━━━━━━━━━━━━━
+🎉 សូមអបអរសាទរ! ប្រាក់របស់អ្នកត្រូវបានបញ្ចូលដោយជោគជ័យ!
+                `;
+                await sendNotificationToMember(d.phone, memberMessage);
 
                 showToast(`✅ បានអនុម័តបញ្ចូល ${formatMoney(d.amount)}`, 'success');
             }
             renderPage('adminDeposit');
         };
 
-        window.rejectDeposit = function(id) {
+        window.rejectDeposit = async function(id) {
             let deposits = DB.getDeposits();
             const idx = deposits.findIndex(d => d.id === id);
             if (idx === -1) return;
-            deposits[idx].status = 'rejected';
+            const d = deposits[idx];
+            d.status = 'rejected';
             DB.setDeposits(deposits);
+            
+            // ====== Send notification to member ======
+            const users = DB.getUsers();
+            const u = users.find(u => u.phone === d.phone);
+            if (u) {
+                const memberMessage = `
+❌ <b>ការបដិសេធពីការបញ្ចូលប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${u.name}
+💰 ចំនួន: ${formatMoney(d.amount)}
+📝 ស្ថានភាព: <b>❌ ត្រូវបានបដិសេធដោយ Admin</b>
+⏰ ${getDate()}
+━━━━━━━━━━━━━━━
+⚠️ សូមពិនិត្យមើលព័ត៌មានរបស់អ្នក ហើយព្យាយាមម្តងទៀត!
+                `;
+                await sendNotificationToMember(d.phone, memberMessage);
+            }
+            
             showToast('❌ បានបដិសេធ', 'error');
             renderPage('adminDeposit');
         };
 
-        window.approveWithdraw = function(id) {
+        window.approveWithdraw = async function(id) {
             let withdraws = DB.getWithdraws();
             const idx = withdraws.findIndex(w => w.id === id);
             if (idx === -1) return;
@@ -2305,17 +2427,20 @@
                         DB.setUsers(users);
                     }
 
-                    const withdrawData = {
-                        name: u.name,
-                        memberId: u.memberId,
-                        phone: u.phone,
-                        bank: w.bank,
-                        accName: w.accName,
-                        account: w.account,
-                        amount: w.amount,
-                        date: getDate()
-                    };
-                    sendWithdrawTelegram(withdrawData, null);
+                    // ====== Send notification to member ======
+                    const memberMessage = `
+✅ <b>ការបញ្ជាក់ពីការដកប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${u.name}
+💰 ចំនួន: ${formatMoney(w.amount)}
+🏦 ធនាគារ: ${w.bank}
+🏦 លេខគណនី: ${w.account}
+📝 ស្ថានភាព: <b>✅ បានអនុម័តដោយ Admin</b>
+⏰ ${getDate()}
+━━━━━━━━━━━━━━━
+🎉 សូមអបអរសាទរ! ប្រាក់របស់អ្នកត្រូវបានដកដោយជោគជ័យ!
+                    `;
+                    await sendNotificationToMember(w.phone, memberMessage);
 
                     showToast(`✅ បានអនុម័តដក ${formatMoney(w.amount)}`, 'success');
                 } else {
@@ -2326,12 +2451,33 @@
             renderPage('adminWithdraw');
         };
 
-        window.rejectWithdraw = function(id) {
+        window.rejectWithdraw = async function(id) {
             let withdraws = DB.getWithdraws();
             const idx = withdraws.findIndex(w => w.id === id);
             if (idx === -1) return;
-            withdraws[idx].status = 'rejected';
+            const w = withdraws[idx];
+            w.status = 'rejected';
             DB.setWithdraws(withdraws);
+            
+            // ====== Send notification to member ======
+            const users = DB.getUsers();
+            const u = users.find(u => u.phone === w.phone);
+            if (u) {
+                const memberMessage = `
+❌ <b>ការបដិសេធពីការដកប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${u.name}
+💰 ចំនួន: ${formatMoney(w.amount)}
+🏦 ធនាគារ: ${w.bank}
+🏦 លេខគណនី: ${w.account}
+📝 ស្ថានភាព: <b>❌ ត្រូវបានបដិសេធដោយ Admin</b>
+⏰ ${getDate()}
+━━━━━━━━━━━━━━━
+⚠️ សូមពិនិត្យមើលព័ត៌មានរបស់អ្នក ហើយព្យាយាមម្តងទៀត!
+                `;
+                await sendNotificationToMember(w.phone, memberMessage);
+            }
+            
             showToast('❌ បានបដិសេធ', 'error');
             renderPage('adminWithdraw');
         };
