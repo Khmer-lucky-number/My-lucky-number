@@ -1,832 +1,2174 @@
 <!DOCTYPE html>
 <html lang="km">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក និងហិរញ្ញវត្ថុទំនើប</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- SheetJS CDN (សម្រាប់ Export Excel) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- Google Fonts (Khmer & Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>អាជីវករខ្មែរឆ្លាតវៃ - ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុ</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Khmer&family=Battambang:wght@400;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
+        * {
+            font-family: 'Battambang', 'Khmer', sans-serif;
+        }
         body {
-            font-family: 'Kantumruy Pro', 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #f0f2f5 0%, #e8ecf1 100%);
+            min-height: 100vh;
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 5px; height: 5px;
+        .card-hover:hover {
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 10px; }
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            border: 2px solid #10b981;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1; border-radius: 10px;
+        .deposit-info {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 12px;
+            padding: 16px;
         }
+        .qr-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #e2e8f0;
+            border: 2px dashed #94a3b8;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .qr-placeholder:hover {
+            transform: scale(1.05);
+            border-color: #3b82f6;
+        }
+        .qr-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .withdraw-box {
+            background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+            border: 2px solid #8b5cf6;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-box img {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 12px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            animation: slideUp 0.4s ease;
+            max-width: 400px;
+        }
+        .toast-success { background: linear-gradient(135deg, #10b981, #059669); }
+        .toast-error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .toast-info { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s ease;
+        }
+        .password-toggle:hover {
+            color: #3b82f6;
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 44px;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #475569;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .back-btn:hover {
+            background: #cbd5e1;
+            transform: translateX(-4px);
+        }
+        .back-btn i {
+            font-size: 16px;
+        }
+        .member-id-badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: white;
+            padding: 8px 0;
+            border-radius: 12px;
+        }
+        .page-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+        .reward-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .income-box {
+            background: linear-gradient(135deg, #dbeafe, #93c5fd);
+            border: 2px solid #3b82f6;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .image-viewer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            cursor: pointer;
+            animation: fadeIn 0.3s ease;
+        }
+        .image-viewer img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .image-viewer .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 32px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .image-viewer .close-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box input {
+            padding-left: 40px;
+        }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .balance-big {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+        @media (max-width: 640px) {
+            .balance-big {
+                font-size: 1.8rem;
+            }
+        }
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+        .btn-with-badge {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: #0088cc;
+            color: white;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .telegram-btn:hover {
+            background: #006699;
+            transform: scale(1.05);
+        }
+        .danger-btn {
+            background: #dc2626;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+        .danger-btn:hover {
+            background: #b91c1c;
+            transform: scale(1.05);
+        }
+        .reset-btn {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        .reset-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        .admin-action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .yellow-btn {
+            background: #eab308;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+        .yellow-btn:hover {
+            background: #ca8a04;
+            transform: scale(1.05);
+        }
+        .member-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+        .member-table-container table {
+            width: 100%;
+        }
+        .member-table-container thead {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            transition: all 0.3s ease;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+        }
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            transition: all 0.3s ease;
+        }
+        .btn-purple:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+        }
+        .btn-danger-gradient {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            transition: all 0.3s ease;
+        }
+        .btn-danger-gradient:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        .delete-balance-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .delete-balance-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: scale(1.05);
+        }
+        .screenshot-preview {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            margin-top: 8px;
+            object-fit: cover;
+        }
+        .screenshot-thumb {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .screenshot-thumb:hover {
+            transform: scale(1.05);
+            border-color: #3b82f6;
+        }
+        .balance-zero {
+            color: #ef4444;
+        }
+        .balance-amount {
+            font-weight: 800;
+        }
+
+        /* ===== SCROLLABLE BOXES ===== */
+        .scrollable-box {
+            max-height: 250px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+        .scrollable-box-sm {
+            max-height: 180px;
+            overflow-y: auto;
+            border-radius: 12px;
+        }
+        .scrollable-box::-webkit-scrollbar,
+        .scrollable-box-sm::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scrollable-box::-webkit-scrollbar-track,
+        .scrollable-box-sm::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .scrollable-box::-webkit-scrollbar-thumb,
+        .scrollable-box-sm::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .scrollable-box::-webkit-scrollbar-thumb:hover,
+        .scrollable-box-sm::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* ===== FLOATING EMOJI ANIMATION ===== */
         .balance-box {
-            background: linear-gradient(135deg, #1e40af 0%, #312e81 100%);
-            color: white; position: relative; overflow: hidden;
-            border-radius: 24px; padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e3a5f, #2d6da8);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            min-height: 140px;
         }
-        .floating-emoji {
-            position: absolute; font-size: 3rem; opacity: 0.04; pointer-events: none;
+        .balance-box .floating-emoji {
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.15;
+            animation: floatEmoji 8s ease-in-out infinite;
+            pointer-events: none;
+            user-select: none;
         }
-        .floating-emoji:nth-child(1) { top: -10px; left: -10px; }
-        .floating-emoji:nth-child(2) { bottom: -10px; right: -10px; }
-        .floating-emoji:nth-child(3) { top: 40%; left: 50%; }
-        .floating-emoji:nth-child(4) { top: 10%; right: 20%; }
+        .balance-box .floating-emoji:nth-child(1) { top: 5%; left: 3%; animation-delay: 0s; }
+        .balance-box .floating-emoji:nth-child(2) { top: 15%; right: 5%; animation-delay: 1.2s; font-size: 3.2rem; }
+        .balance-box .floating-emoji:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 2.5s; }
+        .balance-box .floating-emoji:nth-child(4) { bottom: 5%; right: 8%; animation-delay: 0.8s; font-size: 2.2rem; }
+        .balance-box .floating-emoji:nth-child(5) { top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 1.8s; font-size: 5rem; opacity: 0.07; }
+        .balance-box .floating-emoji:nth-child(6) { top: 8%; left: 45%; animation-delay: 3.2s; font-size: 1.8rem; }
+        .balance-box .floating-emoji:nth-child(7) { bottom: 30%; right: 15%; animation-delay: 0.4s; font-size: 2rem; }
+        .balance-box .floating-emoji:nth-child(8) { top: 60%; left: 5%; animation-delay: 2.0s; font-size: 2.8rem; }
+        .balance-box .floating-emoji:nth-child(9) { bottom: 10%; left: 50%; animation-delay: 3.8s; font-size: 2.4rem; }
+        .balance-box .floating-emoji:nth-child(10) { top: 30%; right: 30%; animation-delay: 1.0s; font-size: 1.6rem; }
+
+        @keyframes floatEmoji {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            20% { transform: translate(20px, -25px) rotate(12deg) scale(1.1); }
+            40% { transform: translate(-15px, 20px) rotate(-8deg) scale(0.9); }
+            60% { transform: translate(25px, 15px) rotate(10deg) scale(1.05); }
+            80% { transform: translate(-10px, -15px) rotate(-5deg) scale(0.95); }
+            100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        }
+        /* ===== END FLOATING EMOJI ===== */
+
+        .balance-box .balance-content {
+            position: relative;
+            z-index: 2;
+        }
+        .balance-box .balance-big {
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 640px) {
+            .balance-box .balance-big {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col antialiased">
+<body>
 
-    <!-- 1. TOP GLOBAL NAVIGATION HEADER -->
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-[1000] border-b border-slate-100">
-        <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+    <div id="app" class="min-h-screen flex flex-col">
+
+        <nav class="bg-white shadow-md border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-200">
-                    <i class="fas fa-chart-pie text-xs"></i>
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
+                    <i class="fas fa-store text-white text-xl"></i>
                 </div>
-                <span class="text-xs font-bold text-gray-900 tracking-wide">FINANCE<span class="text-blue-600">HUB</span></span>
+                <div>
+                    <span class="text-xl font-bold text-gray-800">អាជីវករខ្មែរឆ្លាតវៃ</span>
+                    <span class="hidden sm:inline-block text-xs text-gray-400 ml-2">ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុ</span>
+                </div>
             </div>
-            <div id="navUser">
-                <!-- Dynamic injection of profile view state via controller inside JS area -->
-            </div>
+            <div id="navUser" class="flex items-center gap-3"></div>
+        </nav>
+
+        <div class="flex-1 max-w-7xl mx-auto w-full p-4">
+            <div id="pageContent"></div>
         </div>
-    </nav>
 
-    <!-- 2. CENTRAL LAYOUT MAIN AREA ROUTER CONTROLLER -->
-    <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6" id="pageContent">
-        <!-- Application views loader content framework grid template targets container -->
-    </main>
+        <div id="modalContainer"></div>
 
-    <!-- TOAST NOTIFICATION ALERTS ARCHITECTURE FRAMEWORK SYSTEM POPUPS CONTAINER -->
-    <div id="toastContainer" class="fixed top-16 right-4 z-[2000] space-y-2 pointer-events-none"></div>
-    <div id="modalContainer" class="relative z-[1500]"></div>
+        <div id="imageViewer" class="hidden"></div>
 
-    <!-- FULL SCREEN INTERACTIVE IMAGE PROOF VIEWER MODAL ARCHITECTURE LAYOUT FRAMEWORK -->
-    <div id="imageViewer" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[3000] hidden flex items-center justify-center p-4 animate-fade-in" onclick="if(event.target===this) closeImageViewer()">
-        <!-- Inject view frame container wrapper context directly via click handler triggers logic inside controllers layers -->
+        <div id="toastContainer"></div>
+
+        <footer class="bg-white border-t border-gray-200 text-center text-sm text-gray-400 py-4">
+            © 2026 អាជីវករខ្មែរឆ្លាតវៃ — ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុឆ្លាតវៃ
+        </footer>
     </div>
 
     <script>
-        // ==========================================
-        // TELEGRAM CHANNELS CONFIGURATION LOGIC DATA SYSTEM
-        // ==========================================
-        const DEPOSIT_BOT_TOKEN = "7942704153:AAFX7q1Yx9u-Z66mDov3G2B6K8M9zS4wP-g";
-        const DEPOSIT_CHAT_ID = "-1002251347065";
-        const WITHDRAW_BOT_TOKEN = "7620455850:AAGL2n1zB36YxNod1bTveZ04Q8M9P1F-LwE";
-        const WITHDRAW_CHAT_ID = "-1002361131102";
-
-        // ==========================================
-        // 1. DATA CORE ARCHITECTURE ENGINE LABELS SYSTEM (LOCAL STORAGE INTERACTION LAYER)
-        // ==========================================
+        // ============================================================
+        //  1. DATA LAYER
+        // ============================================================
         const DB = {
-            get: (k, def) => JSON.parse(localStorage.getItem(k)) || def,
-            set: (k, v) => localStorage.setItem(k, JSON.stringify(v)),
-            getUsers: () => DB.get('sys_users', []),
-            setUsers: (u) => DB.set('sys_users', u),
-            getDeposits: () => DB.get('sys_deposits', []),
-            setDeposits: (d) => DB.set('sys_deposits', d),
-            getWithdraws: () => DB.get('sys_withdraws', []),
-            setWithdraws: (w) => DB.set('sys_withdraws', w),
-            getRewards: () => DB.get('sys_rewards', []),
-            setRewards: (r) => DB.set('sys_rewards', r),
-            getSession: () => DB.get('sys_session', null),
-            setSession: (s) => DB.set('sys_session', s),
-            clearSession: () => localStorage.removeItem('sys_session'),
-            getNextId: () => {
-                let id = parseInt(localStorage.getItem('sys_next_id')) || 1001;
-                localStorage.setItem('sys_next_id', id + 1);
-                return id;
+            get(key, def) {
+                try {
+                    const raw = localStorage.getItem('ak_' + key);
+                    return raw ? JSON.parse(raw) : def;
+                } catch { return def; }
             },
-            deleteMember: (phone) => {
-                let users = DB.getUsers().filter(u => u.phone !== phone);
-                let deps = DB.getDeposits().filter(d => d.phone !== phone);
-                let wits = DB.getWithdraws().filter(w => w.phone !== phone);
-                let rws = DB.getRewards().filter(r => r.phone !== phone);
-                DB.setUsers(users); DB.setDeposits(deps); DB.setWithdraws(wits); DB.setRewards(rws);
+            set(key, val) {
+                localStorage.setItem('ak_' + key, JSON.stringify(val));
+            },
+            remove(key) {
+                localStorage.removeItem('ak_' + key);
+            },
+            getUsers() { return this.get('users', []); },
+            setUsers(u) { this.set('users', u); },
+            getTx() { return this.get('tx', []); },
+            setTx(t) { this.set('tx', t); },
+            getWithdraws() { return this.get('withdraws', []); },
+            setWithdraws(w) { this.set('withdraws', w); },
+            getDeposits() { return this.get('deposits', []); },
+            setDeposits(d) { this.set('deposits', d); },
+            getRewards() { return this.get('rewards', []); },
+            setRewards(r) { this.set('rewards', r); },
+            getSession() { return this.get('session', null); },
+            setSession(s) { this.set('session', s); },
+            clearSession() { localStorage.removeItem('ak_session'); },
+            getNextId() {
+                let current = this.get('nextId', 1000);
+                this.set('nextId', current + 1);
+                return current;
+            },
+            resetAll() {
+                const admin = this.getUsers().find(u => u.role === 'admin');
+                this.remove('users');
+                this.remove('tx');
+                this.remove('withdraws');
+                this.remove('deposits');
+                this.remove('rewards');
+                this.remove('nextId');
+                this.remove('adminBankInfo');
+                this.remove('session');
+                if (admin) {
+                    this.setUsers([admin]);
+                }
+            },
+            deleteMember(phone) {
+                let users = this.getUsers();
+                users = users.filter(u => u.phone !== phone);
+                this.setUsers(users);
+                let tx = this.getTx();
+                tx = tx.filter(t => t.phone !== phone);
+                this.setTx(tx);
+                let deposits = this.getDeposits();
+                deposits = deposits.filter(d => d.phone !== phone);
+                this.setDeposits(deposits);
+                let withdraws = this.getWithdraws();
+                withdraws = withdraws.filter(w => w.phone !== phone);
+                this.setWithdraws(withdraws);
+                let rewards = this.getRewards();
+                rewards = rewards.filter(r => r.phone !== phone);
+                this.setRewards(rewards);
             }
         };
 
-        // ==========================================
-        // 2. INTERNAL UTILITIES FORMATTERS AND ASYNC TELEGRAM PIPELINES CONTROLLERS
-        // ==========================================
-        function formatMoney(v) { return new Intl.NumberFormat('km-KH', { style: 'currency', currency: 'KHR', minimumFractionDigits: 0 }).format(v); }
-        function genId() { return 'TX' + Math.random().toString(36).substr(2, 9).toUpperCase(); }
-        function getDate() { return new Date().toLocaleString('km-KH', { hour12: true }); }
+        // ============================================================
+        //  2. HELPERS
+        // ============================================================
+        function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
-        function sendToTelegramViaXHR(token, chatTemplateId, textContent) {
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", `https://api.telegram.org/bot${token}/sendMessage`, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.send(JSON.stringify({ chat_id: chatTemplateId, text: textContent, parse_mode: "HTML" }));
+        function formatMoney(n) {
+            if (n <= 0) return '0.00 ៛';
+            return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ៛';
         }
 
-        function sendPhotoToTelegramViaXHR(token, chatTemplateId, base64ImageContext, textContent) {
-            try {
-                const arr = base64ImageContext.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]);
-                let n = bstr.length, u8arr = new Uint8Array(n);
-                while(n--) { u8arr[n] = bstr.charCodeAt(n); }
-                const fileBlob = new Blob([u8arr], { type: mime });
-                
-                const formData = new FormData();
-                formData.append("chat_id", chatTemplateId);
-                formData.append("photo", fileBlob, "proof_screenshot.png");
-                formData.append("caption", textContent);
-                formData.append("parse_mode", "HTML");
+        function getDate() {
+            return new Date().toLocaleString('km-KH', { timeZone: 'Asia/Phnom_Penh' });
+        }
 
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", `https://api.telegram.org/bot${token}/sendPhoto`, true);
-                xhr.send(formData);
+        // ============================================================
+        //  2.1 TELEGRAM HELPERS - FIXED WITH XMLHttpRequest
+        // ============================================================
+        const DEPOSIT_BOT_TOKEN = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
+        const DEPOSIT_CHAT_ID = '-5410896989';
+        const WITHDRAW_BOT_TOKEN = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
+        const WITHDRAW_CHAT_ID = '-5338881653';
+
+        function sendToTelegramViaXHR(botToken, chatId, message) {
+            return new Promise((resolve) => {
+                try {
+                    console.log(`📤 Sending to Telegram via XHR: chat=${chatId}`);
+                    const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.ok) {
+                                    console.log('✅ Telegram sent successfully');
+                                    resolve(true);
+                                } else {
+                                    console.error('❌ Telegram error:', response.description);
+                                    resolve(false);
+                                }
+                            } catch (e) {
+                                console.error('❌ Parse error:', e);
+                                resolve(false);
+                            }
+                        } else {
+                            console.error('❌ HTTP error:', xhr.status);
+                            resolve(false);
+                        }
+                    };
+                    xhr.onerror = function() {
+                        console.error('❌ XHR error');
+                        resolve(false);
+                    };
+                    xhr.send(JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'HTML'
+                    }));
+                } catch (err) {
+                    console.error('❌ Telegram send error:', err);
+                    resolve(false);
+                }
+            });
+        }
+
+        function sendPhotoToTelegramViaXHR(botToken, chatId, photoBase64, caption) {
+            return new Promise((resolve) => {
+                try {
+                    console.log(`📤 Sending photo to Telegram via XHR: chat=${chatId}`);
+                    const byteString = atob(photoBase64.split(',')[1]);
+                    const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
+                    const ab = new ArrayBuffer(byteString.length);
+                    const ia = new Uint8Array(ab);
+                    for (let i = 0; i < byteString.length; i++) {
+                        ia[i] = byteString.charCodeAt(i);
+                    }
+                    const blob = new Blob([ab], { type: mimeString });
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', blob, 'screenshot.jpg');
+                    formData.append('caption', caption);
+                    formData.append('parse_mode', 'HTML');
+
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', `https://api.telegram.org/bot${botToken}/sendPhoto`, true);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.ok) {
+                                    console.log('✅ Photo sent successfully');
+                                    resolve(true);
+                                } else {
+                                    console.error('❌ Photo error:', response.description);
+                                    resolve(false);
+                                }
+                            } catch (e) {
+                                console.error('❌ Parse error:', e);
+                                resolve(false);
+                            }
+                        } else {
+                            console.error('❌ HTTP error:', xhr.status);
+                            resolve(false);
+                        }
+                    };
+                    xhr.onerror = function() {
+                        console.error('❌ XHR error');
+                        resolve(false);
+                    };
+                    xhr.send(formData);
+                } catch (err) {
+                    console.error('❌ Photo send error:', err);
+                    resolve(false);
+                }
+            });
+        }
+
+        async function sendDepositTelegram(depositData, screenshotBase64) {
+            const message = `
+📥 <b>សំណើបញ្ចូលប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${depositData.name}
+🆔 ID: ${depositData.memberId || 'N/A'}
+📱 ទូរសព្ទ: ${depositData.phone}
+🏦 ធនាគារ: ${depositData.bank}
+👤 អ្នកផ្ញើ: ${depositData.sender}
+💰 ចំនួន: ${formatMoney(depositData.amount)}
+📝 កំណត់សម្គាល់: ${depositData.note || 'គ្មាន'}
+⏰ កាលបរិច្ឆេទ: ${depositData.date}
+━━━━━━━━━━━━━━━
+✅ សូមពិនិត្យ និងអនុម័ត!
+            `;
+            try {
+                let result;
+                if (screenshotBase64) {
+                    result = await sendPhotoToTelegramViaXHR(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, screenshotBase64, message);
+                } else {
+                    result = await sendToTelegramViaXHR(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, message);
+                }
+                if (result) {
+                    showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                } else {
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                }
+                return result;
             } catch (err) {
-                console.error("Telegram Media Dispatch Pipeline Interrupted Engine:", err);
+                console.error('Deposit Telegram error:', err);
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                return false;
             }
         }
 
-        // ==========================================
-        // 3. UI SYSTEM ALERTS & MODAL CONTROLLERS
-        // ==========================================
-        window.showToast = function(msg, type = 'success') {
+        async function sendWithdrawTelegram(withdrawData, screenshotBase64) {
+            const message = `
+📤 <b>សំណើដកប្រាក់</b>
+━━━━━━━━━━━━━━━
+👤 ឈ្មោះ: ${withdrawData.name}
+🆔 ID: ${withdrawData.memberId || 'N/A'}
+📱 ទូរសព្ទ: ${withdrawData.phone}
+🏦 ធនាគារ: ${withdrawData.bank}
+🏦 លេខគណនី: ${withdrawData.account}
+👤 ឈ្មោះគណនី: ${withdrawData.accName}
+💰 ចំនួន: ${formatMoney(withdrawData.amount)}
+⏰ កាលបរិច្ឆេទ: ${withdrawData.date}
+━━━━━━━━━━━━━━━
+✅ សូមពិនិត្យ និងអនុម័ត!
+            `;
+            try {
+                let result;
+                if (screenshotBase64) {
+                    result = await sendPhotoToTelegramViaXHR(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, screenshotBase64, message);
+                } else {
+                    result = await sendToTelegramViaXHR(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, message);
+                }
+                if (result) {
+                    showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                } else {
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                }
+                return result;
+            } catch (err) {
+                console.error('Withdraw Telegram error:', err);
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                return false;
+            }
+        }
+
+        // ============================================================
+        //  3. TOAST & MODAL
+        // ============================================================
+        function showToast(msg, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg text-white text-xs font-semibold border transition duration-300 transform translate-y-2 opacity-0 animate-fade-in ${
-                type === 'success' ? 'bg-emerald-600 border-emerald-500' : 'bg-rose-600 border-rose-500'
-            }`;
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> <span>${msg}</span>`;
+            toast.className = `toast toast-${type}`;
+            toast.textContent = msg;
             container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('opacity-0', 'translate-y-2'); }, 10);
             setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        };
-
-        window.showModal = function(title, content, onConfirm) {
-            const container = document.getElementById('modalContainer');
-            container.innerHTML = `
-                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4" onclick="if(event.target===this) closeModal()">
-                    <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl animate-fade-in space-y-4">
-                        <h3 class="text-xs font-bold text-gray-900 border-b pb-2"><i class="fas fa-exclamation-triangle text-amber-500 mr-1.5"></i>${title}</h3>
-                        <p class="text-xs text-gray-600 leading-relaxed">${content}</p>
-                        <div class="flex justify-end gap-2 text-xs pt-2">
-                            <button onclick="closeModal()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition">បដិសេធ</button>
-                            <button id="modalConfirmBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition">យល់ព្រម</button>
-                        </div>
-                    </div>
-                </div>`;
-            document.getElementById('modalConfirmBtn').onclick = () => { onConfirm(); closeModal(); };
-        };
-
-        window.closeModal = function() { document.getElementById('modalContainer').innerHTML = ''; };
-
-        window.showImageViewer = function(src) {
-            const el = document.getElementById('imageViewer');
-            el.innerHTML = `<div class="relative max-w-3xl max-h-[90vh]"><img src="${src}" class="max-w-full max-h-[85vh] rounded-xl shadow-2xl border border-white/20 object-contain"><button onclick="closeImageViewer()" class="absolute -top-10 right-0 text-white hover:text-gray-300 text-xl"><i class="fas fa-times"></i></button></div>`;
-            el.classList.remove('hidden');
-        };
-        window.closeImageViewer = function() { document.getElementById('imageViewer').classList.add('hidden'); };
-
-        // ==========================================
-        // 4. USER AUTHENTICATION CONTROLLER (LOGIN/REG)
-        // ==========================================
-        function getCurrentUser() {
-            const session = DB.getSession();
-            if (!session) return null;
-            const users = DB.getUsers();
-            return users.find(u => u.phone === session.phone) || null;
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
         }
 
-        window.logout = function() {
-            DB.clearSession();
-            showToast('បានចាកចេញពីប្រព័ន្ធដោយជោគជ័យ!');
-            renderPage('login');
-        };
+        function showModal(title, message, onConfirm = null, onCancel = null) {
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+                    <div class="modal-box">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">${title}</h3>
+                        <div class="text-gray-600 mb-4">${message}</div>
+                        <div class="flex gap-3 justify-end">
+                            ${onCancel !== false ? `<button onclick="closeModal()" class="px-4 py-2 bg-gray-200 rounded-xl hover:bg-gray-300 transition">បោះបង់</button>` : ''}
+                            ${onConfirm ? `<button onclick="closeModal(); ${onConfirm}()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">យល់ព្រម</button>` : `<button onclick="closeModal()" class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">យល់ព្រម</button>`}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
-        function renderLoginView(container) {
+        function closeModal() {
+            document.getElementById('modalContainer').innerHTML = '';
+        }
+
+        // ============================================================
+        //  4. IMAGE VIEWER
+        // ============================================================
+        function showImageViewer(imageSrc) {
+            if (!imageSrc || imageSrc === '') {
+                showToast('មិនមានរូបភាព QR Code សូមទាក់ទង Admin', 'error');
+                return;
+            }
+            const viewer = document.getElementById('imageViewer');
+            viewer.innerHTML = `
+                <div class="image-viewer" onclick="closeImageViewer()">
+                    <div class="close-btn" onclick="event.stopPropagation(); closeImageViewer()">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <img src="${imageSrc}" alt="QR Code" onclick="event.stopPropagation()" />
+                </div>
+            `;
+            viewer.classList.remove('hidden');
+        }
+
+        function closeImageViewer() {
+            document.getElementById('imageViewer').classList.add('hidden');
+        }
+
+        // ============================================================
+        //  5. AUTH
+        // ============================================================
+        function registerUser(phone, name, password, memberId, bankName = '', bankAccount = '', bankAccName = '') {
             let users = DB.getUsers();
-            if (!users.some(u => u.role === 'admin')) {
-                users.push({ memberId: '9999', name: 'Master Admin', phone: '0887163013', pin: '1122', balance: 0, role: 'admin', status: 'active' });
+            if (users.find(u => u.phone === phone)) return { ok: false, msg: 'លេខទូរសព្ទមានរួចហើយ!' };
+            if (users.find(u => u.memberId === parseInt(memberId))) return { ok: false, msg: 'លេខ ID នេះមានរួចហើយ!' };
+            
+            users.push({ 
+                phone, 
+                name, 
+                password, 
+                balance: 0, 
+                status: 'active', 
+                role: 'user', 
+                memberId: parseInt(memberId),
+                bankName: bankName,
+                bankAccount: bankAccount,
+                bankAccName: bankAccName
+            });
+            DB.setUsers(users);
+            return { ok: true, memberId };
+        }
+
+        function loginUser(phone, password) {
+            let users = DB.getUsers();
+            let u = users.find(u => u.phone === phone && u.password === password);
+            if (!u) return { ok: false, msg: 'លេខទូរសព្ទ ឬ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ' };
+            if (u.status === 'suspended') return { ok: false, msg: 'គណនីត្រូវបានផ្អាក!' };
+            DB.setSession({ phone: u.phone, name: u.name, role: u.role || 'user' });
+            return { ok: true };
+        }
+
+        function getCurrentUser() {
+            const sess = DB.getSession();
+            if (!sess) return null;
+            const users = DB.getUsers();
+            return users.find(u => u.phone === sess.phone) || null;
+        }
+
+        function logout() {
+            DB.clearSession();
+            renderPage('login');
+        }
+
+        // ============================================================
+        //  6. TRANSACTIONS
+        // ============================================================
+        function addTransaction(phone, type, amount, note = '', account = '') {
+            let tx = DB.getTx();
+            tx.push({ id: genId(), phone, type, amount, status: 'completed', date: getDate(), note, account: account || '' });
+            DB.setTx(tx);
+
+            let users = DB.getUsers();
+            let u = users.find(u => u.phone === phone);
+            if (u) {
+                if (type === 'deposit') u.balance += amount;
+                else if (type === 'withdraw') u.balance -= amount;
                 DB.setUsers(users);
             }
-
-            container.innerHTML = `
-                <div class="max-w-md mx-auto my-12 bg-white rounded-3xl p-6 md:p-8 border shadow-xs space-y-6">
-                    <div class="text-center space-y-1.5">
-                        <h2 class="text-lg font-bold text-gray-900" id="authTitle">សូមចូលប្រើប្រាស់ប្រព័ន្ធ</h2>
-                        <p class="text-xs text-gray-400" id="authDesc">សូមបញ្ចូលលេខទូរសព្ទ និងលេខកូដសម្ងាត់ PIN របស់អ្នក</p>
-                    </div>
-
-                    <form id="fAuth" class="space-y-4 text-xs">
-                        <div id="boxName" class="hidden">
-                            <label class="block font-bold text-gray-700 mb-1.5">ឈ្មោះពេញសមាជិក (ភាសាខ្មែរ ឬឡាតាំង)</label>
-                            <input type="text" id="auName" class="w-full px-3 py-2.5 border rounded-xl focus:ring-1 focus:ring-blue-500 outline-none transition" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-gray-700 mb-1.5">លេខទូរសព្ទគណនី</label>
-                            <input type="tel" id="auPhone" required class="w-full px-3 py-2.5 border rounded-xl focus:ring-1 focus:ring-blue-500 outline-none font-mono transition" placeholder="ឧទាហរណ៍៖ 012345678">
-                        </div>
-                        <div>
-                            <label class="block font-bold text-gray-700 mb-1.5">លេខកូដសម្ងាត់ PIN (៤ ខ្ទង់)</label>
-                            <input type="password" id="auPin" required maxlength="4" pattern="\\d{4}" class="w-full px-3 py-2.5 border rounded-xl focus:ring-1 focus:ring-blue-500 outline-none text-center font-mono tracking-widest transition" placeholder="••••">
-                        </div>
-
-                        <button type="submit" id="btnAuthSubmit" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl shadow-md hover:from-blue-700 hover:to-indigo-700 transition transform active:scale-95">ចូលគណនី</button>
-                    </form>
-
-                    <div class="text-center">
-                        <button id="btnAuthToggle" class="text-xs font-bold text-blue-600 hover:underline">មិនទាន់មានគណនីមែនទេ? ចុះឈ្មោះនៅទីនេះ</button>
-                    </div>
-                </div>`;
-
-            let isLoginMode = true;
-            const fAuth = document.getElementById('fAuth'), btnToggle = document.getElementById('btnAuthToggle');
-            const bName = document.getElementById('boxName'), auName = document.getElementById('auName');
-            const auPhone = document.getElementById('auPhone'), auPin = document.getElementById('auPin');
-            const aTitle = document.getElementById('authTitle'), aDesc = document.getElementById('authDesc'), btnSub = document.getElementById('btnAuthSubmit');
-
-            btnToggle.onclick = () => {
-                isLoginMode = !isLoginMode;
-                if (isLoginMode) {
-                    aTitle.innerText = "សូមចូលប្រើប្រាស់ប្រព័ន្ធ";
-                    aDesc.innerText = "សូមបញ្ចូលលេខទូរសព្ទ និងលេខកូដសម្ងាត់ PIN របស់អ្នក";
-                    btnSub.innerText = "ចូលគណនី";
-                    btnToggle.innerText = "មិនទាន់មានគណនីមែនទេ? ចុះឈ្មោះនៅទីនេះ";
-                    bName.classList.add('hidden'); auName.removeAttribute('required');
-                } else {
-                    aTitle.innerText = "ចុះឈ្មោះសមាជិកថ្មី";
-                    aDesc.innerText = "បង្កើតគណនីដើម្បីគ្រប់គ្រងហិរញ្ញវត្ថុរបស់អ្នក";
-                    btnSub.innerText = "បង្កើតគណនីថ្មី";
-                    btnToggle.innerText = "មានគណនីរួចហើយមែនទេ? ចូលប្រើប្រាស់វិញ";
-                    bName.classList.remove('hidden'); auName.setAttribute('required', 'true');
-                }
-                fAuth.reset();
-            };
-
-            fAuth.onsubmit = (e) => {
-                e.preventDefault();
-                const phone = auPhone.value.trim(), pin = auPin.value.trim();
-                let list = DB.getUsers();
-
-                if (isLoginMode) {
-                    const found = list.find(u => u.phone === phone && u.pin === pin);
-                    if (!found) return showToast('លេខទូរសព្ទ ឬលេខកូដ PIN មិនត្រឹមត្រូវឡើយ!', 'error');
-                    if (found.status !== 'active') return showToast('គណនីរបស់អ្នកត្រូវបានផ្អាកជាបណ្ដោះអាសន្ន!', 'error');
-
-                    DB.setSession({ phone: found.phone, role: found.role });
-                    showToast(`ស្វាគមន៍ការត្រឡប់មកវិញ ៖ ${found.name}!`);
-                    renderPage(found.role === 'admin' ? 'admin' : 'dashboard');
-                } else {
-                    const name = auName.value.trim();
-                    if (list.some(u => u.phone === phone)) return showToast('លេខទូរសព្ទនេះមានក្នុងប្រព័ន្ធរួចរាល់ហើយ!', 'error');
-
-                    const newMemberId = DB.getNextId().toString();
-                    const newUser = { memberId: newMemberId, name, phone, pin, balance: 0, role: 'member', status: 'active' };
-                    list.push(newUser);
-                    DB.setUsers(list);
-
-                    DB.setSession({ phone: newUser.phone, role: newUser.role });
-                    showToast('ការចុះឈ្មោះគណនីថ្មីទទួលបានជោគជ័យ!');
-                    renderPage('dashboard');
-                }
-            };
         }
 
-        // ==========================================
-        // 5. MEMBER INTERACTIVE DASHBOARD CONTROLLER
-        // ==========================================
-        function renderDashboardView(container, user) {
-            if (!user) return renderPage('login');
-
-            const myDeps = DB.getDeposits().filter(d => d.phone === user.phone).map(d => ({ type: 'deposit', amount: d.amount, title: '📥 ស្នើបញ្ចូលប្រាក់', status: d.status, date: d.date }));
-            const myWits = DB.getWithdraws().filter(w => w.phone === user.phone).map(w => ({ type: 'withdraw', amount: w.amount, title: '📤 ស្នើដកប្រាក់', status: w.status, date: w.date }));
-            const myRws = DB.getRewards().filter(r => r.phone === user.phone).map(r => ({ type: 'reward', amount: r.amount, title: `🎁 រង្វាន់៖ ${r.type}`, status: 'approved', date: r.date }));
-            
-            const history = [...myDeps, ...myWits, ...myRws].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            container.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
-                    
-                    <!-- Left Column: Balance Box Profile Card -->
-                    <div class="md:col-span-1 space-y-4">
-                        <div class="balance-box shadow-lg flex flex-col justify-between">
-                            <div class="floating-emoji">💵</div><div class="floating-emoji">✨</div>
-                            <div class="floating-emoji">💰</div><div class="floating-emoji">🏪</div>
-                            <div class="relative z-10">
-                                <span class="text-[10px] tracking-wider uppercase font-bold text-blue-200 block opacity-90">សមតុល្យទឹកប្រាក់សរុប</span>
-                                <h1 class="text-2xl font-bold tracking-wide mt-1">${formatMoney(user.balance)}</h1>
-                            </div>
-                            <div class="relative z-10 flex gap-2 pt-4 border-t border-white/10 text-[11px]">
-                                <div class="flex-1">ID: <span class="font-bold">${user.memberId}</span></div>
-                                <div class="text-right">ស្ថានភាព: <span class="font-bold text-emerald-300">✓ សកម្ម</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Financial Call Action Buttons -->
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            <button onclick="openDepositModal()" class="py-3 bg-blue-600 text-white font-bold rounded-2xl shadow-md hover:bg-blue-700 transition flex flex-col items-center gap-1.5">
-                                <i class="fas fa-wallet text-sm"></i> បញ្ចូលប្រាក់
-                            </button>
-                            <button onclick="openWithdrawModal()" class="py-3 bg-indigo-600 text-white font-bold rounded-2xl shadow-md hover:bg-indigo-700 transition flex flex-col items-center gap-1.5">
-                                <i class="fas fa-hand-holding-usd text-sm"></i> ដកប្រាក់ចេញ
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: Personal Transactions History Ledger -->
-                    <div class="md:col-span-2 bg-white rounded-3xl border shadow-xs p-4 flex flex-col">
-                        <h3 class="text-xs font-bold text-gray-800 pb-3 border-b flex items-center gap-2">
-                            <i class="fas fa-history text-gray-400"></i> ប្រវត្តិនៃប្រតិបត្តិការគណនីរបស់អ្នក
-                        </h3>
-                        <div class="flex-1 overflow-y-auto max-h-[380px] custom-scrollbar divide-y text-xs">
-                            ${history.map(h => `
-                                <div class="py-3 flex justify-between items-center gap-4">
-                                    <div class="space-y-0.5">
-                                        <span class="font-bold text-gray-900 block">${h.title}</span>
-                                        <span class="text-[10px] text-gray-400 font-mono block">${h.date}</span>
-                                    </div>
-                                    <div class="text-right space-y-1">
-                                        <span class="font-bold text-sm block ${h.type === 'withdraw' ? 'text-rose-600' : 'text-emerald-600'}">
-                                            ${h.type === 'withdraw' ? '-' : '+'}${formatMoney(h.amount)}
-                                        </span>
-                                        <span class="text-[9px] px-2 py-0.5 rounded-md font-bold inline-block ${
-                                            h.status === 'approved' ? 'bg-emerald-50 text-emerald-600' : h.status === 'rejected' ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600'
-                                        }">
-                                            ${h.status === 'approved' ? 'បានជោគជ័យ' : h.status === 'rejected' ? 'បានបដិសេធ' : 'កំពុងរង់ចាំ'}
-                                        </span>
-                                    </div>
-                                </div>
-                            `).join('') || '<div class="text-center py-12 text-gray-400">មិនទាន់មានប្រតិបត្តិការណាមួយឡើយ</div>'}
-                        </div>
-                    </div>
-                </div>`;
-        }
-
-        // ==========================================
-        // 6. COMPLETE MEMBER DEPOSIT & WITHDRAWAL MODALS (បូករួមទាំងប្រព័ន្ធ QR CODE)
-        // ==========================================
-        window.openDepositModal = function() {
-            const bank = DB.get('adminBankInfo', { 
-                name: 'ABA Bank', 
-                account: '000 111 222', 
-                holder: 'AK KH',
-                // រូបភាព QR Code របស់ក្រុមហ៊ុន (អាចដូរដាក់ លីងរូបភាព QR ពិតប្រាកដរបស់លោកអ្នកបាន)
-                qrImage: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ABA_000111222' 
-            });
-            const container = document.getElementById('modalContainer');
-            container.innerHTML = `
-                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4" onclick="if(event.target===this) closeModal()">
-                    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl animate-fade-in space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <h3 class="text-xs font-bold text-gray-900"><i class="fas fa-wallet text-blue-600 mr-1.5"></i>ទម្រង់ស្នើសុំបញ្ចូលប្រាក់</h3>
-                            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-                        </div>
-                        
-                        <!-- QR Code ទូទាត់របស់ក្រុមហ៊ុន -->
-                        <div class="flex flex-col items-center justify-center bg-slate-50 p-3 rounded-xl border border-dashed border-slate-200">
-                            <span class="text-[10px] font-bold text-gray-500 mb-1.5"><i class="fas fa-qrcode mr-1"></i>ស្កេន QR Code ខាងក្រោមដើម្បីទូទាត់</span>
-                            <img src="${bank.qrImage}" alt="Company QR Code" class="w-36 h-36 rounded-lg shadow-xs border bg-white p-1 object-contain cursor-zoom-in" onclick="showImageViewer('${bank.qrImage}')" title="ចុចដើម្បីពង្រីក">
-                        </div>
-
-                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100 text-xs space-y-1">
-                            <span class="font-bold text-blue-800 block">📥 ព័ត៌មានគណនីធនាគាររបស់ក្រុមហ៊ុន៖</span>
-                            <div>ធនាគារ៖ <span class="font-bold">${bank.name}</span></div>
-                            <div>លេខគណនី៖ <span class="font-bold">${bank.account}</span></div>
-                            <div>ឈ្មោះគណនី៖ <span class="font-bold">${bank.holder}</span></div>
-                        </div>
-                        <form id="fDepSubmit" class="space-y-3 text-xs">
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">ឈ្មោះគណនីរបស់អ្នក (អក្សរធំ)</label>
-                                <input type="text" id="dpSenderName" required class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="ឧទាហរណ៍៖ CHAN SOK">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">លេខគណនីរបស់អ្នក</label>
-                                <input type="text" id="dpSenderAcc" required class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="លេខគណនីផ្ទេររបស់អ្នក">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">ចំនួនទឹកប្រាក់ដែលបានផ្ទេរ (៛)</label>
-                                <input type="number" id="dpAmount" required class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="បញ្ចូលចំនួនទឹកប្រាក់">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">រូបភាពភស្តុតាង (Screenshot)</label>
-                                <input type="file" id="dpFile" accept="image/*" required class="w-full px-2 py-1.5 border rounded-xl outline-none" onchange="previewDepositImage(this)">
-                            </div>
-                            <div id="dpPreviewArea" class="hidden border rounded-xl p-2 bg-slate-50 flex justify-center">
-                                <img id="dpPreviewImg" src="" class="max-h-40 rounded-lg shadow-sm" />
-                            </div>
-                            <button type="submit" class="w-full py-2.5 bg-blue-600 text-white font-bold rounded-xl shadow-md hover:bg-blue-700 transition">ផ្ញើសំណើបញ្ចូលប្រាក់</button>
-                        </form>
-                    </div>
-                </div>`;
-
-            document.getElementById('fDepSubmit').onsubmit = function(e) {
-                e.preventDefault();
-                const senderName = document.getElementById('dpSenderName').value.trim().toUpperCase();
-                const senderAcc = document.getElementById('dpSenderAcc').value.trim();
-                const amt = parseFloat(document.getElementById('dpAmount').value);
-                const fileInp = document.getElementById('dpFile').files[0];
-                const user = getCurrentUser();
-
-                if (!amt || amt <= 0) return showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!', 'error');
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const base64 = event.target.result;
-                    let deps = DB.getDeposits();
-                    const newDep = { id: genId(), phone: user.phone, name: user.name, memberId: user.memberId, senderName, senderAccount: senderAcc, amount: amt, screenshot: base64, status: 'pending', date: getDate() };
-                    deps.push(newDep);
-                    DB.setDeposits(deps);
-
-                    const tgMsg = `🔔 <b>សំណើបញ្ចូលប្រាក់ថ្មី</b>\n\n🆔 ID សមាជិក៖ ${user.memberId}\n👤 ឈ្មោះគណនី៖ ${user.name}\n📱 ទូរសព្ទ៖ ${user.phone}\n-------------------------\n💳 ឈ្មោះអ្នកផ្ញើ៖ ${senderName}\n🔢 លេខគណនី៖ ${senderAcc}\n💵 ទឹកប្រាក់៖ <b>${formatMoney(amt)}</b>\n📅 កាលបរិច្ឆេទ៖ ${newDep.date}`;
-                    sendPhotoToTelegramViaXHR(DEPOSIT_BOT_TOKEN, DEPOSIT_CHAT_ID, base64, tgMsg);
-
-                    showToast('បានផ្ញើសំណើបញ្ចូលប្រាក់ជោគជ័យ!', 'success');
-                    closeModal();
-                    renderPage('dashboard');
-                };
-                reader.readAsDataURL(fileInp);
-            };
-        };
-
-        window.previewDepositImage = function(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('dpPreviewImg').src = e.target.result;
-                    document.getElementById('dpPreviewArea').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
+        // ============================================================
+        //  7. TOGGLE PASSWORD
+        // ============================================================
+        window.togglePassword = function(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
         };
 
-        window.openWithdrawModal = function() {
-            const container = document.getElementById('modalContainer');
-            const user = getCurrentUser();
-            container.innerHTML = `
-                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4" onclick="if(event.target===this) closeModal()">
-                    <div class="bg-white rounded-2xl p-5 max-w-md w-full shadow-2xl animate-fade-in space-y-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
-                        <div class="flex justify-between items-center border-b pb-2">
-                            <h3 class="text-sm font-bold text-gray-900"><i class="fas fa-hand-holding-usd text-indigo-600 mr-1.5"></i>ទម្រង់ស្នើសុំដកប្រាក់</h3>
-                            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-                        </div>
-                        <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-xs">
-                            <span class="font-bold text-indigo-800 block">💰 សមតុល្យដែលអាចដកបាន៖ ${formatMoney(user.balance)}</span>
-                        </div>
-                        <form id="fWitSubmit" class="space-y-3 text-xs">
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">ឈ្មោះធនាគាររបស់អ្នក</label>
-                                <input type="text" id="wtBank" required class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="ឧទាហរណ៍៖ ABA Bank / ACLEDA">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">លេខគណនីធនាគារ</label>
-                                <input type="text" id="wtAcc" required class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="បញ្ចូលលេខគណនីទទួលប្រាក់">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">ឈ្មោះម្ចាស់គណនី (អក្សរឡាតាំងធំ)</label>
-                                <input type="text" id="wtHolder" required class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="ឧទាហរណ៍៖ CHAN SOK">
-                            </div>
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">ចំនួនទឹកប្រាក់ដែលត្រូវដក (៛)</label>
-                                <input type="number" id="wtAmount" required class="w-full px-3 py-2 border rounded-xl outline-none" placeholder="បញ្ចូលចំនួនទឹកប្រាក់">
-                            </div>
-                            
-                            <!-- បន្ថែមកន្លែងបញ្ចូលរូបភាព QR Code ទូទាត់របស់សមាជិក -->
-                            <div>
-                                <label class="block font-bold text-gray-700 mb-1">បញ្ចូលរូបភាព QR Code ទទួលប្រាក់របស់អ្នក</label>
-                                <input type="file" id="wtQrFile" accept="image/*" required class="w-full px-2 py-1.5 border rounded-xl outline-none" onchange="previewWithdrawQr(this)">
-                            </div>
-                            <div id="wtQrPreviewArea" class="hidden border rounded-xl p-2 bg-slate-50 flex justify-center">
-                                <img id="wtQrPreviewImg" src="" class="max-h-40 rounded-lg shadow-sm object-contain" />
-                            </div>
-
-                            <button type="submit" class="w-full py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-md hover:bg-indigo-700 transition">ផ្ញើសំណើដកប្រាក់</button>
-                        </form>
-                    </div>
-                </div>`;
-
-            document.getElementById('fWitSubmit').onsubmit = function(e) {
-                e.preventDefault();
-                const bName = document.getElementById('wtBank').value.trim();
-                const bAcc = document.getElementById('wtAcc').value.trim();
-                const bHold = document.getElementById('wtHolder').value.trim().toUpperCase();
-                const amt = parseFloat(document.getElementById('wtAmount').value);
-                const qrFileInp = document.getElementById('wtQrFile').files[0];
-                const user = getCurrentUser();
-
-                if (amt <= 0 || amt > user.balance) return showToast('សមតុល្យទឹកប្រាក់មិនគ្រាន់សម្រាប់ការដកឡើយ!', 'error');
-                if (!qrFileInp) return showToast('សូមបញ្ចូលរូបភាព QR Code របស់អ្នក!', 'error');
-
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const qrBase64 = event.target.result;
-                    let wits = DB.getWithdraws();
-                    const newWit = { id: genId(), phone: user.phone, name: user.name, memberId: user.memberId, bankName: bName, bankAccount: bAcc, bankHolder: bHold, amount: amt, status: 'pending', memberQr: qrBase64, date: getDate() };
-                    wits.push(newWit);
-                    DB.setWithdraws(wits);
-
-                    const tgMsg = `⚠️ <b>សំណើដកប្រាក់ថ្មី</b>\n\n🆔 ID សមាជិក៖ ${user.memberId}\n👤 ឈ្មោះគណនី៖ ${user.name}\n📱 ទូរសព្ទ៖ ${user.phone}\n-------------------------\n🏦 ទៅកាន់ធនាគារ៖ ${bName}\n💳 លេខគណនី៖ ${bAcc}\n👤 ម្ចាស់គណនី៖ ${bHold}\n💵 ចំនួនទឹកប្រាក់៖ <b>-${formatMoney(amt)}</b>\n📅 កាលបរិច្ឆេទ៖ ${newWit.date}`;
-                    
-                    // បញ្ជូនទាំងរូបភាព QR របស់សមាជិកទៅកាន់ក្រុម Telegram របស់ Admin ដើម្បីងាយស្រួលស្កេន
-                    sendPhotoToTelegramViaXHR(WITHDRAW_BOT_TOKEN, WITHDRAW_CHAT_ID, qrBase64, tgMsg);
-
-                    showToast('បានផ្ញើសំណើដកប្រាក់ជោគជ័យ!', 'success');
-                    closeModal();
-                    renderPage('dashboard');
-                };
-                reader.readAsDataURL(qrFileInp);
-            };
-        };
-
-        window.previewWithdrawQr = function(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('wtQrPreviewImg').src = e.target.result;
-                    document.getElementById('wtQrPreviewArea').classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        // ==========================================
-        // 7. INTUITIVE ADMIN MANAGEMENT CONTROLLER
-        // ==========================================
-        function renderAdminView(container) {
-            const users = DB.getUsers().filter(u => u.role !== 'admin');
-            const deps = DB.getDeposits();
-            const wits = DB.getWithdraws();
-
-            container.innerHTML = `
-                <div class="space-y-6 animate-fade-in">
-                    <div class="bg-slate-900 text-white p-5 rounded-2xl flex justify-between items-center shadow-lg">
-                        <div>
-                            <h2 class="text-base font-bold">ផ្ទាំងគ្រប់គ្រងចម្បងរបស់ Admin 🛠️</h2>
-                            <p class="text-[11px] text-slate-400">គ្រប់គ្រងសមាជិក ការដាក់ប្រាក់ ដកប្រាក់ និងរបាយការណ៍</p>
-                        </div>
-                        <button onclick="exportToExcel()" class="px-3.5 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 hover:bg-emerald-700 transition shadow-md">
-                            <i class="fas fa-file-excel"></i> ទាញយក Excel
-                        </button>
-                    </div>
-
-                    <div class="bg-white rounded-2xl border shadow-xs p-4">
-                        <div class="flex border-b pb-2 mb-4 gap-4 overflow-x-auto custom-scrollbar">
-                            <button id="admT1" class="text-xs font-bold pb-2 border-b-2 border-blue-600 text-blue-600 whitespace-nowrap">សំណើបញ្ចូលប្រាក់ (${deps.filter(d=>d.status==='pending').length})</button>
-                            <button id="admT2" class="text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">សំណើដកប្រាក់ (${wits.filter(w=>w.status==='pending').length})</button>
-                            <button id="admT3" class="text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap">គ្រប់គ្រងសមាជិក (${users.length})</button>
-                        </div>
-
-                        <!-- សំណើបញ្ចូលប្រាក់ -->
-                        <div id="admBoxDep" class="overflow-x-auto custom-scrollbar">
-                            <table class="w-full text-left border-collapse min-w-[650px]">
-                                <thead>
-                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
-                                        <th class="p-3">សមាជិក</th><th class="p-3">គណនីផ្ញើ</th><th class="p-3">ចំនួនទឹកប្រាក់</th><th class="p-3">ភស្តុតាង</th><th class="p-3 text-right">សកម្មភាព</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-xs text-gray-600 divide-y">
-                                    ${deps.reverse().map(d => `
-                                        <tr class="${d.status==='pending'?'bg-amber-50/40':''}">
-                                            <td class="p-3 font-medium">${d.name} (ID: ${d.memberId})</td>
-                                            <td class="p-3">${d.senderName || 'N/A'}<br><span class="text-gray-400 font-mono">${d.senderAccount || ''}</span></td>
-                                            <td class="p-3 font-bold text-blue-600">${formatMoney(d.amount)}</td>
-                                            <td class="p-3"><button onclick="showImageViewer('${d.screenshot}')" class="text-blue-500 font-semibold hover:underline"><i class="fas fa-image mr-1"></i>មើលបង្កាន់ដៃ</button></td>
-                                            <td class="p-3 text-right space-x-1">
-                                                ${d.status === 'pending' ? `
-                                                    <button onclick="handleDepositStatus('${d.id}', 'approved')" class="px-2.5 py-1 bg-emerald-600 text-white font-bold rounded-lg text-[10px]">អនុម័ត</button>
-                                                    <button onclick="handleDepositStatus('${d.id}', 'rejected')" class="px-2.5 py-1 bg-rose-600 text-white font-bold rounded-lg text-[10px]">បដិសេធ</button>
-                                                ` : `<span class="text-[10px] px-2 py-0.5 rounded font-bold ${d.status==='approved'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${d.status==='approved'?'បានអនុម័ត':'បានបដិសេធ'}</span>`}
-                                            </td>
-                                        </tr>
-                                    `).join('') || '<tr><td colspan="5" class="p-4 text-center text-gray-400">មិនទាន់មានសំណើបញ្ចូលប្រាក់ទេ</td></tr>'}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- សំណើដកប្រាក់ (មានប៊ូតុងចុះមើល QR Code របស់សមាជិក) -->
-                        <div id="admBoxWit" class="overflow-x-auto custom-scrollbar hidden">
-                            <table class="w-full text-left border-collapse min-w-[700px]">
-                                <thead>
-                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
-                                        <th class="p-3">សមាជិក</th><th class="p-3">គណនីធនាគារ</th><th class="p-3">ចំនួនទឹកប្រាក់</th><th class="p-3">QR ទទួលប្រាក់</th><th class="p-3 text-right">សកម្មភាព</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-xs text-gray-600 divide-y">
-                                    ${wits.reverse().map(w => `
-                                        <tr class="${w.status==='pending'?'bg-amber-50/40':''}">
-                                            <td class="p-3 font-medium">${w.name} (ID: ${w.memberId})</td>
-                                            <td class="p-3">${w.bankName}<br><span class="text-gray-400 font-mono">${w.bankAccount} (${w.bankHolder})</span></td>
-                                            <td class="p-3 font-bold text-rose-600">${formatMoney(w.amount)}</td>
-                                            <td class="p-3">
-                                                ${w.memberQr ? `<button onclick="showImageViewer('${w.memberQr}')" class="text-indigo-600 font-semibold hover:underline"><i class="fas fa-qrcode mr-1"></i>មើល QR ស្កេន</button>` : '<span class="text-gray-400">គ្មានរូបភាព</span>'}
-                                            </td>
-                                            <td class="p-3 text-right space-x-1">
-                                                ${w.status === 'pending' ? `
-                                                    <button onclick="handleWithdrawStatus('${w.id}', 'approved')" class="px-2.5 py-1 bg-emerald-600 text-white font-bold rounded-lg text-[10px]">អនុម័ត</button>
-                                                    <button onclick="handleWithdrawStatus('${w.id}', 'rejected')" class="px-2.5 py-1 bg-rose-600 text-white font-bold rounded-lg text-[10px]">បដិសេធ</button>
-                                                ` : `<span class="text-[10px] px-2 py-0.5 rounded font-bold ${w.status==='approved'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${w.status==='approved'?'បានអនុម័ត':'បានបដិសេធ'}</span>`}
-                                            </td>
-                                        </tr>
-                                    `).join('') || '<tr><td colspan="5" class="p-4 text-center text-gray-400">មិនទាន់មានសំណើដកប្រាក់ទេ</td></tr>'}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- គ្រប់គ្រងសមាជិក -->
-                        <div id="admBoxUsr" class="overflow-x-auto custom-scrollbar hidden">
-                            <table class="w-full text-left border-collapse min-w-[750px]">
-                                <thead>
-                                    <tr class="bg-slate-50 text-[11px] font-bold text-gray-500 uppercase border-b">
-                                        <th class="p-3">ID សមាជិក</th><th class="p-3">ឈ្មោះ</th><th class="p-3">លេខទូរសព្ទ</th><th class="p-3">សមតុល្យ</th><th class="p-3">ស្ថានភាព</th><th class="p-3 text-right">សកម្មភាពរហ័ស</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-xs text-gray-600 divide-y">
-                                    ${users.map(u => `
-                                        <tr>
-                                            <td class="p-3 font-bold text-gray-900">${u.memberId}</td>
-                                            <td class="p-3 font-medium">${u.name}</td>
-                                            <td class="p-3 font-mono">${u.phone}</td>
-                                            <td class="p-3 font-bold text-emerald-600">${formatMoney(u.balance)}</td>
-                                            <td class="p-3">
-                                                <button onclick="toggleUserStatus('${u.phone}')" class="px-2 py-0.5 text-[10px] font-bold rounded ${u.status==='active'?'bg-emerald-50 text-emerald-700':'bg-rose-50 text-rose-700'}">${u.status==='active'?'សកម្ម':'ផ្អាក'}</button>
-                                            </td>
-                                            <td class="p-3 text-right space-x-1 whitespace-nowrap">
-                                                <button onclick="openRewardModal('${u.phone}')" class="px-2 py-1 bg-purple-600 text-white font-bold rounded-md text-[10px]" title="រង្វាន់"><i class="fas fa-gift"></i></button>
-                                                <button onclick="openDeductModal('${u.phone}')" class="px-2 py-1 bg-amber-600 text-white font-bold rounded-md text-[10px]" title="កាត់ប្រាក់"><i class="fas fa-minus-circle"></i></button>
-                                                <button onclick="confirmDeleteUser('${u.phone}')" class="px-2 py-1 bg-rose-600 text-white font-bold rounded-md text-[10px]" title="លុបចោល"><i class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                    `).join('') || '<tr><td colspan="6" class="p-4 text-center text-gray-400">មិនទាន់មានសមាជិកចុះឈ្មោះឡើយ</td></tr>'}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>`;
-
-            const adT1 = document.getElementById('admT1'), adT2 = document.getElementById('admT2'), adT3 = document.getElementById('admT3');
-            const abD = document.getElementById('admBoxDep'), abW = document.getElementById('admBoxWit'), abU = document.getElementById('admBoxUsr');
-
-            adT1.onclick = () => {
-                adT1.className = "text-xs font-bold pb-2 border-b-2 border-blue-600 text-blue-600 whitespace-nowrap";
-                adT2.className = adT3.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
-                abD.classList.remove('hidden'); abW.classList.add('hidden'); abU.classList.add('hidden');
-            };
-            adT2.onclick = () => {
-                adT2.className = "text-xs font-bold pb-2 border-b-2 border-indigo-600 text-indigo-600 whitespace-nowrap";
-                adT1.className = adT3.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
-                abW.classList.remove('hidden'); abD.classList.add('hidden'); abU.classList.add('hidden');
-            };
-            adT3.onclick = () => {
-                adT3.className = "text-xs font-bold pb-2 border-b-2 border-purple-600 text-purple-600 whitespace-nowrap";
-                adT1.className = adT2.className = "text-xs font-bold pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600 whitespace-nowrap";
-                abU.classList.remove('hidden'); abD.classList.add('hidden'); abW.classList.add('hidden');
-            };
-        }
-
-        // ==========================================
-        // 8. ADMIN FUNCTIONS (ACTION PROCESSORS)
-        // ==========================================
-        window.handleDepositStatus = function(id, status) {
-            let deps = DB.getDeposits();
-            let d = deps.find(x => x.id === id);
-            if (!d || d.status !== 'pending') return;
-
-            d.status = status;
-            if (status === 'approved') {
-                let users = DB.getUsers();
-                let u = users.find(x => x.phone === d.phone);
-                if (u) { u.balance += d.amount; DB.setUsers(users); }
-            }
-            DB.setDeposits(deps);
-            showToast(status === 'approved' ? 'បានអនុម័តការបញ្ចូលប្រាក់!' : 'បានបដិសេធសំណើ!', status === 'approved' ? 'success' : 'error');
-            renderPage('admin');
-        };
-
-        window.handleWithdrawStatus = function(id, status) {
-            let wits = DB.getWithdraws();
-            let w = wits.find(x => x.id === id);
-            if (!w || w.status !== 'pending') return;
-
-            w.status = status;
-            let users = DB.getUsers();
-            let u = users.find(x => x.phone === w.phone);
-            if (u && status === 'approved') { u.balance -= w.amount; }
-            DB.setUsers(users);
-            DB.setWithdraws(wits);
-            showToast(status === 'approved' ? 'បានអនុម័តការដកប្រាក់!' : 'បានបដិសេធសំណើដកប្រាក់!', status === 'approved' ? 'success' : 'error');
-            renderPage('admin');
-        };
-
-        window.toggleUserStatus = function(phone) {
-            let users = DB.getUsers();
-            let u = users.find(x => x.phone === phone);
-            if (u) { u.status = u.status === 'active' ? 'suspended' : 'active'; DB.setUsers(users); showToast('បានប្តូរស្ថានភាពសមាជិក!'); renderPage('admin'); }
-        };
-
-        window.openRewardModal = function(phone) {
-            const container = document.getElementById('modalContainer');
-            container.innerHTML = `
-                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4">
-                    <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl space-y-4 text-xs">
-                        <h3 class="font-bold text-gray-900 border-b pb-2">🎁 បន្ថែមរង្វាន់ជូនសមាជិក</h3>
-                        <input type="text" id="rwType" class="w-full px-3 py-2 border rounded-xl" placeholder="ឧទាហរណ៍៖ រង្វាន់ប្រចាំខែ">
-                        <input type="number" id="rwAmount" class="w-full px-3 py-2 border rounded-xl" placeholder="ចំនួនទឹកប្រាក់ (៛)">
-                        <button onclick="submitReward('${phone}')" class="w-full py-2.5 bg-purple-600 text-white font-bold rounded-xl">យល់ព្រមផ្ដើមរង្វាន់</button>
-                    </div>
-                </div>`;
-        };
-
-        window.submitReward = function(phone) {
-            const type = document.getElementById('rwType').value.trim();
-            const amt = parseFloat(document.getElementById('rwAmount').value);
-            if (!type || !amt || amt <= 0) return showToast('សូមបំពេញទិន្នន័យឱ្យត្រឹមត្រូវ!', 'error');
-
-            let users = DB.getUsers(); let u = users.find(x => x.phone === phone);
-            if (u) {
-                u.balance += amt;
-                let rws = DB.getRewards(); rws.push({ id: genId(), phone, name: u.name, type, amount: amt, date: getDate() });
-                DB.setUsers(users); DB.setRewards(rws); showToast('បានផ្ដល់រង្វាន់ជោគជ័យ!'); closeModal(); renderPage('admin');
-            }
-        };
-
-        window.openDeductModal = function(phone) {
-            const container = document.getElementById('modalContainer');
-            container.innerHTML = `
-                <div class="fixed inset-0 bg-black/50 backdrop-blur-xs z-[1500] flex items-center justify-center p-4">
-                    <div class="bg-white rounded-2xl p-5 max-w-sm w-full shadow-2xl space-y-4 text-xs">
-                        <h3 class="font-bold text-gray-900 border-b pb-2">➖ កាត់សមតុល្យប្រាក់សមាជិក</h3>
-                        <input type="number" id="ddAmount" class="w-full px-3 py-2 border rounded-xl" placeholder="ចំនួនទឹកប្រាក់ដែលត្រូវកាត់ (៛)">
-                        <button onclick="submitDeduct('${phone}')" class="w-full py-2.5 bg-amber-600 text-white font-bold rounded-xl">យល់ព្រមដកប្រាក់ចេញ</button>
-                    </div>
-                </div>`;
-        };
-
-        window.submitDeduct = function(phone) {
-            const amt = parseFloat(document.getElementById('ddAmount').value);
-            let users = DB.getUsers(); let u = users.find(x => x.phone === phone);
-            if (u) {
-                if (u.balance < amt) return showToast('សមតុល្យសមាជិកមិនគ្រាន់សម្រាប់ការកាត់ទេ!', 'error');
-                u.balance -= amt; DB.setUsers(users); showToast('បានកាត់ប្រាក់ជោគជ័យ!'); closeModal(); renderPage('admin');
-            }
-        };
-
-        window.confirmDeleteUser = function(phone) {
-            showModal('🛑 លុបសមាជិក', 'តើអ្នកពិតជាចង់លុបគណនីសមាជិកនេះ និងរាល់ប្រវត្តិនៃការប្រតិបត្តិការទាំងអស់មែនទេ?', () => {
-                DB.deleteMember(phone); showToast('បានលុបទិន្នន័យសមាជិកជោគជ័យ!'); renderPage('admin');
-            });
-        };
-
-        window.exportToExcel = function() {
-            const users = DB.getUsers().filter(u => u.role !== 'admin');
-            if (users.length === 0) return showToast('មិនមានទិន្នន័យទេ!', 'error');
-            const data = users.map(u => ({ "ID សមាជិក": u.memberId, "ឈ្មោះ": u.name, "ទូរសព្ទ": u.phone, "សមតុល្យ (៛)": u.balance, "ស្ថានភាព": u.status === 'active' ? 'សកម្ម' : 'ផ្អាក' }));
-            const worksheet = XLSX.utils.json_to_sheet(data); const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "សមាជិក"); XLSX.writeFile(workbook, `របាយការណ៍_${Date.now()}.xlsx`);
-            showToast('ទាញយក Excel ជោគជ័យ!');
-        };
-
-        // ==========================================
-        // 9. CENTRAL PAGE ROUTER ENGINE
-        // ==========================================
-        function renderPage(page) {
+        // ============================================================
+        //  8. RENDER ENGINE
+        // ============================================================
+        function renderPage(page, data = null) {
             const container = document.getElementById('pageContent');
             const user = getCurrentUser();
             const navUser = document.getElementById('navUser');
-
             if (user) {
+                const memberId = user.memberId || 'N/A';
                 navUser.innerHTML = `
-                    <div class="flex items-center gap-2 md:gap-3">
-                        <div class="text-right hidden sm:block text-xs">
-                            <span class="font-bold text-gray-800 block leading-tight">${user.name}</span>
-                            <span class="text-[10px] text-gray-400 font-bold">ID: ${user.memberId}</span>
-                        </div>
-                        ${user.role === 'admin' ? `
-                            <button onclick="renderPage('admin')" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"><i class="fas fa-cog"></i> Admin</button>
-                            <button onclick="renderPage('dashboard')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-xl text-xs font-bold transition cursor-pointer"><i class="fas fa-home"></i> ទំព័រដើម</button>
-                        ` : ''}
-                        <button onclick="logout()" class="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"><i class="fas fa-sign-out-alt"></i></button>
-                    </div>`;
+                    <span class="text-sm text-gray-600 hidden sm:inline"><i class="fas fa-user-circle mr-1"></i> ${user.name}</span>
+                    <span class="member-id-badge">ID: ${memberId}</span>
+                    <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">${user.role === 'admin' ? 'Admin' : user.phone}</span>
+                    <span class="text-sm font-bold ${user.balance === 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(user.balance)}</span>
+                    <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-sign-out-alt"></i></button>
+                `;
             } else {
-                navUser.innerHTML = `<button onclick="renderPage('login')" class="px-4 py-1.5 text-xs font-semibold bg-blue-600 text-white rounded-xl shadow-md hover:bg-blue-700 transition cursor-pointer">ចូលប្រើ</button>`;
+                navUser.innerHTML = `<button onclick="renderPage('login')" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-1 rounded-xl text-sm hover:shadow-lg transition">ចូលប្រើ</button>`;
             }
 
-            if (page === 'login') renderLoginView(container);
-            else if (page === 'admin' && user && user.role === 'admin') renderAdminView(container);
-            else renderDashboardView(container, user);
+            switch (page) {
+                case 'login': renderLogin(container); break;
+                case 'dashboard': renderDashboard(container, user); break;
+                case 'deposit': renderDeposit(container, user); break;
+                case 'withdraw': renderWithdraw(container, user); break;
+                case 'admin': renderAdmin(container, user); break;
+                case 'adminDeposit': renderAdminDeposit(container, user); break;
+                case 'adminWithdraw': renderAdminWithdraw(container, user); break;
+                case 'adminHistory': renderAdminHistory(container, user); break;
+                case 'adminReward': renderAdminReward(container, user); break;
+                case 'adminIncome': renderAdminIncome(container, user); break;
+                default: renderLogin(container);
+            }
         }
 
-        // INITIALIZER ENTRYPOINT
-        (() => {
-            const user = getCurrentUser();
-            if (user) renderPage(user.role === 'admin' ? 'admin' : 'dashboard');
-            else renderPage('login');
+        // ============================================================
+        //  9. PAGE: LOGIN / REGISTER
+        // ============================================================
+        function renderLogin(container) {
+            container.innerHTML = `
+                <div class="flex items-center justify-center min-h-[70vh]">
+                    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8">
+                        <div class="text-center mb-6">
+                            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                                <i class="fas fa-store text-white text-3xl"></i>
+                            </div>
+                            <h1 class="text-2xl font-bold text-gray-800">អាជីវករខ្មែរឆ្លាតវៃ</h1>
+                            <p class="text-gray-500 text-sm">ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុ</p>
+                        </div>
+
+                        <div class="flex bg-gray-100 rounded-xl p-1 mb-6">
+                            <button id="loginTab" class="flex-1 py-2 rounded-lg text-sm font-semibold bg-white shadow-md text-blue-600">ចូលប្រើ</button>
+                            <button id="registerTab" class="flex-1 py-2 rounded-lg text-sm font-semibold text-gray-500">ចុះឈ្មោះ</button>
+                        </div>
+
+                        <form id="loginForm">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
+                                <input type="text" id="loginPhone" placeholder="012345678" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-sm" required />
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-700 text-sm font-medium mb-2"><i class="fas fa-lock text-purple-500 mr-2"></i>លេខកូដសម្ងាត់ (PIN)</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="loginPassword" placeholder="••••" maxlength="8" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition text-sm" required />
+                                    <i class="fas fa-eye password-toggle" onclick="togglePassword('loginPassword', this)"></i>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 text-white font-bold rounded-xl shadow-lg transition text-sm btn-primary">ចូលគណនី <i class="fas fa-arrow-right ml-1"></i></button>
+                        </form>
+
+                        <form id="registerForm" class="hidden">
+                            <div class="mb-3">
+                                <label class="block text-gray-700 text-xs font-medium mb-1"><i class="fas fa-id-card text-indigo-500 mr-2"></i>លេខសម្គាល់សមាជិក (ID)</label>
+                                <input type="number" id="regId" placeholder="ឧទាហរណ៍៖ 1001" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition text-xs" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-gray-700 text-xs font-medium mb-1"><i class="fas fa-user text-green-500 mr-2"></i>ឈ្មោះពេញ</label>
+                                <input type="text" id="regName" placeholder="ឈ្មោះជាភាសាខ្មែរ ឬ អង់គ្លេស" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition text-xs" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-gray-700 text-xs font-medium mb-1"><i class="fas fa-phone text-blue-500 mr-2"></i>លេខទូរសព្ទ</label>
+                                <input type="text" id="regPhone" placeholder="012345678" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-xs" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="block text-gray-700 text-xs font-medium mb-1"><i class="fas fa-lock text-purple-500 mr-2"></i>បង្កើតលេខកូដសម្ងាត់ (PIN)</label>
+                                <div class="password-wrapper">
+                                    <input type="password" id="regPassword" placeholder="បង្កើត PIN ៤ ទៅ ៨ ខ្ទង់" maxlength="8" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition text-xs" required />
+                                    <i class="fas fa-eye password-toggle" onclick="togglePassword('regPassword', this)"></i>
+                                </div>
+                            </div>
+                            <div class="border-t pt-2 mt-2">
+                                <p class="text-xs font-bold text-gray-500 mb-2">ព័ត៌មានគណនីធនាគារ (ចាំបាច់សម្រាប់ Admin ផ្ទេរប្រាក់)</p>
+                                <div class="grid grid-cols-2 gap-2 mb-2">
+                                    <div>
+                                        <label class="block text-gray-600 text-[11px] mb-1">ឈ្មោះធនាគារ</label>
+                                        <input type="text" id="regBankName" placeholder="ABA, ACLEDA..." class="w-full px-3 py-1.5 border rounded-lg text-xs" required/>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-600 text-[11px] mb-1">លេខគណនី</label>
+                                        <input type="text" id="regBankAccount" placeholder="000 000 000" class="w-full px-3 py-1.5 border rounded-lg text-xs" required/>
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="block text-gray-600 text-[11px] mb-1">ឈ្មោះម្ចាស់គណនី (អក្សរធំ)</label>
+                                    <input type="text" id="regBankAccName" placeholder="SOK SAN" class="w-full px-3 py-1.5 border rounded-lg text-xs" required/>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 text-white font-bold rounded-xl shadow-lg transition text-sm btn-success">បង្កើតគណនីថ្មី <i class="fas fa-user-plus ml-1"></i></button>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            const lTab = document.getElementById('loginTab');
+            const rTab = document.getElementById('registerTab');
+            const lForm = document.getElementById('loginForm');
+            const rForm = document.getElementById('registerForm');
+
+            lTab.onclick = () => {
+                lTab.className = "flex-1 py-2 rounded-lg text-sm font-semibold bg-white shadow-md text-blue-600";
+                rTab.className = "flex-1 py-2 rounded-lg text-sm font-semibold text-gray-500";
+                lForm.classList.remove('hidden');
+                rForm.classList.add('hidden');
+            };
+            rTab.onclick = () => {
+                rTab.className = "flex-1 py-2 rounded-lg text-sm font-semibold bg-white shadow-md text-green-600";
+                lTab.className = "flex-1 py-2 rounded-lg text-sm font-semibold text-gray-500";
+                rForm.classList.remove('hidden');
+                lForm.classList.add('hidden');
+            };
+
+            lForm.onsubmit = (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('loginPhone').value.trim();
+                const pass = document.getElementById('loginPassword').value.trim();
+                const res = loginUser(phone, pass);
+                if (res.ok) {
+                    showToast('🎉 ចូលប្រព័ន្ធជោគជ័យ!');
+                    const u = getCurrentUser();
+                    if (u && u.role === 'admin') renderPage('admin');
+                    else renderPage('dashboard');
+                } else {
+                    showToast(res.msg, 'error');
+                }
+            };
+
+            rForm.onsubmit = (e) => {
+                e.preventDefault();
+                const id = document.getElementById('regId').value.trim();
+                const name = document.getElementById('regName').value.trim();
+                const phone = document.getElementById('regPhone').value.trim();
+                const pass = document.getElementById('regPassword').value.trim();
+                const bName = document.getElementById('regBankName').value.trim();
+                const bAcc = document.getElementById('regBankAccount').value.trim();
+                const bAccName = document.getElementById('regBankAccName').value.trim();
+
+                const res = registerUser(phone, name, pass, id, bName, bAcc, bAccName);
+                if (res.ok) {
+                    showToast('✨ ចុះឈ្មោះជោគជ័យ! សូមចូលប្រើប្រាស់។');
+                    lTab.click();
+                    document.getElementById('loginPhone').value = phone;
+                } else {
+                    showToast(res.msg, 'error');
+                }
+            };
+        }
+
+        // ============================================================
+        //  10. PAGE: USER DASHBOARD
+        // ============================================================
+        function renderDashboard(container, user) {
+            if (!user) { renderPage('login'); return; }
+            
+            let txLog = DB.getTx().filter(t => t.phone === user.phone);
+            let txHtml = txLog.length === 0 ? `<div class="text-center py-6 text-gray-400 text-sm">មិនទាន់មានប្រវត្តិប្រតិបត្តិការឡើយ</div>` : '';
+            
+            // Sort to latest first
+            txLog.reverse().forEach(t => {
+                const isPlus = t.type === 'deposit';
+                txHtml += `
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm ${isPlus ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
+                                <i class="fas ${isPlus ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">${isPlus ? 'បញ្ចូលប្រាក់' : 'ដកប្រាក់'}</p>
+                                <p class="text-[11px] text-gray-400">${t.date}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-bold ${isPlus ? 'text-green-600' : 'text-red-600'}">${isPlus ? '+' : '-'}${formatMoney(t.amount)}</p>
+                            <span class="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">ជោគជ័យ</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="balance-box shadow-xl">
+                            <span class="floating-emoji">💰</span><span class="floating-emoji">💵</span>
+                            <span class="floating-emoji">💎</span><span class="floating-emoji">✨</span>
+                            <span class="floating-emoji">📈</span><span class="floating-emoji">🏦</span>
+                            <div class="balance-content flex flex-col justify-between h-full">
+                                <div>
+                                    <p class="text-blue-200 text-xs font-semibold tracking-wider uppercase mb-1">សមតុល្យទឹកប្រាក់សរុប</p>
+                                    <h2 class="balance-big font-black tracking-tight text-white">${formatMoney(user.balance)}</h2>
+                                </div>
+                                <div class="flex justify-between items-end mt-4 border-t border-white/10 pt-3">
+                                    <div>
+                                        <p class="text-white/60 text-[10px]">ឈ្មោះសមាជិក</p>
+                                        <p class="text-sm font-bold text-white">${user.name}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-white/60 text-[10px]">លេខសម្គាល់គណនី</p>
+                                        <p class="text-xs bg-white/20 px-2 py-0.5 rounded-md text-white font-mono inline-block">ID: ${user.memberId || 'N/A'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="renderPage('deposit')" class="p-4 bg-white rounded-2xl shadow-md text-center card-hover border border-gray-100">
+                                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center text-white mx-auto mb-2 shadow-md">
+                                    <i class="fas fa-wallet text-xl"></i>
+                                </div>
+                                <span class="text-sm font-bold text-gray-700">បញ្ចូលប្រាក់</span>
+                            </button>
+                            <button onclick="renderPage('withdraw')" class="p-4 bg-white rounded-2xl shadow-md text-center card-hover border border-gray-100">
+                                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center text-white mx-auto mb-2 shadow-md">
+                                    <i class="fas fa-hand-holding-usd text-xl"></i>
+                                </div>
+                                <span class="text-sm font-bold text-gray-700">ដកប្រាក់</span>
+                            </button>
+                        </div>
+
+                        <div class="bg-white rounded-2xl shadow-md p-4 border border-gray-100">
+                            <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center justify-between">
+                                <span><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិប្រតិបត្តិការចុងក្រោយ</span>
+                                <i class="fas fa-ellipsis-h text-gray-400"></i>
+                            </h3>
+                            <div class="scrollable-box space-y-2 pr-1">${txHtml}</div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-2xl shadow-md p-4 border border-gray-100 text-center">
+                            <h3 class="text-sm font-bold text-gray-800 mb-4 text-left"><i class="fas fa-id-card-alt text-indigo-500 mr-2"></i>ព័ត៌មានគណនីធនាគាររបស់អ្នក</h3>
+                            <div class="bg-blue-50/50 rounded-xl p-4 text-left space-y-2 border border-blue-100">
+                                <div>
+                                    <span class="text-[11px] text-gray-400 block">ធនាគារ</span>
+                                    <span class="text-sm font-bold text-gray-800">${user.bankName || 'មិនទាន់មាន'}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] text-gray-400 block">លេខគណនី</span>
+                                    <span class="text-sm font-mono font-bold text-blue-600">${user.bankAccount || 'មិនទាន់មាន'}</span>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] text-gray-400 block">ឈ្មោះគណនី</span>
+                                    <span class="text-sm font-bold text-gray-800">${user.bankAccName || 'មិនទាន់មាន'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-br from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow-xl relative overflow-hidden text-center">
+                            <h4 class="text-sm font-bold mb-1">ជំនួយ និងការគាំទ្រ ២៤/៧</h4>
+                            <p class="text-xs text-indigo-200 mb-4">ជួបបញ្ហាក្នុងការផ្ទេរប្រាក់ ឬសំណើផ្សេងៗ? ក្រុមការងារយើងរង់ចាំជួយអ្នក!</p>
+                            <a href="https://t.me/SmartKhmerMerchant Support" target="_blank" class="telegram-btn shadow-lg">
+                                <i class="fab fa-telegram-plane"></i> ទាក់ទងមកយើងតាម Telegram
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            if (user.role === 'admin') {
+                const nav = document.getElementById('navUser');
+                const adminBtn = document.createElement('button');
+                adminBtn.className = "px-3 py-1 bg-purple-600 text-white rounded-xl text-xs font-bold hover:bg-purple-700 transition flex items-center gap-1 shadow-md";
+                adminBtn.innerHTML = `<i class="fas fa-tools"></i> 🛠️ Admin`;
+                adminBtn.onclick = () => renderPage('admin');
+                nav.insertBefore(adminBtn, nav.firstChild);
+            }
+        }
+
+        // ============================================================
+        //  11. PAGE: DEPOSIT REQUEST FORM
+        // ============================================================
+        function renderDeposit(container, user) {
+            if (!user) { renderPage('login'); return; }
+            let bankInfo = DB.get('adminBankInfo', null);
+            let qrSectionHtml = `
+                <div class="qr-placeholder mx-auto shadow-sm" onclick="showToast('Admin មិនទាន់បានដាក់រូបភាព QR កូដទេ','error')">
+                    <i class="fas fa-qrcode text-3xl"></i>
+                </div>
+                <p class="text-xs text-red-500 mt-2 font-medium">មិនទាន់មានរូបភាព QR Code បញ្ចូលប្រាក់ទេ</p>
+            `;
+            if (bankInfo && bankInfo.qrCode && bankInfo.qrCode !== '') {
+                qrSectionHtml = `
+                    <div class="qr-placeholder mx-auto shadow-md" onclick="showImageViewer('${bankInfo.qrCode}')">
+                        <img src="${bankInfo.qrCode}" alt="Admin QR" />
+                    </div>
+                    <p class="text-[11px] text-gray-400 mt-2"><i class="fas fa-search-plus mr-1"></i>ចុចលើរូបដើម្បីពង្រីក</p>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+                    <div class="page-header">
+                        <button onclick="renderPage('dashboard')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់ក្រោយ</button>
+                        <h2><i class="fas fa-wallet text-green-500 mr-2"></i>ស្នើសុំបញ្ចូលប្រាក់</h2>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 text-center mb-6 shadow-sm">
+                        <p class="text-xs text-gray-500 mb-2 font-medium">សូមស្កេន QR Code ឬផ្ទេរមកគណនីខាងក្រោម៖</p>
+                        ${qrSectionHtml}
+                        <div class="deposit-info text-left mt-4 space-y-1 bg-white border border-gray-100 shadow-inner">
+                            <p class="text-xs text-gray-700"><span class="font-bold text-gray-500">ធនាគារ៖</span> ${bankInfo ? bankInfo.bankName : 'ABA Bank'}</p>
+                            <p class="text-xs text-gray-700"><span class="font-bold text-gray-500">លេខគណនី៖</span> <span class="font-mono font-bold text-blue-600">${bankInfo ? bankInfo.accountNumber : '000 000 000'}</span></p>
+                            <p class="text-xs text-gray-700"><span class="font-bold text-gray-500">ឈ្មោះគណនី៖</span> <span class="font-bold">${bankInfo ? bankInfo.accountName : 'SMART MERCHANT'}</span></p>
+                        </div>
+                    </div>
+
+                    <form id="depositForm" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-gray-700 text-xs font-semibold mb-1">លេខសម្គាល់សមាជិក (ID)</label>
+                                <input type="number" id="depId" value="${user.memberId || ''}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 font-bold focus:outline-none text-xs" readonly required />
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-xs font-semibold mb-1">លេខទូរសព្ទគណនី</label>
+                                <input type="text" id="depPhone" value="${user.phone}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:outline-none text-xs" readonly required />
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-xs font-semibold mb-1">ឈ្មោះអ្នកផ្ញើប្រាក់</label>
+                            <input type="text" id="depSender" placeholder="បញ្ជាក់ឈ្មោះក្នុងវិក្កយបត្រផ្ទេរប្រាក់" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition text-xs" required />
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-xs font-semibold mb-1">ចំនួនទឹកប្រាក់ដែលបានផ្ញើ (៛)</label>
+                            <input type="number" id="depAmount" placeholder="ឧទាហរណ៍៖ 20000" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition text-xs font-bold text-green-600" required />
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-xs font-semibold mb-1">រូបភាពវិក្កយបត្រផ្ទេរប្រាក់ (Screenshot)</label>
+                            <input type="file" id="depFile" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer" required />
+                            <img id="depPreview" class="screenshot-preview hidden mx-auto" alt="Preview" />
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-xs font-semibold mb-1">ចំណាំ/កំណត់សម្គាល់ (បើមាន)</label>
+                            <textarea id="depNote" placeholder="បញ្ជាក់ព័ត៌មានបន្ថែម..." rows="2" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 transition text-xs"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 text-white font-bold rounded-xl shadow-lg transition text-sm btn-success flex items-center justify-center gap-2">
+                            <i class="fab fa-telegram-plane"></i> ផ្ញើសំណើបញ្ចូលប្រាក់ទៅ Admin
+                        </button>
+                    </form>
+                </div>
+            `;
+
+            const fileInput = document.getElementById('depFile');
+            const previewImg = document.getElementById('depPreview');
+            let base64Image = "";
+
+            fileInput.onchange = function() {
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        base64Image = e.target.result;
+                        previewImg.src = base64Image;
+                        previewImg.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            document.getElementById('depositForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('depId').value.trim();
+                const sender = document.getElementById('depSender').value.trim();
+                const amount = parseFloat(document.getElementById('depAmount').value.trim());
+                const note = document.getElementById('depNote').value.trim();
+
+                if (amount <= 0) { showToast('⚠️ ចំនួនទឹកប្រាក់ត្រូវតែធំជាង 0', 'error'); return; }
+
+                const depReq = {
+                    id: genId(),
+                    memberId: parseInt(id),
+                    phone: user.phone,
+                    name: user.name,
+                    sender: sender,
+                    amount: amount,
+                    bank: bankInfo ? bankInfo.bankName : 'ABA Bank',
+                    screenshot: base64Image,
+                    status: 'pending',
+                    date: getDate(),
+                    note: note
+                };
+
+                let deposits = DB.getDeposits();
+                deposits.push(depReq);
+                DB.setDeposits(deposits);
+
+                showToast('📤 កំពុងផ្ញើសំណើទៅកាន់ Telegram...');
+                await sendDepositTelegram(depReq, base64Image);
+                showModal('📥 ផ្ញើសំណើជោគជ័យ', 'សំណើបញ្ចូលប្រាក់របស់អ្នកត្រូវបានផ្ញើជូន Admin រួចរាល់ហើយ! សូមរង់ចាំការពិនិត្យ និងអនុម័ត។', () => {
+                    renderPage('dashboard');
+                }, false);
+            };
+        }
+
+        // ============================================================
+        //  12. PAGE: WITHDRAW REQUEST FORM
+        // ============================================================
+        function renderWithdraw(container, user) {
+            if (!user) { renderPage('login'); return; }
+
+            container.innerHTML = `
+                <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+                    <div class="page-header">
+                        <button onclick="renderPage('dashboard')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់ក្រោយ</button>
+                        <h2><i class="fas fa-hand-holding-usd text-purple-500 mr-2"></i>ស្នើសុំដកប្រាក់</h2>
+                    </div>
+
+                    <div class="withdraw-box flex items-center justify-between shadow-sm mb-6">
+                        <div>
+                            <p class="text-purple-900 text-xs font-semibold">សមតុល្យដែលអាចដកបាន</p>
+                            <p class="text-xl font-bold text-purple-700">${formatMoney(user.balance)}</p>
+                        </div>
+                        <i class="fas fa-money-bill-wave text-purple-400 text-3xl opacity-60"></i>
+                    </div>
+
+                    <form id="withdrawForm" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-gray-700 text-xs font-semibold mb-1">លេខសម្គាល់សមាជិក (ID)</label>
+                                <input type="number" id="withId" value="${user.memberId || ''}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 font-bold focus:outline-none text-xs" readonly required />
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-xs font-semibold mb-1">លេខទូរសព្ទគណនី</label>
+                                <input type="text" id="withPhone" value="${user.phone}" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50 focus:outline-none text-xs" readonly required />
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-xs font-semibold mb-1">ចំនួនទឹកប្រាក់ដែលចង់ដក (៛)</label>
+                            <input type="number" id="withAmount" placeholder="បញ្ចូលចំនួនប្រាក់រៀល" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition text-xs font-bold text-purple-600" required />
+                        </div>
+                        
+                        <div class="border-t pt-3 mt-2 space-y-3">
+                            <p class="text-xs font-bold text-gray-500"><i class="fas fa-university mr-1"></i>បញ្ជាក់គណនីធនាគារទទួលប្រាក់</p>
+                            <div>
+                                <label class="block text-gray-600 text-[11px] mb-1">ឈ្មោះធនាគារ (ឧទាហរណ៍៖ ABA)</label>
+                                <input type="text" id="withBank" value="${user.bankName || ''}" placeholder="ABA, ACLEDA, Wing..." class="w-full px-4 py-2 border rounded-xl text-xs" required />
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] mb-1">លេខគណនីធនាគារ</label>
+                                    <input type="text" id="withAccount" value="${user.bankAccount || ''}" placeholder="000 000 000" class="w-full px-4 py-2 border rounded-xl text-xs font-mono font-bold" required />
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] mb-1">ឈ្មោះម្ចាស់គណនី (អក្សរធំ)</label>
+                                    <input type="text" id="withAccName" value="${user.bankAccName || ''}" placeholder="SOK SAN" class="w-full px-4 py-2 border rounded-xl text-xs font-bold" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 text-white font-bold rounded-xl shadow-lg transition text-sm btn-purple flex items-center justify-center gap-2">
+                            <i class="fab fa-telegram-plane"></i> ផ្ញើសំណើដកប្រាក់ទៅ Admin
+                        </button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('withdrawForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('withId').value.trim();
+                const amount = parseFloat(document.getElementById('withAmount').value.trim());
+                const bank = document.getElementById('withBank').value.trim();
+                const account = document.getElementById('withAccount').value.trim();
+                const accName = document.getElementById('withAccName').value.trim();
+
+                if (amount <= 0) { showToast('⚠️ ចំនួនទឹកប្រាក់ត្រូវតែធំជាង 0', 'error'); return; }
+                if (amount > user.balance) { showToast('⚠️ សមតុល្យទឹកប្រាក់របស់អ្នកមិនគ្រាន់ឡើយ!', 'error'); return; }
+
+                const withReq = {
+                    id: genId(),
+                    memberId: parseInt(id),
+                    phone: user.phone,
+                    name: user.name,
+                    amount: amount,
+                    bank: bank,
+                    account: account,
+                    accName: accName,
+                    status: 'pending',
+                    date: getDate()
+                };
+
+                let withdraws = DB.getWithdraws();
+                withdraws.push(withReq);
+                DB.setWithdraws(withdraws);
+
+                showToast('📤 កំពុងផ្ញើសំណើទៅកាន់ Telegram...');
+                await sendWithdrawTelegram(withReq, null);
+                showModal('📤 ផ្ញើសំណើដកប្រាក់ជោគជ័យ', 'សំណើដកប្រាក់របស់អ្នកត្រូវបានបញ្ជូនទៅកាន់ Admin រួចរាល់! ទឹកប្រាក់នឹងត្រូវដកចេញពីគណនីបណ្តោះអាសន្នដើម្បីរង់ចាំការផ្ទេរចូលធនាគាររបស់អ្នក។', () => {
+                    renderPage('dashboard');
+                }, false);
+            };
+        }
+
+        // ============================================================
+        //  13. ADMIN PORTAL DESIGN & LOGIC
+        // ============================================================
+        function renderAdmin(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+
+            let users = DB.getUsers().filter(u => u.role !== 'admin');
+            let pDep = DB.getDeposits().filter(d => d.status === 'pending').length;
+            let pWith = DB.getWithdraws().filter(w => w.status === 'pending').length;
+
+            let tableRows = users.length === 0 ? `<tr><td colspan="6" class="text-center py-4 text-gray-400 text-xs">មិនទាន់មានសមាជិកចុះឈ្មោះឡើយ</td></tr>` : '';
+            
+            users.forEach((u, index) => {
+                const memberId = u.memberId || 'N/A';
+                const bName = u.bankName || 'N/A';
+                const bAcc = u.bankAccount || 'N/A';
+                const bAccName = u.bankAccName || 'N/A';
+                
+                tableRows += `
+                    <tr class="border-b text-xs hover:bg-gray-50">
+                        <td class="py-3 px-2 text-center font-bold text-gray-600">${index + 1}</td>
+                        <td class="py-3 px-2 text-center font-mono font-bold text-blue-600 bg-blue-50/50">${memberId}</td>
+                        <td class="py-3 px-2 font-semibold text-gray-800">${u.name}</td>
+                        <td class="py-3 px-2 text-center font-mono">${u.phone}</td>
+                        <td class="py-3 px-2 bg-purple-50/40">
+                            <p class="font-bold text-purple-700">${bName}</p>
+                            <p class="font-mono text-[11px] font-bold text-gray-600">${bAcc}</p>
+                            <p class="text-[10px] text-gray-500">${bAccName}</p>
+                        </td>
+                        <td class="py-3 px-2 text-right font-bold text-green-600">${formatMoney(u.balance)}</td>
+                        <td class="py-3 px-2 text-center">
+                            <div class="admin-action-buttons justify-center">
+                                <button onclick="showAdminDepositModal('${u.phone}')" class="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition text-[10px]"><i class="fas fa-plus-circle"></i></button>
+                                <button onclick="showAdminDeleteBalanceModal('${u.phone}')" class="px-2 py-1 bg-amber-500 text-white rounded hover:bg-amber-600 transition text-[10px]"><i class="fas fa-minus-circle"></i></button>
+                                <button onclick="confirmDeleteMember('${u.phone}', '${u.name}')" class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition text-[10px]"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex items-center justify-between flex-wrap gap-4 bg-white p-4 rounded-2xl shadow-sm border">
+                        <div class="flex items-center gap-3">
+                            <button onclick="renderPage('dashboard')" class="back-btn"><i class="fas fa-home"></i> ទំព័រដើម</button>
+                            <h2 class="text-xl font-bold text-gray-800 m-0">🛠️ ផ្ទាំងគ្រប់គ្រងចម្បងរបស់ Admin</h2>
+                        </div>
+                        <button onclick="confirmReset()" class="reset-btn shadow"><i class="fas fa-sync-alt mr-1"></i> កំណត់ប្រព័ន្ធឡើងវិញ</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                        <button onclick="renderPage('admin')" class="p-3 bg-blue-600 text-white rounded-xl shadow-md text-center font-bold text-xs"><i class="fas fa-users block text-lg mb-1"></i> បញ្ជីសមាជិក</button>
+                        <button onclick="renderPage('adminDeposit')" class="p-3 bg-white text-gray-700 hover:bg-gray-50 rounded-xl shadow border text-center font-bold text-xs btn-with-badge"><i class="fas fa-wallet block text-lg mb-1 text-green-500"></i> សំណើបញ្ចូលប្រាក់ ${pDep > 0 ? `<span class="notification-badge">${pDep}</span>` : ''}</button>
+                        <button onclick="renderPage('adminWithdraw')" class="p-3 bg-white text-gray-700 hover:bg-gray-50 rounded-xl shadow border text-center font-bold text-xs btn-with-badge"><i class="fas fa-hand-holding-usd block text-lg mb-1 text-purple-500"></i> សំណើដកប្រាក់ ${pWith > 0 ? `<span class="notification-badge">${pWith}</span>` : ''}</button>
+                        <button onclick="renderPage('adminHistory')" class="p-3 bg-white text-gray-700 hover:bg-gray-50 rounded-xl shadow border text-center font-bold text-xs"><i class="fas fa-history block text-lg mb-1 text-blue-500"></i> ប្រវត្តិតុល្យការ</button>
+                        <button onclick="renderPage('adminReward')" class="p-3 bg-white text-gray-700 hover:bg-gray-50 rounded-xl shadow border text-center font-bold text-xs col-span-2 md:col-span-1"><i class="fas fa-gift block text-lg mb-1 text-amber-500"></i> បញ្ជីរង្វាន់/ចំណូល</button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white rounded-2xl shadow p-4 border">
+                            <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center"><i class="fas fa-users text-blue-500 mr-2"></i>គ្រប់គ្រងសមាជិកទាំងអស់</h3>
+                            <div class="member-table-container border">
+                                <table class="text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-100 text-[11px] uppercase text-gray-600 text-center sticky top-0 border-b">
+                                            <th class="py-2.5 px-2">ល.រ</th>
+                                            <th class="py-2.5 px-2">ID សមាជិក</th>
+                                            <th class="py-2.5 px-2 text-left">ឈ្មោះ</th>
+                                            <th class="py-2.5 px-2">លេខទូរសព្ទ</th>
+                                            <th class="py-2.5 px-2 text-left">គណនីធនាគារសមាជិក</th>
+                                            <th class="py-2.5 px-2 text-right">សមតុល្យ</th>
+                                            <th class="py-2.5 px-2">សកម្មភាព</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>${tableRows}</tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl shadow p-4 border space-y-4">
+                            <h3 class="text-sm font-bold text-gray-800 mb-1"><i class="fas fa-qrcode text-indigo-500 mr-2"></i>រៀបចំ QR បញ្ចូលប្រាក់</h3>
+                            <form id="adminBankForm" class="space-y-3">
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] font-semibold mb-1">ឈ្មោះធនាគារ</label>
+                                    <input type="text" id="admBankName" placeholder="ឧទាហរណ៍៖ ABA Bank" class="w-full px-3 py-2 border rounded-xl text-xs" required />
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] font-semibold mb-1">លេខគណនីធនាគារ</label>
+                                    <input type="text" id="admBankAcc" placeholder="000 111 222" class="w-full px-3 py-2 border rounded-xl text-xs font-mono font-bold" required />
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] font-semibold mb-1">ឈ្មោះម្ចាស់គណនី</label>
+                                    <input type="text" id="admBankNameAcc" placeholder="KH KHMER SMART" class="w-full px-3 py-2 border rounded-xl text-xs font-bold" required />
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] font-semibold mb-1">រូបភាព QR Code (Base64/File)</label>
+                                    <input type="file" id="admBankFile" accept="image/*" class="w-full text-xs text-gray-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" />
+                                    <img id="admBankPreview" class="screenshot-preview hidden mx-auto" alt="Preview QR" />
+                                </div>
+                                <button type="submit" class="w-full py-2.5 text-white font-bold rounded-xl shadow transition text-xs btn-primary"><i class="fas fa-save mr-1"></i> រក្សាទុកព័ត៌មានធនាគារ</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Load Existing Admin Bank Info Setup
+            let currentBank = DB.get('adminBankInfo', null);
+            let adminQRBase64 = "";
+            if (currentBank) {
+                document.getElementById('admBankName').value = currentBank.bankName || '';
+                document.getElementById('admBankAcc').value = currentBank.accountNumber || '';
+                document.getElementById('admBankNameAcc').value = currentBank.accountName || '';
+                if (currentBank.qrCode && currentBank.qrCode !== '') {
+                    adminQRBase64 = currentBank.qrCode;
+                    const prev = document.getElementById('admBankPreview');
+                    prev.src = adminQRBase64;
+                    prev.classList.remove('hidden');
+                }
+            }
+
+            document.getElementById('admBankFile').onchange = function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        adminQRBase64 = e.target.result;
+                        const prev = document.getElementById('admBankPreview');
+                        prev.src = adminQRBase64;
+                        prev.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            document.getElementById('adminBankForm').onsubmit = (e) => {
+                e.preventDefault();
+                const bName = document.getElementById('admBankName').value.trim();
+                const bAcc = document.getElementById('admBankAcc').value.trim();
+                const bAccName = document.getElementById('admBankNameAcc').value.trim();
+
+                DB.set('adminBankInfo', {
+                    bankName: bName,
+                    accountNumber: bAcc,
+                    accountName: bAccName,
+                    qrCode: adminQRBase64
+                });
+                showToast('🏦 រក្សាទុកគណនីធនាគារ Admin រួចរាល់!');
+                renderPage('admin');
+            };
+        }
+
+        // ============================================================
+        //  14. ADMIN: MANAGE DEPOSIT REQUESTS
+        // ============================================================
+        function renderAdminDeposit(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            let list = DB.getDeposits();
+            let htmlRows = list.length === 0 ? `<tr><td colspan="8" class="text-center py-4 text-gray-400 text-xs">មិនទាន់មានសំណើបញ្ចូលប្រាក់នៅឡើយទេ</td></tr>` : '';
+
+            // Reverse for latest first
+            [...list].reverse().forEach(d => {
+                const isPending = d.status === 'pending';
+                const statusBadge = isPending ? `<span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-bold">រង់ចាំពិនិត្យ</span>` : (d.status === 'approved' ? `<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold">បានអនុម័ត</span>` : `<span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full font-bold">បានបដិសេធ</span>`);
+                
+                // Find user bank info for display
+                let allUsers = DB.getUsers();
+                let u = allUsers.find(usr => usr.phone === d.phone);
+                let userBankHtml = u ? `
+                    <p class="font-bold text-purple-700 text-[11px]">${u.bankName || 'N/A'}</p>
+                    <p class="font-mono text-[10px] font-bold text-gray-600">${u.bankAccount || 'N/A'}</p>
+                    <p class="text-[9px] text-gray-500">${u.bankAccName || 'N/A'}</p>
+                ` : 'N/A';
+
+                htmlRows += `
+                    <tr class="border-b text-xs hover:bg-gray-50">
+                        <td class="py-2.5 px-2 text-center font-mono font-bold text-blue-600 bg-blue-50/50">${d.memberId || 'N/A'}</td>
+                        <td class="py-2.5 px-2 font-semibold">${d.name}<br><span class="text-[10px] text-gray-400 font-mono">${d.phone}</span></td>
+                        <td class="py-2.5 px-2">${userBankHtml}</td>
+                        <td class="py-2.5 px-2 font-bold text-green-600 text-right">${formatMoney(d.amount)}</td>
+                        <td class="py-2.5 px-2 text-center">
+                            ${d.screenshot ? `<img src="${d.screenshot}" class="screenshot-thumb mx-auto" onclick="showImageViewer('${d.screenshot}')" />` : '<span class="text-gray-400">គ្មានរូប</span>'}
+                        </td>
+                        <td class="py-2.5 px-2 text-gray-500 text-[11px]">${d.date}</td>
+                        <td class="py-2.5 px-2 text-center">${statusBadge}</td>
+                        <td class="py-2.5 px-2 text-center">
+                            ${isPending ? `
+                                <div class="flex gap-1 justify-center">
+                                    <button onclick="approveDeposit('${d.id}')" class="px-2 py-1 bg-green-600 text-white text-[10px] rounded hover:bg-green-700 font-bold">អនុម័ត</button>
+                                    <button onclick="rejectDeposit('${d.id}')" class="px-2 py-1 bg-red-600 text-white text-[10px] rounded hover:bg-red-700 font-bold">បដិសេធ</button>
+                                </div>
+                            ` : '<span class="text-gray-400">—</span>'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border">
+                        <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់ទៅផ្ទាំងគ្រប់គ្រង</button>
+                        <h2 class="text-xl font-bold m-0"><i class="fas fa-wallet text-green-500 mr-2"></i>គ្រប់គ្រងសំណើបញ្ចូលប្រាក់សរុប</h2>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow p-4 border overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 text-[11px] uppercase text-gray-600 text-center border-b">
+                                    <th class="py-2.5 px-2">ID สមាជិក</th>
+                                    <th class="py-2.5 px-2 text-left">សមាជិក</th>
+                                    <th class="py-2.5 px-2 text-left">គណនីធនាគារសមាជិក</th>
+                                    <th class="py-2.5 px-2 text-right">ចំនួនទឹកប្រាក់</th>
+                                    <th class="py-2.5 px-2">វិក្កយបត្រ</th>
+                                    <th class="py-2.5 px-2">កាលបរិច្ឆេទ</th>
+                                    <th class="py-2.5 px-2">ស្ថានភាព</th>
+                                    <th class="py-2.5 px-2">សកម្មភាព</th>
+                                </tr>
+                            </thead>
+                            <tbody>${htmlRows}</tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        //  15. ADMIN: MANAGE WITHDRAW REQUESTS
+        // ============================================================
+        function renderAdminWithdraw(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            let list = DB.getWithdraws();
+            let htmlRows = list.length === 0 ? `<tr><td colspan="8" class="text-center py-4 text-gray-400 text-xs">មិនទាន់មានសំណើដកប្រាក់នៅឡើយទេ</td></tr>` : '';
+
+            [...list].reverse().forEach(w => {
+                const isPending = w.status === 'pending';
+                const statusBadge = isPending ? `<span class="px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-bold">រង់ចាំអនុម័ត</span>` : (w.status === 'approved' ? `<span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold">បានផ្ទេរប្រាក់រួច</span>` : `<span class="px-2 py-0.5 bg-red-100 text-red-700 rounded-full font-bold">បានបដិសេធ</span>`);
+                
+                // Member registered bank account display
+                let allUsers = DB.getUsers();
+                let usrObj = allUsers.find(usr => usr.phone === w.phone);
+                let registeredBankHtml = usrObj ? `
+                    <div class="mt-1 border-t pt-1 border-dashed border-purple-200">
+                        <p class="text-[9px] text-gray-400 font-bold uppercase">គណនីចុះឈ្មោះ៖</p>
+                        <p class="text-purple-600 font-bold text-[10px]">${usrObj.bankName || 'N/A'} - ${usrObj.bankAccount || 'N/A'}</p>
+                    </div>
+                ` : '';
+
+                htmlRows += `
+                    <tr class="border-b text-xs hover:bg-gray-50">
+                        <td class="py-2.5 px-2 text-center font-mono font-bold text-blue-600 bg-blue-50/50">${w.memberId || 'N/A'}</td>
+                        <td class="py-2.5 px-2 font-semibold">${w.name}<br><span class="text-[10px] text-gray-400 font-mono">${w.phone}</span></td>
+                        <td class="py-2.5 px-2 bg-purple-50/30">
+                            <p class="font-bold text-purple-800">${w.bank}</p>
+                            <p class="font-mono text-blue-700 font-bold">${w.account}</p>
+                            <p class="text-gray-600 font-bold text-[10px]">${w.accName}</p>
+                            ${registeredBankHtml}
+                        </td>
+                        <td class="py-2.5 px-2 font-bold text-purple-600 text-right">${formatMoney(w.amount)}</td>
+                        <td class="py-2.5 px-2 text-gray-500 text-[11px]">${w.date}</td>
+                        <td class="py-2.5 px-2 text-center">${statusBadge}</td>
+                        <td class="py-2.5 px-2 text-center">
+                            ${isPending ? `
+                                <div class="flex gap-1 justify-center">
+                                    <button onclick="approveWithdraw('${w.id}')" class="px-2 py-1 bg-purple-600 text-white text-[10px] rounded hover:bg-purple-700 font-bold">អនុម័ត & ផ្ទេរ</button>
+                                    <button onclick="rejectWithdraw('${w.id}')" class="px-2 py-1 bg-red-600 text-white text-[10px] rounded hover:bg-red-700 font-bold">បដិសេធ</button>
+                                </div>
+                            ` : '<span class="text-gray-400">—</span>'}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border">
+                        <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់ទៅផ្ទាំងគ្រប់គ្រង</button>
+                        <h2 class="text-xl font-bold m-0"><i class="fas fa-hand-holding-usd text-purple-500 mr-2"></i>គ្រប់គ្រងសំណើដកប្រាក់សរុប</h2>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow p-4 border overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 text-[11px] uppercase text-gray-600 text-center border-b">
+                                    <th class="py-2.5 px-2">ID សមាជិក</th>
+                                    <th class="py-2.5 px-2 text-left">សមាជិក</th>
+                                    <th class="py-2.5 px-2 text-left">គណនីធនាគារដែលស្នើសុំដក</th>
+                                    <th class="py-2.5 px-2 text-right">ចំនួនទឹកប្រាក់</th>
+                                    <th class="py-2.5 px-2">កាលបរិច្ឆេទ</th>
+                                    <th class="py-2.5 px-2">ស្ថានភាព</th>
+                                    <th class="py-2.5 px-2">សកម្មភាព</th>
+                                </tr>
+                            </thead>
+                            <tbody>${htmlRows}</tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        //  16. ADMIN: TRANSACTION BALANCE LOGS HISTORY
+        // ============================================================
+        function renderAdminHistory(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            let list = DB.getTx();
+            let allUsers = DB.getUsers();
+            let htmlRows = list.length === 0 ? `<tr><td colspan="7" class="text-center py-4 text-gray-400 text-xs">មិនទាន់មានប្រវត្តិប្រតិបត្តិការណាមួយឡើយ</td></tr>` : '';
+
+            [...list].reverse().forEach((t, idx) => {
+                const isDeposit = t.type === 'deposit';
+                let usr = allUsers.find(u => u.phone === t.phone);
+                const memberId = usr ? usr.memberId : 'N/A';
+                const memberName = usr ? usr.name : 'គណនីត្រូវបានលុប';
+                
+                let userBankHtml = usr ? `
+                    <p class="font-bold text-purple-700 text-[10px]">${usr.bankName || 'N/A'}</p>
+                    <p class="font-mono text-[9px] font-bold text-gray-600">${usr.bankAccount || 'N/A'}</p>
+                ` : 'N/A';
+
+                htmlRows += `
+                    <tr class="border-b text-xs hover:bg-gray-50">
+                        <td class="py-2 px-2 text-center font-mono font-bold text-blue-600 bg-blue-50/50">${memberId}</td>
+                        <td class="py-2 px-2 font-semibold text-gray-800">${memberName}<br><span class="text-[10px] font-mono text-gray-400">${t.phone}</span></td>
+                        <td class="py-2 px-2">${userBankHtml}</td>
+                        <td class="py-2 px-2 text-center">
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isDeposit ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+                                ${isDeposit ? 'បញ្ចូលប្រាក់' : 'ដកប្រាក់'}
+                            </span>
+                        </td>
+                        <td class="py-2 px-2 font-bold text-right ${isDeposit ? 'text-green-600' : 'text-red-600'}">
+                            ${isDeposit ? '+' : '-'}${formatMoney(t.amount)}
+                        </td>
+                        <td class="py-2 px-2 text-gray-400 text-[10px]">${t.date}</td>
+                        <td class="py-2 px-2 text-gray-600 text-[11px]">${t.note || '—'}</td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border">
+                        <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់ទៅផ្ទាំងគ្រប់គ្រង</button>
+                        <h2 class="text-xl font-bold m-0"><i class="fas fa-history text-blue-500 mr-2"></i>ប្រវត្តិតុល្យការហិរញ្ញវត្ថុរួម</h2>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow p-4 border overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 text-[11px] uppercase text-gray-600 text-center border-b">
+                                    <th class="py-2.5 px-2">ID សមាជិក</th>
+                                    <th class="py-2.5 px-2 text-left">សមាជិក</th>
+                                    <th class="py-2.5 px-2 text-left">គណនីធនាគារសមាជិក</th>
+                                    <th class="py-2.5 px-2">ប្រភេទ</th>
+                                    <th class="py-2.5 px-2 text-right">ចំនួនទឹកប្រាក់</th>
+                                    <th class="py-2.5 px-2">កាលបរិច្ឆេទ</th>
+                                    <th class="py-2.5 px-2 text-left">កំណត់សម្គាល់</th>
+                                </tr>
+                            </thead>
+                            <tbody>${htmlRows}</tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        //  17. ADMIN: REWARDS MANAGEMENT SCREEN
+        // ============================================================
+        function renderAdminReward(container, user) {
+            if (!user || user.role !== 'admin') { renderPage('login'); return; }
+            
+            let users = DB.getUsers().filter(u => u.role !== 'admin');
+            let rewards = DB.getRewards();
+            
+            let rewardRows = rewards.length === 0 ? `<tr><td colspan="6" class="text-center py-4 text-gray-400 text-xs">មិនទាន់មានការចែករង្វាន់ឡើយ</td></tr>` : '';
+            
+            [...rewards].reverse().forEach(r => {
+                let usr = users.find(u => u.phone === r.phone);
+                const memberId = usr ? usr.memberId : 'N/A';
+                
+                let userBankHtml = usr ? `
+                    <p class="font-bold text-purple-700 text-[10px]">${usr.bankName || 'N/A'}</p>
+                    <p class="font-mono text-[9px] font-bold text-gray-600">${usr.bankAccount || 'N/A'}</p>
+                ` : 'N/A';
+
+                rewardRows += `
+                    <tr class="border-b text-xs hover:bg-gray-50 text-center">
+                        <td class="py-2 font-mono font-bold text-blue-600 bg-blue-50/50">${memberId}</td>
+                        <td class="py-2 text-left font-semibold">${r.name}<br><span class="text-[10px] text-gray-400 font-mono">${r.phone}</span></td>
+                        <td class="py-2 text-left">${userBankHtml}</td>
+                        <td class="py-2 text-amber-600 font-bold text-right">${formatMoney(r.amount)}</td>
+                        <td class="py-2 text-left text-gray-600 text-[11px]">${r.note}</td>
+                        <td class="py-2 text-gray-400 text-[10px]">${r.date}</td>
+                    </tr>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border">
+                        <button onclick="renderPage('admin')" class="back-btn"><i class="fas fa-arrow-left"></i> ត្រឡប់ទៅផ្ទាំងគ្រប់គ្រង</button>
+                        <h2 class="text-xl font-bold m-0"><i class="fas fa-gift text-amber-500 mr-2"></i>គ្រប់គ្រងការចែករង្វាន់ និងចំណូលសមាជិក</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-2xl shadow p-4 border h-fit">
+                            <h3 class="text-sm font-bold text-gray-800 mb-3"><i class="fas fa-paper-plane text-amber-500 mr-2"></i>ចែករង្វាន់ជូនសមាជិក</h3>
+                            <form id="rewardForm" class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] font-semibold mb-1">ជ្រើសរើសសមាជិកទទួលរង្វាន់</label>
+                                    <select id="rewPhone" class="w-full px-3 py-2 border rounded-xl text-xs font-bold text-gray-700 bg-gray-50" required>
+                                        <option value="">-- ជ្រើសរើសសមាជិក --</option>
+                                        ${users.map(u => `<option value="${u.phone}">ID: ${u.memberId || 'N/A'} - ${u.name} (${u.phone})</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] font-semibold mb-1">ចំនួនទឹកប្រាក់រង្វាន់ (៛)</label>
+                                    <input type="number" id="rewAmount" placeholder="បញ្ចូលចំនួនប្រាក់រៀល" class="w-full px-3 py-2 border rounded-xl text-xs font-bold text-amber-600" required />
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 text-[11px] font-semibold mb-1">មូលហេតុ/កំណត់សម្គាល់</label>
+                                    <input type="text" id="rewNote" placeholder="ឧទាហរណ៍៖ រង្វាន់លើកទឹកចិត្តប្រចាំខែ" class="w-full px-3 py-2 border rounded-xl text-xs text-gray-700" required />
+                                </div>
+                                <button type="submit" class="w-full py-2.5 text-white font-bold rounded-xl shadow transition text-xs btn-purple">
+                                    <i class="fas fa-gift mr-1"></i> ប្រគល់រង្វាន់ជូនសមាជិក
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="lg:col-span-2 bg-white rounded-2xl shadow p-4 border overflow-x-auto">
+                            <h3 class="text-sm font-bold text-gray-800 mb-3"><i class="fas fa-list-alt text-blue-500 mr-2"></i>ប្រវត្តិនៃការចែករង្វាន់ចុងក្រោយ</h3>
+                            <div class="member-table-container">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="bg-gray-100 text-[11px] uppercase text-gray-600 border-b">
+                                            <th class="py-2 px-2 text-center">ID សមាជិក</th>
+                                            <th class="py-2 px-2 text-left">សមាជិក</th>
+                                            <th class="py-2 px-2 text-left">គណនីធនាគារ</th>
+                                            <th class="py-2 px-2 text-right">ចំនួនរង្វាន់</th>
+                                            <th class="py-2 px-2 text-left">មូលហេតុ</th>
+                                            <th class="py-2 px-2 text-center">កាលបរិច្ឆេទ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>${rewardRows}</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('rewardForm').onsubmit = (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('rewPhone').value;
+                const amount = parseFloat(document.getElementById('rewAmount').value.trim());
+                const note = document.getElementById('rewNote').value.trim();
+
+                if (!phone) { showToast('⚠️ សូមជ្រើសរើសសមាជិកម្នាក់!', 'error'); return; }
+                if (amount <= 0) { showToast('⚠️ ទឹកប្រាក់រង្វាន់ត្រូវតែធំជាង 0', 'error'); return; }
+
+                let allUsers = DB.getUsers();
+                let u = allUsers.find(usr => usr.phone === phone);
+                if (u) {
+                    u.balance += amount; // Add reward to user balance directly
+                    DB.setUsers(allUsers);
+
+                    let rewards = DB.getRewards();
+                    rewards.push({
+                        id: genId(),
+                        phone: phone,
+                        name: u.name,
+                        amount: amount,
+                        note: note,
+                        date: getDate()
+                    });
+                    DB.setRewards(rewards);
+
+                    // Track in general transaction history as deposit
+                    let tx = DB.getTx();
+                    tx.push({ id: genId(), phone, type: 'deposit', amount, status: 'completed', date: getDate(), note: `🎁 រង្វាន់៖ ${note}` });
+                    DB.setTx(tx);
+
+                    showToast('🎉 បានប្រគល់រង្វាន់ និងបន្ថែមសមតុល្យជូនសមាជិកជោគជ័យ!');
+                    renderPage('adminReward');
+                }
+            };
+        }
+
+        function renderAdminIncome(container, user) {
+            renderAdminReward(container, user);
+        }
+
+        // ============================================================
+        //  18. ADMIN MODALS ACTION HANDLERS (DEPOSIT / BALANCE DELETE)
+        // ============================================================
+        function showAdminDepositModal(phone) {
+            let u = DB.getUsers().find(usr => usr.phone === phone);
+            if (!u) return;
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+                    <div class="modal-box">
+                        <h3 class="text-sm font-bold text-gray-800 mb-1"><i class="fas fa-plus-circle text-green-500 mr-1"></i> បញ្ចូលប្រាក់ផ្ទាល់ (Manual Deposit)</h3>
+                        <p class="text-xs text-gray-500 mb-4">បញ្ចូលសមតុល្យទៅគណនីសមាជិក៖ <span class="font-bold text-gray-800">${u.name}</span></p>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-gray-600 text-[11px] mb-1">ចំនួនទឹកប្រាក់រៀល (៛)</label>
+                                <input type="number" id="admModalAmount" placeholder="ឧទាហរណ៍៖ 50000" class="w-full px-3 py-2 border rounded-xl text-xs font-bold text-green-600" />
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 text-[11px] mb-1">កំណត់សម្គាល់របស់ Admin</label>
+                                <input type="text" id="admModalNote" placeholder="បញ្ចូលដោយ Admin ផ្ទាល់..." class="w-full px-3 py-2 border rounded-xl text-xs" />
+                            </div>
+                        </div>
+                        <div class="flex gap-2 justify-end mt-4">
+                            <button onclick="closeModal()" class="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg text-xs font-bold">បោះបង់</button>
+                            <button onclick="processAdminDeposit('${phone}')" class="px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs font-bold">បញ្ចូលប្រាក់</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function processAdminDeposit(phone) {
+            const amount = parseFloat(document.getElementById('admModalAmount').value.trim());
+            const note = document.getElementById('admModalNote').value.trim();
+            if (isNaN(amount) || amount <= 0) { showToast('⚠️ សូមបញ្ចូលចំនួនប្រាក់ឱ្យត្រឹមត្រូវ!', 'error'); return; }
+
+            addTransaction(phone, 'deposit', amount, note || 'បញ្ចូលដោយ Admin ផ្ទាល់');
+            showToast('🎉 បានបញ្ចូលទឹកប្រាក់ជូនសមាជិកដោយជោគជ័យ!');
+            closeModal();
+            renderPage('admin');
+        }
+
+        function showAdminDeleteBalanceModal(phone) {
+            let u = DB.getUsers().find(usr => usr.phone === phone);
+            if (!u) return;
+            const container = document.getElementById('modalContainer');
+            container.innerHTML = `
+                <div class="modal-overlay" onclick="if(event.target===this) closeModal()">
+                    <div class="modal-box">
+                        <h3 class="text-sm font-bold text-gray-800 mb-1"><i class="fas fa-minus-circle text-amber-500 mr-1"></i> កាត់ប្រាក់/ដកសមតុល្យចេញ (Direct Deduct)</h3>
+                        <p class="text-xs text-gray-500 mb-4">សមតុល្យបច្ចុប្បន្ន៖ <span class="font-bold text-green-600">${formatMoney(u.balance)}</span></p>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-gray-600 text-[11px] mb-1">ចំនួនទឹកប្រាក់ដែលត្រូវកាត់ (៛)</label>
+                                <input type="number" id="admDelAmount" placeholder="បញ្ចូលចំនួនប្រាក់រៀល" class="w-full px-3 py-2 border rounded-xl text-xs font-bold text-red-600" />
+                            </div>
+                            <div>
+                                <label class="block text-gray-600 text-[11px] mb-1">មូលហេតុនៃការកាត់ប្រាក់</label>
+                                <input type="text" id="admDelNote" placeholder="បញ្ជាក់មូលហេតុ..." class="w-full px-3 py-2 border rounded-xl text-xs" />
+                            </div>
+                        </div>
+                        <div class="flex gap-2 justify-end mt-4">
+                            <button onclick="closeModal()" class="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-lg text-xs font-bold">បោះបង់</button>
+                            <button onclick="processAdminDeleteBalance('${phone}')" class="px-3 py-1.5 bg-amber-600 text-white rounded-lg text-xs font-bold">កាត់ប្រាក់ចេញ</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function processAdminDeleteBalance(phone) {
+            const amount = parseFloat(document.getElementById('admDelAmount').value.trim());
+            const note = document.getElementById('admDelNote').value.trim();
+            
+            let users = DB.getUsers();
+            let u = users.find(usr => usr.phone === phone);
+            if (!u) return;
+
+            if (isNaN(amount) || amount <= 0) { showToast('⚠️ សូមបញ្ចូលទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!', 'error'); return; }
+            if (amount > u.balance) { showToast('⚠️ ទឹកប្រាក់ដែលត្រូវកាត់ ធំជាងសមតុល្យសមាជិកដែលមាន!', 'error'); return; }
+
+            addTransaction(phone, 'withdraw', amount, note || 'កាត់ចេញដោយ Admin ផ្ទាល់');
+            showToast('💸 បានកាត់ទឹកប្រាក់ចេញពីសមាជិកដោយជោគជ័យ!');
+            closeModal();
+            renderPage('admin');
+        }
+
+        // ============================================================
+        //  19. ADMIN APPROVAL REQUEST ACTIONS
+        // ============================================================
+        function approveDeposit(id) {
+            let deposits = DB.getDeposits();
+            let d = deposits.find(req => req.id === id);
+            if (!d || d.status !== 'pending') return;
+
+            d.status = 'approved';
+            DB.setDeposits(deposits);
+
+            // Add real cash amount to targeted member balance
+            addTransaction(d.phone, 'deposit', d.amount, `📥 អនុម័តលើសំណើបញ្ចូលប្រាក់ (អ្នកផ្ញើ៖ ${d.sender})`);
+            showToast('✅ បានអនុម័តសំណើបញ្ចូលប្រាក់រួចរាល់!');
+            renderPage('adminDeposit');
+        }
+
+        function rejectDeposit(id) {
+            let deposits = DB.getDeposits();
+            let d = deposits.find(req => req.id === id);
+            if (!d || d.status !== 'pending') return;
+
+            d.status = 'rejected';
+            DB.setDeposits(deposits);
+            showToast('❌ បានបដិសេធសំណើបញ្ចូលប្រាក់!');
+            renderPage('adminDeposit');
+        }
+
+        function approveWithdraw(id) {
+            let withdraws = DB.getWithdraws();
+            let w = withdraws.find(req => req.id === id);
+            if (!w || w.status !== 'pending') return;
+
+            let allUsers = DB.getUsers();
+            let u = allUsers.find(usr => usr.phone === w.phone);
+            if (!u || u.balance < w.amount) {
+                showToast('⚠️ ទឹកប្រាក់សមាជិកមិនគ្រប់គ្រាន់សម្រាប់ការអនុម័តទេ!', 'error');
+                return;
+            }
+
+            w.status = 'approved';
+            DB.setWithdraws(withdraws);
+
+            // Deduct real balance cash from user
+            addTransaction(w.phone, 'withdraw', w.amount, `📤 អនុម័តដកប្រាក់ទៅគណនី ${w.bank} (${w.account})`);
+            showToast('✅ បានអនុម័តការដកប្រាក់ និងកាត់សមតុល្យរួចរាល់!');
+            renderPage('adminWithdraw');
+        }
+
+        function rejectWithdraw(id) {
+            let withdraws = DB.getWithdraws();
+            let w = withdraws.find(req => req.id === id);
+            if (!w || w.status !== 'pending') return;
+
+            w.status = 'rejected';
+            DB.setWithdraws(withdraws);
+            showToast('❌ បានបដិសេធសំណើដកប្រាក់!');
+            renderPage('adminWithdraw');
+        }
+
+        // ============================================================
+        //  20. SYSTEM CORE INITIALIZATION & FACTORY SETUP
+        // ============================================================
+        function confirmDeleteMember(phone, name) {
+            showModal('⚠️ លុបសមាជិកប្រព័ន្ធ', `តើលោកអ្នកពិតជាចង់លុបសមាជិកឈ្មោះ <b>${name}</b> (${phone}) ចេញពីប្រព័ន្ធមែនទេ? រាល់ប្រវត្តិប្រតិបត្តិការទាំងអស់របស់សមាជិកនេះនឹងត្រូវលុបចោលទាំងស្រុង!`, () => {
+                DB.deleteMember(phone);
+                showToast('🗑️ បានលុបសមាជិកចេញពីប្រព័ន្ធជោគជ័យ!');
+                renderPage('admin');
+            });
+        }
+
+        function confirmReset() {
+            showModal('🚨 កំណត់ប្រព័ន្ធឡើងវិញទាំងស្រុង', 'តើអ្នកពិតជាចង់សម្អាតទិន្នន័យសមាជិក និងប្រតិបត្តិការទាំងអស់មែនទេ? (គណនី Admin ចម្បងនឹងមិនត្រូវលុបឡើយ)', () => {
+                DB.resetAll();
+                showToast('🔄 បានសម្អាត និងកំណត់ប្រព័ន្ធឡើងវិញជោគជ័យ!');
+                renderPage('admin');
+            });
+        }
+
+        // INITIAL CHECK FLOW
+        (function initSystem() {
+            let users = DB.getUsers();
+            // Create default master admin database if not existing
+            if (!users.find(u => u.phone === '0887163013')) {
+                users.push({
+                    phone: '0887163013',
+                    name: 'Master Admin',
+                    password: '1122',
+                    balance: 0,
+                    status: 'active',
+                    role: 'admin',
+                    memberId: 777
+                });
+                DB.setUsers(users);
+            }
+
+            const sess = DB.getSession();
+            if (sess) {
+                let u = users.find(usr => usr.phone === sess.phone);
+                if (u) {
+                    if (u.role === 'admin') renderPage('admin');
+                    else renderPage('dashboard');
+                    return;
+                }
+            }
+            renderPage('login');
         })();
+
+        // Make functions globally accessible
+        window.renderPage = renderPage;
+        window.logout = logout;
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+        window.showToast = showToast;
+        window.showImageViewer = showImageViewer;
+        window.closeImageViewer = closeImageViewer;
+        window.showAdminDepositModal = showAdminDepositModal;
+        window.closeAdminDepositModal = closeModal;
+        window.processAdminDeposit = processAdminDeposit;
+        window.showAdminDeleteBalanceModal = showAdminDeleteBalanceModal;
+        window.closeAdminDeleteBalanceModal = closeModal;
+        window.processAdminDeleteBalance = processAdminDeleteBalance;
+        window.confirmDeleteMember = confirmDeleteMember;
+        window.confirmReset = confirmReset;
+        window.approveDeposit = approveDeposit;
+        window.rejectDeposit = rejectDeposit;
+        window.approveWithdraw = approveWithdraw;
+        window.rejectWithdraw = rejectWithdraw;
     </script>
 </body>
 </html>
