@@ -194,6 +194,8 @@
             border-radius: 16px;
             padding: 16px;
             margin-top: 16px;
+            max-height: 250px;
+            overflow-y: auto;
         }
         .income-box {
             background: linear-gradient(135deg, #dbeafe, #93c5fd);
@@ -201,6 +203,8 @@
             border-radius: 16px;
             padding: 16px;
             margin-top: 16px;
+            max-height: 250px;
+            overflow-y: auto;
         }
         .image-viewer {
             position: fixed;
@@ -608,7 +612,8 @@
         function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
         function formatMoney(n) {
-            if (n === 0) return '0.00 ៛';
+            // FIXED: If n is negative or less than 0, show 0.00 ៛
+            if (n <= 0) return '0.00 ៛';
             return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ៛';
         }
 
@@ -617,13 +622,11 @@
         }
 
         // ============================================================
-        //  2.1 TELEGRAM HELPERS
+        //  2.1 TELEGRAM HELPERS - WITH BETTER ERROR LOGGING
         // ============================================================
-        // Deposit Telegram: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw , -5410896989
-        // Withdraw Telegram: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc , -5338881653
-
         async function sendToTelegram(botToken, chatId, message) {
             try {
+                console.log(`📤 Sending to Telegram: bot=${botToken.substring(0,10)}..., chat=${chatId}`);
                 const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
                 const payload = {
                     chat_id: chatId,
@@ -651,6 +654,7 @@
 
         async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
             try {
+                console.log(`📤 Sending photo to Telegram: bot=${botToken.substring(0,10)}..., chat=${chatId}`);
                 const byteString = atob(photoBase64.split(',')[1]);
                 const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
                 const ab = new ArrayBuffer(byteString.length);
@@ -685,7 +689,7 @@
 
         async function sendDepositTelegram(depositData, screenshotBase64) {
             const botToken = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
-            const chatIds = ['-5410896989']; // បន្ថែម Chat ID ផ្សេងទៀតបើចាំបាច់
+            const chatIds = ['-5410896989'];
             
             const message = `
 📥 <b>សំណើបញ្ចូលប្រាក់</b>
@@ -721,14 +725,14 @@
             if (success) {
                 showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
             } else {
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram (សូមពិនិត្យ Console)', 'error');
             }
             return success;
         }
 
         async function sendWithdrawTelegram(withdrawData, screenshotBase64) {
             const botToken = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
-            const chatIds = ['-5338881653']; // បន្ថែម Chat ID ផ្សេងទៀតបើចាំបាច់
+            const chatIds = ['-5338881653'];
             
             const message = `
 📤 <b>សំណើដកប្រាក់</b>
@@ -764,7 +768,7 @@
             if (success) {
                 showToast('📱 បានផ្ញើសារទៅ Telegram ដោយជោគជ័យ!', 'success');
             } else {
-                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram', 'error');
+                showToast('⚠️ មានបញ្ហាក្នុងការផ្ញើសារទៅ Telegram (សូមពិនិត្យ Console)', 'error');
             }
             return success;
         }
@@ -1066,7 +1070,7 @@
         }
 
         // ============================================================
-        //  10. PAGE: DASHBOARD (User) - WITH FLOATING EMOJI
+        //  10. PAGE: DASHBOARD (User)
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1481,7 +1485,7 @@
         }
 
         // ============================================================
-        //  14. PAGE: ADMIN DASHBOARD - WITH FLOATING EMOJI & REWARD HISTORY
+        //  14. PAGE: ADMIN DASHBOARD - REMOVED REWARD GIVEN BOX, ADDED INCOME HISTORY
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1491,9 +1495,10 @@
             const adminBalance = user.balance || 0;
             const rewardsHistory = DB.getRewards().slice(-5).reverse();
             const totalRewardsGiven = DB.getRewards().reduce((s, r) => s + r.amount, 0);
+            const incomeHistory = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).slice(-5).reverse();
+            const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
             const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
-            const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
             container.innerHTML = `
             <div class="balance-box mb-6">
@@ -1567,9 +1572,9 @@
                 </button>
             </div>
 
-            <!-- Reward History Display -->
-            <div class="reward-box mb-6">
-                <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិប្រាក់រង្វាន់ថ្មីៗ</h4>
+            <!-- Reward History Box -->
+            <div class="reward-box mb-4">
+                <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិផ្ដល់ប្រាក់រង្វាន់ថ្មីៗ</h4>
                 ${rewardsHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>' :
                     rewardsHistory.map(r => {
                         const member = DB.getUsers().find(u => u.phone === r.phone);
@@ -1578,6 +1583,23 @@
                                 <span>${member ? member.name : r.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
                                 <span class="text-yellow-600">➕ ${formatMoney(r.amount)}</span>
                                 <span class="text-xs text-gray-400">${r.date}</span>
+                            </div>
+                        `;
+                    }).join('')
+                }
+            </div>
+
+            <!-- Income History Box -->
+            <div class="income-box mb-6">
+                <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-blue-600 mr-2"></i>ប្រវត្តិផ្ដល់ប្រាក់ចំណូលថ្មីៗ</h4>
+                ${incomeHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់ចំណូលទេ</p>' :
+                    incomeHistory.map(t => {
+                        const member = DB.getUsers().find(u => u.phone === t.phone);
+                        return `
+                            <div class="flex justify-between items-center border-b border-blue-200 py-2 text-sm">
+                                <span>${member ? member.name : t.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
+                                <span class="text-blue-600">➕ ${formatMoney(t.amount)}</span>
+                                <span class="text-xs text-gray-400">${t.date}</span>
                             </div>
                         `;
                     }).join('')
@@ -1794,7 +1816,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="block text-gray-600 text-sm font-medium mb-1">ចំនួនទឹកប្រាក់ដែលចង់លុប (៛)</label>
-                        <input type="number" id="adminDeleteBalanceAmount" placeholder="${currentBalance}" max="${currentBalance}" 
+                        <input type="number" id="adminDeleteBalanceAmount" placeholder="0" min="0" max="${currentBalance}" 
                                class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-400 outline-none" />
                         <p class="text-xs text-gray-400 mt-1">អតិបរមា: ${formatMoney(currentBalance)}</p>
                     </div>
@@ -2022,7 +2044,6 @@
                             <tbody>
                                 ${allTx.map(t => {
                                     const user = DB.getUsers().find(u => u.phone === t.phone);
-                                    // Find account from deposits/withdraws
                                     let account = t.account || '';
                                     if (!account) {
                                         const deposit = DB.getDeposits().find(d => d.phone === t.phone && d.amount === t.amount && d.date === t.date);
@@ -2051,7 +2072,7 @@
         }
 
         // ============================================================
-        //  22. PAGE: ADMIN REWARD - WITH SAVING TO DB.REWARDS
+        //  22. PAGE: ADMIN REWARD
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2091,24 +2112,6 @@
                         <i class="fas fa-gift mr-2"></i> ផ្ដល់ប្រាក់រង្វាន់
                     </button>
                 </form>
-
-                <div class="reward-box mt-6">
-                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិប្រាក់រង្វាន់</h4>
-                    ${(() => {
-                        const rewards = DB.getRewards().slice(-5).reverse();
-                        if (rewards.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>';
-                        return rewards.map(r => {
-                            const member = DB.getUsers().find(u => u.phone === r.phone);
-                            return `
-                                <div class="flex justify-between items-center border-b border-yellow-200 py-2 text-sm">
-                                    <span>${member ? member.name : r.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
-                                    <span class="text-yellow-600">➕ ${formatMoney(r.amount)}</span>
-                                    <span class="text-xs text-gray-400">${r.date}</span>
-                                </div>
-                            `;
-                        }).join('');
-                    })()}
-                </div>
             </div>
             `;
 
@@ -2151,13 +2154,10 @@
                     return;
                 }
 
-                // Deduct from admin
                 admin.balance -= amount;
-                // Add to member
                 member.balance += amount;
                 DB.setUsers(users);
                 
-                // Save to rewards history
                 let rewards = DB.getRewards();
                 rewards.push({
                     id: genId(),
@@ -2169,10 +2169,8 @@
                 });
                 DB.setRewards(rewards);
                 
-                // Add transaction
                 addTransaction(member.phone, 'deposit', amount, `ប្រាក់រង្វាន់: ${note}`);
 
-                // Send to Telegram
                 const depositData = {
                     name: member.name,
                     memberId: member.memberId,
@@ -2231,24 +2229,6 @@
                         <i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល
                     </button>
                 </form>
-
-                <div class="income-box mt-6">
-                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-blue-600 mr-2"></i>ប្រវត្តិប្រាក់ចំណូល</h4>
-                    ${(() => {
-                        const incomes = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).slice(-5).reverse();
-                        if (incomes.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់ចំណូលទេ</p>';
-                        return incomes.map(t => {
-                            const member = DB.getUsers().find(u => u.phone === t.phone);
-                            return `
-                                <div class="flex justify-between items-center border-b border-blue-200 py-2 text-sm">
-                                    <span>${member ? member.name : t.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
-                                    <span class="text-blue-600">➕ ${formatMoney(t.amount)}</span>
-                                    <span class="text-xs text-gray-400">${t.date}</span>
-                                </div>
-                            `;
-                        }).join('');
-                    })()}
-                </div>
             </div>
             `;
 
