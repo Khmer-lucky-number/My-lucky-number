@@ -435,96 +435,66 @@
             transform: scale(1.05);
             border-color: #3b82f6;
         }
+        .balance-zero {
+            color: #ef4444;
+        }
+        .balance-amount {
+            font-weight: 800;
+        }
 
-        /* Balance Box Emoji Background */
+        /* ===== FLOATING EMOJI ANIMATION ===== */
         .balance-box {
             position: relative;
             overflow: hidden;
-            border-radius: 16px;
+            background: linear-gradient(135deg, #1e3a5f, #2d6da8);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            min-height: 140px;
         }
-        .balance-box-content {
+        .balance-box .floating-emoji {
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.15;
+            animation: floatEmoji 8s ease-in-out infinite;
+            pointer-events: none;
+            user-select: none;
+        }
+        .balance-box .floating-emoji:nth-child(1) { top: 5%; left: 3%; animation-delay: 0s; }
+        .balance-box .floating-emoji:nth-child(2) { top: 15%; right: 5%; animation-delay: 1.2s; font-size: 3.2rem; }
+        .balance-box .floating-emoji:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 2.5s; }
+        .balance-box .floating-emoji:nth-child(4) { bottom: 5%; right: 8%; animation-delay: 0.8s; font-size: 2.2rem; }
+        .balance-box .floating-emoji:nth-child(5) { top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 1.8s; font-size: 5rem; opacity: 0.07; }
+        .balance-box .floating-emoji:nth-child(6) { top: 8%; left: 45%; animation-delay: 3.2s; font-size: 1.8rem; }
+        .balance-box .floating-emoji:nth-child(7) { bottom: 30%; right: 15%; animation-delay: 0.4s; font-size: 2rem; }
+        .balance-box .floating-emoji:nth-child(8) { top: 60%; left: 5%; animation-delay: 2.0s; font-size: 2.8rem; }
+        .balance-box .floating-emoji:nth-child(9) { bottom: 10%; left: 50%; animation-delay: 3.8s; font-size: 2.4rem; }
+        .balance-box .floating-emoji:nth-child(10) { top: 30%; right: 30%; animation-delay: 1.0s; font-size: 1.6rem; }
+
+        @keyframes floatEmoji {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            20% { transform: translate(20px, -25px) rotate(12deg) scale(1.1); }
+            40% { transform: translate(-15px, 20px) rotate(-8deg) scale(0.9); }
+            60% { transform: translate(25px, 15px) rotate(10deg) scale(1.05); }
+            80% { transform: translate(-10px, -15px) rotate(-5deg) scale(0.95); }
+            100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        }
+        /* ===== END FLOATING EMOJI ===== */
+
+        .balance-box .balance-content {
             position: relative;
             z-index: 2;
         }
-        .balance-emoji-bg {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            opacity: 0.15;
-            pointer-events: none;
-            overflow: hidden;
-            font-size: 3rem;
-            display: flex;
-            flex-wrap: wrap;
-            align-content: center;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
+        .balance-box .balance-big {
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .balance-emoji-bg span {
-            animation: floatEmoji 4s ease-in-out infinite;
-            display: inline-block;
-            font-size: 2.5rem;
+        @media (max-width: 640px) {
+            .balance-box .balance-big {
+                font-size: 1.8rem;
+            }
         }
-        .balance-emoji-bg span:nth-child(1) { animation-delay: 0s; }
-        .balance-emoji-bg span:nth-child(2) { animation-delay: 0.5s; }
-        .balance-emoji-bg span:nth-child(3) { animation-delay: 1s; }
-        .balance-emoji-bg span:nth-child(4) { animation-delay: 1.5s; }
-        .balance-emoji-bg span:nth-child(5) { animation-delay: 2s; }
-        .balance-emoji-bg span:nth-child(6) { animation-delay: 2.5s; }
-        .balance-emoji-bg span:nth-child(7) { animation-delay: 3s; }
-        .balance-emoji-bg span:nth-child(8) { animation-delay: 3.5s; }
-
-        @keyframes floatEmoji {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-15px) rotate(5deg); }
-            50% { transform: translateY(5px) rotate(-5deg); }
-            75% { transform: translateY(-8px) rotate(3deg); }
-        }
-
-        /* Reward & Income box - same style */
-        .history-box {
-            border-radius: 16px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-        .history-box .history-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .history-box .history-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            padding: 8px 0;
-            font-size: 14px;
-        }
-        .history-box .history-item:last-child {
-            border-bottom: none;
-        }
-        .history-box .history-item .amount {
-            font-weight: 600;
-        }
-        .history-box .history-item .date {
-            color: #94a3b8;
-            font-size: 12px;
-        }
-        .reward-history-box {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border: 2px solid #f59e0b;
-        }
-        .income-history-box {
-            background: linear-gradient(135deg, #dbeafe, #93c5fd);
-            border: 2px solid #3b82f6;
-        }
-        .reward-history-box .history-title { color: #92400e; }
-        .income-history-box .history-title { color: #1e40af; }
-        .reward-history-box .amount { color: #b45309; }
-        .income-history-box .amount { color: #1d4ed8; }
     </style>
 </head>
 <body>
@@ -589,6 +559,8 @@
             setWithdraws(w) { this.set('withdraws', w); },
             getDeposits() { return this.get('deposits', []); },
             setDeposits(d) { this.set('deposits', d); },
+            getRewards() { return this.get('rewards', []); },
+            setRewards(r) { this.set('rewards', r); },
             getSession() { return this.get('session', null); },
             setSession(s) { this.set('session', s); },
             clearSession() { localStorage.removeItem('ak_session'); },
@@ -603,6 +575,7 @@
                 this.remove('tx');
                 this.remove('withdraws');
                 this.remove('deposits');
+                this.remove('rewards');
                 this.remove('nextId');
                 this.remove('adminBankInfo');
                 this.remove('session');
@@ -623,6 +596,9 @@
                 let withdraws = this.getWithdraws();
                 withdraws = withdraws.filter(w => w.phone !== phone);
                 this.setWithdraws(withdraws);
+                let rewards = this.getRewards();
+                rewards = rewards.filter(r => r.phone !== phone);
+                this.setRewards(rewards);
             }
         };
 
@@ -632,8 +608,7 @@
         function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 
         function formatMoney(n) {
-            if (n === undefined || n === null) n = 0;
-            if (n < 0) n = 0;
+            if (n === 0) return '0.00 ៛';
             return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' ៛';
         }
 
@@ -641,19 +616,13 @@
             return new Date().toLocaleString('km-KH', { timeZone: 'Asia/Phnom_Penh' });
         }
 
-        // Balance Box Emoji Background HTML
-        function getBalanceEmojiBg() {
-            const emojis = ['💵', '💰', '🎉', '🛍️', '💸', '💳', '💷', '💶'];
-            return emojis.map(e => `<span>${e}</span>`).join('');
-        }
-
         // ============================================================
-        //  2.1 TELEGRAM HELPERS - FIXED with fetch + retry
+        //  2.1 TELEGRAM HELPERS
         // ============================================================
         // Deposit Telegram: 8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw , -5410896989
         // Withdraw Telegram: 8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc , -5338881653
 
-        async function sendToTelegramFetch(botToken, chatId, message, retries = 2) {
+        async function sendToTelegram(botToken, chatId, message) {
             try {
                 const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
                 const payload = {
@@ -668,29 +637,19 @@
                 });
                 const data = await response.json();
                 if (data.ok) {
-                    console.log('✅ Telegram sent to', chatId);
+                    console.log('✅ Telegram sent successfully to', chatId);
                     return true;
                 } else {
                     console.error('❌ Telegram error:', data.description);
-                    if (retries > 0) {
-                        console.log('🔄 Retrying...', retries);
-                        await new Promise(r => setTimeout(r, 1000));
-                        return sendToTelegramFetch(botToken, chatId, message, retries - 1);
-                    }
                     return false;
                 }
             } catch (err) {
                 console.error('❌ Telegram send error:', err);
-                if (retries > 0) {
-                    console.log('🔄 Retrying...', retries);
-                    await new Promise(r => setTimeout(r, 1000));
-                    return sendToTelegramFetch(botToken, chatId, message, retries - 1);
-                }
                 return false;
             }
         }
 
-        async function sendPhotoToTelegramFetch(botToken, chatId, photoBase64, caption, retries = 2) {
+        async function sendPhotoToTelegram(botToken, chatId, photoBase64, caption) {
             try {
                 const byteString = atob(photoBase64.split(',')[1]);
                 const mimeString = photoBase64.split(',')[0].split(':')[1].split(';')[0];
@@ -712,31 +671,21 @@
                 });
                 const data = await response.json();
                 if (data.ok) {
-                    console.log('✅ Photo sent to', chatId);
+                    console.log('✅ Photo sent successfully to', chatId);
                     return true;
                 } else {
                     console.error('❌ Photo error:', data.description);
-                    if (retries > 0) {
-                        console.log('🔄 Retrying...', retries);
-                        await new Promise(r => setTimeout(r, 1000));
-                        return sendPhotoToTelegramFetch(botToken, chatId, photoBase64, caption, retries - 1);
-                    }
                     return false;
                 }
             } catch (err) {
                 console.error('❌ Photo send error:', err);
-                if (retries > 0) {
-                    console.log('🔄 Retrying...', retries);
-                    await new Promise(r => setTimeout(r, 1000));
-                    return sendPhotoToTelegramFetch(botToken, chatId, photoBase64, caption, retries - 1);
-                }
                 return false;
             }
         }
 
         async function sendDepositTelegram(depositData, screenshotBase64) {
             const botToken = '8364652665:AAESgPsrL-Q2D3ZYtLTN6IzdkQ1pLYnc5vw';
-            const chatIds = ['-5410896989'];
+            const chatIds = ['-5410896989']; // បន្ថែម Chat ID ផ្សេងទៀតបើចាំបាច់
             
             const message = `
 📥 <b>សំណើបញ្ចូលប្រាក់</b>
@@ -755,20 +704,18 @@
 
             let success = true;
             for (const chatId of chatIds) {
-                let result;
-                if (screenshotBase64) {
-                    result = await sendPhotoToTelegramFetch(botToken, chatId, screenshotBase64, message);
-                } else {
-                    result = await sendToTelegramFetch(botToken, chatId, message);
+                try {
+                    if (screenshotBase64) {
+                        const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
+                        if (!result) success = false;
+                    } else {
+                        const result = await sendToTelegram(botToken, chatId, message);
+                        if (!result) success = false;
+                    }
+                } catch (err) {
+                    console.error('Telegram send error:', err);
+                    success = false;
                 }
-                if (!result) success = false;
-            }
-            
-            // Also send to second chat
-            if (screenshotBase64) {
-                await sendPhotoToTelegramFetch(botToken, '-5410896989', screenshotBase64, message);
-            } else {
-                await sendToTelegramFetch(botToken, '-5410896989', message);
             }
             
             if (success) {
@@ -781,7 +728,7 @@
 
         async function sendWithdrawTelegram(withdrawData, screenshotBase64) {
             const botToken = '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc';
-            const chatIds = ['-5338881653'];
+            const chatIds = ['-5338881653']; // បន្ថែម Chat ID ផ្សេងទៀតបើចាំបាច់
             
             const message = `
 📤 <b>សំណើដកប្រាក់</b>
@@ -800,20 +747,18 @@
 
             let success = true;
             for (const chatId of chatIds) {
-                let result;
-                if (screenshotBase64) {
-                    result = await sendPhotoToTelegramFetch(botToken, chatId, screenshotBase64, message);
-                } else {
-                    result = await sendToTelegramFetch(botToken, chatId, message);
+                try {
+                    if (screenshotBase64) {
+                        const result = await sendPhotoToTelegram(botToken, chatId, screenshotBase64, message);
+                        if (!result) success = false;
+                    } else {
+                        const result = await sendToTelegram(botToken, chatId, message);
+                        if (!result) success = false;
+                    }
+                } catch (err) {
+                    console.error('Telegram send error:', err);
+                    success = false;
                 }
-                if (!result) success = false;
-            }
-            
-            // Also send to second chat
-            if (screenshotBase64) {
-                await sendPhotoToTelegramFetch(botToken, '-5338881653', screenshotBase64, message);
-            } else {
-                await sendToTelegramFetch(botToken, '-5338881653', message);
             }
             
             if (success) {
@@ -928,7 +873,7 @@
         // ============================================================
         //  6. TRANSACTIONS
         // ============================================================
-        function addTransaction(phone, type, amount, note = '') {
+        function addTransaction(phone, type, amount, note = '', account = '') {
             let tx = DB.getTx();
             tx.push({
                 id: genId(),
@@ -937,7 +882,8 @@
                 amount,
                 status: 'completed',
                 date: getDate(),
-                note
+                note,
+                account: account || ''
             });
             DB.setTx(tx);
             let users = DB.getUsers();
@@ -945,7 +891,6 @@
             if (u) {
                 if (type === 'deposit') u.balance += amount;
                 else if (type === 'withdraw') u.balance -= amount;
-                if (u.balance < 0) u.balance = 0;
                 DB.setUsers(users);
             }
         }
@@ -976,12 +921,11 @@
             const navUser = document.getElementById('navUser');
             if (user) {
                 const memberId = user.memberId || 'N/A';
-                const balance = user.balance || 0;
                 navUser.innerHTML = `
                     <span class="text-sm text-gray-600 hidden sm:inline"><i class="fas fa-user-circle mr-1"></i> ${user.name}</span>
                     <span class="member-id-badge">ID: ${memberId}</span>
                     <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">${user.role === 'admin' ? 'Admin' : user.phone}</span>
-                    <span class="text-sm font-bold ${balance === 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(balance)}</span>
+                    <span class="text-sm font-bold ${user.balance === 0 ? 'text-red-500' : 'text-green-600'}">${formatMoney(user.balance)}</span>
                     <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-sign-out-alt"></i></button>
                 `;
             } else {
@@ -1002,6 +946,7 @@
                 default: renderLogin(container);
             }
         }
+
         // ============================================================
         //  9. PAGE: LOGIN / REGISTER
         // ============================================================
@@ -1121,7 +1066,7 @@
         }
 
         // ============================================================
-        //  10. PAGE: DASHBOARD (User) - WITH BALANCE EMOJI BACKGROUND
+        //  10. PAGE: DASHBOARD (User) - WITH FLOATING EMOJI
         // ============================================================
         function renderDashboard(container, user) {
             if (!user) { renderPage('login'); return; }
@@ -1130,14 +1075,22 @@
             const totalWithdraw = DB.getTx().filter(t => t.phone === user.phone && t.type === 'withdraw').reduce((s, t) => s + t.amount, 0);
             const rewards = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់រង្វាន់')).reduce((s, t) => s + t.amount, 0);
             const income = DB.getTx().filter(t => t.phone === user.phone && t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
-            const balance = user.balance || 0;
 
             container.innerHTML = `
-            <div class="balance-box bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl shadow-xl p-6 mb-6 text-white">
-                <div class="balance-emoji-bg">${getBalanceEmojiBg()}</div>
-                <div class="balance-box-content relative z-10 text-center">
-                    <p class="text-sm text-blue-100"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
-                    <p class="balance-big ${balance === 0 ? 'text-yellow-300' : ''}">${formatMoney(balance)}</p>
+            <div class="balance-box mb-6">
+                <span class="floating-emoji">💵</span>
+                <span class="floating-emoji">💰</span>
+                <span class="floating-emoji">🎉</span>
+                <span class="floating-emoji">💶</span>
+                <span class="floating-emoji">🛍</span>
+                <span class="floating-emoji">💸</span>
+                <span class="floating-emoji">💳</span>
+                <span class="floating-emoji">💷</span>
+                <span class="floating-emoji">🏦</span>
+                <span class="floating-emoji">✨</span>
+                <div class="balance-content">
+                    <p class="text-sm text-blue-200"><i class="fas fa-wallet mr-2"></i>សមតុល្យទឹកប្រាក់របស់ខ្ញុំ</p>
+                    <p class="balance-big ${user.balance === 0 ? 'text-yellow-300' : ''}">${formatMoney(user.balance)}</p>
                 </div>
             </div>
 
@@ -1221,6 +1174,9 @@
                     let withdraws = DB.getWithdraws();
                     withdraws = withdraws.filter(w => w.phone !== user.phone);
                     DB.setWithdraws(withdraws);
+                    let rewards = DB.getRewards();
+                    rewards = rewards.filter(r => r.phone !== user.phone);
+                    DB.setRewards(rewards);
                     let users = DB.getUsers();
                     const u = users.find(u => u.phone === user.phone);
                     if (u) {
@@ -1339,7 +1295,7 @@
                 }
             };
 
-            document.getElementById('depositForm').onsubmit = async function(e) {
+            document.getElementById('depositForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const bank = document.getElementById('depBank').value;
                 const sender = document.getElementById('depSender').value.trim();
@@ -1472,7 +1428,7 @@
                 }
             };
 
-            document.getElementById('withdrawForm').onsubmit = async function(e) {
+            document.getElementById('withdrawForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const bank = document.getElementById('wdBank').value;
                 const accName = document.getElementById('wdName').value.trim();
@@ -1523,8 +1479,9 @@
                 renderPage('withdraw');
             };
         }
+
         // ============================================================
-        //  14. PAGE: ADMIN DASHBOARD
+        //  14. PAGE: ADMIN DASHBOARD - WITH FLOATING EMOJI & REWARD HISTORY
         // ============================================================
         function renderAdmin(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -1532,21 +1489,52 @@
             const deposits = DB.getDeposits().filter(d => d.status === 'pending');
             const withdraws = DB.getWithdraws().filter(w => w.status === 'pending');
             const adminBalance = user.balance || 0;
+            const rewardsHistory = DB.getRewards().slice(-5).reverse();
+            const totalRewardsGiven = DB.getRewards().reduce((s, r) => s + r.amount, 0);
 
             const adminInfo = DB.get('adminBankInfo', { bank: 'ABA', account: '001 234 567', qrData: '' });
             const totalIncomeGiven = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).reduce((s, t) => s + t.amount, 0);
 
-            // Get reward history
-            const rewardHistory = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់រង្វាន់')).slice(-10).reverse();
-            const incomeHistory = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).slice(-10).reverse();
-
             container.innerHTML = `
-            <div class="balance-box bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg p-6 mb-6 text-white">
-                <div class="balance-emoji-bg">${getBalanceEmojiBg()}</div>
-                <div class="balance-box-content relative z-10 text-center">
-                    <p class="text-sm text-blue-100"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
-                    <p class="text-3xl font-bold ${adminBalance === 0 ? 'text-yellow-300' : ''}">${formatMoney(adminBalance)}</p>
-                    <p class="text-sm text-blue-200 mt-1">បានផ្ដល់ប្រាក់ចំណូលសរុប: ${formatMoney(totalIncomeGiven)}</p>
+            <div class="balance-box mb-6">
+                <span class="floating-emoji">💵</span>
+                <span class="floating-emoji">💰</span>
+                <span class="floating-emoji">🎉</span>
+                <span class="floating-emoji">💶</span>
+                <span class="floating-emoji">🛍</span>
+                <span class="floating-emoji">💸</span>
+                <span class="floating-emoji">💳</span>
+                <span class="floating-emoji">💷</span>
+                <span class="floating-emoji">🏦</span>
+                <span class="floating-emoji">✨</span>
+                <div class="balance-content">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div>
+                            <p class="text-sm text-blue-200"><i class="fas fa-user-shield mr-2"></i>សមតុល្យ Admin</p>
+                            <p class="text-3xl font-bold ${adminBalance === 0 ? 'text-yellow-300' : ''}">${formatMoney(adminBalance)}</p>
+                            <p class="text-sm text-blue-200 mt-1">បានផ្ដល់ប្រាក់ចំណូលសរុប: ${formatMoney(totalIncomeGiven)}</p>
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button onclick="showAdminDepositModal()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
+                                <i class="fas fa-plus-circle"></i> បញ្ចូលប្រាក់
+                            </button>
+                            <button onclick="showAdminDeleteBalanceModal()" class="bg-red-500/30 hover:bg-red-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
+                                <i class="fas fa-minus-circle"></i> លុបទឹកប្រាក់
+                            </button>
+                            <button onclick="renderPage('adminReward')" class="bg-yellow-500/30 hover:bg-yellow-500/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
+                                <i class="fas fa-gift"></i> ប្រាក់រង្វាន់
+                            </button>
+                            <button onclick="renderPage('adminIncome')" class="bg-blue-400/30 hover:bg-blue-400/40 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
+                                <i class="fas fa-hand-holding-usd"></i> ប្រាក់ចំណូល
+                            </button>
+                            <button onclick="renderPage('adminHistory')" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl text-sm transition flex items-center gap-2 backdrop-blur-sm">
+                                <i class="fas fa-history"></i> ប្រវត្តិ
+                            </button>
+                        </div>
+                    </div>
+                    <div class="admin-action-buttons mt-3">
+                        <button onclick="confirmReset()" class="reset-btn"><i class="fas fa-undo mr-1"></i> ចាប់ផ្ដើមឡើងវិញ</button>
+                    </div>
                 </div>
             </div>
 
@@ -1563,8 +1551,8 @@
                     ${withdraws.length > 0 ? `<span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">${withdraws.length}</span>` : ''}
                 </div>
                 <div class="bg-white rounded-2xl shadow p-4 card-hover">
-                    <p class="text-gray-400 text-sm">បានផ្ដល់ប្រាក់ចំណូល</p>
-                    <p class="text-2xl font-bold text-blue-600">${formatMoney(totalIncomeGiven)}</p>
+                    <p class="text-gray-400 text-sm">ប្រាក់រង្វាន់បានផ្ដល់</p>
+                    <p class="text-2xl font-bold text-yellow-600">${formatMoney(totalRewardsGiven)}</p>
                 </div>
             </div>
 
@@ -1577,6 +1565,23 @@
                     <i class="fas fa-arrow-right"></i> អនុម័តដក
                     ${withdraws.length > 0 ? `<span class="notification-badge">${withdraws.length}</span>` : ''}
                 </button>
+            </div>
+
+            <!-- Reward History Display -->
+            <div class="reward-box mb-6">
+                <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិប្រាក់រង្វាន់ថ្មីៗ</h4>
+                ${rewardsHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>' :
+                    rewardsHistory.map(r => {
+                        const member = DB.getUsers().find(u => u.phone === r.phone);
+                        return `
+                            <div class="flex justify-between items-center border-b border-yellow-200 py-2 text-sm">
+                                <span>${member ? member.name : r.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
+                                <span class="text-yellow-600">➕ ${formatMoney(r.amount)}</span>
+                                <span class="text-xs text-gray-400">${r.date}</span>
+                            </div>
+                        `;
+                    }).join('')
+                }
             </div>
 
             <!-- Admin Bank Info Form -->
@@ -1616,41 +1621,6 @@
                     <p><strong>ធនាគារ:</strong> ${adminInfo.bank || 'មិនទាន់កំណត់'}</p>
                     <p><strong>លេខគណនី:</strong> ${adminInfo.account || 'មិនទាន់កំណត់'}</p>
                     <p><strong>QR Code:</strong> ${adminInfo.qrData ? '✅ មាន' : '❌ មិនមាន'}</p>
-                </div>
-            </div>
-
-            <!-- Reward & Income History Boxes - Same Style -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div class="history-box reward-history-box">
-                    <div class="history-title"><i class="fas fa-gift"></i> ប្រវត្តិប្រាក់រង្វាន់</div>
-                    ${rewardHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>' :
-                        rewardHistory.map(t => {
-                            const member = DB.getUsers().find(u => u.phone === t.phone);
-                            return `
-                                <div class="history-item">
-                                    <span>${member ? member.name : t.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
-                                    <span class="amount">➕ ${formatMoney(t.amount)}</span>
-                                    <span class="date">${t.date}</span>
-                                </div>
-                            `;
-                        }).join('')
-                    }
-                </div>
-
-                <div class="history-box income-history-box">
-                    <div class="history-title"><i class="fas fa-hand-holding-usd"></i> ប្រវត្តិប្រាក់ចំណូល</div>
-                    ${incomeHistory.length === 0 ? '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់ចំណូលទេ</p>' :
-                        incomeHistory.map(t => {
-                            const member = DB.getUsers().find(u => u.phone === t.phone);
-                            return `
-                                <div class="history-item">
-                                    <span>${member ? member.name : t.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
-                                    <span class="amount">➕ ${formatMoney(t.amount)}</span>
-                                    <span class="date">${t.date}</span>
-                                </div>
-                            `;
-                        }).join('')
-                    }
                 </div>
             </div>
 
@@ -1800,7 +1770,7 @@
         };
 
         // ============================================================
-        //  16. ADMIN DELETE BALANCE MODAL
+        //  16. ADMIN DELETE BALANCE MODAL - FIXED
         // ============================================================
         window.showAdminDeleteBalanceModal = function() {
             const users = DB.getUsers();
@@ -1863,6 +1833,7 @@
             let users = DB.getUsers();
             const admin = users.find(u => u.role === 'admin');
             if (admin) {
+                // FIXED: Check if balance is sufficient
                 if (admin.balance < amount) {
                     showToast(`❌ សមតុល្យ Admin មិនគ្រប់គ្រាន់! មានត្រឹម ${formatMoney(admin.balance)}`, 'error');
                     return;
@@ -1899,6 +1870,9 @@
                     let withdraws = DB.getWithdraws();
                     withdraws = withdraws.filter(w => w.phone !== phone);
                     DB.setWithdraws(withdraws);
+                    let rewards = DB.getRewards();
+                    rewards = rewards.filter(r => r.phone !== phone);
+                    DB.setRewards(rewards);
                     let users = DB.getUsers();
                     const u = users.find(u => u.phone === phone);
                     if (u) {
@@ -2026,7 +2000,7 @@
         }
 
         // ============================================================
-        //  21. PAGE: ADMIN HISTORY - WITH ACCOUNT NUMBER
+        //  21. PAGE: ADMIN HISTORY - WITH ACCOUNT DISPLAY
         // ============================================================
         function renderAdminHistory(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2048,15 +2022,19 @@
                             <tbody>
                                 ${allTx.map(t => {
                                     const user = DB.getUsers().find(u => u.phone === t.phone);
-                                    const deposit = DB.getDeposits().find(d => d.phone === t.phone && d.amount === t.amount && d.date === t.date);
-                                    const withdraw = DB.getWithdraws().find(w => w.phone === t.phone && w.amount === t.amount && w.date === t.date);
-                                    const account = deposit ? deposit.account : (withdraw ? withdraw.account : 'N/A');
+                                    // Find account from deposits/withdraws
+                                    let account = t.account || '';
+                                    if (!account) {
+                                        const deposit = DB.getDeposits().find(d => d.phone === t.phone && d.amount === t.amount && d.date === t.date);
+                                        const withdraw = DB.getWithdraws().find(w => w.phone === t.phone && w.amount === t.amount && w.date === t.date);
+                                        account = deposit ? deposit.account : (withdraw ? withdraw.account : '');
+                                    }
                                     return `
                                         <tr class="border-b border-gray-100 hover:bg-gray-50 transition">
                                             <td class="px-4 py-2 font-semibold text-blue-600">${user ? user.memberId || 'N/A' : 'N/A'}</td>
                                             <td class="px-4 py-2">${user ? user.name : t.phone}</td>
                                             <td class="px-4 py-2">${t.phone}</td>
-                                            <td class="px-4 py-2 text-xs text-blue-600">${account || 'N/A'}</td>
+                                            <td class="px-4 py-2 text-blue-600 font-medium">${account || 'N/A'}</td>
                                             <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full text-xs ${t.type === 'deposit' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}">${t.type === 'deposit' ? 'បញ្ចូល' : 'ដក'}</span></td>
                                             <td class="px-4 py-2 ${t.type === 'deposit' ? 'text-green-600' : 'text-purple-600'}">${formatMoney(t.amount)}</td>
                                             <td class="px-4 py-2 text-xs text-gray-500">${t.note || '-'}</td>
@@ -2073,7 +2051,7 @@
         }
 
         // ============================================================
-        //  22. PAGE: ADMIN REWARD
+        //  22. PAGE: ADMIN REWARD - WITH SAVING TO DB.REWARDS
         // ============================================================
         function renderAdminReward(container, user) {
             if (!user || user.role !== 'admin') { renderPage('login'); return; }
@@ -2113,6 +2091,24 @@
                         <i class="fas fa-gift mr-2"></i> ផ្ដល់ប្រាក់រង្វាន់
                     </button>
                 </form>
+
+                <div class="reward-box mt-6">
+                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-yellow-600 mr-2"></i>ប្រវត្តិប្រាក់រង្វាន់</h4>
+                    ${(() => {
+                        const rewards = DB.getRewards().slice(-5).reverse();
+                        if (rewards.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់រង្វាន់ទេ</p>';
+                        return rewards.map(r => {
+                            const member = DB.getUsers().find(u => u.phone === r.phone);
+                            return `
+                                <div class="flex justify-between items-center border-b border-yellow-200 py-2 text-sm">
+                                    <span>${member ? member.name : r.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
+                                    <span class="text-yellow-600">➕ ${formatMoney(r.amount)}</span>
+                                    <span class="text-xs text-gray-400">${r.date}</span>
+                                </div>
+                            `;
+                        }).join('');
+                    })()}
+                </div>
             </div>
             `;
 
@@ -2130,7 +2126,7 @@
                 });
             };
 
-            document.getElementById('rewardForm').onsubmit = async function(e) {
+            document.getElementById('rewardForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const phone = document.getElementById('rewardMember').value;
                 const amount = parseInt(document.getElementById('rewardAmount').value.trim());
@@ -2155,11 +2151,28 @@
                     return;
                 }
 
+                // Deduct from admin
                 admin.balance -= amount;
+                // Add to member
                 member.balance += amount;
                 DB.setUsers(users);
+                
+                // Save to rewards history
+                let rewards = DB.getRewards();
+                rewards.push({
+                    id: genId(),
+                    phone: member.phone,
+                    name: member.name,
+                    amount: amount,
+                    note: note,
+                    date: getDate()
+                });
+                DB.setRewards(rewards);
+                
+                // Add transaction
                 addTransaction(member.phone, 'deposit', amount, `ប្រាក់រង្វាន់: ${note}`);
 
+                // Send to Telegram
                 const depositData = {
                     name: member.name,
                     memberId: member.memberId,
@@ -2218,6 +2231,24 @@
                         <i class="fas fa-hand-holding-usd mr-2"></i> ផ្ដល់ប្រាក់ចំណូល
                     </button>
                 </form>
+
+                <div class="income-box mt-6">
+                    <h4 class="font-semibold text-gray-700"><i class="fas fa-clock text-blue-600 mr-2"></i>ប្រវត្តិប្រាក់ចំណូល</h4>
+                    ${(() => {
+                        const incomes = DB.getTx().filter(t => t.note && t.note.includes('ប្រាក់ចំណូល')).slice(-5).reverse();
+                        if (incomes.length === 0) return '<p class="text-sm text-gray-500 mt-2">មិនទាន់មានការផ្ដល់ប្រាក់ចំណូលទេ</p>';
+                        return incomes.map(t => {
+                            const member = DB.getUsers().find(u => u.phone === t.phone);
+                            return `
+                                <div class="flex justify-between items-center border-b border-blue-200 py-2 text-sm">
+                                    <span>${member ? member.name : t.phone} (ID: ${member ? member.memberId : 'N/A'})</span>
+                                    <span class="text-blue-600">➕ ${formatMoney(t.amount)}</span>
+                                    <span class="text-xs text-gray-400">${t.date}</span>
+                                </div>
+                            `;
+                        }).join('');
+                    })()}
+                </div>
             </div>
             `;
 
@@ -2235,7 +2266,7 @@
                 });
             };
 
-            document.getElementById('incomeForm').onsubmit = async function(e) {
+            document.getElementById('incomeForm').onsubmit = async (e) => {
                 e.preventDefault();
                 const phone = document.getElementById('incomeMember').value;
                 const amount = parseInt(document.getElementById('incomeAmount').value.trim());
@@ -2298,7 +2329,7 @@
             if (u) {
                 u.balance += d.amount;
                 DB.setUsers(users);
-                addTransaction(d.phone, 'deposit', d.amount, `បញ្ចូលតាម Admin (${d.bank})`);
+                addTransaction(d.phone, 'deposit', d.amount, `បញ្ចូលតាម Admin (${d.bank})`, d.account || '');
 
                 const admin = users.find(u => u.role === 'admin');
                 if (admin) {
@@ -2334,14 +2365,12 @@
             if (u) {
                 if (u.balance >= w.amount) {
                     u.balance -= w.amount;
-                    if (u.balance < 0) u.balance = 0;
                     DB.setUsers(users);
-                    addTransaction(w.phone, 'withdraw', w.amount, `ដកតាម Admin (${w.bank})`);
+                    addTransaction(w.phone, 'withdraw', w.amount, `ដកតាម Admin (${w.bank})`, w.account || '');
 
                     const admin = users.find(u => u.role === 'admin');
                     if (admin) {
                         admin.balance -= w.amount;
-                        if (admin.balance < 0) admin.balance = 0;
                         DB.setUsers(users);
                     }
 
