@@ -1,558 +1,305 @@
 <!DOCTYPE html>
 <html lang="km">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>អាជីវករខ្មែរឆ្លាតវៃ - ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុ</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Khmer&family=Battambang:wght@400;700&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ខ្មែរ អាក្រូ-ប្រូសេសស៊ីង - ផលិតផលកសិកម្មកែច្នៃខ្មែរ</title>
     <style>
-        * {
-            font-family: 'Battambang', 'Khmer', sans-serif;
-        }
-        body {
-            background: linear-gradient(135deg, #f0f2f5 0%, #e8ecf1 100%);
-            min-height: 100vh;
-        }
-        .card-hover:hover {
-            transform: translateY(-4px);
-            transition: all 0.3s ease;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.1);
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #e5e7eb; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 10px; }
+        /* ការកំណត់ទូទៅ */
+        @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;600;700&display=swap');
         
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Kantumruy Pro', sans-serif;
         }
-        .modal-box {
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: fadeIn 0.3s ease;
+
+        body {
+            background-color: #f4f7f5;
+            color: #333;
+            line-height: 1.6;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 16px 24px;
-            border-radius: 16px;
+
+        /* ផ្នែកខាងលើ (Header) */
+        header {
+            background-color: #2e7d32;
             color: white;
-            font-weight: 600;
-            z-index: 1000;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            animation: slideUp 0.4s ease;
-        }
-        .toast-success { background: linear-gradient(135deg, #10b981, #059669); }
-        .toast-error { background: linear-gradient(135deg, #ef4444, #dc2626); }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .qr-placeholder {
-            width: 140px;
-            height: 140px;
-            background: #e2e8f0;
-            border: 2px dashed #94a3b8;
-            border-radius: 12px;
+            padding: 20px 5%;
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        header .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #a3e635;
+        }
+
+        /* ផ្ទាំងរូបភាពធំខាងមុខ (Hero Section) */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=1200&q=80') no-repeat center center/cover;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
-            font-size: 12px;
-            color: #64748b;
+            align-items: center;
+            color: white;
             text-align: center;
-            cursor: pointer;
-            overflow: hidden;
+            padding: 0 20px;
+        }
+
+        .hero h2 {
+            font-size: 40px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            background-color: #8bc34a;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #7cb342;
+        }
+
+        /* ផ្នែកមាតិកា (Main Content) */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 28px;
+            color: #2e7d32;
+            margin-bottom: 40px;
             position: relative;
         }
-        .qr-placeholder img {
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: #8bc34a;
+            margin: 10px auto 0;
+        }
+
+        /* ផ្នែកផលិតផល */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-img {
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-info p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        /* ទម្រង់ទាក់ទង (Contact Form) */
+        .contact-section {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
         }
-        .image-viewer {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1001;
+
+        .submit-btn {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
         }
-        .image-viewer img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 16px;
+
+        .submit-btn:hover {
+            background-color: #1b5e20;
+        }
+
+        /* ផ្នែកខាងក្រោម (Footer) */
+        footer {
+            background-color: #1b5e20;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <div id="app" class="min-h-screen flex flex-col">
-        <nav class="bg-white shadow-md border-b border-gray-200 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
-            <div class="flex items-center gap-2">
-                <div class="bg-gradient-to-r from-blue-600 to-indigo-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
-                    <i class="fas fa-store text-white text-xl"></i>
-                </div>
-                <div>
-                    <span class="text-xl font-bold text-gray-800">អាជីវករខ្មែរឆ្លាតវៃ</span>
-                    <span class="hidden sm:inline-block text-xs text-gray-400 ml-2">ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុ</span>
+    <header>
+        <div class="logo">
+            <h1>ខ្មែរ អាក្រូ-ប្រូសេសស៊ីង</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">ទំព័រដើម</a></li>
+                <li><a href="#products">ផលិតផលរបស់យើង</a></li>
+                <li><a href="#about">អំពីយើង</a></li>
+                <li><a href="#contact">ទាក់ទងមកយើង</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <h2>លើកកម្ពស់កសិផលខ្មែរ ទៅកាន់ទីផ្សារអន្តរជាតិ</h2>
+        <p>យើងខ្ញុំកែច្នៃកសិផលធម្មជាតិពិតៗពីកសិករខ្មែរ ប្រកបដោយអនាម័យ គុណភាពខ្ពស់ និងស្តង់ដារអន្តរជាតិ។</p>
+        <a href="#products" class="btn">មើលផលិតផល</a>
+    </section>
+
+    <section class="container" id="products">
+        <h2 class="section-title">ផលិតផលសក្តានុពលរបស់យើង</h2>
+        <div class="products-grid">
+            
+            <div class="product-card">
+                <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1600189020840-e9cb18566e01?auto=format&fit=crop&w=400&q=80');"></div>
+                <div class="product-info">
+                    <h3>គ្រាប់ស្វាយចន្ទីលីងប្រៃ</h3>
+                    <p>គ្រាប់ស្វាយចន្ទីលំដាប់ថ្នាក់ Premium ជ្រើសរើសយ៉ាងសម្រិតសម្រាំង លីងតាមបែបធម្មជាតិ ឈ្ងុយឆ្ងាញ់ និងមានជីវជាតិខ្ពស់។</p>
+                    <a href="#contact" class="btn" style="padding: 5px 15px; font-size: 14px;">កម្ម៉ង់ទិញ / ព័ត៌មានបន្ថែម</a>
                 </div>
             </div>
-            <div id="navUser" class="flex items-center gap-3"></div>
-        </nav>
 
-        <div class="flex-1 max-w-7xl mx-auto w-full p-4">
-            <div id="pageContent"></div>
+            <div class="product-card">
+                <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=400&q=80');"></div>
+                <div class="product-info">
+                    <h3>ដំណាប់ស្វាយធម្មជាតិ</h3>
+                    <p>ធ្វើពីស្វាយកែវរមៀតទុំល្អ កែច្នៃដោយបច្ចេកវិទ្យាសម្ងួតទំនើប រក្សាបាននូវរសជាតិជូរអែមធម្មជាតិ ដោយគ្មានសារធាតុគីមីរក្សាទុកបានយូរ។</p>
+                    <a href="#contact" class="btn" style="padding: 5px 15px; font-size: 14px;">កម្ម៉ង់ទិញ / ព័ត៌មានបន្ថែម</a>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-img" style="background-image: url('https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=400&q=80');"></div>
+                <div class="product-info">
+                    <h3>ចេកឆ្វៀលស្រួយ</h3>
+                    <p>ចេកណំ្វាខ្មែរដាំតាមលក្ខណៈធម្មជាតិ ហាន់ជាបន្ទះស្តើងៗបំពងឱ្យស្រួយ មានរសជាតិផ្អែមស្រាល អាហារសម្រន់ដ៏ពេញនិយម។</p>
+                    <a href="#contact" class="btn" style="padding: 5px 15px; font-size: 14px;">កម្ម៉ង់ទិញ / ព័ត៌មានបន្ថែម</a>
+                </div>
+            </div>
+
         </div>
+    </section>
 
-        <div id="modalContainer"></div>
-        <div id="imageViewer" class="hidden" onclick="closeImageViewer()"></div>
-        <div id="toastContainer"></div>
-
-        <footer class="bg-white border-t border-gray-200 text-center text-sm text-gray-400 py-4">
-            © 2026 អាជីវករខ្មែរឆ្លាតវៃ — ប្រព័ន្ធគ្រប់គ្រងហិរញ្ញវត្ថុឆ្លាតវៃ
-        </footer>
-    </div>
-
-    <script>
-        // ============================================================
-        //  1. ទិន្នន័យប្រព័ន្ធ (DATA LAYER)
-        // ============================================================
-        const DB = {
-            get(key, def) {
-                const raw = localStorage.getItem('ak_' + key);
-                return raw ? JSON.parse(raw) : def;
-            },
-            set(key, val) {
-                localStorage.setItem('ak_' + key, JSON.stringify(val));
-            },
-            getUsers() { return this.get('users', []); },
-            setUsers(u) { this.set('users', u); },
-            getSession() { return this.get('session', null); },
-            setSession(s) { this.set('session', s); },
-            getAdminQr() { return this.get('admin_qr', ''); },
-            setAdminQr(qr) { this.set('admin_qr', qr); },
-            
-            initAdmin() {
-                let users = this.getUsers();
-                if (!users.find(u => u.role === 'admin')) {
-                    users.push({
-                        phone: '012345678',
-                        name: 'ប្រធានប្រព័ន្ធ (Admin)',
-                        password: 'admin',
-                        role: 'admin',
-                        status: 'active'
-                    });
-                    this.setUsers(users);
-                }
-            }
-        };
-
-        // បញ្ចូលគណនី Admin ដំបូង
-        DB.initAdmin();
-
-        // បញ្ជីឈ្មោះធនាគារដែលមានស្រាប់សម្រាប់ជ្រើសរើស
-        const BANK_LIST = ["ធនាគារ ABA", "ធនាគារ ACLEDA", "ធនាគារ វីង (Wing)", "ធនាគារ កាណាឌីយ៉ា", "ធនាគារ វឌ្ឍនៈ", "ធនាគារ ជេត្រាស់", "សត្ដហ៊ីប"];
-
-        // ============================================================
-        //  2. មុខងារជំនួយ (HELPERS)
-        // ============================================================
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.textContent = msg;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
-        }
-
-        function handleImageUpload(event, callback) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    callback(e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function showImageViewer(src) {
-            if(!src) return showToast('មិនមានរូបភាពឡើយ', 'error');
-            const viewer = document.getElementById('imageViewer');
-            viewer.innerHTML = `<div class="image-viewer"><img src="${src}" alt="QR Code" /></div>`;
-            viewer.classList.remove('hidden');
-        }
-
-        function closeImageViewer() {
-            document.getElementById('imageViewer').classList.add('hidden');
-        }
-
-        // ============================================================
-        //  3. ការបង្ហាញទំព័រ (ROUTER & RENDER PAGES)
-        // ============================================================
-        function renderPage(page) {
-            const content = document.getElementById('pageContent');
-            const navUser = document.getElementById('navUser');
-            const session = DB.getSession();
-
-            // កំណត់ការបង្ហាញលើ Navbar
-            if (session) {
-                navUser.innerHTML = `
-                    <span class="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-lg">
-                        <i class="fas fa-user-circle mr-1"></i> ${session.name} (${session.role === 'admin' ? 'Admin' : 'សមាជិក'})
-                    </span>
-                    <button onclick="logout()" class="px-3 py-1.5 bg-red-500 text-white text-xs font-bold rounded-lg hover:bg-red-600 transition">
-                        <i class="fas fa-sign-out-alt"></i> ចាកចេញ
-                    </button>
-                `;
-            } else {
-                navUser.innerHTML = `<span class="text-xs text-gray-400">សូមចូលប្រើប្រាស់ប្រព័ន្ធ</span>`;
-            }
-
-            // បែងចែកទំព័រតាម Role
-            if (!session) {
-                renderLogin(content);
-                return;
-            }
-
-            if (session.role === 'admin') {
-                renderAdminDashboard(content);
-            } else {
-                renderMemberDashboard(content);
-            }
-        }
-
-        // ----------------------------------------
-        // ទំព័រចូលប្រើប្រាស់ (Login)
-        // ----------------------------------------
-        function renderLogin(el) {
-            el.innerHTML = `
-                <div class="max-w-md mx-auto mt-12 bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">ចូលប្រើប្រាស់ប្រព័ន្ធ</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">លេខទូរសព្ទ</label>
-                            <input type="text" id="loginPhone" placeholder="ឧទាហរណ៍៖ 012345678" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">ពាក្យសម្ងាត់</label>
-                            <input type="password" id="loginPassword" placeholder="បញ្ចូលពាក្យសម្ងាត់" class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                        </div>
-                        <button onclick="processLogin()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:opacity-90 transition shadow-md">
-                            ចូលប្រើប្រាស់
-                        </button>
-                    </div>
-                    <div class="mt-4 text-center">
-                        <p class="text-sm text-gray-500">គណនីសាកល្បង Admin: <b>012345678</b> / Password: <b>admin</b></p>
-                    </div>
+    <section class="container" id="contact">
+        <h2 class="section-title">ចាប់ដៃគូអាជីវកម្ម ឬវិនិយោគជាមួយយើង</h2>
+        <div class="contact-section">
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="name">ឈ្មោះពេញ / ឈ្មោះក្រុមហ៊ុន៖</label>
+                    <input type="text" id="name" required placeholder="សូមបញ្ជាក់ឈ្មោះរបស់អ្នក">
                 </div>
-            `;
-        }
-
-        function processLogin() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const pass = document.getElementById('loginPassword').value;
-            
-            if(!phone || !pass) return showToast('សូមបំពេញព័ត៌មានឱ្យបានគ្រប់គ្រាន់!', 'error');
-
-            const users = DB.getUsers();
-            const user = users.find(u => u.phone === phone && u.password === pass);
-
-            if(user) {
-                DB.setSession({ phone: user.phone, name: user.name, role: user.role });
-                showToast('ចូលប្រើប្រាស់បានជោគជ័យ!', 'success');
-                renderPage();
-            } else {
-                showToast('លេខទូរសព្ទ ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវឡើយ!', 'error');
-            }
-        }
-
-        function logout() {
-            DB.setSession(null);
-            showToast('បានចាកចេញពីប្រព័ន្ធ!', 'success');
-            renderPage();
-        }
-
-        // ----------------------------------------
-        // ទំព័រ ADMIN (គ្រប់គ្រង និងរក្សាទុក QR Code Admin)
-        // ----------------------------------------
-        function renderAdminDashboard(el) {
-            let adminQrSrc = DB.getAdminQr() || 'https://via.placeholder.com/150?text=No+QR';
-            let users = DB.getUsers().filter(u => u.role !== 'admin');
-
-            el.innerHTML = `
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fas fa-qrcode text-blue-500 mr-2"></i>រៀបចំ QR Code ទូទាត់របស់ Admin</h3>
-                        <div class="flex flex-col items-center space-y-4">
-                            <div class="qr-placeholder" onclick="document.getElementById('adminQrInput').click()">
-                                <img id="adminQrPreview" src="${adminQrSrc}" alt="Admin QR Preview">
-                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition text-white text-xs text-center p-2">
-                                    ចុចដើម្បីប្តូររូបភាព QR
-                                </div>
-                            </div>
-                            <input type="file" id="adminQrInput" accept="image/*" class="hidden" onchange="previewAdminQr(event)">
-                            <button onclick="saveAdminQr()" class="w-full py-2 bg-green-500 text-white font-bold rounded-xl hover:bg-green-600 transition shadow">
-                                <i class="fas fa-save mr-1"></i> រក្សាទុក QR Code
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 lg:col-span-2">
-                        <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fas fa-user-plus text-indigo-500 mr-2"></i>ចុះឈ្មោះសមាជិកថ្មី</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">លេខសម្គាល់សមាជិក (ID)</label>
-                                <input type="number" id="mId" placeholder="ឧទហរណ៍៖ 1001" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">ឈ្មោះពេញសមាជិក</label>
-                                <input type="text" id="mName" placeholder="បញ្ចូលឈ្មោះពេញ" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">លេខទូរសព្ទ (ប្រើសម្រាប់ Login)</label>
-                                <input type="text" id="mPhone" placeholder="បញ្ចូលលេខទូរសព្ទ" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-600 mb-1">ពាក្យសម្ងាត់គណនី</label>
-                                <input type="password" id="mPassword" placeholder="បញ្ចូលពាក្យសម្ងាត់" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            </div>
-                        </div>
-                        <button onclick="createNewMember()" class="mt-4 px-6 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition shadow">
-                            <i class="fas fa-check mr-1"></i> បង្កើតគណនីសមាជិក
-                        </button>
-                    </div>
+                <div class="form-group">
+                    <label for="phone">លេខទូរស័ព្ទ៖</label>
+                    <input type="tel" id="phone" required placeholder="ឧទាហរណ៍៖ 012 345 678">
                 </div>
-
-                <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 mt-6">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4"><i class="fas fa-users text-gray-600 mr-2"></i>បញ្ជីឈ្មោះសមាជិកក្នុងប្រព័ន្ធ</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-gray-50 border-b border-gray-200">
-                                    <th class="p-3 text-sm font-bold text-gray-600">ID</th>
-                                    <th class="p-3 text-sm font-bold text-gray-600">ឈ្មោះពេញ</th>
-                                    <th class="p-3 text-sm font-bold text-gray-600">ទូរសព្ទ</th>
-                                    <th class="p-3 text-sm font-bold text-gray-600">អាយុ</th>
-                                    <th class="p-3 text-sm font-bold text-gray-600">ធនាគារ</th>
-                                    <th class="p-3 text-sm font-bold text-gray-600">លេខគណនី</th>
-                                    <th class="p-3 text-sm font-bold text-gray-600">រូបភាព QR Code</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-100">
-                                ${users.length === 0 ? `<tr><td colspan="7" class="p-4 text-center text-gray-400 text-sm">មិនទាន់មានសមាជិកនៅឡើយទេ</td></tr>` : users.map(u => `
-                                    <tr class="hover:bg-gray-50/80 transition text-sm">
-                                        <td class="p-3 font-semibold text-blue-600">#${u.memberId || 'N/A'}</td>
-                                        <td class="p-3 font-bold text-gray-800">${u.name}</td>
-                                        <td class="p-3 text-gray-600">${u.phone}</td>
-                                        <td class="p-3 text-gray-600">${u.age || 'មិនទាន់បំពេញ'}</td>
-                                        <td class="p-3 text-gray-600">${u.bankName || 'មិនទាន់បំពេញ'}</td>
-                                        <td class="p-3 font-mono text-gray-700">${u.bankAccount || 'មិនទាន់បំពេញ'}</td>
-                                        <td class="p-3">
-                                            ${u.memberQr ? `<button onclick="showImageViewer('${u.memberQr}')" class="px-2 py-1 bg-gray-100 text-blue-600 text-xs font-bold rounded-lg border hover:bg-blue-50 transition"><i class="fas fa-image mr-1"></i>មើល QR</button>` : `<span class="text-xs text-gray-400">គ្មានរូបភាព</span>`}
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="form-group">
+                    <label for="message">សារ ឬសំណើរបស់អ្នក៖</label>
+                    <textarea id="message" rows="5" required placeholder="តើអ្នកចាប់អារម្មណ៍លើការទិញដុំ ឬចង់បណ្តាក់ទុនវិនិយោគ?"></textarea>
                 </div>
-            `;
-        }
+                <button type="submit" class="submit-btn">ផ្ញើសារមកកាន់យើង</button>
+            </form>
+        </div>
+    </section>
 
-        // រក្សាទុកបណ្តោះអាសន្ននូវរូបភាព QR Admin
-        let tempAdminQrBase64 = null;
-        function previewAdminQr(event) {
-            handleImageUpload(event, function(base64) {
-                tempAdminQrBase64 = base64;
-                document.getElementById('adminQrPreview').src = base64;
-                showToast('បានជ្រើសរើសរូបភាព QR ថ្មី!', 'success');
-            });
-        }
+    <footer>
+        <p>&copy; 2026 ខ្មែរ អាក្រូ-ប្រូសេសស៊ីង (Khmer Agro-Processing). រក្សាសិទ្ធិគ្រប់យ៉ាង។</p>
+    </footer>
 
-        function saveAdminQr() {
-            if (!tempAdminQrBase64) {
-                return showToast('សូមជ្រើសរើសរូបភាព QR code ថ្មីជាមុនសិន ទើបអាចរក្សាទុកបាន!', 'error');
-            }
-            DB.setAdminQr(tempAdminQrBase64);
-            showToast('បានរក្សាទុក QR Code របស់ Admin ទៅក្នុងប្រព័ន្ធដោយជោគជ័យ!', 'success');
-            renderPage();
-        }
-
-        function createNewMember() {
-            const id = document.getElementById('mId').value.trim();
-            const name = document.getElementById('mName').value.trim();
-            const phone = document.getElementById('mPhone').value.trim();
-            const pass = document.getElementById('mPassword').value.trim();
-
-            if(!id || !name || !phone || !pass) return showToast('សូមបំពេញទិន្នន័យសមាជិកឱ្យបានគ្រប់គ្រាន់!', 'error');
-
-            let users = DB.getUsers();
-            if(users.find(u => u.phone === phone)) return showToast('លេខទូរសព្ទនេះមានក្នុងប្រព័ន្ធរួចហើយ!', 'error');
-            if(users.find(u => u.memberId === parseInt(id))) return showToast('លេខសម្គាល់ ID នេះមានរួចហើយ!', 'error');
-
-            users.push({
-                memberId: parseInt(id),
-                name: name,
-                phone: phone,
-                password: pass,
-                role: 'user',
-                age: '',
-                address: '',
-                bankName: '',
-                bankAccount: '',
-                bankOwnerName: '',
-                memberQr: ''
-            });
-
-            DB.setUsers(users);
-            showToast('បានចុះឈ្មោះសមាជិកថ្មីដោយជោគជ័យ!', 'success');
-            renderPage();
-        }
-
-
-        // ----------------------------------------
-        // ទំព័រ សមាជិក (បំពេញព័ត៌មានផ្ទាល់ខ្លួនគ្រប់ជ្រុងជ្រោយ)
-        // ----------------------------------------
-        let tempMemberQrBase64 = null;
-
-        function renderMemberDashboard(el) {
-            const session = DB.getSession();
-            const users = DB.getUsers();
-            const currentUser = users.find(u => u.phone === session.phone);
-
-            tempMemberQrBase64 = currentUser.memberQr || null;
-            let memberQrSrc = currentUser.memberQr || 'https://via.placeholder.com/150?text=No+QR';
-
-            el.innerHTML = `
-                <div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                    <div class="border-b pb-4 mb-6">
-                        <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-id-card text-blue-600 mr-2"></i>ទម្រង់បំពេញព័ត៌មានផ្ទាល់ខ្លួនរបស់សមាជិក</h2>
-                        <p class="text-xs text-gray-400 mt-1">សូមពិនិត្យ និងបំពេញព័ត៌មានខាងក្រោមឱ្យបានត្រឹមត្រូវគ្រប់ជ្រុងជ្រោយ</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">លេខសម្គាល់សមាជិក (ID)</label>
-                            <input type="text" value="${currentUser.memberId || 'N/A'}" disabled class="w-full px-3 py-2 border rounded-xl bg-gray-50 font-semibold text-blue-600 cursor-not-allowed">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">ឈ្មោះពេញសមាជិក</label>
-                            <input type="text" id="profileName" value="${currentUser.name || ''}" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">អាយុ</label>
-                            <input type="number" id="profileAge" value="${currentUser.age || ''}" placeholder="បញ្ចូលអាយុ" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">លេខទូរសព្ទបច្ចុប្បន្ន</label>
-                            <input type="text" id="profilePhone" value="${currentUser.phone || ''}" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-bold text-gray-600 mb-1">ទីលំនៅបច្ចុប្បន្ន</label>
-                            <input type="text" id="profileAddress" value="${currentUser.address || ''}" placeholder="បញ្ចូលអាសយដ្ឋានបច្ចុប្បន្ន" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">ឈ្មោះធនាគារ</label>
-                            <select id="profileBankName" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
-                                <option value="">-- សូមជ្រើសរើសធនាគារ --</option>
-                                ${BANK_LIST.map(b => `<option value="${b}" ${currentUser.bankName === b ? 'selected' : ''}>${b}</option>`).join('')}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">លេខគណនីធនាគារ</label>
-                            <input type="text" id="profileBankAccount" value="${currentUser.bankAccount || ''}" placeholder="បញ្ចូលលេខគណនីធនាគារ" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">ឈ្មោះម្ចាស់ធនាគារ</label>
-                            <input type="text" id="profileBankOwnerName" value="${currentUser.bankOwnerName || ''}" placeholder="បញ្ចូលឈ្មោះម្ចាស់គណនី" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-bold text-gray-600 mb-1">រូបភាព QR Code ទូទាត់</label>
-                            <div class="qr-placeholder" onclick="document.getElementById('memberQrInput').click()">
-                                <img id="memberQrPreview" src="${memberQrSrc}" alt="Member QR Code">
-                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition text-white text-[10px] p-1 text-center">
-                                    ចុចប្តូររូបភាព QR
-                                </div>
-                            </div>
-                            <input type="file" id="memberQrInput" accept="image/*" class="hidden" onchange="previewMemberQr(event)">
-                        </div>
-                    </div>
-
-                    <div class="mt-6 border-t pt-4 text-right">
-                        <button onclick="updateMemberProfile()" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-xl hover:opacity-90 transition shadow-md">
-                            <i class="fas fa-save mr-1"></i> រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួន
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function previewMemberQr(event) {
-            handleImageUpload(event, function(base64) {
-                tempMemberQrBase64 = base64;
-                document.getElementById('memberQrPreview').src = base64;
-                showToast('បានជ្រើសរើសរូបភាព QR ទូទាត់ថ្មី!', 'success');
-            });
-        }
-
-        function updateMemberProfile() {
-            const session = DB.getSession();
-            let users = DB.getUsers();
-            let idx = users.findIndex(u => u.phone === session.phone);
-
-            if(idx !== -1) {
-                users[idx].name = document.getElementById('profileName').value.trim();
-                users[idx].age = document.getElementById('profileAge').value.trim();
-                users[idx].phone = document.getElementById('profilePhone').value.trim();
-                users[idx].address = document.getElementById('profileAddress').value.trim();
-                users[idx].bankName = document.getElementById('profileBankName').value;
-                users[idx].bankAccount = document.getElementById('profileBankAccount').value.trim();
-                users[idx].bankOwnerName = document.getElementById('profileBankOwnerName').value.trim();
-                users[idx].memberQr = tempMemberQrBase64 || '';
-
-                // កែសម្រួលព័ត៌មាន Session ក្នុងករណីមានការប្តូរឈ្មោះ ឬលេខទូរសព្ទ
-                DB.setSession({ phone: users[idx].phone, name: users[idx].name, role: users[idx].role });
-                DB.setUsers(users);
-
-                showToast('បានធ្វើបច្ចុប្បន្នភាព និងរក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនរួចរាល់!', 'success');
-                renderPage();
-            }
-        }
-
-        // ចាប់ផ្តើមដំណើរការទំព័រដំបូង
-        renderPage();
-    </script>
 </body>
 </html>
