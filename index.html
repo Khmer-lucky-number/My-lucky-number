@@ -585,7 +585,6 @@
         // ===== DATA LAYER =====
         // ================================================================
 
-        // ===== ប្រព័ន្ធផ្ទុកទិន្នន័យ =====
         let data = JSON.parse(localStorage.getItem('memberSystemData')) || {
             superAdmins: {},
             subAdmins: {},
@@ -601,7 +600,6 @@
             localStorage.setItem('memberSystemData', JSON.stringify(data));
         }
 
-        // ===== បង្កើត ID =====
         function generateAdminId() {
             data.adminCounter++;
             saveData();
@@ -614,7 +612,6 @@
             return 'M-' + String(data.memberCounter).padStart(4, '0');
         }
 
-        // ===== ប្រព័ន្ធ Session =====
         function getCurrentUser() {
             return JSON.parse(localStorage.getItem('currentUser') || 'null');
         }
@@ -634,34 +631,6 @@
             }
         }
 
-        // ===== ពិនិត្យសិទ្ធិ =====
-        function requireAuth(role) {
-            const user = getCurrentUser();
-            if (!user) {
-                renderPage('login');
-                return false;
-            }
-            if (role && user.role !== role) {
-                alert('អ្នកមិនមានសិទ្ធិចូលប្រើទំព័រនេះទេ!');
-                renderPage('home');
-                return false;
-            }
-            return true;
-        }
-
-        function requireSuperAdmin() {
-            return requireAuth('super_admin');
-        }
-
-        function requireSubAdmin() {
-            return requireAuth('sub_admin');
-        }
-
-        function requireMember() {
-            return requireAuth('member');
-        }
-
-        // ===== កត់ត្រាសកម្មភាព =====
         function logActivity(adminId, adminName, action, actionType, target, amount, details) {
             const log = {
                 id: 'LOG-' + String(data.activityLogs.length + 1).padStart(4, '0'),
@@ -678,7 +647,6 @@
                 details: details || ''
             };
             data.activityLogs.unshift(log);
-            // រក្សាទុកតែ 500 កំណត់ត្រាចុងក្រោយ
             if (data.activityLogs.length > 500) {
                 data.activityLogs = data.activityLogs.slice(0, 500);
             }
@@ -686,7 +654,6 @@
             return log;
         }
 
-        // ===== បង្កើត Super Admin លំនាំដើម =====
         function initSuperAdmin() {
             if (!data.superAdminExists) {
                 data.superAdmins['099999999'] = {
@@ -793,9 +760,10 @@
                     </div>
 
                     <p style="font-size:0.8rem;color:rgba(255,255,255,0.2);margin-top:15px;">
-                        🔒 សម្រាប់ Super Admin 
-                        <span onclick="renderPage('super-dashboard')" style="color:rgba(255,215,0,0.5);cursor:pointer;">ចូលទីនេះ</span>
-                        ${data.superAdminExists ? '✅' : ''}
+                        👑 សម្រាប់ Super Admin 
+                        <button onclick="renderPage('super-dashboard')" style="background:linear-gradient(135deg,#ffd700,#f59e0b);border:none;color:#1a1a2e;padding:6px 18px;border-radius:20px;font-weight:600;cursor:pointer;font-size:13px;box-shadow:0 4px 15px rgba(255,215,0,0.3);">
+                            ⚡ ចូលដោយផ្ទាល់
+                        </button>
                     </p>
                 </div>
             `;
@@ -825,7 +793,9 @@
                 <div class="text-center mt-10">
                     <p style="font-size:0.8rem;color:rgba(255,255,255,0.2);">
                         👑 Super Admin: 
-                        <span onclick="renderPage('super-dashboard')" style="color:rgba(255,215,0,0.5);cursor:pointer;">ចូលដោយផ្ទាល់</span>
+                        <button onclick="renderPage('super-dashboard')" style="background:linear-gradient(135deg,#ffd700,#f59e0b);border:none;color:#1a1a2e;padding:4px 16px;border-radius:20px;font-weight:600;cursor:pointer;font-size:12px;">
+                            ⚡ ចូលដោយផ្ទាល់
+                        </button>
                     </p>
                 </div>
             `;
@@ -880,7 +850,7 @@
         function getDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'member') {
-                return `<p style="color:red;">សូមចូលប្រើជាមុនសិន!</p>`;
+                return `<p style="color:red;">សូមចូលប្រើជាមុនសិន! <button onclick="renderPage('role-select')" class="btn btn-sm">ចូលប្រើ</button></p>`;
             }
 
             const member = data.members[user.phone];
@@ -897,7 +867,6 @@
                 benefitsHtml = `<li style="opacity:0.4;">មិនទាន់មានអត្ថប្រយោជន៍</li>`;
             }
 
-            // Notifications
             let notificationsHtml = '';
             const userLogs = data.activityLogs.filter(log => log.target === user.phone && log.actionType === 'member_transfer');
             if (userLogs.length > 0) {
@@ -1052,13 +1021,21 @@
         }
 
         function getSuperDashboardPage() {
-            if (!requireSuperAdmin()) return '';
-
+            // Super Admin can access directly without login check
             const superAdmin = Object.values(data.superAdmins)[0];
             const totalMembers = Object.keys(data.members).length;
             const totalAdmins = Object.keys(data.subAdmins).length;
             const totalBalance = Object.values(data.members).reduce((sum, m) => sum + m.balance, 0) +
                 Object.values(data.subAdmins).reduce((sum, a) => sum + a.balance, 0);
+
+            // Set current user as super admin if not already
+            if (!getCurrentUser() || getCurrentUser().role !== 'super_admin') {
+                setCurrentUser({
+                    phone: superAdmin ? superAdmin.phone : '099999999',
+                    role: 'super_admin',
+                    name: 'Super Admin'
+                });
+            }
 
             let adminListHtml = '';
             Object.values(data.subAdmins).forEach(a => {
@@ -1102,7 +1079,9 @@
                             <span style="margin-left:15px;">📱 ${superAdmin ? superAdmin.phone : 'N/A'}</span>
                         </div>
                     </div>
-                    <button onclick="logoutUser()" class="btn btn-danger" style="padding:8px 16px;font-size:13px;">🚪 ចាកចេញ</button>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button onclick="logoutUser()" class="btn btn-danger" style="padding:8px 16px;font-size:13px;">🚪 ចាកចេញ</button>
+                    </div>
                 </div>
 
                 <div class="stats">
@@ -1156,7 +1135,6 @@
         }
 
         function getCreateAdminPage() {
-            if (!requireSuperAdmin()) return '';
             return getSuperDashboardPage();
         }
 
@@ -1215,7 +1193,6 @@
             }
 
             let logs = data.activityLogs;
-            // Filter based on role
             if (user.role === 'sub_admin') {
                 const admin = data.subAdmins[user.phone];
                 if (admin) {
@@ -1306,7 +1283,7 @@
                         }
                         setCurrentUser({ phone: phone, role: 'member', name: member.username || phone });
                         logActivity(member.id, member.username || phone, 'login', 'authentication', null, null,
-                        'ចូលប្រើជាសមាជិក');
+                            'ចូលប្រើជាសមាជិក');
                         renderPage('dashboard');
                     }
                 });
@@ -1461,7 +1438,6 @@
                         return;
                     }
 
-                    // Transfer
                     admin.balance -= amount;
                     admin.totalTransferred = (admin.totalTransferred || 0) + amount;
                     member.balance += amount;
@@ -1469,7 +1445,6 @@
                         year: 'numeric' });
                     member.benefits.push('💰 បានទទួលប្រាក់ $' + amount.toFixed(2) + ' នៅថ្ងៃ ' + date);
 
-                    // Add member to admin's list if not exists
                     if (!admin.members.includes(phone)) {
                         admin.members.push(phone);
                     }
@@ -1525,10 +1500,8 @@
         // ===== START APP =====
         // ================================================================
 
-        // Initialize Super Admin
         initSuperAdmin();
 
-        // Check current session
         const currentUser = getCurrentUser();
         if (currentUser) {
             if (currentUser.role === 'super_admin') {
