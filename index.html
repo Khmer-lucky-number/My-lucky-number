@@ -30,7 +30,7 @@
             border-radius: 25px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 720px;
+            max-width: 750px;
             animation: fadeInUp 0.6s ease-out;
             max-height: 98vh;
             overflow-y: auto;
@@ -59,9 +59,7 @@
             }
         }
 
-        h1,
-        h2,
-        h3 {
+        h1, h2, h3 {
             color: #ffffff;
             font-weight: 700;
             margin-bottom: 8px;
@@ -84,8 +82,7 @@
             line-height: 1.6;
         }
 
-        input,
-        select {
+        input, select {
             width: 100%;
             padding: 12px 16px;
             margin: 5px 0;
@@ -100,8 +97,7 @@
         input::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
-        input:focus,
-        select:focus {
+        input:focus, select:focus {
             border-color: #667eea;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.15);
@@ -454,43 +450,18 @@
         .text-center {
             text-align: center;
         }
-        .mt-5 {
-            margin-top: 5px;
-        }
-        .mt-10 {
-            margin-top: 10px;
-        }
-        .mt-15 {
-            margin-top: 15px;
-        }
-        .mb-10 {
-            margin-bottom: 10px;
-        }
-        .op-3 {
-            opacity: 0.3;
-        }
-        .op-5 {
-            opacity: 0.5;
-        }
-        .fs-11 {
-            font-size: 11px;
-        }
-        .fs-12 {
-            font-size: 12px;
-        }
-        .fs-13 {
-            font-size: 13px;
-        }
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .gap-5 {
-            gap: 5px;
-        }
+        .mt-5 { margin-top: 5px; }
+        .mt-10 { margin-top: 10px; }
+        .mt-15 { margin-top: 15px; }
+        .mb-10 { margin-bottom: 10px; }
+        .op-3 { opacity: 0.3; }
+        .op-5 { opacity: 0.5; }
+        .fs-11 { font-size: 11px; }
+        .fs-12 { font-size: 12px; }
+        .fs-13 { font-size: 13px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+        .gap-5 { gap: 5px; }
+        .flex-center { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
         #message .success {
             background: rgba(72, 187, 120, 0.2);
@@ -539,14 +510,11 @@
             border-color: #ffd700;
         }
 
-        /* Modal */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -559,55 +527,33 @@
             border-radius: 20px;
             max-width: 420px;
             width: 90%;
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255,215,0,0.2);
         }
         .modal-box h3 {
             color: #ffd700;
         }
 
+        .search-result-box {
+            background: rgba(255,215,0,0.08);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,215,0,0.2);
+            margin-top: 8px;
+        }
+
         @media (max-width: 600px) {
-            .container {
-                padding: 15px 12px;
-                border-radius: 18px;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-            h2 {
-                font-size: 1.2rem;
-            }
-            .amount {
-                font-size: 2rem;
-            }
-            .buttons {
-                flex-direction: column;
-            }
-            .btn {
-                width: 100%;
-                text-align: center;
-            }
-            .stats {
-                grid-template-columns: 1fr 1fr;
-            }
-            .role-selector {
-                grid-template-columns: 1fr;
-            }
-            .list-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .list-item .actions {
-                width: 100%;
-                justify-content: flex-start;
-            }
-            .otp-input input {
-                width: 38px;
-                height: 42px;
-                font-size: 16px;
-            }
-            .modal-box {
-                padding: 18px;
-            }
+            .container { padding: 15px 12px; border-radius: 18px; }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.2rem; }
+            .amount { font-size: 2rem; }
+            .buttons { flex-direction: column; }
+            .btn { width: 100%; text-align: center; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .role-selector { grid-template-columns: 1fr; }
+            .list-item { flex-direction: column; align-items: flex-start; }
+            .list-item .actions { width: 100%; justify-content: flex-start; }
+            .otp-input input { width: 38px; height: 42px; font-size: 16px; }
+            .modal-box { padding: 18px; }
         }
     </style>
 </head>
@@ -703,47 +649,20 @@
             let html = '';
 
             switch (page) {
-                case 'home':
-                    html = getHomePage();
-                    break;
-                case 'role-select':
-                    html = getRoleSelectPage();
-                    break;
-                case 'login':
-                    html = getLoginPage(params);
-                    break;
-                case 'register':
-                    html = getRegisterPage();
-                    break;
-                case 'dashboard':
-                    html = getDashboardPage();
-                    break;
-                case 'admin-dashboard':
-                    html = getAdminDashboardPage();
-                    break;
-                case 'super-dashboard':
-                    html = getSuperDashboardPage();
-                    break;
-                case 'super-login':
-                    html = getSuperLoginPage();
-                    break;
-                case 'super-otp':
-                    html = getSuperOTPPage(params);
-                    break;
-                case 'transfer-money':
-                    html = getTransferMoneyPage(params);
-                    break;
-                case 'activity-log':
-                    html = getActivityLogPage();
-                    break;
-                case 'edit-member':
-                    html = getEditMemberPage(params);
-                    break;
-                case 'edit-admin':
-                    html = getEditAdminPage(params);
-                    break;
-                default:
-                    html = getHomePage();
+                case 'home': html = getHomePage(); break;
+                case 'role-select': html = getRoleSelectPage(); break;
+                case 'login': html = getLoginPage(params); break;
+                case 'register': html = getRegisterPage(); break;
+                case 'dashboard': html = getDashboardPage(); break;
+                case 'admin-dashboard': html = getAdminDashboardPage(); break;
+                case 'super-dashboard': html = getSuperDashboardPage(); break;
+                case 'super-login': html = getSuperLoginPage(); break;
+                case 'super-otp': html = getSuperOTPPage(params); break;
+                case 'transfer-money': html = getTransferMoneyPage(params); break;
+                case 'activity-log': html = getActivityLogPage(); break;
+                case 'edit-member': html = getEditMemberPage(params); break;
+                case 'edit-admin': html = getEditAdminPage(params); break;
+                default: html = getHomePage();
             }
 
             container.innerHTML = html;
@@ -780,9 +699,7 @@
                     </div>
 
                     <div style="margin-top:12px;">
-                        <button onclick="renderPage('super-login')" class="btn-super">
-                            ⭐ Super Admin
-                        </button>
+                        <button onclick="renderPage('super-login')" class="btn-super">⭐ Super Admin</button>
                     </div>
                 </div>
             `;
@@ -1029,6 +946,17 @@
                     <div class="stat-box"><div class="number">$${admin.totalTransferred || 0}</div><div class="label">បានផ្ទេរ</div></div>
                 </div>
 
+                <!-- 🔍 SEARCH MEMBER FOR TRANSFER -->
+                <div class="card admin-panel">
+                    <h3>🔍 ស្វែងរកសមាជិកដើម្បីផ្ទេរប្រាក់</h3>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <input type="text" id="adminSearchMember" placeholder="🔎 បញ្ចូល ID (M-0001) ឬ លេខទូរសព្ទ" style="flex:1;min-width:150px;">
+                        <button onclick="searchMemberForTransfer()" class="btn btn-warning">🔍 ស្វែងរក</button>
+                        <button onclick="clearSearchResult('adminSearchResult')" class="btn btn-sm" style="background:rgba(255,255,255,0.1);">✖</button>
+                    </div>
+                    <div id="adminSearchResult" style="margin-top:10px;"></div>
+                </div>
+
                 <div class="card admin-panel"><h3>📋 បញ្ជីសមាជិក</h3>${membersHtml}</div>
                 <div class="card"><h3>📊 ប្រវត្តិផ្ទេរ</h3>${logsHtml}</div>
                 <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
@@ -1142,6 +1070,17 @@
                     <div id="createAdminMessage"></div>
                 </div>
 
+                <!-- 🔍 SEARCH SUB ADMIN FOR FUNDING -->
+                <div class="card admin-panel">
+                    <h3>🔍 ស្វែងរក Sub Admin ដើម្បីបញ្ចូលប្រាក់</h3>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <input type="text" id="superSearchAdmin" placeholder="🔎 បញ្ចូល ID (A-0001) ឬ លេខទូរសព្ទ" style="flex:1;min-width:150px;">
+                        <button onclick="searchSubAdmin()" class="btn btn-gold">🔍 ស្វែងរក</button>
+                        <button onclick="clearSearchResult('superSearchResult')" class="btn btn-sm" style="background:rgba(255,255,255,0.1);">✖</button>
+                    </div>
+                    <div id="superSearchResult" style="margin-top:10px;"></div>
+                </div>
+
                 <div class="card"><h3>📋 Sub Admin</h3><div class="list-container">${adminListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
                 <div class="card"><h3>📋 សមាជិក</h3><div class="list-container">${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
 
@@ -1210,7 +1149,7 @@
                     const d = new Date(l.timestamp);
                     const emoji = { login: '🔑', create_admin: '👑', member_transfer: '💸', system_init: '⚙️',
                         assign_admin: '👑', delete_admin: '🗑️', delete_member: '🗑️', edit_member: '✏️',
-                        edit_admin: '✏️', reset_password: '🔑' } [l.action] || '📝';
+                        edit_admin: '✏️', reset_password: '🔑', fund_admin: '💰', request_assign: '📨' } [l.action] || '📝';
                     html += `
                         <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;flex-wrap:wrap;gap:4px;">
                             <div>${emoji} ${l.details || l.action} ${l.amount ? '<span style="color:#48bb78;">$'+l.amount+'</span>' : ''}</div>
@@ -1220,8 +1159,7 @@
                 });
             }
 
-            const backPage = user.role === 'super_admin' ? 'super-dashboard' : user.role === 'sub_admin' ? 'admin-dashboard' :
-                'dashboard';
+            const backPage = user.role === 'super_admin' ? 'super-dashboard' : user.role === 'sub_admin' ? 'admin-dashboard' : 'dashboard';
             return `
                 <div class="top-bar">
                     <h2>📋 កំណត់ត្រា</h2>
@@ -1271,6 +1209,216 @@
                 </form>
                 <div id="message"></div>
             `;
+        }
+
+        // ================================================================
+        // ===== SEARCH FUNCTIONS =====
+        // ================================================================
+
+        function clearSearchResult(elementId) {
+            const el = document.getElementById(elementId);
+            if (el) el.innerHTML = '';
+            const input = document.getElementById(elementId === 'superSearchResult' ? 'superSearchAdmin' : 'adminSearchMember');
+            if (input) input.value = '';
+        }
+
+        // ===== SUPER ADMIN: SEARCH SUB ADMIN =====
+        function searchSubAdmin() {
+            const input = document.getElementById('superSearchAdmin').value.trim();
+            const resultDiv = document.getElementById('superSearchResult');
+            
+            if (!input) {
+                resultDiv.innerHTML = `<div class="error">សូមបញ្ចូល ID ឬ លេខទូរសព្ទ!</div>`;
+                return;
+            }
+
+            let foundAdmin = null;
+            Object.values(data.subAdmins).forEach(a => {
+                if (a.id === input || a.phone === input) {
+                    foundAdmin = a;
+                }
+            });
+
+            if (!foundAdmin) {
+                resultDiv.innerHTML = `<div class="error">❌ រកមិនឃើញ Sub Admin ដែលមាន ID ឬ លេខទូរសព្ទនេះ!</div>`;
+                return;
+            }
+
+            resultDiv.innerHTML = `
+                <div class="search-result-box">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <div>
+                            <div style="color:#ffd700;font-weight:600;">👑 ${foundAdmin.username}</div>
+                            <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${foundAdmin.id} | 📱 ${foundAdmin.phone}</div>
+                            <div style="font-size:14px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: $${foundAdmin.balance.toFixed(2)}</div>
+                        </div>
+                        <div>
+                            <form id="superFundAdminForm" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                                <input type="hidden" name="adminPhone" value="${foundAdmin.phone}">
+                                <input type="number" name="fundAmount" placeholder="$$$ ចំនួនប្រាក់" min="0.01" step="0.01" style="width:130px;padding:8px 12px;margin:0;" required>
+                                <button type="submit" class="btn btn-gold btn-sm">💳 បញ្ចូលប្រាក់</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const fundForm = document.getElementById('superFundAdminForm');
+            if (fundForm) {
+                fundForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const phone = this.querySelector('[name="adminPhone"]').value;
+                    const amount = parseFloat(this.querySelector('[name="fundAmount"]').value);
+                    
+                    if (!amount || amount <= 0) {
+                        alert('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!');
+                        return;
+                    }
+
+                    const admin = data.subAdmins[phone];
+                    if (!admin) {
+                        alert('មិនឃើញ Admin!');
+                        return;
+                    }
+
+                    admin.balance += amount;
+                    admin.totalReceived = (admin.totalReceived || 0) + amount;
+                    saveData();
+                    logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', phone, amount,
+                        'បញ្ចូលប្រាក់ $' + amount.toFixed(2) + ' ទៅ Sub Admin ' + admin.username);
+
+                    alert('✅ បញ្ចូលប្រាក់ $' + amount.toFixed(2) + ' ទៅ ' + admin.username + ' ជោគជ័យ!');
+                    renderPage('super-dashboard');
+                });
+            }
+        }
+
+        // ===== SUB ADMIN: SEARCH MEMBER FOR TRANSFER =====
+        function searchMemberForTransfer() {
+            const input = document.getElementById('adminSearchMember').value.trim();
+            const resultDiv = document.getElementById('adminSearchResult');
+            const user = getCurrentUser();
+            
+            if (!user || user.role !== 'sub_admin') {
+                resultDiv.innerHTML = `<div class="error">សូមចូលប្រើជា Sub Admin!</div>`;
+                return;
+            }
+
+            if (!input) {
+                resultDiv.innerHTML = `<div class="error">សូមបញ្ចូល ID ឬ លេខទូរសព្ទ!</div>`;
+                return;
+            }
+
+            const admin = data.subAdmins[user.phone];
+            if (!admin) {
+                resultDiv.innerHTML = `<div class="error">មិនឃើញព័ត៌មាន Admin!</div>`;
+                return;
+            }
+
+            let foundMember = null;
+            Object.values(data.members).forEach(m => {
+                if (m.id === input || m.phone === input) {
+                    foundMember = m;
+                }
+            });
+
+            if (!foundMember) {
+                resultDiv.innerHTML = `<div class="error">❌ រកមិនឃើញសមាជិកដែលមាន ID ឬ លេខទូរសព្ទនេះ!</div>`;
+                return;
+            }
+
+            const isAssigned = foundMember.adminId === admin.id;
+            const warning = isAssigned ? '' : 
+                `<div style="color:#f6ad55;font-size:12px;margin-top:5px;">⚠️ សមាជិកនេះមិនទាន់ត្រូវបានចាត់តាំងឲ្យអ្នកទេ! សូមទាក់ទង Super Admin</div>`;
+
+            resultDiv.innerHTML = `
+                <div class="search-result-box">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                        <div>
+                            <div style="color:#fff;font-weight:600;">👤 ${foundMember.username || foundMember.phone}</div>
+                            <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${foundMember.id} | 📱 ${foundMember.phone}</div>
+                            <div style="font-size:14px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: $${foundMember.balance.toFixed(2)}</div>
+                            ${warning}
+                        </div>
+                        <div>
+                            <form id="adminTransferSearchForm" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                                <input type="hidden" name="memberPhone" value="${foundMember.phone}">
+                                <input type="number" name="transferAmount" placeholder="$$$ ចំនួនប្រាក់" min="0.01" step="0.01" style="width:130px;padding:8px 12px;margin:0;" required>
+                                <button type="submit" class="btn btn-warning btn-sm" ${!isAssigned ? 'disabled style="opacity:0.5;"' : ''}>💸 ផ្ទេរ</button>
+                            </form>
+                            ${!isAssigned ? `<button onclick="requestAssignMember('${foundMember.phone}')" class="btn btn-gold btn-sm mt-5">👑 ស្នើចាត់តាំង</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const transferForm = document.getElementById('adminTransferSearchForm');
+            if (transferForm) {
+                transferForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const phone = this.querySelector('[name="memberPhone"]').value;
+                    const amount = parseFloat(this.querySelector('[name="transferAmount"]').value);
+                    
+                    if (!amount || amount <= 0) {
+                        alert('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!');
+                        return;
+                    }
+
+                    if (amount > admin.balance) {
+                        alert('ប្រាក់របស់អ្នកមិនគ្រប់គ្រាន់! (នៅសល់ $' + admin.balance.toFixed(2) + ')');
+                        return;
+                    }
+
+                    const member = data.members[phone];
+                    if (!member) {
+                        alert('មិនឃើញសមាជិក!');
+                        return;
+                    }
+
+                    admin.balance -= amount;
+                    admin.totalTransferred = (admin.totalTransferred || 0) + amount;
+                    member.balance += amount;
+                    const date = new Date().toLocaleDateString('km-KH');
+                    member.benefits.push('💰 បានទទួល $' + amount.toFixed(2) + ' នៅថ្ងៃ ' + date);
+                    if (!admin.members.includes(phone)) admin.members.push(phone);
+                    if (!member.adminId) member.adminId = admin.id;
+
+                    saveData();
+                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', phone, amount,
+                        'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone));
+
+                    alert('✅ ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone) + ' ជោគជ័យ!');
+                    renderPage('admin-dashboard');
+                });
+            }
+        }
+
+        // ===== SUB ADMIN: REQUEST ASSIGN MEMBER =====
+        function requestAssignMember(memberPhone) {
+            if (!confirm('តើអ្នកចង់ស្នើ Super Admin ឲ្យចាត់តាំងសមាជិកនេះឲ្យអ្នកមែនទេ?')) return;
+            
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                alert('សូមចូលប្រើជា Sub Admin!');
+                return;
+            }
+
+            const admin = data.subAdmins[user.phone];
+            if (!admin) {
+                alert('មិនឃើញព័ត៌មាន Admin!');
+                return;
+            }
+
+            const member = data.members[memberPhone];
+            if (!member) {
+                alert('មិនឃើញសមាជិក!');
+                return;
+            }
+
+            logActivity(admin.id, admin.username, 'request_assign', 'administration', memberPhone, null,
+                'ស្នើចាត់តាំងសមាជិក ' + (member.username || memberPhone) + ' ឲ្យខ្លួន');
+
+            alert('✅ បានផ្ញើសំណើទៅ Super Admin ហើយ! សូមរង់ចាំការបញ្ជាក់');
         }
 
         // ================================================================
@@ -1337,7 +1485,6 @@
                 return;
             }
 
-            // Remove from old admin if exists
             if (member.adminId) {
                 const oldAdmin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
                 if (oldAdmin) {
@@ -1345,7 +1492,6 @@
                 }
             }
 
-            // Assign new admin
             member.adminId = adminId;
             if (!admin.members.includes(memberPhone)) {
                 admin.members.push(memberPhone);
@@ -1366,27 +1512,19 @@
         }
 
         // ===== CRUD Operations =====
-        function editMember(phone) {
-            renderPage('edit-member', { phone: phone });
-        }
-
-        function editAdmin(phone) {
-            renderPage('edit-admin', { phone: phone });
-        }
+        function editMember(phone) { renderPage('edit-member', { phone: phone }); }
+        function editAdmin(phone) { renderPage('edit-admin', { phone: phone }); }
 
         function deleteAdmin(phone) {
             if (!confirm('តើអ្នកចង់លុប Sub Admin នេះមែនទេ?')) return;
             const admin = data.subAdmins[phone];
             if (!admin) return;
             Object.values(data.members).forEach(m => {
-                if (m.adminId === admin.id) {
-                    m.adminId = null;
-                }
+                if (m.adminId === admin.id) m.adminId = null;
             });
             delete data.subAdmins[phone];
             saveData();
-            logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null, 'លុប Sub Admin ' +
-                admin.username);
+            logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null, 'លុប Sub Admin ' + admin.username);
             renderPage('super-dashboard');
         }
 
@@ -1394,17 +1532,13 @@
             if (!confirm('តើអ្នកចង់លុបសមាជិកនេះមែនទេ?')) return;
             const member = data.members[phone];
             if (!member) return;
-            // Remove from admin's list
             if (member.adminId) {
                 const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
-                if (admin) {
-                    admin.members = admin.members.filter(p => p !== phone);
-                }
+                if (admin) admin.members = admin.members.filter(p => p !== phone);
             }
             delete data.members[phone];
             saveData();
-            logActivity('SUPER-001', 'Super Admin', 'delete_member', 'administration', phone, null, 'លុបសមាជិក ' + (member
-                .username || phone));
+            logActivity('SUPER-001', 'Super Admin', 'delete_member', 'administration', phone, null, 'លុបសមាជិក ' + (member.username || phone));
             renderPage('super-dashboard');
         }
 
@@ -1418,8 +1552,7 @@
             if (!admin) return;
             admin.password = newPwd;
             saveData();
-            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' +
-                admin.username);
+            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + admin.username);
             alert('✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!');
             renderPage('super-dashboard');
         }
@@ -1434,8 +1567,7 @@
             if (!member) return;
             member.password = newPwd;
             saveData();
-            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' +
-                (member.username || phone));
+            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + (member.username || phone));
             alert('✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!');
             renderPage('super-dashboard');
         }
@@ -1565,8 +1697,7 @@
                     const now = Date.now();
 
                     if (!storedOTP || now - otpTime > 5 * 60 * 1000) {
-                        msg.innerHTML =
-                            `<div class="error">⏱️ OTP ផុតកំណត់! សូមផ្ញើ OTP ឡើងវិញ</div>`;
+                        msg.innerHTML = `<div class="error">⏱️ OTP ផុតកំណត់! សូមផ្ញើ OTP ឡើងវិញ</div>`;
                         return;
                     }
 
@@ -1580,8 +1711,7 @@
                         role: 'super_admin',
                         name: 'Super Admin'
                     });
-                    logActivity('SUPER-001', 'Super Admin', 'login', 'authentication', null, null,
-                        'ចូលប្រើដោយ OTP');
+                    logActivity('SUPER-001', 'Super Admin', 'login', 'authentication', null, null, 'ចូលប្រើដោយ OTP');
                     data.superAdminOTP = null;
                     data.superAdminOTPTime = null;
                     saveData();
@@ -1611,8 +1741,7 @@
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'sub_admin', name: admin.username });
-                        logActivity(admin.id, admin.username, 'login', 'authentication', null, null,
-                            'ចូលប្រើជា Sub Admin');
+                        logActivity(admin.id, admin.username, 'login', 'authentication', null, null, 'ចូលប្រើជា Sub Admin');
                         renderPage('admin-dashboard');
                     } else {
                         const member = data.members[phone];
@@ -1621,8 +1750,7 @@
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'member', name: member.username || phone });
-                        logActivity(member.id, member.username || phone, 'login', 'authentication', null,
-                            null, 'ចូលប្រើជាសមាជិក');
+                        logActivity(member.id, member.username || phone, 'login', 'authentication', null, null, 'ចូលប្រើជាសមាជិក');
                         renderPage('dashboard');
                     }
                 });
@@ -1669,8 +1797,7 @@
                         createdAt: new Date().toISOString()
                     };
                     saveData();
-                    msg.innerHTML =
-                        `<div class="success">✅ ចុះឈ្មោះជោគជ័យ! 🆔 ${newId}<br><span onclick="renderPage('role-select')" style="color:#667eea;cursor:pointer;">🔑 ចូលប្រើ</span></div>`;
+                    msg.innerHTML = `<div class="success">✅ ចុះឈ្មោះជោគជ័យ! 🆔 ${newId}<br><span onclick="renderPage('role-select')" style="color:#667eea;cursor:pointer;">🔑 ចូលប្រើ</span></div>`;
                     registerForm.reset();
                 });
             }
@@ -1714,16 +1841,14 @@
                         createdAt: new Date().toISOString()
                     };
                     saveData();
-                    logActivity('SUPER-001', 'Super Admin', 'create_admin', 'administration', phone, null,
-                        'បង្កើត Sub Admin "' + name + '" (' + newId + ')');
-                    msg.innerHTML =
-                        `<div class="success">✅ បង្កើតជោគជ័យ! 🆔 ${newId}<br>🔒 ${password}</div>`;
+                    logActivity('SUPER-001', 'Super Admin', 'create_admin', 'administration', phone, null, 'បង្កើត Sub Admin "' + name + '" (' + newId + ')');
+                    msg.innerHTML = `<div class="success">✅ បង្កើតជោគជ័យ! 🆔 ${newId}<br>🔒 ${password}</div>`;
                     createAdminForm.reset();
                     setTimeout(() => renderPage('super-dashboard'), 2000);
                 });
             }
 
-            // ---- TRANSFER MONEY ----
+            // ---- TRANSFER MONEY (from admin dashboard) ----
             const transferForm = document.getElementById('transferForm');
             if (transferForm) {
                 transferForm.addEventListener('submit', function(e) {
@@ -1744,8 +1869,7 @@
                         return;
                     }
                     if (amount > admin.balance) {
-                        msg.innerHTML =
-                            `<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ $${admin.balance.toFixed(2)})</div>`;
+                        msg.innerHTML = `<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ $${admin.balance.toFixed(2)})</div>`;
                         return;
                     }
 
@@ -1764,11 +1888,9 @@
                     if (!member.adminId) member.adminId = admin.id;
 
                     saveData();
-                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', phone, amount,
-                        'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone));
+                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', phone, amount, 'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone));
 
-                    msg.innerHTML =
-                        `<div class="success">✅ ផ្ទេរ $${amount.toFixed(2)} ជោគជ័យ!<br>នៅសល់: $${admin.balance.toFixed(2)}</div>`;
+                    msg.innerHTML = `<div class="success">✅ ផ្ទេរ $${amount.toFixed(2)} ជោគជ័យ!<br>នៅសល់: $${admin.balance.toFixed(2)}</div>`;
                     document.getElementById('transferAmount').value = '';
                     setTimeout(() => renderPage('admin-dashboard'), 1500);
                 });
@@ -1795,7 +1917,6 @@
                         return;
                     }
 
-                    // Update admin's member list if phone changes
                     if (newPhone !== oldPhone && member.adminId) {
                         const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
                         if (admin) {
@@ -1811,8 +1932,7 @@
                     }
 
                     saveData();
-                    logActivity('SUPER-001', 'Super Admin', 'edit_member', 'administration', newPhone, null,
-                        'កែប្រែសមាជិក ' + (username || newPhone));
+                    logActivity('SUPER-001', 'Super Admin', 'edit_member', 'administration', newPhone, null, 'កែប្រែសមាជិក ' + (username || newPhone));
                     msg.innerHTML = `<div class="success">✅ រក្សាទុកជោគជ័យ!</div>`;
                     setTimeout(() => renderPage('super-dashboard'), 1000);
                 });
@@ -1840,12 +1960,6 @@
                     }
 
                     if (newPhone !== oldPhone) {
-                        // Update members' adminId reference
-                        Object.values(data.members).forEach(m => {
-                            if (m.adminId === admin.id) {
-                                // keep adminId same
-                            }
-                        });
                         data.subAdmins[newPhone] = { ...admin, phone: newPhone, username: name };
                         delete data.subAdmins[oldPhone];
                     } else {
@@ -1853,8 +1967,7 @@
                     }
 
                     saveData();
-                    logActivity('SUPER-001', 'Super Admin', 'edit_admin', 'administration', newPhone, null,
-                        'កែប្រែ Sub Admin ' + name);
+                    logActivity('SUPER-001', 'Super Admin', 'edit_admin', 'administration', newPhone, null, 'កែប្រែ Sub Admin ' + name);
                     msg.innerHTML = `<div class="success">✅ រក្សាទុកជោគជ័យ!</div>`;
                     setTimeout(() => renderPage('super-dashboard'), 1000);
                 });
@@ -1886,8 +1999,7 @@
             if (currentUser.role === 'super_admin') renderPage('super-dashboard');
             else if (currentUser.role === 'sub_admin' && data.subAdmins[currentUser.phone]) renderPage('admin-dashboard');
             else if (currentUser.role === 'member' && data.members[currentUser.phone]) renderPage('dashboard');
-            else { setCurrentUser(null);
-                renderPage('home'); }
+            else { setCurrentUser(null); renderPage('home'); }
         } else {
             renderPage('home');
         }
