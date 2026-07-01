@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក និង Admin</title>
     <style>
-        /* ===== CSS ទាំងអស់ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -27,18 +26,18 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 30px;
+            padding: 25px;
+            border-radius: 25px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 650px;
+            max-width: 680px;
             animation: fadeInUp 0.6s ease-out;
             max-height: 98vh;
             overflow-y: auto;
         }
 
         .container::-webkit-scrollbar {
-            width: 6px;
+            width: 5px;
         }
         .container::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
@@ -65,36 +64,36 @@
         h3 {
             color: #ffffff;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         h2 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: #fff;
         }
         p {
             color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             line-height: 1.6;
         }
 
         input,
         select {
             width: 100%;
-            padding: 14px 18px;
-            margin: 6px 0;
+            padding: 12px 16px;
+            margin: 5px 0;
             border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
+            border-radius: 12px;
             background: rgba(255, 255, 255, 0.06);
             color: #fff;
-            font-size: 15px;
+            font-size: 14px;
             transition: all 0.3s ease;
             outline: none;
         }
@@ -111,27 +110,46 @@
             background: #1a1a2e;
             color: #fff;
         }
-        input[type="number"]::-webkit-inner-spin-button {
-            opacity: 0.5;
+
+        .input-group {
+            position: relative;
+        }
+        .input-group input {
+            padding-right: 45px;
+        }
+        .input-group .toggle-pwd {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+        }
+        .input-group .toggle-pwd:hover {
+            color: #fff;
         }
 
         .btn {
             display: inline-block;
-            padding: 13px 30px;
+            padding: 11px 24px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             text-decoration: none;
             border: none;
-            border-radius: 14px;
-            font-size: 15px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 4px;
+            margin: 3px;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
         .btn:hover {
-            transform: translateY(-3px) scale(1.02);
+            transform: translateY(-2px) scale(1.02);
             box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
         }
         .btn-secondary {
@@ -164,29 +182,53 @@
             box-shadow: 0 12px 35px rgba(255, 215, 0, 0.5);
         }
         .btn-sm {
-            padding: 8px 16px;
-            font-size: 13px;
+            padding: 5px 12px;
+            font-size: 12px;
+        }
+        .btn-xs {
+            padding: 3px 10px;
+            font-size: 11px;
         }
         .btn-block {
             width: 100%;
             text-align: center;
         }
 
+        .btn-super {
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            color: #1a1a2e;
+            padding: 4px 14px;
+            font-size: 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.25);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-super:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+        .btn-super .icon {
+            font-size: 14px;
+        }
+
         .buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             justify-content: center;
             flex-wrap: wrap;
-            margin: 15px 0;
+            margin: 12px 0;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 18px;
-            border-radius: 18px;
-            margin: 12px 0;
+            padding: 15px;
+            border-radius: 16px;
+            margin: 10px 0;
             text-align: left;
             transition: all 0.3s ease;
         }
@@ -195,20 +237,15 @@
             transform: translateY(-2px);
         }
         .card h3 {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 6px;
-        }
-        .card .label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 4px;
+            margin-bottom: 5px;
         }
 
         .amount {
-            font-size: 3rem;
+            font-size: 2.6rem;
             font-weight: 800;
             background: linear-gradient(135deg, #48bb78, #38a169);
             -webkit-background-clip: text;
@@ -218,13 +255,10 @@
 
         .badge {
             display: inline-block;
-            padding: 3px 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 20px;
-            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 16px;
+            font-size: 10px;
             font-weight: 600;
-            color: #fff;
-            letter-spacing: 0.5px;
             text-transform: uppercase;
         }
         .badge-gold {
@@ -233,12 +267,15 @@
         }
         .badge-green {
             background: linear-gradient(135deg, #48bb78, #38a169);
+            color: #fff;
         }
         .badge-red {
             background: linear-gradient(135deg, #fc8181, #e53e3e);
+            color: #fff;
         }
         .badge-purple {
             background: linear-gradient(135deg, #9f7aea, #805ad5);
+            color: #fff;
         }
 
         .admin-panel {
@@ -249,133 +286,158 @@
             color: #ffd700;
         }
 
-        #memberList,
-        #adminList {
-            text-align: left;
-            margin-top: 8px;
-            max-height: 250px;
+        .list-container {
+            max-height: 200px;
             overflow-y: auto;
+            margin-top: 6px;
         }
-        #memberList::-webkit-scrollbar,
-        #adminList::-webkit-scrollbar {
+        .list-container::-webkit-scrollbar {
             width: 4px;
         }
-        #memberList::-webkit-scrollbar-thumb,
-        #adminList::-webkit-scrollbar-thumb {
+        .list-container::-webkit-scrollbar-thumb {
             background: #667eea;
             border-radius: 10px;
         }
 
-        .member-item,
-        .admin-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px 14px;
-            margin: 5px 0;
-            border-radius: 12px;
-            border-left: 4px solid #667eea;
-            color: rgba(255, 255, 255, 0.9);
+        .list-item {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
             flex-wrap: wrap;
             gap: 5px;
+            font-size: 13px;
         }
-        .member-item:hover,
-        .admin-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-        }
-        .member-item .info,
-        .admin-item .info {
+        .list-item .info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
-        .member-item .info .name,
-        .admin-item .info .name {
+        .list-item .info .name {
             color: #fff;
             font-weight: 600;
         }
-        .member-item .info .sub,
-        .admin-item .info .sub {
-            font-size: 12px;
+        .list-item .info .sub {
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
         }
-        .member-item .info .id {
-            font-size: 11px;
-            color: rgba(255, 215, 0, 0.6);
+        .list-item .info .id {
+            font-size: 10px;
+            color: rgba(255, 215, 0, 0.5);
         }
-        .member-item .balance,
-        .admin-item .balance {
+        .list-item .balance {
             color: #48bb78;
             font-weight: 600;
-            font-size: 15px;
+            font-size: 14px;
         }
-        .member-item .actions,
-        .admin-item .actions {
+        .list-item .actions {
             display: flex;
-            gap: 5px;
+            gap: 4px;
             flex-wrap: wrap;
         }
 
-        #benefitsList {
-            list-style: none;
-            padding: 0;
-        }
-        #benefitsList li {
-            padding: 8px 14px;
-            margin: 4px 0;
-            background: rgba(255, 255, 255, 0.04);
+        .notification-item {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid #f6ad55;
+            padding: 10px 14px;
             border-radius: 10px;
-            color: rgba(255, 255, 255, 0.8);
-            border-left: 3px solid #667eea;
+            margin: 5px 0;
             font-size: 13px;
         }
-
-        #message .success {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72, 187, 120, 0.3);
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
-        #message .error {
-            background: rgba(252, 129, 129, 0.2);
-            color: #fc8181;
-            border: 1px solid rgba(252, 129, 129, 0.3);
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 10px;
-        }
-        #message .info {
-            background: rgba(102, 126, 234, 0.2);
-            color: #667eea;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            padding: 12px;
-            border-radius: 12px;
-            margin-top: 10px;
+        .notification-item .time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
         }
 
-        .hidden {
-            display: none !important;
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 6px;
+            margin: 6px 0;
+        }
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-box .number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .stat-box .label {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 12px 0;
+        }
+        .role-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .role-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+        .role-card .icon {
+            font-size: 30px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .role-card .title {
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .role-card .desc {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            margin-top: 2px;
+        }
+        .role-card.admin-card {
+            border-color: rgba(255, 215, 0, 0.2);
+        }
+        .role-card.admin-card:hover {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.08);
+        }
+        .role-card.super-card {
+            border-color: rgba(255, 215, 0, 0.1);
+            background: rgba(255, 215, 0, 0.03);
         }
 
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
         .top-bar h2 {
             margin: 0;
+            font-size: 1.4rem;
         }
         .top-bar .back-link {
-            font-size: 14px;
-            opacity: 0.6;
+            font-size: 13px;
+            opacity: 0.5;
             cursor: pointer;
         }
         .top-bar .back-link:hover {
@@ -394,9 +456,6 @@
         .mt-15 {
             margin-top: 15px;
         }
-        .mt-20 {
-            margin-top: 20px;
-        }
         .mb-10 {
             margin-bottom: 10px;
         }
@@ -412,141 +471,86 @@
         .fs-12 {
             font-size: 12px;
         }
-        .fs-14 {
-            font-size: 14px;
+        .fs-13 {
+            font-size: 13px;
         }
         .flex-between {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
         .flex-center {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .gap-5 {
             gap: 5px;
         }
-        .gap-10 {
-            gap: 10px;
+
+        #message .success {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        #message .error {
+            background: rgba(252, 129, 129, 0.2);
+            color: #fc8181;
+            border: 1px solid rgba(252, 129, 129, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        #message .info {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 8px;
+            font-size: 13px;
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+        .otp-input {
+            display: flex;
             gap: 8px;
+            justify-content: center;
             margin: 8px 0;
         }
-        .stat-box {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            border-radius: 12px;
+        .otp-input input {
+            width: 45px;
+            height: 50px;
             text-align: center;
-        }
-        .stat-box .number {
             font-size: 20px;
             font-weight: 700;
-            color: #fff;
-        }
-        .stat-box .label {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .role-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 15px 0;
-        }
-        .role-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .role-card:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-        }
-        .role-card .icon {
-            font-size: 40px;
-            display: block;
-            margin-bottom: 8px;
-        }
-        .role-card .title {
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        .role-card .desc {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-            margin-top: 4px;
-        }
-        .role-card.admin-card {
-            border-color: rgba(255, 215, 0, 0.3);
-        }
-        .role-card.admin-card:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-        }
-
-        .notification-item {
-            background: rgba(246, 173, 85, 0.1);
-            border-left: 4px solid #f6ad55;
-            padding: 12px 16px;
+            padding: 0;
             border-radius: 10px;
-            margin: 6px 0;
         }
-        .notification-item .time {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .search-box {
-            position: relative;
-        }
-        .search-box input {
-            padding-right: 45px;
-        }
-        .search-box .clear-btn {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            font-size: 18px;
-        }
-        .search-box .clear-btn:hover {
-            color: #fff;
+        .otp-input input:focus {
+            border-color: #ffd700;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 18px 14px;
-                border-radius: 20px;
+                padding: 15px 12px;
+                border-radius: 18px;
             }
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             h2 {
-                font-size: 1.4rem;
+                font-size: 1.2rem;
             }
             .amount {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             .buttons {
                 flex-direction: column;
@@ -561,15 +565,18 @@
             .role-selector {
                 grid-template-columns: 1fr;
             }
-            .member-item,
-            .admin-item {
+            .list-item {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .member-item .actions,
-            .admin-item .actions {
+            .list-item .actions {
                 width: 100%;
                 justify-content: flex-start;
+            }
+            .otp-input input {
+                width: 38px;
+                height: 42px;
+                font-size: 16px;
             }
         }
     </style>
@@ -590,10 +597,11 @@
             subAdmins: {},
             members: {},
             activityLogs: [],
-            adminVerificationCode: 'ADMIN2026',
             memberCounter: 0,
             adminCounter: 0,
-            superAdminExists: false
+            otpStore: {},
+            superAdminOTP: null,
+            superAdminOTPTime: null
         };
 
         function saveData() {
@@ -610,6 +618,10 @@
             data.memberCounter++;
             saveData();
             return 'M-' + String(data.memberCounter).padStart(4, '0');
+        }
+
+        function generateOTP() {
+            return String(Math.floor(100000 + Math.random() * 900000));
         }
 
         function getCurrentUser() {
@@ -647,28 +659,9 @@
                 details: details || ''
             };
             data.activityLogs.unshift(log);
-            if (data.activityLogs.length > 500) {
-                data.activityLogs = data.activityLogs.slice(0, 500);
-            }
+            if (data.activityLogs.length > 500) data.activityLogs = data.activityLogs.slice(0, 500);
             saveData();
             return log;
-        }
-
-        function initSuperAdmin() {
-            if (!data.superAdminExists) {
-                data.superAdmins['099999999'] = {
-                    username: 'Super Admin',
-                    password: 'super123',
-                    phone: '099999999',
-                    id: 'SUPER-001',
-                    role: 'super_admin',
-                    balance: 10000,
-                    createdAt: new Date().toISOString()
-                };
-                data.superAdminExists = true;
-                saveData();
-                logActivity('SUPER-001', 'Super Admin', 'system_init', 'system', null, null, 'បង្កើតប្រព័ន្ធ Super Admin');
-            }
         }
 
         // ================================================================
@@ -701,14 +694,23 @@
                 case 'super-dashboard':
                     html = getSuperDashboardPage();
                     break;
-                case 'create-admin':
-                    html = getCreateAdminPage();
+                case 'super-login':
+                    html = getSuperLoginPage();
+                    break;
+                case 'super-otp':
+                    html = getSuperOTPPage(params);
                     break;
                 case 'transfer-money':
                     html = getTransferMoneyPage(params);
                     break;
                 case 'activity-log':
                     html = getActivityLogPage();
+                    break;
+                case 'edit-member':
+                    html = getEditMemberPage(params);
+                    break;
+                case 'edit-admin':
+                    html = getEditAdminPage(params);
                     break;
                 default:
                     html = getHomePage();
@@ -725,33 +727,21 @@
         function getHomePage() {
             const totalMembers = Object.keys(data.members).length;
             const totalAdmins = Object.keys(data.subAdmins).length;
-            const totalBalance = Object.values(data.members).reduce((sum, m) => sum + m.balance, 0) +
-                Object.values(data.subAdmins).reduce((sum, a) => sum + a.balance, 0);
+            const totalBalance = Object.values(data.members).reduce((s, m) => s + m.balance, 0) +
+                Object.values(data.subAdmins).reduce((s, a) => s + a.balance, 0);
 
             return `
                 <div class="text-center">
-                    <div style="margin-bottom:8px;"><span class="badge badge-gold">🚀 កំណែ 3.0</span></div>
+                    <div style="margin-bottom:6px;"><span class="badge badge-gold">🚀 v3.0</span></div>
                     <h1>ស្វាគមន៍!</h1>
-                    <p style="font-size:1rem;color:rgba(255,255,255,0.6);">ប្រព័ន្ធគ្រប់គ្រងសមាជិក និង Admin</p>
-                    <div style="height:2px;width:60px;background:linear-gradient(90deg,#667eea,transparent);margin:15px auto;"></div>
+                    <p style="font-size:0.95rem;color:rgba(255,255,255,0.5);">ប្រព័ន្ធគ្រប់គ្រងសមាជិក និង Admin</p>
+                    <div style="height:2px;width:50px;background:linear-gradient(90deg,#667eea,transparent);margin:12px auto;"></div>
 
                     <div class="stats">
-                        <div class="stat-box">
-                            <div class="number">${totalMembers}</div>
-                            <div class="label">សមាជិក</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="number">${totalAdmins}</div>
-                            <div class="label">Sub Admin</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="number">$${totalBalance.toFixed(0)}</div>
-                            <div class="label">ប្រាក់សរុប</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="number">${Object.keys(data.members).filter(k => data.members[k].balance > 0).length}</div>
-                            <div class="label">សកម្ម</div>
-                        </div>
+                        <div class="stat-box"><div class="number">${totalMembers}</div><div class="label">សមាជិក</div></div>
+                        <div class="stat-box"><div class="number">${totalAdmins}</div><div class="label">Sub Admin</div></div>
+                        <div class="stat-box"><div class="number">$${totalBalance.toFixed(0)}</div><div class="label">ប្រាក់សរុប</div></div>
+                        <div class="stat-box"><div class="number">${Object.keys(data.members).filter(k => data.members[k].balance > 0).length}</div><div class="label">សកម្ម</div></div>
                     </div>
 
                     <div class="buttons">
@@ -759,12 +749,11 @@
                         <button onclick="renderPage('register')" class="btn btn-secondary">📝 ចុះឈ្មោះ</button>
                     </div>
 
-                    <p style="font-size:0.8rem;color:rgba(255,255,255,0.2);margin-top:15px;">
-                        👑 សម្រាប់ Super Admin 
-                        <button onclick="renderPage('super-dashboard')" style="background:linear-gradient(135deg,#ffd700,#f59e0b);border:none;color:#1a1a2e;padding:6px 18px;border-radius:20px;font-weight:600;cursor:pointer;font-size:13px;box-shadow:0 4px 15px rgba(255,215,0,0.3);">
-                            ⚡ ចូលដោយផ្ទាល់
+                    <div style="margin-top:12px;">
+                        <button onclick="renderPage('super-login')" class="btn-super">
+                            <span class="icon">👑</span> Super Admin
                         </button>
-                    </p>
+                    </div>
                 </div>
             `;
         }
@@ -775,7 +764,7 @@
                     <h2>🔑 ជ្រើសរើសប្រភេទ</h2>
                     <span class="back-link" onclick="renderPage('home')">← ត្រឡប់</span>
                 </div>
-                <p>សូមជ្រើសរើសប្រភេទអ្នកប្រើប្រាស់</p>
+                <p style="font-size:13px;">សូមជ្រើសរើសប្រភេទអ្នកប្រើប្រាស់</p>
 
                 <div class="role-selector">
                     <div class="role-card" onclick="renderPage('login', {role:'member'})">
@@ -788,16 +777,62 @@
                         <div class="title">Sub Admin</div>
                         <div class="desc">ចូលប្រើជាអ្នកគ្រប់គ្រង</div>
                     </div>
+                    <div class="role-card super-card" onclick="renderPage('super-login')">
+                        <span class="icon">⭐</span>
+                        <div class="title">Super Admin</div>
+                        <div class="desc">ចូលជាអ្នកគ្រប់គ្រងកំពូល</div>
+                    </div>
                 </div>
+            `;
+        }
 
-                <div class="text-center mt-10">
-                    <p style="font-size:0.8rem;color:rgba(255,255,255,0.2);">
-                        👑 Super Admin: 
-                        <button onclick="renderPage('super-dashboard')" style="background:linear-gradient(135deg,#ffd700,#f59e0b);border:none;color:#1a1a2e;padding:4px 16px;border-radius:20px;font-weight:600;cursor:pointer;font-size:12px;">
-                            ⚡ ចូលដោយផ្ទាល់
-                        </button>
-                    </p>
+        function getSuperLoginPage() {
+            return `
+                <div class="top-bar">
+                    <h2>⭐ Super Admin Login</h2>
+                    <span class="back-link" onclick="renderPage('home')">← ត្រឡប់</span>
                 </div>
+                <p style="font-size:13px;">បញ្ចូលព័ត៌មាន ដើម្បីទទួល OTP</p>
+
+                <form id="superLoginForm">
+                    <input type="tel" id="superPhone" placeholder="📱 លេខទូរសព្ទ (066817407)" value="066817407">
+                    <input type="email" id="superEmail" placeholder="📧 អ៊ីមែល (narith128080@gmail.com)" value="narith128080@gmail.com">
+                    <div class="input-group">
+                        <input type="password" id="superPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                        <button type="button" class="toggle-pwd" onclick="togglePassword('superPassword', this)">👁️</button>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-block mt-10">📤 ផ្ញើ OTP</button>
+                </form>
+                <div id="message"></div>
+                <p class="text-center mt-10 fs-12 op-5">លេខកូដ OTP នឹងត្រូវបានផ្ញើទៅកាន់អ៊ីមែល និងទូរសព្ទរបស់អ្នក</p>
+            `;
+        }
+
+        function getSuperOTPPage(params) {
+            const phone = params && params.phone ? params.phone : '066817407';
+            return `
+                <div class="top-bar">
+                    <h2>🔑 បញ្ចូល OTP</h2>
+                    <span class="back-link" onclick="renderPage('super-login')">← ត្រឡប់</span>
+                </div>
+                <p style="font-size:13px;">សូមបញ្ចូលលេខកូដ OTP ដែលបានផ្ញើទៅកាន់អ្នក</p>
+                <p style="font-size:12px;color:rgba(255,215,0,0.5);">📱 ${phone}</p>
+
+                <form id="superOTPForm">
+                    <input type="hidden" id="otpPhone" value="${phone}">
+                    <div class="otp-input">
+                        <input type="text" maxlength="1" class="otp-digit" data-index="0" required>
+                        <input type="text" maxlength="1" class="otp-digit" data-index="1" required>
+                        <input type="text" maxlength="1" class="otp-digit" data-index="2" required>
+                        <input type="text" maxlength="1" class="otp-digit" data-index="3" required>
+                        <input type="text" maxlength="1" class="otp-digit" data-index="4" required>
+                        <input type="text" maxlength="1" class="otp-digit" data-index="5" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-block">🔓 ផ្ទៀងផ្ទាត់</button>
+                </form>
+                <div id="message"></div>
+                <p class="text-center mt-10 fs-12 op-5">⏱️ OTP ផុតកំណត់ក្នុងរយៈពេល ៥ នាទី</p>
+                <p class="text-center fs-12"><span onclick="resendOTP('${phone}')" style="color:#667eea;cursor:pointer;">📤 ផ្ញើ OTP ឡើងវិញ</span></p>
             `;
         }
 
@@ -805,23 +840,25 @@
             const role = (params && params.role) || 'member';
             const isAdmin = role === 'sub_admin';
             const title = isAdmin ? '👑 ចូលប្រើជា Sub Admin' : '👤 ចូលប្រើជាសមាជិក';
-            const icon = isAdmin ? '👑' : '👤';
 
             return `
                 <div class="top-bar">
                     <h2>${title}</h2>
                     <span class="back-link" onclick="renderPage('role-select')">← ត្រឡប់</span>
                 </div>
-                <p>${isAdmin ? 'បញ្ចូលលេខទូរសព្ទ និងពាក្យសម្ងាត់របស់អ្នក' : 'បញ្ចូលលេខទូរសព្ទ និងពាក្យសម្ងាត់របស់អ្នក'}</p>
+                <p style="font-size:13px;">បញ្ចូលលេខទូរសព្ទ និងពាក្យសម្ងាត់</p>
 
                 <form id="loginForm">
                     <input type="hidden" id="loginRole" value="${role}">
                     <input type="tel" id="loginPhone" placeholder="📱 លេខទូរសព្ទ" required>
-                    <input type="password" id="loginPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
-                    <button type="submit" class="btn btn-block">${icon} ចូលប្រើ</button>
+                    <div class="input-group">
+                        <input type="password" id="loginPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                        <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword', this)">👁️</button>
+                    </div>
+                    <button type="submit" class="btn btn-block">🔑 ចូលប្រើ</button>
                 </form>
                 <div id="message"></div>
-                <p class="text-center mt-10 fs-14">
+                <p class="text-center mt-10 fs-12">
                     ${isAdmin ? 'មិនទាន់មានគណនី Admin? សូមទាក់ទង Super Admin' : 'មិនទាន់មានគណនី? <span onclick="renderPage(\'register\')" style="color:#667eea;cursor:pointer;">ចុះឈ្មោះ</span>'}
                 </p>
             `;
@@ -833,85 +870,76 @@
                     <h2>📝 ចុះឈ្មោះជាសមាជិក</h2>
                     <span class="back-link" onclick="renderPage('home')">← ត្រឡប់</span>
                 </div>
-                <p>បង្កើតគណនីថ្មីដើម្បីចូលប្រើប្រព័ន្ធ</p>
+                <p style="font-size:13px;">បង្កើតគណនីថ្មីដើម្បីចូលប្រើ</p>
 
                 <form id="registerForm">
                     <input type="text" id="regUsername" placeholder="👤 ឈ្មោះអ្នកប្រើ (ស្រេចចិត្ត)">
-                    <input type="tel" id="regPhone" placeholder="📱 លេខទូរសព្ទ (ត្រូវការសម្រាប់ចូលប្រើ)" required>
-                    <input type="password" id="regPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
-                    <input type="password" id="regConfirmPassword" placeholder="🔑 បញ្ជាក់ពាក្យសម្ងាត់" required>
-                    <button type="submit" class="btn btn-block">📝 ចុះឈ្មោះ</button>
+                    <input type="tel" id="regPhone" placeholder="📱 លេខទូរសព្ទ (ត្រូវការ)" required>
+                    <div class="input-group">
+                        <input type="password" id="regPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                        <button type="button" class="toggle-pwd" onclick="togglePassword('regPassword', this)">👁️</button>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="regConfirmPassword" placeholder="🔑 បញ្ជាក់ពាក្យសម្ងាត់" required>
+                        <button type="button" class="toggle-pwd" onclick="togglePassword('regConfirmPassword', this)">👁️</button>
+                    </div>
+                    <button type="submit" class="btn btn-secondary btn-block">📝 ចុះឈ្មោះ</button>
                 </form>
                 <div id="message"></div>
-                <p class="text-center mt-10 fs-14">មានគណនីរួចហើយ? <span onclick="renderPage('role-select')" style="color:#667eea;cursor:pointer;">ចូលប្រើ</span></p>
+                <p class="text-center mt-10 fs-12">មានគណនីរួចហើយ? <span onclick="renderPage('role-select')" style="color:#667eea;cursor:pointer;">ចូលប្រើ</span></p>
             `;
         }
 
         function getDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'member') {
-                return `<p style="color:red;">សូមចូលប្រើជាមុនសិន! <button onclick="renderPage('role-select')" class="btn btn-sm">ចូលប្រើ</button></p>`;
+                return `<p style="color:red;">សូមចូលប្រើជាមុន! <button onclick="renderPage('role-select')" class="btn btn-sm">ចូលប្រើ</button></p>`;
             }
 
             const member = data.members[user.phone];
-            if (!member) {
-                return `<p style="color:red;">មិនឃើញព័ត៌មានសមាជិក!</p>`;
-            }
+            if (!member) return `<p style="color:red;">មិនឃើញព័ត៌មាន!</p>`;
 
+            const admin = data.subAdmins[member.adminId];
             let benefitsHtml = '';
             if (member.benefits && member.benefits.length > 0) {
-                member.benefits.forEach(b => {
-                    benefitsHtml += `<li>${b}</li>`;
-                });
+                member.benefits.forEach(b => benefitsHtml += `<li>${b}</li>`);
             } else {
-                benefitsHtml = `<li style="opacity:0.4;">មិនទាន់មានអត្ថប្រយោជន៍</li>`;
+                benefitsHtml = `<li style="opacity:0.4;">មិនទាន់មាន</li>`;
             }
 
             let notificationsHtml = '';
             const userLogs = data.activityLogs.filter(log => log.target === user.phone && log.actionType === 'member_transfer');
             if (userLogs.length > 0) {
                 userLogs.slice(0, 5).forEach(log => {
-                    const date = new Date(log.timestamp);
+                    const d = new Date(log.timestamp);
                     notificationsHtml += `
                         <div class="notification-item">
-                            💰 ${log.details || 'បានទទួលប្រាក់ $' + log.amount}
-                            <div class="time">${date.toLocaleDateString('km-KH')} ម៉ោង ${date.toLocaleTimeString('km-KH')}</div>
+                            💰 ${log.details || 'បានទទួល $' + log.amount}
+                            <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
                         </div>
                     `;
                 });
             } else {
-                notificationsHtml = `<p style="opacity:0.4;font-size:13px;">មិនទាន់មានការជូនដំណឹង</p>`;
+                notificationsHtml = `<p style="opacity:0.4;font-size:12px;">មិនទាន់មាន</p>`;
             }
 
             return `
                 <div class="top-bar">
                     <div>
-                        <span class="badge">👤 សមាជិក</span>
-                        <h2 style="margin:5px 0 0 0;">ស្វាគមន៍ <span style="color:#667eea;">${member.username || user.phone}</span>!</h2>
-                        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:3px;">
-                            <span>🆔 ${member.id || 'N/A'}</span>
-                            <span style="margin-left:15px;">📱 ${member.phone}</span>
+                        <span class="badge badge-purple">👤 សមាជិក</span>
+                        <h2 style="margin:3px 0 0;">${member.username || user.phone}</h2>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">
+                            🆔 ${member.id} | 📱 ${member.phone}
+                            ${admin ? `| 👑 ${admin.username}` : ''}
                         </div>
                     </div>
-                    <button onclick="logoutUser()" class="btn btn-danger" style="padding:8px 16px;font-size:13px;">🚪 ចាកចេញ</button>
+                    <button onclick="logoutUser()" class="btn btn-danger btn-sm">🚪 ចាកចេញ</button>
                 </div>
 
-                <div class="card" style="margin-top:15px;">
-                    <h3>💰 ទឹកប្រាក់របស់អ្នក</h3>
-                    <p class="amount">$${member.balance.toFixed(2)}</p>
-                </div>
-
-                <div class="card">
-                    <h3>🔔 ការជូនដំណឹង</h3>
-                    ${notificationsHtml}
-                </div>
-
-                <div class="card">
-                    <h3>🎁 អត្ថប្រយោជន៍ដែលទទួលបាន</h3>
-                    <ul id="benefitsList">${benefitsHtml}</ul>
-                </div>
-
-                <div class="text-center mt-10 op-3 fs-12">ប្រព័ន្ធគ្រប់គ្រង v3.0</div>
+                <div class="card"><h3>💰 ទឹកប្រាក់</h3><p class="amount">$${member.balance.toFixed(2)}</p></div>
+                <div class="card"><h3>🔔 ការជូនដំណឹង</h3>${notificationsHtml}</div>
+                <div class="card"><h3>🎁 អត្ថប្រយោជន៍</h3><ul id="benefitsList">${benefitsHtml}</ul></div>
+                <div class="text-center mt-10 op-3 fs-11">v3.0</div>
             `;
         }
 
@@ -922,132 +950,98 @@
             }
 
             const admin = data.subAdmins[user.phone];
-            if (!admin) {
-                return `<p style="color:red;">មិនឃើញព័ត៌មាន Admin!</p>`;
-            }
+            if (!admin) return `<p style="color:red;">មិនឃើញព័ត៌មាន!</p>`;
 
             const memberKeys = admin.members || [];
             let membersHtml = '';
             if (memberKeys.length === 0) {
-                membersHtml = `<p style="opacity:0.4;font-size:13px;">មិនទាន់មានសមាជិក</p>`;
+                membersHtml = `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានសមាជិក</p>`;
             } else {
                 memberKeys.forEach(phone => {
                     const m = data.members[phone];
                     if (!m) return;
                     membersHtml += `
-                        <div class="member-item">
+                        <div class="list-item">
                             <div class="info">
                                 <span class="name">${m.username || phone}</span>
-                                <span class="id">🆔 ${m.id || 'N/A'}</span>
+                                <span class="id">🆔 ${m.id}</span>
                                 <span class="sub">📱 ${m.phone}</span>
                             </div>
-                            <div>
-                                <span class="balance">$${m.balance.toFixed(2)}</span>
-                            </div>
+                            <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
                             <div class="actions">
-                                <button onclick="renderPage('transfer-money', {phone:'${phone}'})" class="btn btn-warning btn-sm">💸 ផ្ទេរ</button>
+                                <button onclick="renderPage('transfer-money', {phone:'${phone}'})" class="btn btn-warning btn-xs">💸</button>
                             </div>
                         </div>
                     `;
                 });
             }
 
+            let logsHtml = getAdminTransferLogs(admin.id);
+
             return `
                 <div class="top-bar">
                     <div>
                         <span class="badge badge-gold">👑 Sub Admin</span>
-                        <h2 style="margin:5px 0 0 0;color:#ffd700;">${admin.username}</h2>
-                        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:3px;">
-                            <span>🆔 ${admin.id || 'N/A'}</span>
-                            <span style="margin-left:15px;">📱 ${admin.phone}</span>
-                        </div>
+                        <h2 style="margin:3px 0 0;color:#ffd700;">${admin.username}</h2>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">🆔 ${admin.id} | 📱 ${admin.phone}</div>
                     </div>
-                    <button onclick="logoutUser()" class="btn btn-danger" style="padding:8px 16px;font-size:13px;">🚪 ចាកចេញ</button>
+                    <button onclick="logoutUser()" class="btn btn-danger btn-sm">🚪 ចាកចេញ</button>
                 </div>
 
                 <div class="stats">
-                    <div class="stat-box">
-                        <div class="number">${memberKeys.length}</div>
-                        <div class="label">សមាជិក</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">$${admin.balance.toFixed(0)}</div>
-                        <div class="label">ប្រាក់នៅសល់</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">$${admin.totalReceived || 0}</div>
-                        <div class="label">បានទទួល</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">$${admin.totalTransferred || 0}</div>
-                        <div class="label">បានផ្ទេរ</div>
-                    </div>
+                    <div class="stat-box"><div class="number">${memberKeys.length}</div><div class="label">សមាជិក</div></div>
+                    <div class="stat-box"><div class="number">$${admin.balance.toFixed(0)}</div><div class="label">នៅសល់</div></div>
+                    <div class="stat-box"><div class="number">$${admin.totalReceived || 0}</div><div class="label">បានទទួល</div></div>
+                    <div class="stat-box"><div class="number">$${admin.totalTransferred || 0}</div><div class="label">បានផ្ទេរ</div></div>
                 </div>
 
-                <div class="card admin-panel">
-                    <h3>📋 បញ្ជីសមាជិកដែលគ្រប់គ្រង</h3>
-                    ${membersHtml}
-                </div>
-
-                <div class="card">
-                    <h3>📊 ប្រវត្តិការផ្ទេរប្រាក់</h3>
-                    <div id="adminTransferLogs">
-                        ${getAdminTransferLogs(admin.id)}
-                    </div>
-                </div>
-
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 មើលកំណត់ត្រា</button>
-                </div>
+                <div class="card admin-panel"><h3>📋 បញ្ជីសមាជិក</h3>${membersHtml}</div>
+                <div class="card"><h3>📊 ប្រវត្តិផ្ទេរ</h3>${logsHtml}</div>
+                <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
             `;
         }
 
         function getAdminTransferLogs(adminId) {
-            const logs = data.activityLogs.filter(log => log.adminId === adminId && log.actionType === 'member_transfer');
-            if (logs.length === 0) {
-                return '<p style="opacity:0.4;font-size:13px;">មិនទាន់មានប្រវត្តិការផ្ទេរ</p>';
-            }
+            const logs = data.activityLogs.filter(l => l.adminId === adminId && l.actionType === 'member_transfer');
+            if (logs.length === 0) return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មាន</p>';
             let html = '';
-            logs.slice(0, 10).forEach(log => {
-                const date = new Date(log.timestamp);
-                html += `
-                    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;">
-                        <span>💰 $${log.amount} → ${log.target}</span>
-                        <span style="opacity:0.4;">${date.toLocaleDateString('km-KH')}</span>
-                    </div>
-                `;
+            logs.slice(0, 10).forEach(l => {
+                const d = new Date(l.timestamp);
+                html += `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;">
+                    <span>💰 $${l.amount} → ${l.target}</span>
+                    <span style="opacity:0.4;">${d.toLocaleDateString('km-KH')}</span>
+                </div>`;
             });
             return html;
         }
 
         function getSuperDashboardPage() {
-            // Super Admin can access directly without login check
+            const user = getCurrentUser();
+            if (!user || user.role !== 'super_admin') {
+                renderPage('super-login');
+                return '';
+            }
+
             const superAdmin = Object.values(data.superAdmins)[0];
             const totalMembers = Object.keys(data.members).length;
             const totalAdmins = Object.keys(data.subAdmins).length;
-            const totalBalance = Object.values(data.members).reduce((sum, m) => sum + m.balance, 0) +
-                Object.values(data.subAdmins).reduce((sum, a) => sum + a.balance, 0);
-
-            // Set current user as super admin if not already
-            if (!getCurrentUser() || getCurrentUser().role !== 'super_admin') {
-                setCurrentUser({
-                    phone: superAdmin ? superAdmin.phone : '099999999',
-                    role: 'super_admin',
-                    name: 'Super Admin'
-                });
-            }
+            const totalBalance = Object.values(data.members).reduce((s, m) => s + m.balance, 0) +
+                Object.values(data.subAdmins).reduce((s, a) => s + a.balance, 0);
 
             let adminListHtml = '';
             Object.values(data.subAdmins).forEach(a => {
                 adminListHtml += `
-                    <div class="admin-item">
+                    <div class="list-item">
                         <div class="info">
-                            <span class="name">${a.username}</span>
+                            <span class="name">👑 ${a.username}</span>
                             <span class="id">🆔 ${a.id}</span>
-                            <span class="sub">📱 ${a.phone} | 👥 ${(a.members || []).length} សមាជិក</span>
+                            <span class="sub">📱 ${a.phone} | 👥 ${(a.members || []).length} នាក់</span>
                         </div>
-                        <div>
-                            <span class="balance">$${a.balance.toFixed(2)}</span>
+                        <div><span class="balance">$${a.balance.toFixed(2)}</span></div>
+                        <div class="actions">
+                            <button onclick="editAdmin('${a.phone}')" class="btn btn-warning btn-xs">✏️</button>
+                            <button onclick="deleteAdmin('${a.phone}')" class="btn btn-danger btn-xs">🗑️</button>
+                            <button onclick="resetAdminPassword('${a.phone}')" class="btn btn-secondary btn-xs">🔑</button>
                         </div>
                     </div>
                 `;
@@ -1055,15 +1049,19 @@
 
             let memberListHtml = '';
             Object.values(data.members).forEach(m => {
+                const admin = data.subAdmins[m.adminId];
                 memberListHtml += `
-                    <div class="member-item">
+                    <div class="list-item">
                         <div class="info">
                             <span class="name">${m.username || m.phone}</span>
                             <span class="id">🆔 ${m.id}</span>
-                            <span class="sub">📱 ${m.phone}</span>
+                            <span class="sub">📱 ${m.phone} ${admin ? '| 👑 ' + admin.username : ''}</span>
                         </div>
-                        <div>
-                            <span class="balance">$${m.balance.toFixed(2)}</span>
+                        <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
+                        <div class="actions">
+                            <button onclick="editMember('${m.phone}')" class="btn btn-warning btn-xs">✏️</button>
+                            <button onclick="deleteMember('${m.phone}')" class="btn btn-danger btn-xs">🗑️</button>
+                            <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-xs">🔑</button>
                         </div>
                     </div>
                 `;
@@ -1072,70 +1070,46 @@
             return `
                 <div class="top-bar">
                     <div>
-                        <span class="badge badge-gold">👑 SUPER ADMIN</span>
-                        <h2 style="margin:5px 0 0 0;color:#ffd700;">${superAdmin ? superAdmin.username : 'Super Admin'}</h2>
-                        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:3px;">
-                            <span>🆔 ${superAdmin ? superAdmin.id : 'N/A'}</span>
-                            <span style="margin-left:15px;">📱 ${superAdmin ? superAdmin.phone : 'N/A'}</span>
+                        <span class="badge badge-gold">⭐ SUPER ADMIN</span>
+                        <h2 style="margin:3px 0 0;color:#ffd700;">${superAdmin ? superAdmin.username : 'Super Admin'}</h2>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">
+                            🆔 ${superAdmin ? superAdmin.id : 'N/A'} | 📱 ${superAdmin ? superAdmin.phone : 'N/A'}
+                            ${superAdmin ? '| 📧 ' + superAdmin.email : ''}
                         </div>
                     </div>
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                        <button onclick="logoutUser()" class="btn btn-danger" style="padding:8px 16px;font-size:13px;">🚪 ចាកចេញ</button>
-                    </div>
+                    <button onclick="logoutUser()" class="btn btn-danger btn-sm">🚪 ចាកចេញ</button>
                 </div>
 
                 <div class="stats">
-                    <div class="stat-box">
-                        <div class="number">${totalMembers}</div>
-                        <div class="label">សមាជិក</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">${totalAdmins}</div>
-                        <div class="label">Sub Admin</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">$${totalBalance.toFixed(0)}</div>
-                        <div class="label">ប្រាក់សរុប</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="number">${data.activityLogs.length}</div>
-                        <div class="label">កំណត់ត្រា</div>
-                    </div>
+                    <div class="stat-box"><div class="number">${totalMembers}</div><div class="label">សមាជិក</div></div>
+                    <div class="stat-box"><div class="number">${totalAdmins}</div><div class="label">Sub Admin</div></div>
+                    <div class="stat-box"><div class="number">$${totalBalance.toFixed(0)}</div><div class="label">ប្រាក់សរុប</div></div>
+                    <div class="stat-box"><div class="number">${data.activityLogs.length}</div><div class="label">កំណត់ត្រា</div></div>
                 </div>
 
                 <div class="card admin-panel">
                     <h3>👑 បង្កើត Sub Admin</h3>
                     <form id="createAdminForm">
-                        <input type="text" id="newAdminName" placeholder="👤 ឈ្មោះ Sub Admin" required>
+                        <input type="text" id="newAdminName" placeholder="👤 ឈ្មោះ" required>
                         <input type="tel" id="newAdminPhone" placeholder="📱 លេខទូរសព្ទ" required>
-                        <input type="password" id="newAdminPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
-                        <input type="number" id="newAdminBalance" placeholder="💰 ប្រាក់ដំបូង ($)" min="0" step="0.01">
-                        <button type="submit" class="btn btn-gold btn-block">👑 បង្កើត Sub Admin</button>
+                        <div class="input-group">
+                            <input type="password" id="newAdminPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                            <button type="button" class="toggle-pwd" onclick="togglePassword('newAdminPassword', this)">👁️</button>
+                        </div>
+                        <input type="number" id="newAdminBalance" placeholder="💰 ប្រាក់ដំបូង" min="0" step="0.01">
+                        <button type="submit" class="btn btn-gold btn-block">👑 បង្កើត</button>
                     </form>
                     <div id="createAdminMessage"></div>
                 </div>
 
-                <div class="card">
-                    <h3>📋 បញ្ជី Sub Admin</h3>
-                    ${adminListHtml || '<p style="opacity:0.4;">មិនទាន់មាន Sub Admin</p>'}
-                </div>
+                <div class="card"><h3>📋 Sub Admin</h3><div class="list-container">${adminListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
+                <div class="card"><h3>📋 សមាជិក</h3><div class="list-container">${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
 
-                <div class="card">
-                    <h3>📋 បញ្ជីសមាជិកទាំងអស់</h3>
-                    <div style="max-height:200px;overflow-y:auto;">
-                        ${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មានសមាជិក</p>'}
-                    </div>
-                </div>
-
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 មើលកំណត់ត្រា</button>
-                    <button onclick="exportData()" class="btn btn-secondary btn-sm">📤 នាំចេញទិន្នន័យ</button>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
+                    <button onclick="exportData()" class="btn btn-secondary btn-sm">📤 នាំចេញ</button>
                 </div>
             `;
-        }
-
-        function getCreateAdminPage() {
-            return getSuperDashboardPage();
         }
 
         function getTransferMoneyPage(params) {
@@ -1150,36 +1124,28 @@
 
             if (!member) {
                 return `
-                    <div class="top-bar">
-                        <h2>💸 ផ្ទេរប្រាក់</h2>
-                        <span class="back-link" onclick="renderPage('admin-dashboard')">← ត្រឡប់</span>
-                    </div>
-                    <p style="color:red;">មិនឃើញព័ត៌មានសមាជិក!</p>
+                    <div class="top-bar"><h2>💸 ផ្ទេរប្រាក់</h2><span class="back-link" onclick="renderPage('admin-dashboard')">←</span></div>
+                    <p style="color:red;">មិនឃើញសមាជិក!</p>
                 `;
             }
 
             return `
                 <div class="top-bar">
-                    <h2>💸 ផ្ទេរប្រាក់ទៅសមាជិក</h2>
-                    <span class="back-link" onclick="renderPage('admin-dashboard')">← ត្រឡប់</span>
+                    <h2>💸 ផ្ទេរប្រាក់</h2>
+                    <span class="back-link" onclick="renderPage('admin-dashboard')">←</span>
                 </div>
-
                 <div class="card">
-                    <h3>👤 ព័ត៌មានសមាជិក</h3>
-                    <div><strong style="color:#fff;">${member.username || member.phone}</strong></div>
-                    <div style="font-size:13px;color:rgba(255,255,255,0.5);">🆔 ${member.id} | 📱 ${member.phone}</div>
-                    <div style="font-size:15px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: $${member.balance.toFixed(2)}</div>
+                    <h3>👤 ${member.username || member.phone}</h3>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${member.id} | 📱 ${member.phone}</div>
+                    <div style="color:#48bb78;font-size:15px;">💰 $${member.balance.toFixed(2)}</div>
                 </div>
-
                 <div class="card admin-panel">
-                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ</h3>
+                    <h3>💵 ផ្ទេរ</h3>
                     <form id="transferForm">
                         <input type="hidden" id="transferPhone" value="${member.phone}">
-                        <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់ ($)" min="0.01" step="0.01" required>
-                        <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:5px;">
-                            💰 ប្រាក់ដែលនៅសល់ក្នុងគណនីអ្នក: $${admin.balance.toFixed(2)}
-                        </div>
-                        <button type="submit" class="btn btn-warning btn-block mt-10">💸 បញ្ជាក់ការផ្ទេរ</button>
+                        <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">នៅសល់: $${admin.balance.toFixed(2)}</div>
+                        <button type="submit" class="btn btn-warning btn-block mt-10">💸 បញ្ជាក់</button>
                     </form>
                     <div id="transferMessage"></div>
                 </div>
@@ -1188,62 +1154,208 @@
 
         function getActivityLogPage() {
             const user = getCurrentUser();
-            if (!user) {
-                return `<p style="color:red;">សូមចូលប្រើជាមុនសិន!</p>`;
-            }
+            if (!user) return `<p style="color:red;">សូមចូលប្រើ!</p>`;
 
             let logs = data.activityLogs;
             if (user.role === 'sub_admin') {
                 const admin = data.subAdmins[user.phone];
-                if (admin) {
-                    logs = logs.filter(log => log.adminId === admin.id);
-                }
+                if (admin) logs = logs.filter(l => l.adminId === admin.id);
             }
 
-            let logsHtml = '';
+            let html = '';
             if (logs.length === 0) {
-                logsHtml = '<p style="opacity:0.4;">មិនទាន់មានកំណត់ត្រា</p>';
+                html = '<p style="opacity:0.4;">មិនទាន់មាន</p>';
             } else {
-                logs.slice(0, 50).forEach(log => {
-                    const date = new Date(log.timestamp);
-                    const actionEmoji = {
-                        'login': '🔑',
-                        'fund_admin': '💰',
-                        'create_admin': '👑',
-                        'member_transfer': '💸',
-                        'system_init': '⚙️',
-                        'edit_member': '✏️',
-                        'reset_password': '🔒'
-                    } [log.action] || '📝';
-
-                    logsHtml += `
-                        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;flex-wrap:wrap;gap:5px;">
-                            <div>
-                                <span>${actionEmoji}</span>
-                                <span style="color:rgba(255,255,255,0.7);">${log.details || log.action}</span>
-                                ${log.amount ? `<span style="color:#48bb78;">$${log.amount}</span>` : ''}
-                            </div>
-                            <div style="opacity:0.4;font-size:11px;">
-                                ${date.toLocaleDateString('km-KH')} ${date.toLocaleTimeString('km-KH')}
-                            </div>
+                logs.slice(0, 50).forEach(l => {
+                    const d = new Date(l.timestamp);
+                    const emoji = { login: '🔑', create_admin: '👑', member_transfer: '💸', system_init: '⚙️' } [l
+                        .action] || '📝';
+                    html += `
+                        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;flex-wrap:wrap;gap:4px;">
+                            <div>${emoji} ${l.details || l.action} ${l.amount ? '<span style="color:#48bb78;">$'+l.amount+'</span>' : ''}</div>
+                            <div style="opacity:0.4;">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
                         </div>
                     `;
                 });
             }
 
+            const backPage = user.role === 'super_admin' ? 'super-dashboard' : user.role === 'sub_admin' ? 'admin-dashboard' :
+                'dashboard';
             return `
                 <div class="top-bar">
-                    <h2>📋 កំណត់ត្រាសកម្មភាព</h2>
-                    <span class="back-link" onclick="renderPage('${user.role === 'super_admin' ? 'super-dashboard' : user.role === 'sub_admin' ? 'admin-dashboard' : 'dashboard'}')">← ត្រឡប់</span>
+                    <h2>📋 កំណត់ត្រា</h2>
+                    <span class="back-link" onclick="renderPage('${backPage}')">←</span>
                 </div>
-                <p>បង្ហាញកំណត់ត្រាចំនួន ${Math.min(logs.length, 50)} ចុងក្រោយ</p>
-                <div class="card">
-                    ${logsHtml}
-                </div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
-                    <button onclick="exportLogs()" class="btn btn-secondary btn-sm">📤 នាំចេញកំណត់ត្រា</button>
-                </div>
+                <p style="font-size:12px;">${Math.min(logs.length, 50)} ចុងក្រោយ</p>
+                <div class="card">${html}</div>
+                <button onclick="exportLogs()" class="btn btn-secondary btn-sm">📤 នាំចេញ</button>
             `;
+        }
+
+        function getEditMemberPage(params) {
+            const phone = params && params.phone;
+            const member = phone ? data.members[phone] : null;
+            if (!member) return `<p style="color:red;">មិនឃើញសមាជិក!</p>`;
+
+            return `
+                <div class="top-bar">
+                    <h2>✏️ កែប្រែសមាជិក</h2>
+                    <span class="back-link" onclick="renderPage('super-dashboard')">←</span>
+                </div>
+                <form id="editMemberForm">
+                    <input type="hidden" id="editMemberPhone" value="${phone}">
+                    <input type="text" id="editMemberUsername" value="${member.username || ''}" placeholder="👤 ឈ្មោះ">
+                    <input type="tel" id="editMemberPhoneNew" value="${member.phone}" placeholder="📱 លេខទូរសព្ទ">
+                    <button type="submit" class="btn btn-warning btn-block">💾 រក្សាទុក</button>
+                </form>
+                <div id="message"></div>
+            `;
+        }
+
+        function getEditAdminPage(params) {
+            const phone = params && params.phone;
+            const admin = phone ? data.subAdmins[phone] : null;
+            if (!admin) return `<p style="color:red;">មិនឃើញ Admin!</p>`;
+
+            return `
+                <div class="top-bar">
+                    <h2>✏️ កែប្រែ Sub Admin</h2>
+                    <span class="back-link" onclick="renderPage('super-dashboard')">←</span>
+                </div>
+                <form id="editAdminForm">
+                    <input type="hidden" id="editAdminPhone" value="${phone}">
+                    <input type="text" id="editAdminName" value="${admin.username}" placeholder="👤 ឈ្មោះ">
+                    <input type="tel" id="editAdminPhoneNew" value="${admin.phone}" placeholder="📱 លេខទូរសព្ទ">
+                    <button type="submit" class="btn btn-warning btn-block">💾 រក្សាទុក</button>
+                </form>
+                <div id="message"></div>
+            `;
+        }
+
+        // ================================================================
+        // ===== HELPER FUNCTIONS =====
+        // ================================================================
+
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        }
+
+        function editMember(phone) {
+            renderPage('edit-member', { phone: phone });
+        }
+
+        function editAdmin(phone) {
+            renderPage('edit-admin', { phone: phone });
+        }
+
+        function deleteAdmin(phone) {
+            if (!confirm('តើអ្នកចង់លុប Sub Admin នេះមែនទេ?')) return;
+            const admin = data.subAdmins[phone];
+            if (!admin) return;
+            // Remove admin from members
+            Object.values(data.members).forEach(m => {
+                if (m.adminId === admin.id) {
+                    m.adminId = null;
+                }
+            });
+            delete data.subAdmins[phone];
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null, 'លុប Sub Admin ' +
+                admin.username);
+            renderPage('super-dashboard');
+        }
+
+        function deleteMember(phone) {
+            if (!confirm('តើអ្នកចង់លុបសមាជិកនេះមែនទេ?')) return;
+            const member = data.members[phone];
+            if (!member) return;
+            delete data.members[phone];
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'delete_member', 'administration', phone, null, 'លុបសមាជិក ' + (member
+                .username || phone));
+            renderPage('super-dashboard');
+        }
+
+        function resetAdminPassword(phone) {
+            const newPwd = prompt('បញ្ចូលពាក្យសម្ងាត់ថ្មីសម្រាប់ Admin នេះ:');
+            if (!newPwd || newPwd.length < 4) {
+                alert('ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៤ តួ!');
+                return;
+            }
+            const admin = data.subAdmins[phone];
+            if (!admin) return;
+            admin.password = newPwd;
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' +
+                admin.username);
+            alert('✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!');
+            renderPage('super-dashboard');
+        }
+
+        function resetMemberPassword(phone) {
+            const newPwd = prompt('បញ្ចូលពាក្យសម្ងាត់ថ្មីសម្រាប់សមាជិកនេះ:');
+            if (!newPwd || newPwd.length < 4) {
+                alert('ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៤ តួ!');
+                return;
+            }
+            const member = data.members[phone];
+            if (!member) return;
+            member.password = newPwd;
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' +
+                (member.username || phone));
+            alert('✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!');
+            renderPage('super-dashboard');
+        }
+
+        function resendOTP(phone) {
+            const superAdmin = Object.values(data.superAdmins)[0];
+            if (!superAdmin) {
+                alert('មិនឃើញ Super Admin!');
+                return;
+            }
+            const otp = generateOTP();
+            data.superAdminOTP = otp;
+            data.superAdminOTPTime = Date.now();
+            saveData();
+            // Simulate sending OTP
+            console.log('📤 OTP sent to ' + phone + ': ' + otp);
+            alert('📤 លេខកូដ OTP ថ្មីត្រូវបានផ្ញើរួច! (សាកល្បង: ' + otp + ')');
+        }
+
+        function exportData() {
+            const str = JSON.stringify(data, null, 2);
+            const blob = new Blob([str], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function exportLogs() {
+            const logs = data.activityLogs;
+            let csv = 'កាលបរិច្ឆេទ,សកម្មភាព,ព័ត៌មានលម្អិត,ចំនួនប្រាក់\n';
+            logs.forEach(l => {
+                const d = new Date(l.timestamp).toLocaleString('km-KH');
+                csv += `${d},${l.action},${l.details || ''},${l.amount || ''}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `logs_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
         }
 
         // ================================================================
@@ -1251,7 +1363,114 @@
         // ================================================================
 
         function attachEvents(page, params) {
-            // ---- LOGIN ----
+            // ---- SUPER LOGIN (OTP) ----
+            const superLoginForm = document.getElementById('superLoginForm');
+            if (superLoginForm) {
+                superLoginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const phone = document.getElementById('superPhone').value.trim();
+                    const email = document.getElementById('superEmail').value.trim();
+                    const password = document.getElementById('superPassword').value.trim();
+                    const msg = document.getElementById('message');
+
+                    const superAdmin = Object.values(data.superAdmins)[0];
+                    if (!superAdmin) {
+                        msg.innerHTML = `<div class="error">មិនឃើញ Super Admin!</div>`;
+                        return;
+                    }
+
+                    if (password !== superAdmin.password) {
+                        msg.innerHTML = `<div class="error">❌ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
+                        return;
+                    }
+
+                    // Generate OTP
+                    const otp = generateOTP();
+                    data.superAdminOTP = otp;
+                    data.superAdminOTPTime = Date.now();
+                    saveData();
+
+                    // Simulate sending OTP
+                    console.log('📤 OTP sent to ' + phone + ' / ' + email + ': ' + otp);
+                    msg.innerHTML = `
+                        <div class="success">
+                            ✅ លេខកូដ OTP ត្រូវបានផ្ញើរួច!<br>
+                            📱 ${phone} | 📧 ${email}<br>
+                            ⏱️ ផុតកំណត់ក្នុង ៥ នាទី<br>
+                            <span style="font-size:12px;opacity:0.5;">(សាកល្បង: ${otp})</span>
+                        </div>
+                    `;
+                    renderPage('super-otp', { phone: phone });
+                });
+            }
+
+            // ---- SUPER OTP VERIFY ----
+            const superOTPForm = document.getElementById('superOTPForm');
+            if (superOTPForm) {
+                // Auto focus next input
+                document.querySelectorAll('.otp-digit').forEach((input, index, arr) => {
+                    input.addEventListener('input', function() {
+                        if (this.value.length === 1 && index < arr.length - 1) {
+                            arr[index + 1].focus();
+                        }
+                    });
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+                            arr[index - 1].focus();
+                        }
+                    });
+                });
+
+                superOTPForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const phone = document.getElementById('otpPhone').value;
+                    const msg = document.getElementById('message');
+
+                    let otp = '';
+                    document.querySelectorAll('.otp-digit').forEach(inp => otp += inp.value);
+
+                    if (otp.length !== 6) {
+                        msg.innerHTML = `<div class="error">សូមបញ្ចូល OTP �្យបាន ៦ ខ្ទង់!</div>`;
+                        return;
+                    }
+
+                    const superAdmin = Object.values(data.superAdmins)[0];
+                    if (!superAdmin) {
+                        msg.innerHTML = `<div class="error">មិនឃើញ Super Admin!</div>`;
+                        return;
+                    }
+
+                    const storedOTP = data.superAdminOTP;
+                    const otpTime = data.superAdminOTPTime || 0;
+                    const now = Date.now();
+
+                    if (!storedOTP || now - otpTime > 5 * 60 * 1000) {
+                        msg.innerHTML =
+                            `<div class="error">⏱️ OTP ផុតកំណត់! សូមផ្ញើ OTP ឡើងវិញ</div>`;
+                        return;
+                    }
+
+                    if (otp !== storedOTP) {
+                        msg.innerHTML = `<div class="error">❌ OTP មិនត្រឹមត្រូវ! សូមព្យាយាមម្តងទៀត</div>`;
+                        return;
+                    }
+
+                    // Success
+                    setCurrentUser({
+                        phone: superAdmin.phone,
+                        role: 'super_admin',
+                        name: 'Super Admin'
+                    });
+                    logActivity('SUPER-001', 'Super Admin', 'login', 'authentication', null, null,
+                        'ចូលប្រើដោយ OTP');
+                    data.superAdminOTP = null;
+                    data.superAdminOTPTime = null;
+                    saveData();
+                    renderPage('super-dashboard');
+                });
+            }
+
+            // ---- LOGIN (Member / Sub Admin) ----
             const loginForm = document.getElementById('loginForm');
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
@@ -1262,28 +1481,29 @@
                     const msg = document.getElementById('message');
 
                     if (!phone || !password) {
-                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មានឲ្យពេញលេញ!</div>`;
+                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
                         return;
                     }
 
                     if (role === 'sub_admin') {
                         const admin = data.subAdmins[phone];
                         if (!admin || admin.password !== password) {
-                            msg.innerHTML = `<div class="error">❌ លេខទូរសព្ទឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
+                            msg.innerHTML = `<div class="error">❌ លេខទូរសព្ទ/ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'sub_admin', name: admin.username });
-                        logActivity(admin.id, admin.username, 'login', 'authentication', null, null, 'ចូលប្រើជា Sub Admin');
+                        logActivity(admin.id, admin.username, 'login', 'authentication', null, null,
+                            'ចូលប្រើជា Sub Admin');
                         renderPage('admin-dashboard');
                     } else {
                         const member = data.members[phone];
                         if (!member || member.password !== password) {
-                            msg.innerHTML = `<div class="error">❌ លេខទូរសព្ទឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
+                            msg.innerHTML = `<div class="error">❌ លេខទូរសព្ទ/ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'member', name: member.username || phone });
-                        logActivity(member.id, member.username || phone, 'login', 'authentication', null, null,
-                            'ចូលប្រើជាសមាជិក');
+                        logActivity(member.id, member.username || phone, 'login', 'authentication', null,
+                            null, 'ចូលប្រើជាសមាជិក');
                         renderPage('dashboard');
                     }
                 });
@@ -1297,26 +1517,23 @@
                     const username = document.getElementById('regUsername').value.trim();
                     const phone = document.getElementById('regPhone').value.trim();
                     const password = document.getElementById('regPassword').value.trim();
-                    const confirmPassword = document.getElementById('regConfirmPassword').value.trim();
+                    const confirm = document.getElementById('regConfirmPassword').value.trim();
                     const msg = document.getElementById('message');
 
-                    if (!phone || !password || !confirmPassword) {
-                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មានឲ្យពេញលេញ!</div>`;
+                    if (!phone || !password || !confirm) {
+                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
                         return;
                     }
-
                     if (!/^\d{9,}$/.test(phone)) {
-                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ! (ត្រូវមានយ៉ាងតិច ៩ ខ្ទង់)</div>`;
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
                         return;
                     }
-
-                    if (password !== confirmPassword) {
-                        msg.innerHTML = `<div class="error">ពាក្យសម្ងាត់ទាំងពីរមិនដូចគ្នា!</div>`;
+                    if (password !== confirm) {
+                        msg.innerHTML = `<div class="error">ពាក្យសម្ងាត់មិនដូចគ្នា!</div>`;
                         return;
                     }
-
                     if (data.members[phone]) {
-                        msg.innerHTML = `<div class="error">លេខទូរសព្ទនេះមានរួចហើយ!</div>`;
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមានរួចហើយ!</div>`;
                         return;
                     }
 
@@ -1329,23 +1546,17 @@
                         role: 'member',
                         balance: 0,
                         benefits: ['✨ សមាជិកថ្មី'],
+                        adminId: null,
                         createdAt: new Date().toISOString()
                     };
                     saveData();
-
-                    msg.innerHTML = `
-                        <div class="success">
-                            ✅ ចុះឈ្មោះជោគជ័យ!<br>
-                            🆔 ID: ${newId}<br>
-                            📱 លេខទូរសព្ទ: ${phone}<br>
-                            <span onclick="renderPage('role-select')" style="color:#667eea;cursor:pointer;">🔑 ចូលប្រើ</span>
-                        </div>
-                    `;
+                    msg.innerHTML =
+                        `<div class="success">✅ ចុះឈ្មោះជោគជ័យ! 🆔 ${newId}<br><span onclick="renderPage('role-select')" style="color:#667eea;cursor:pointer;">🔑 ចូលប្រើ</span></div>`;
                     registerForm.reset();
                 });
             }
 
-            // ---- CREATE ADMIN (Super Admin) ----
+            // ---- CREATE ADMIN ----
             const createAdminForm = document.getElementById('createAdminForm');
             if (createAdminForm) {
                 createAdminForm.addEventListener('submit', function(e) {
@@ -1357,17 +1568,15 @@
                     const msg = document.getElementById('createAdminMessage');
 
                     if (!name || !phone || !password) {
-                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មានឲ្យពេញលេញ!</div>`;
+                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
                         return;
                     }
-
                     if (!/^\d{9,}$/.test(phone)) {
                         msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
                         return;
                     }
-
                     if (data.subAdmins[phone]) {
-                        msg.innerHTML = `<div class="error">លេខទូរសព្ទនេះមានរួចហើយ!</div>`;
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមានរួចហើយ!</div>`;
                         return;
                     }
 
@@ -1386,26 +1595,16 @@
                         createdAt: new Date().toISOString()
                     };
                     saveData();
-
                     logActivity('SUPER-001', 'Super Admin', 'create_admin', 'administration', phone, null,
-                        `បង្កើត Sub Admin "${name}" (${newId})`);
-
-                    msg.innerHTML = `
-                        <div class="success">
-                            ✅ បង្កើត Sub Admin ជោគជ័យ!<br>
-                            🆔 ID: ${newId}<br>
-                            👤 ឈ្មោះ: ${name}<br>
-                            📱 លេខទូរសព្ទ: ${phone}<br>
-                            🔒 ពាក្យសម្ងាត់: ${password}<br>
-                            💰 ប្រាក់: $${balance.toFixed(2)}
-                        </div>
-                    `;
+                        'បង្កើត Sub Admin "' + name + '" (' + newId + ')');
+                    msg.innerHTML =
+                        `<div class="success">✅ បង្កើតជោគជ័យ! 🆔 ${newId}<br>🔒 ${password}</div>`;
                     createAdminForm.reset();
-                    setTimeout(() => renderPage('super-dashboard'), 3000);
+                    setTimeout(() => renderPage('super-dashboard'), 2000);
                 });
             }
 
-            // ---- TRANSFER MONEY (Sub Admin) ----
+            // ---- TRANSFER MONEY ----
             const transferForm = document.getElementById('transferForm');
             if (transferForm) {
                 transferForm.addEventListener('submit', function(e) {
@@ -1422,107 +1621,147 @@
                     const msg = document.getElementById('transferMessage');
 
                     if (!amount || amount <= 0) {
-                        msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនប្រាក់ឲ្យបានត្រឹមត្រូវ!</div>`;
+                        msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនត្រឹមត្រូវ!</div>`;
                         return;
                     }
-
                     if (amount > admin.balance) {
                         msg.innerHTML =
-                        `<div class="error">ប្រាក់របស់អ្នកមិនគ្រប់គ្រាន់! (នៅសល់ $${admin.balance.toFixed(2)})</div>`;
+                            `<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ $${admin.balance.toFixed(2)})</div>`;
                         return;
                     }
 
                     const member = data.members[phone];
                     if (!member) {
-                        msg.innerHTML = `<div class="error">មិនឃើញសមាជិកនេះទេ!</div>`;
+                        msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`;
                         return;
                     }
 
                     admin.balance -= amount;
                     admin.totalTransferred = (admin.totalTransferred || 0) + amount;
                     member.balance += amount;
-                    const date = new Date().toLocaleDateString('km-KH', { day: '2-digit', month: '2-digit',
-                        year: 'numeric' });
-                    member.benefits.push('💰 បានទទួលប្រាក់ $' + amount.toFixed(2) + ' នៅថ្ងៃ ' + date);
-
-                    if (!admin.members.includes(phone)) {
-                        admin.members.push(phone);
-                    }
+                    const date = new Date().toLocaleDateString('km-KH');
+                    member.benefits.push('💰 បានទទួល $' + amount.toFixed(2) + ' នៅថ្ងៃ ' + date);
+                    if (!admin.members.includes(phone)) admin.members.push(phone);
+                    if (!member.adminId) member.adminId = admin.id;
 
                     saveData();
                     logActivity(admin.id, admin.username, 'member_transfer', 'financial', phone, amount,
-                        `ផ្ទេរប្រាក់ $${amount.toFixed(2)} ទៅ ${member.username || phone}`);
+                        'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone));
 
-                    msg.innerHTML = `
-                        <div class="success">
-                            ✅ ផ្ទេរប្រាក់ $${amount.toFixed(2)} ទៅ ${member.username || phone} ជោគជ័យ!<br>
-                            💰 ប្រាក់ដែលនៅសល់: $${admin.balance.toFixed(2)}
-                        </div>
-                    `;
+                    msg.innerHTML =
+                        `<div class="success">✅ ផ្ទេរ $${amount.toFixed(2)} ជោគជ័យ!<br>នៅសល់: $${admin.balance.toFixed(2)}</div>`;
                     document.getElementById('transferAmount').value = '';
-                    setTimeout(() => renderPage('admin-dashboard'), 2000);
+                    setTimeout(() => renderPage('admin-dashboard'), 1500);
+                });
+            }
+
+            // ---- EDIT MEMBER ----
+            const editMemberForm = document.getElementById('editMemberForm');
+            if (editMemberForm) {
+                editMemberForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const oldPhone = document.getElementById('editMemberPhone').value;
+                    const username = document.getElementById('editMemberUsername').value.trim();
+                    const newPhone = document.getElementById('editMemberPhoneNew').value.trim();
+                    const msg = document.getElementById('message');
+
+                    const member = data.members[oldPhone];
+                    if (!member) {
+                        msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`;
+                        return;
+                    }
+
+                    if (newPhone !== oldPhone && data.members[newPhone]) {
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>`;
+                        return;
+                    }
+
+                    if (newPhone !== oldPhone) {
+                        data.members[newPhone] = { ...member, phone: newPhone, username: username || newPhone };
+                        delete data.members[oldPhone];
+                    } else {
+                        member.username = username || member.phone;
+                    }
+
+                    saveData();
+                    logActivity('SUPER-001', 'Super Admin', 'edit_member', 'administration', newPhone, null,
+                        'កែប្រែសមាជិក ' + (username || newPhone));
+                    msg.innerHTML = `<div class="success">✅ រក្សាទុកជោគជ័យ!</div>`;
+                    setTimeout(() => renderPage('super-dashboard'), 1000);
+                });
+            }
+
+            // ---- EDIT ADMIN ----
+            const editAdminForm = document.getElementById('editAdminForm');
+            if (editAdminForm) {
+                editAdminForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const oldPhone = document.getElementById('editAdminPhone').value;
+                    const name = document.getElementById('editAdminName').value.trim();
+                    const newPhone = document.getElementById('editAdminPhoneNew').value.trim();
+                    const msg = document.getElementById('message');
+
+                    const admin = data.subAdmins[oldPhone];
+                    if (!admin) {
+                        msg.innerHTML = `<div class="error">មិនឃើញ Admin!</div>`;
+                        return;
+                    }
+
+                    if (newPhone !== oldPhone && data.subAdmins[newPhone]) {
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>`;
+                        return;
+                    }
+
+                    if (newPhone !== oldPhone) {
+                        data.subAdmins[newPhone] = { ...admin, phone: newPhone, username: name };
+                        delete data.subAdmins[oldPhone];
+                        // Update members
+                        Object.values(data.members).forEach(m => {
+                            if (m.adminId === admin.id) {
+                                // Keep adminId same
+                            }
+                        });
+                    } else {
+                        admin.username = name;
+                    }
+
+                    saveData();
+                    logActivity('SUPER-001', 'Super Admin', 'edit_admin', 'administration', newPhone, null,
+                        'កែប្រែ Sub Admin ' + name);
+                    msg.innerHTML = `<div class="success">✅ រក្សាទុកជោគជ័យ!</div>`;
+                    setTimeout(() => renderPage('super-dashboard'), 1000);
                 });
             }
         }
 
         // ================================================================
-        // ===== EXPORT FUNCTIONS =====
+        // ===== INIT =====
         // ================================================================
 
-        function exportData() {
-            const dataStr = JSON.stringify(data, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `member_system_backup_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
+        // Initialize Super Admin with phone and email
+        if (!data.superAdminExists) {
+            data.superAdmins['066817407'] = {
+                username: 'Super Admin',
+                password: 'super123',
+                phone: '066817407',
+                email: 'narith128080@gmail.com',
+                id: 'SUPER-001',
+                role: 'super_admin',
+                balance: 10000,
+                createdAt: new Date().toISOString()
+            };
+            data.superAdminExists = true;
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'system_init', 'system', null, null, 'បង្កើតប្រព័ន្ធ Super Admin');
         }
-
-        function exportLogs() {
-            const logs = data.activityLogs;
-            let csv = 'កាលបរិច្ឆេទ,សកម្មភាព,ព័ត៌មានលម្អិត,ចំនួនប្រាក់\n';
-            logs.forEach(log => {
-                const date = new Date(log.timestamp).toLocaleString('km-KH');
-                csv += `${date},${log.action},${log.details || ''},${log.amount || ''}\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `activity_logs_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // ================================================================
-        // ===== START APP =====
-        // ================================================================
-
-        initSuperAdmin();
 
         const currentUser = getCurrentUser();
         if (currentUser) {
-            if (currentUser.role === 'super_admin') {
-                renderPage('super-dashboard');
-            } else if (currentUser.role === 'sub_admin') {
-                if (data.subAdmins[currentUser.phone]) {
-                    renderPage('admin-dashboard');
-                } else {
-                    setCurrentUser(null);
-                    renderPage('home');
-                }
-            } else if (currentUser.role === 'member') {
-                if (data.members[currentUser.phone]) {
-                    renderPage('dashboard');
-                } else {
-                    setCurrentUser(null);
-                    renderPage('home');
-                }
-            } else {
-                renderPage('home');
-            }
+            if (currentUser.role === 'super_admin') renderPage('super-dashboard');
+            else if (currentUser.role === 'sub_admin' && data.subAdmins[currentUser.phone]) renderPage('admin-dashboard');
+            else if (currentUser.role === 'member' && data.members[currentUser.phone]) renderPage('dashboard');
+            else { setCurrentUser(null);
+                renderPage('home'); }
         } else {
             renderPage('home');
         }
