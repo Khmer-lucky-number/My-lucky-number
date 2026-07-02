@@ -30,7 +30,7 @@
             border-radius: 25px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 750px;
+            max-width: 800px;
             animation: fadeInUp 0.6s ease-out;
             max-height: 98vh;
             overflow-y: auto;
@@ -280,7 +280,7 @@
         }
 
         .list-container {
-            max-height: 250px;
+            max-height: 300px;
             overflow-y: auto;
             margin-top: 6px;
         }
@@ -525,7 +525,7 @@
             background: #1a1a2e;
             padding: 25px;
             border-radius: 20px;
-            max-width: 420px;
+            max-width: 450px;
             width: 90%;
             border: 1px solid rgba(255,215,0,0.2);
         }
@@ -890,6 +890,9 @@
             `;
         }
 
+        // ================================================================
+        // ===== SUB ADMIN DASHBOARD (with password view, edit, delete) =====
+        // ================================================================
         function getAdminDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
@@ -917,10 +920,13 @@
                                 <span class="name">${m.username || phone}</span>
                                 <span class="id">🆔 ${m.id}</span>
                                 <span class="sub">📱 ${m.phone}</span>
+                                <span class="pwd">🔑 ${m.password}</span>
                             </div>
                             <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
                             <div class="actions">
-                                <button onclick="renderPage('transfer-money', {phone:'${phone}'})" class="btn btn-warning btn-xs">💸</button>
+                                <button onclick="editMemberByAdmin('${m.phone}')" class="btn btn-warning btn-xs">✏️</button>
+                                <button onclick="deleteMemberByAdmin('${m.phone}')" class="btn btn-danger btn-xs">🗑️</button>
+                                <button onclick="renderPage('transfer-money', {phone:'${m.phone}'})" class="btn btn-secondary btn-xs">💸</button>
                             </div>
                         </div>
                     `;
@@ -957,9 +963,19 @@
                     <div id="adminSearchResult" style="margin-top:10px;"></div>
                 </div>
 
-                <div class="card admin-panel"><h3>📋 បញ្ជីសមាជិក</h3>${membersHtml}</div>
-                <div class="card"><h3>📊 ប្រវត្តិផ្ទេរ</h3>${logsHtml}</div>
-                <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
+                <div class="card admin-panel">
+                    <h3>📋 បញ្ជីសមាជិក</h3>
+                    ${membersHtml}
+                </div>
+
+                <div class="card">
+                    <h3>📊 ប្រវត្តិផ្ទេរ</h3>
+                    ${logsHtml}
+                </div>
+
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
+                </div>
             `;
         }
 
@@ -977,6 +993,9 @@
             return html;
         }
 
+        // ================================================================
+        // ===== SUPER ADMIN DASHBOARD =====
+        // ================================================================
         function getSuperDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'super_admin') {
@@ -1240,7 +1259,7 @@
             });
 
             if (!foundAdmin) {
-                resultDiv.innerHTML = `<div class="error">❌ រកមិនឃើញ Sub Admin ដែលមាន ID ឬ លេខទូរសព្ទនេះ!</div>`;
+                resultDiv.innerHTML = `<div class="error">❌ រកមិនឃើញ Sub Admin!</div>`;
                 return;
             }
 
@@ -1250,13 +1269,13 @@
                         <div>
                             <div style="color:#ffd700;font-weight:600;">👑 ${foundAdmin.username}</div>
                             <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${foundAdmin.id} | 📱 ${foundAdmin.phone}</div>
-                            <div style="font-size:14px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: $${foundAdmin.balance.toFixed(2)}</div>
+                            <div style="font-size:14px;color:#48bb78;">💰 $${foundAdmin.balance.toFixed(2)}</div>
                         </div>
                         <div>
                             <form id="superFundAdminForm" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
                                 <input type="hidden" name="adminPhone" value="${foundAdmin.phone}">
-                                <input type="number" name="fundAmount" placeholder="$$$ ចំនួនប្រាក់" min="0.01" step="0.01" style="width:130px;padding:8px 12px;margin:0;" required>
-                                <button type="submit" class="btn btn-gold btn-sm">💳 បញ្ចូលប្រាក់</button>
+                                <input type="number" name="fundAmount" placeholder="$$$" min="0.01" step="0.01" style="width:120px;padding:8px 12px;margin:0;" required>
+                                <button type="submit" class="btn btn-gold btn-sm">💳 បញ្ចូល</button>
                             </form>
                         </div>
                     </div>
@@ -1271,23 +1290,20 @@
                     const amount = parseFloat(this.querySelector('[name="fundAmount"]').value);
                     
                     if (!amount || amount <= 0) {
-                        alert('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!');
+                        alert('សូមបញ្ចូលចំនួនត្រឹមត្រូវ!');
                         return;
                     }
 
                     const admin = data.subAdmins[phone];
-                    if (!admin) {
-                        alert('មិនឃើញ Admin!');
-                        return;
-                    }
+                    if (!admin) { alert('មិនឃើញ Admin!'); return; }
 
                     admin.balance += amount;
                     admin.totalReceived = (admin.totalReceived || 0) + amount;
                     saveData();
                     logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', phone, amount,
-                        'បញ្ចូលប្រាក់ $' + amount.toFixed(2) + ' ទៅ Sub Admin ' + admin.username);
+                        'បញ្ចូល $' + amount.toFixed(2) + ' ទៅ ' + admin.username);
 
-                    alert('✅ បញ្ចូលប្រាក់ $' + amount.toFixed(2) + ' ទៅ ' + admin.username + ' ជោគជ័យ!');
+                    alert('✅ បញ្ចូល $' + amount.toFixed(2) + ' ជោគជ័យ!');
                     renderPage('super-dashboard');
                 });
             }
@@ -1311,7 +1327,7 @@
 
             const admin = data.subAdmins[user.phone];
             if (!admin) {
-                resultDiv.innerHTML = `<div class="error">មិនឃើញព័ត៌មាន Admin!</div>`;
+                resultDiv.innerHTML = `<div class="error">មិនឃើញ Admin!</div>`;
                 return;
             }
 
@@ -1323,13 +1339,13 @@
             });
 
             if (!foundMember) {
-                resultDiv.innerHTML = `<div class="error">❌ រកមិនឃើញសមាជិកដែលមាន ID ឬ លេខទូរសព្ទនេះ!</div>`;
+                resultDiv.innerHTML = `<div class="error">❌ រកមិនឃើញសមាជិក!</div>`;
                 return;
             }
 
             const isAssigned = foundMember.adminId === admin.id;
             const warning = isAssigned ? '' : 
-                `<div style="color:#f6ad55;font-size:12px;margin-top:5px;">⚠️ សមាជិកនេះមិនទាន់ត្រូវបានចាត់តាំងឲ្យអ្នកទេ! សូមទាក់ទង Super Admin</div>`;
+                `<div style="color:#f6ad55;font-size:12px;margin-top:5px;">⚠️ មិនទាន់ចាត់តាំង! សូមទាក់ទង Super Admin</div>`;
 
             resultDiv.innerHTML = `
                 <div class="search-result-box">
@@ -1337,16 +1353,16 @@
                         <div>
                             <div style="color:#fff;font-weight:600;">👤 ${foundMember.username || foundMember.phone}</div>
                             <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${foundMember.id} | 📱 ${foundMember.phone}</div>
-                            <div style="font-size:14px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: $${foundMember.balance.toFixed(2)}</div>
+                            <div style="font-size:14px;color:#48bb78;">💰 $${foundMember.balance.toFixed(2)}</div>
                             ${warning}
                         </div>
                         <div>
                             <form id="adminTransferSearchForm" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
                                 <input type="hidden" name="memberPhone" value="${foundMember.phone}">
-                                <input type="number" name="transferAmount" placeholder="$$$ ចំនួនប្រាក់" min="0.01" step="0.01" style="width:130px;padding:8px 12px;margin:0;" required>
+                                <input type="number" name="transferAmount" placeholder="$$$" min="0.01" step="0.01" style="width:120px;padding:8px 12px;margin:0;" required>
                                 <button type="submit" class="btn btn-warning btn-sm" ${!isAssigned ? 'disabled style="opacity:0.5;"' : ''}>💸 ផ្ទេរ</button>
                             </form>
-                            ${!isAssigned ? `<button onclick="requestAssignMember('${foundMember.phone}')" class="btn btn-gold btn-sm mt-5">👑 ស្នើចាត់តាំង</button>` : ''}
+                            ${!isAssigned ? `<button onclick="requestAssignMember('${foundMember.phone}')" class="btn btn-gold btn-sm mt-5">👑 ស្នើ</button>` : ''}
                         </div>
                     </div>
                 </div>
@@ -1360,20 +1376,17 @@
                     const amount = parseFloat(this.querySelector('[name="transferAmount"]').value);
                     
                     if (!amount || amount <= 0) {
-                        alert('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!');
+                        alert('សូមបញ្ចូលចំនួនត្រឹមត្រូវ!');
                         return;
                     }
 
                     if (amount > admin.balance) {
-                        alert('ប្រាក់របស់អ្នកមិនគ្រប់គ្រាន់! (នៅសល់ $' + admin.balance.toFixed(2) + ')');
+                        alert('មិនគ្រប់គ្រាន់! (នៅសល់ $' + admin.balance.toFixed(2) + ')');
                         return;
                     }
 
                     const member = data.members[phone];
-                    if (!member) {
-                        alert('មិនឃើញសមាជិក!');
-                        return;
-                    }
+                    if (!member) { alert('មិនឃើញសមាជិក!'); return; }
 
                     admin.balance -= amount;
                     admin.totalTransferred = (admin.totalTransferred || 0) + amount;
@@ -1387,15 +1400,14 @@
                     logActivity(admin.id, admin.username, 'member_transfer', 'financial', phone, amount,
                         'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone));
 
-                    alert('✅ ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone) + ' ជោគជ័យ!');
+                    alert('✅ ផ្ទេរ $' + amount.toFixed(2) + ' ជោគជ័យ!');
                     renderPage('admin-dashboard');
                 });
             }
         }
 
-        // ===== SUB ADMIN: REQUEST ASSIGN MEMBER =====
         function requestAssignMember(memberPhone) {
-            if (!confirm('តើអ្នកចង់ស្នើ Super Admin ឲ្យចាត់តាំងសមាជិកនេះឲ្យអ្នកមែនទេ?')) return;
+            if (!confirm('ស្នើ Super Admin ចាត់តាំងសមាជិកនេះឲ្យអ្នក?')) return;
             
             const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
@@ -1404,21 +1416,149 @@
             }
 
             const admin = data.subAdmins[user.phone];
-            if (!admin) {
-                alert('មិនឃើញព័ត៌មាន Admin!');
-                return;
-            }
+            if (!admin) { alert('មិនឃើញ Admin!'); return; }
 
             const member = data.members[memberPhone];
-            if (!member) {
-                alert('មិនឃើញសមាជិក!');
+            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
+
+            logActivity(admin.id, admin.username, 'request_assign', 'administration', memberPhone, null,
+                'ស្នើចាត់តាំង ' + (member.username || memberPhone));
+
+            alert('✅ បានផ្ញើសំណើ! សូមរង់ចាំ');
+        }
+
+        // ================================================================
+        // ===== SUB ADMIN: EDIT MEMBER =====
+        // ================================================================
+        function editMemberByAdmin(phone) {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                alert('សូមចូលប្រើជា Sub Admin!');
                 return;
             }
 
-            logActivity(admin.id, admin.username, 'request_assign', 'administration', memberPhone, null,
-                'ស្នើចាត់តាំងសមាជិក ' + (member.username || memberPhone) + ' ឲ្យខ្លួន');
+            const member = data.members[phone];
+            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
 
-            alert('✅ បានផ្ញើសំណើទៅ Super Admin ហើយ! សូមរង់ចាំការបញ្ជាក់');
+            const admin = data.subAdmins[user.phone];
+            if (!admin || member.adminId !== admin.id) {
+                alert('សមាជិកនេះមិនស្ថិតក្រោមការគ្រប់គ្រងរបស់អ្នកទេ!');
+                return;
+            }
+
+            const modalHtml = `
+                <div class="modal-overlay" id="editMemberModal">
+                    <div class="modal-box">
+                        <h3>✏️ កែប្រែសមាជិក</h3>
+                        <p style="font-size:13px;">សម្រាប់: <strong style="color:#fff;">${member.username || member.phone}</strong></p>
+                        <form id="editMemberByAdminForm">
+                            <input type="hidden" name="memberPhone" value="${phone}">
+                            <input type="text" id="editMemberUsername" value="${member.username || ''}" placeholder="👤 ឈ្មោះ" required>
+                            <input type="tel" id="editMemberPhone" value="${member.phone}" placeholder="📱 លេខទូរសព្ទ" required>
+                            <div class="input-group">
+                                <input type="password" id="editMemberPassword" value="${member.password}" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                                <button type="button" class="toggle-pwd" onclick="togglePassword('editMemberPassword', this)">👁️</button>
+                            </div>
+                            <button type="submit" class="btn btn-warning btn-block mt-10">💾 រក្សាទុក</button>
+                            <button type="button" onclick="closeEditMemberModal()" class="btn btn-danger btn-sm mt-5">❌ បោះបង់</button>
+                        </form>
+                        <div id="editMemberMessage"></div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            const form = document.getElementById('editMemberByAdminForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const phone = this.querySelector('[name="memberPhone"]').value;
+                    const username = document.getElementById('editMemberUsername').value.trim();
+                    const newPhone = document.getElementById('editMemberPhone').value.trim();
+                    const password = document.getElementById('editMemberPassword').value.trim();
+                    const msg = document.getElementById('editMemberMessage');
+
+                    if (!newPhone || !password) {
+                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
+                        return;
+                    }
+
+                    if (!/^\d{9,}$/.test(newPhone)) {
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
+                        return;
+                    }
+
+                    const member = data.members[phone];
+                    if (!member) { msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`; return; }
+
+                    if (newPhone !== phone && data.members[newPhone]) {
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>`;
+                        return;
+                    }
+
+                    if (newPhone !== phone && member.adminId) {
+                        const admin = data.subAdmins[member.adminId];
+                        if (admin) {
+                            admin.members = admin.members.map(p => p === phone ? newPhone : p);
+                        }
+                    }
+
+                    if (newPhone !== phone) {
+                        data.members[newPhone] = { ...member, phone: newPhone, username: username || newPhone, password: password };
+                        delete data.members[phone];
+                    } else {
+                        member.username = username || member.phone;
+                        member.password = password;
+                    }
+
+                    saveData();
+                    logActivity(admin.id, admin.username, 'edit_member', 'administration', newPhone, null,
+                        'កែប្រែសមាជិក ' + (username || newPhone));
+
+                    msg.innerHTML = `<div class="success">✅ រក្សាទុកជោគជ័យ!</div>`;
+                    setTimeout(() => {
+                        closeEditMemberModal();
+                        renderPage('admin-dashboard');
+                    }, 1500);
+                });
+            }
+        }
+
+        function closeEditMemberModal() {
+            const modal = document.getElementById('editMemberModal');
+            if (modal) modal.remove();
+        }
+
+        // ================================================================
+        // ===== SUB ADMIN: DELETE MEMBER =====
+        // ================================================================
+        function deleteMemberByAdmin(phone) {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                alert('សូមចូលប្រើជា Sub Admin!');
+                return;
+            }
+
+            const member = data.members[phone];
+            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
+
+            const admin = data.subAdmins[user.phone];
+            if (!admin || member.adminId !== admin.id) {
+                alert('សមាជិកនេះមិនស្ថិតក្រោមការគ្រប់គ្រងរបស់អ្នកទេ!');
+                return;
+            }
+
+            if (!confirm(`តើអ្នកចង់លុប "${member.username || member.phone}" មែនទេ?`)) return;
+
+            admin.members = admin.members.filter(p => p !== phone);
+            delete data.members[phone];
+
+            saveData();
+            logActivity(admin.id, admin.username, 'delete_member', 'administration', phone, null,
+                'លុបសមាជិក ' + (member.username || member.phone));
+
+            alert('✅ លុបជោគជ័យ!');
+            renderPage('admin-dashboard');
         }
 
         // ================================================================
@@ -1437,17 +1577,13 @@
             }
         }
 
-        // ===== ASSIGN ADMIN TO MEMBER =====
         function assignAdmin(memberPhone) {
             const member = data.members[memberPhone];
-            if (!member) {
-                alert('មិនឃើញសមាជិក!');
-                return;
-            }
+            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
 
             const adminList = Object.values(data.subAdmins);
             if (adminList.length === 0) {
-                alert('មិនទាន់មាន Sub Admin! សូមបង្កើតមុន');
+                alert('មិនទាន់មាន Sub Admin!');
                 return;
             }
 
@@ -1460,7 +1596,7 @@
                 <div class="modal-overlay" id="assignModal">
                     <div class="modal-box">
                         <h3>👑 ចាត់តាំង Admin</h3>
-                        <p style="font-size:13px;">សម្រាប់សមាជិក: <strong style="color:#fff;">${member.username || member.phone}</strong></p>
+                        <p style="font-size:13px;">សម្រាប់: <strong style="color:#fff;">${member.username || member.phone}</strong></p>
                         <select id="adminSelect" style="width:100%;padding:12px;border-radius:10px;background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,0.1);margin:10px 0;">
                             ${options}
                         </select>
@@ -1480,10 +1616,7 @@
             if (!member) return;
 
             const admin = Object.values(data.subAdmins).find(a => a.id === adminId);
-            if (!admin) {
-                alert('មិនឃើញ Admin!');
-                return;
-            }
+            if (!admin) { alert('មិនឃើញ Admin!'); return; }
 
             if (member.adminId) {
                 const oldAdmin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
@@ -1499,9 +1632,9 @@
 
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'assign_admin', 'administration', memberPhone, null,
-                'ចាត់តាំង Admin ' + admin.username + ' ឲ្យសមាជិក ' + (member.username || memberPhone));
+                'ចាត់តាំង ' + admin.username + ' ឲ្យ ' + (member.username || memberPhone));
 
-            alert('✅ ចាត់តាំង Admin ជោគជ័យ!');
+            alert('✅ ចាត់តាំងជោគជ័យ!');
             closeAssignModal();
             renderPage('super-dashboard');
         }
@@ -1511,12 +1644,11 @@
             if (modal) modal.remove();
         }
 
-        // ===== CRUD Operations =====
         function editMember(phone) { renderPage('edit-member', { phone: phone }); }
         function editAdmin(phone) { renderPage('edit-admin', { phone: phone }); }
 
         function deleteAdmin(phone) {
-            if (!confirm('តើអ្នកចង់លុប Sub Admin នេះមែនទេ?')) return;
+            if (!confirm('លុប Sub Admin នេះ?')) return;
             const admin = data.subAdmins[phone];
             if (!admin) return;
             Object.values(data.members).forEach(m => {
@@ -1524,12 +1656,12 @@
             });
             delete data.subAdmins[phone];
             saveData();
-            logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null, 'លុប Sub Admin ' + admin.username);
+            logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null, 'លុប ' + admin.username);
             renderPage('super-dashboard');
         }
 
         function deleteMember(phone) {
-            if (!confirm('តើអ្នកចង់លុបសមាជិកនេះមែនទេ?')) return;
+            if (!confirm('លុបសមាជិកនេះ?')) return;
             const member = data.members[phone];
             if (!member) return;
             if (member.adminId) {
@@ -1538,52 +1670,43 @@
             }
             delete data.members[phone];
             saveData();
-            logActivity('SUPER-001', 'Super Admin', 'delete_member', 'administration', phone, null, 'លុបសមាជិក ' + (member.username || phone));
+            logActivity('SUPER-001', 'Super Admin', 'delete_member', 'administration', phone, null, 'លុប ' + (member.username || phone));
             renderPage('super-dashboard');
         }
 
         function resetAdminPassword(phone) {
-            const newPwd = prompt('បញ្ចូលពាក្យសម្ងាត់ថ្មីសម្រាប់ Admin នេះ:');
-            if (!newPwd || newPwd.length < 4) {
-                alert('ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៤ តួ!');
-                return;
-            }
+            const newPwd = prompt('ពាក្យសម្ងាត់ថ្មី:');
+            if (!newPwd || newPwd.length < 4) { alert('ត្រូវមានយ៉ាងតិច ៤ តួ!'); return; }
             const admin = data.subAdmins[phone];
             if (!admin) return;
             admin.password = newPwd;
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + admin.username);
-            alert('✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!');
+            alert('✅ ជោគជ័យ!');
             renderPage('super-dashboard');
         }
 
         function resetMemberPassword(phone) {
-            const newPwd = prompt('បញ្ចូលពាក្យសម្ងាត់ថ្មីសម្រាប់សមាជិកនេះ:');
-            if (!newPwd || newPwd.length < 4) {
-                alert('ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៤ តួ!');
-                return;
-            }
+            const newPwd = prompt('ពាក្យសម្ងាត់ថ្មី:');
+            if (!newPwd || newPwd.length < 4) { alert('ត្រូវមានយ៉ាងតិច ៤ តួ!'); return; }
             const member = data.members[phone];
             if (!member) return;
             member.password = newPwd;
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + (member.username || phone));
-            alert('✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!');
+            alert('✅ ជោគជ័យ!');
             renderPage('super-dashboard');
         }
 
         function resendOTP(phone) {
             const superAdmin = Object.values(data.superAdmins)[0];
-            if (!superAdmin) {
-                alert('មិនឃើញ Super Admin!');
-                return;
-            }
+            if (!superAdmin) { alert('មិនឃើញ Super Admin!'); return; }
             const otp = generateOTP();
             data.superAdminOTP = otp;
             data.superAdminOTPTime = Date.now();
             saveData();
-            console.log('📤 OTP sent to ' + phone + ': ' + otp);
-            alert('📤 លេខកូដ OTP ថ្មីត្រូវបានផ្ញើរួច! (សាកល្បង: ' + otp + ')');
+            console.log('📤 OTP: ' + otp);
+            alert('📤 OTP ថ្មី: ' + otp);
         }
 
         function exportData() {
@@ -1618,7 +1741,7 @@
         // ================================================================
 
         function attachEvents(page, params) {
-            // ---- SUPER LOGIN (OTP) ----
+            // ---- SUPER LOGIN ----
             const superLoginForm = document.getElementById('superLoginForm');
             if (superLoginForm) {
                 superLoginForm.addEventListener('submit', function(e) {
@@ -1644,12 +1767,12 @@
                     data.superAdminOTPTime = Date.now();
                     saveData();
 
-                    console.log('📤 OTP sent to ' + phone + ' / ' + email + ': ' + otp);
+                    console.log('📤 OTP: ' + otp);
                     msg.innerHTML = `
                         <div class="success">
-                            ✅ លេខកូដ OTP ត្រូវបានផ្ញើរួច!<br>
+                            ✅ OTP ត្រូវបានផ្ញើរួច!<br>
                             📱 ${phone} | 📧 ${email}<br>
-                            ⏱️ ផុតកំណត់ក្នុង ៥ នាទី<br>
+                            ⏱️ ផុតកំណត់ ៥ នាទី<br>
                             <span style="font-size:12px;opacity:0.5;">(សាកល្បង: ${otp})</span>
                         </div>
                     `;
@@ -1682,7 +1805,7 @@
                     document.querySelectorAll('.otp-digit').forEach(inp => otp += inp.value);
 
                     if (otp.length !== 6) {
-                        msg.innerHTML = `<div class="error">សូមបញ្ចូល OTP ឲ្យបាន ៦ ខ្ទង់!</div>`;
+                        msg.innerHTML = `<div class="error">សូមបញ្ចូល ៦ ខ្ទង់!</div>`;
                         return;
                     }
 
@@ -1697,12 +1820,12 @@
                     const now = Date.now();
 
                     if (!storedOTP || now - otpTime > 5 * 60 * 1000) {
-                        msg.innerHTML = `<div class="error">⏱️ OTP ផុតកំណត់! សូមផ្ញើ OTP ឡើងវិញ</div>`;
+                        msg.innerHTML = `<div class="error">⏱️ OTP ផុតកំណត់!</div>`;
                         return;
                     }
 
                     if (otp !== storedOTP) {
-                        msg.innerHTML = `<div class="error">❌ OTP មិនត្រឹមត្រូវ! សូមព្យាយាមម្តងទៀត</div>`;
+                        msg.innerHTML = `<div class="error">❌ OTP មិនត្រឹមត្រូវ!</div>`;
                         return;
                     }
 
@@ -1719,7 +1842,7 @@
                 });
             }
 
-            // ---- LOGIN (Member / Sub Admin) ----
+            // ---- LOGIN ----
             const loginForm = document.getElementById('loginForm');
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
@@ -1737,7 +1860,7 @@
                     if (role === 'sub_admin') {
                         const admin = data.subAdmins[phone];
                         if (!admin || admin.password !== password) {
-                            msg.innerHTML = `<div class="error">❌ លេខទូរសព្ទ/ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
+                            msg.innerHTML = `<div class="error">❌ មិនត្រឹមត្រូវ!</div>`;
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'sub_admin', name: admin.username });
@@ -1746,7 +1869,7 @@
                     } else {
                         const member = data.members[phone];
                         if (!member || member.password !== password) {
-                            msg.innerHTML = `<div class="error">❌ លេខទូរសព្ទ/ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
+                            msg.innerHTML = `<div class="error">❌ មិនត្រឹមត្រូវ!</div>`;
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'member', name: member.username || phone });
@@ -1848,7 +1971,7 @@
                 });
             }
 
-            // ---- TRANSFER MONEY (from admin dashboard) ----
+            // ---- TRANSFER MONEY ----
             const transferForm = document.getElementById('transferForm');
             if (transferForm) {
                 transferForm.addEventListener('submit', function(e) {
@@ -1888,7 +2011,8 @@
                     if (!member.adminId) member.adminId = admin.id;
 
                     saveData();
-                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', phone, amount, 'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone));
+                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', phone, amount,
+                        'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || phone));
 
                     msg.innerHTML = `<div class="success">✅ ផ្ទេរ $${amount.toFixed(2)} ជោគជ័យ!<br>នៅសល់: $${admin.balance.toFixed(2)}</div>`;
                     document.getElementById('transferAmount').value = '';
@@ -1896,7 +2020,7 @@
                 });
             }
 
-            // ---- EDIT MEMBER ----
+            // ---- EDIT MEMBER (Super Admin) ----
             const editMemberForm = document.getElementById('editMemberForm');
             if (editMemberForm) {
                 editMemberForm.addEventListener('submit', function(e) {
