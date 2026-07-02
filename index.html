@@ -1624,6 +1624,433 @@
             return html;
         }
         // ================================================================
+        // ===== ADMIN DASHBOARD =====
+        // ================================================================
+
+        function getAdminDashboardPage() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                return `<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>`;
+            }
+
+            const admin = data.subAdmins[user.phone];
+            if (!admin) return `<p style="color:red;">មិនឃើញព័ត៌មាន Admin!</p>`;
+
+            const memberKeys = Object.keys(data.members).filter(phone => data.members[phone].adminId === admin.id);
+            let membersHtml = '';
+            if (memberKeys.length === 0) {
+                membersHtml = `
+                    <p style="opacity:0.4;font-size:12px;">មិនទាន់មានសមាជិក</p>
+                    <p style="font-size:11px;color:rgba(255,215,0,0.5);">សូមទាក់ទង Super Admin ដើម្បីចាត់តាំងសមាជិក</p>
+                `;
+            } else {
+                memberKeys.forEach(phone => {
+                    const m = data.members[phone];
+                    if (!m) return;
+                    membersHtml += `
+                        <div class="list-item">
+                            <div class="info">
+                                <span class="name">${m.username || phone}</span>
+                                <span class="id">🆔 ${m.id}</span>
+                                <span class="sub">📱 ${m.phone}</span>
+                                <span class="pwd">🔑 ${m.password}</span>
+                            </div>
+                            <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
+                            <div class="actions">
+                                <button onclick="editMemberByAdmin('${m.phone}')" class="btn btn-warning btn-xs">✏️</button>
+                                <button onclick="deleteMemberByAdmin('${m.phone}')" class="btn btn-danger btn-xs">🗑️</button>
+                                <button onclick="renderPage('transfer-money', {phone:'${m.phone}'})" class="btn btn-secondary btn-xs">💸</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            let logsHtml = getAdminTransferLogs(admin.id);
+
+            return `
+                <div class="top-bar">
+                    <div class="left-section">
+                        <span class="badge badge-gold">👑 Sub Admin</span>
+                        <h2 style="margin:3px 0 0;color:#ffd700;">${admin.username}</h2>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">🆔 ${admin.id} | 📱 ${admin.phone}</div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-box"><div class="number">${memberKeys.length}</div><div class="label">សមាជិក</div></div>
+                    <div class="stat-box"><div class="number">$${admin.balance.toFixed(0)}</div><div class="label">នៅសល់</div></div>
+                    <div class="stat-box"><div class="number">$${admin.totalReceived || 0}</div><div class="label">បានទទួល</div></div>
+                    <div class="stat-box"><div class="number">$${admin.totalTransferred || 0}</div><div class="label">បានផ្ទេរ</div></div>
+                </div>
+
+                <!-- Bank Info Setup -->
+                ${getBankSetupSection()}
+
+                <!-- Search Member -->
+                <div class="card admin-panel">
+                    <h3>🔍 ស្វែងរកសមាជិកដើម្បីផ្ទេរប្រាក់</h3>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <input type="text" id="adminSearchMember" placeholder="🔎 បញ្ចូល ID (M-0001) ឬ លេខទូរសព្ទ" style="flex:1;min-width:150px;">
+                        <button onclick="searchMemberForTransfer()" class="btn btn-warning">🔍 ស្វែងរក</button>
+                        <button onclick="clearSearchResult('adminSearchResult')" class="clear-btn">✖ បិទ</button>
+                    </div>
+                    <div id="adminSearchResult" style="margin-top:10px;"></div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>📋 បញ្ជីសមាជិក</h3>
+                    ${membersHtml}
+                </div>
+
+                <div class="card">
+                    <h3>📊 ប្រវត្តិផ្ទេរ</h3>
+                    ${logsHtml}
+                </div>
+
+                <!-- Admin Transaction History -->
+                ${getAdminTransactionHistory()}
+
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
+                </div>
+            `;
+        }
+
+        function getAdminTransferLogs(adminId) {
+            const logs = data.activityLogs.filter(l => l.adminId === adminId && l.actionType === 'member_transfer');
+            if (logs.length === 0) return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មាន</p>';
+            let html = '';
+            logs.slice(0, 10).forEach(l => {
+                const d = new Date(l.timestamp);
+                html += `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;">
+                    <span>💰 $${l.amount} → ${l.target}</span>
+                    <span style="opacity:0.4;">${d.toLocaleDateString('km-KH')}</span>
+                </div>`;
+            });
+            return html;
+        }
+
+        // ===== BANK INFO SETUP =====
+        function getBankSetupSection() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') return '';
+            
+            const admin = data.subAdmins[user.phone];
+            if (!admin) return '';
+
+            return `
+                <div class="payment-section admin-panel">
+                    <h4>🏦 កំណត់ព័ត៌មានទូទាត់</h4>
+                    <form id="bankInfoForm" onsubmit="event.preventDefault(); saveBankInfo();">
+                        <input type="text" id="bankName" value="${admin.bankName || ''}" placeholder="🏦 ឈ្មោះធនាគារ">
+                        <input type="text" id="bankAccount" value="${admin.bankAccount || ''}" placeholder="🔢 លេខគណនី">
+                        
+                        <div style="margin:10px 0;">
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">📷 បញ្ចូលរូបភាព QR Code</label>
+                            <div class="file-upload" id="qrUploadAdmin">
+                                <span class="upload-icon">📷</span>
+                                <span class="upload-text">ចុកដើម្បីបញ្ចូលរូបភាព</span>
+                                <div class="file-name" id="qrAdminFileName">${admin.qrCode ? '✅ មានរូបភាព' : ''}</div>
+                                <div id="qrAdminPreview">${admin.qrCode ? `<img src="${admin.qrCode}" class="preview-image" alt="Admin QR">` : ''}</div>
+                                <input type="file" id="qrAdminInput" accept="image/*" onchange="handleAdminQRUpload(this)">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-gold btn-block">💾 រក្សាទុក</button>
+                    </form>
+                    <div id="bankInfoMessage"></div>
+                </div>
+            `;
+        }
+
+        // ===== ADMIN TRANSACTION HISTORY =====
+        function getAdminTransactionHistory() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') return '';
+            
+            const admin = data.subAdmins[user.phone];
+            if (!admin) return '';
+            
+            const memberPhones = admin.members || [];
+            let allTx = [];
+            memberPhones.forEach(phone => {
+                const tx = getMemberTransactions(phone);
+                allTx = allTx.concat(tx);
+            });
+            allTx.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            if (allTx.length === 0) {
+                return `
+                    <div class="card">
+                        <h3>📋 ប្រវត្តិប្រតិបត្តិការសមាជិក</h3>
+                        <p style="opacity:0.4;font-size:13px;padding:10px 0;">មិនទាន់មានប្រតិបត្តិការ</p>
+                    </div>
+                `;
+            }
+            
+            const totals = calculateTotals(allTx);
+            let html = `
+                <div class="card">
+                    <h3>📋 ប្រវត្តិប្រតិបត្តិការសមាជិក</h3>
+                    <div class="summary-stats">
+                        <div class="summary-box">
+                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="label">សរុបដាក់</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">សរុបដក</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="label">សល់សរុប</div>
+                        </div>
+                    </div>
+                    <div class="transaction-list">
+            `;
+            
+            allTx.slice(0, 30).forEach(tx => {
+                const member = data.members[tx.memberPhone];
+                const memberName = member ? member.username || member.phone : tx.memberPhone;
+                const date = new Date(tx.timestamp);
+                const dateStr = date.toLocaleDateString('km-KH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const timeStr = date.toLocaleTimeString('km-KH', { hour: '2-digit', minute: '2-digit' });
+                const typeLabel = tx.type === 'deposit' ? 'ដាក់ប្រាក់' : tx.type === 'withdraw' ? 'ដកប្រាក់' : 'ផ្ទេរ';
+                const typeClass = tx.type === 'deposit' ? 'deposit' : tx.type === 'withdraw' ? 'withdraw' : 'transfer';
+                const amountClass = tx.type === 'deposit' ? 'positive' : 'negative';
+                const amountSign = tx.type === 'deposit' ? '+' : '-';
+                const statusText = tx.status === 'pending' ? '⏳ រង់ចាំ' : tx.status === 'completed' ? '✅ បានបញ្ចប់' : '❌ បដិសេធ';
+                
+                html += `
+                    <div class="transaction-item">
+                        <div class="tx-info">
+                            <div>
+                                <span class="tx-type ${typeClass}">${typeLabel}</span>
+                                <span class="tx-status ${tx.status}">${statusText}</span>
+                            </div>
+                            <div class="tx-desc">👤 ${memberName} - ${tx.description || ''}</div>
+                            <div class="tx-time">${dateStr} ${timeStr}</div>
+                        </div>
+                        <div class="tx-amount ${amountClass}">${amountSign}$${tx.amount.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                    ${allTx.length > 30 ? `<p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.2);padding-top:8px;">បង្ហាញ ៣០ ចុងក្រោយ (សរុប ${allTx.length})</p>` : ''}
+                </div>
+            `;
+            
+            return html;
+        }
+        // ================================================================
+        // ===== SUPER ADMIN DASHBOARD =====
+        // ================================================================
+
+        function getSuperDashboardPage() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'super_admin') {
+                renderPage('super-login');
+                return '';
+            }
+
+            const superAdmin = Object.values(data.superAdmins)[0];
+            const totalMembers = Object.keys(data.members).length;
+            const totalAdmins = Object.keys(data.subAdmins).length;
+            const totalBalance = Object.values(data.members).reduce((s, m) => s + m.balance, 0) +
+                Object.values(data.subAdmins).reduce((s, a) => s + a.balance, 0);
+
+            let adminListHtml = '';
+            Object.values(data.subAdmins).forEach(a => {
+                adminListHtml += `
+                    <div class="list-item">
+                        <div class="info">
+                            <span class="name">👑 ${a.username}</span>
+                            <span class="id">🆔 ${a.id}</span>
+                            <span class="sub">📱 ${a.phone} | 👥 ${(a.members || []).length} នាក់</span>
+                            <span class="pwd">🔑 ${a.password}</span>
+                        </div>
+                        <div><span class="balance">$${a.balance.toFixed(2)}</span></div>
+                        <div class="actions">
+                            <button onclick="editAdmin('${a.phone}')" class="btn btn-warning btn-xs">✏️</button>
+                            <button onclick="deleteAdmin('${a.phone}')" class="btn btn-danger btn-xs">🗑️</button>
+                            <button onclick="resetAdminPassword('${a.phone}')" class="btn btn-secondary btn-xs">🔑</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            let memberListHtml = '';
+            Object.values(data.members).forEach(m => {
+                const admin = data.subAdmins[m.adminId];
+                memberListHtml += `
+                    <div class="list-item">
+                        <div class="info">
+                            <span class="name">${m.username || m.phone}</span>
+                            <span class="id">🆔 ${m.id}</span>
+                            <span class="sub">📱 ${m.phone}</span>
+                            <span class="pwd">🔑 ${m.password}</span>
+                            <span class="admin-name">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
+                        </div>
+                        <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
+                        <div class="actions">
+                            <button onclick="editMember('${m.phone}')" class="btn btn-warning btn-xs">✏️</button>
+                            <button onclick="deleteMember('${m.phone}')" class="btn btn-danger btn-xs">🗑️</button>
+                            <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-xs">🔑</button>
+                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-xs">👑 ចាត់តាំង</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="top-bar">
+                    <div class="left-section">
+                        <span class="badge badge-gold">⭐ SUPER ADMIN</span>
+                        <h2 style="margin:3px 0 0;color:#ffd700;">${superAdmin ? superAdmin.username : 'Super Admin'}</h2>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">
+                            🆔 ${superAdmin ? superAdmin.id : 'N/A'} | 📱 ${superAdmin ? superAdmin.phone : 'N/A'}
+                            ${superAdmin ? '| 📧 ' + superAdmin.email : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-box"><div class="number">${totalMembers}</div><div class="label">សមាជិក</div></div>
+                    <div class="stat-box"><div class="number">${totalAdmins}</div><div class="label">Sub Admin</div></div>
+                    <div class="stat-box"><div class="number">$${totalBalance.toFixed(0)}</div><div class="label">ប្រាក់សរុប</div></div>
+                    <div class="stat-box"><div class="number">${data.activityLogs.length}</div><div class="label">កំណត់ត្រា</div></div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>👑 បង្កើត Sub Admin</h3>
+                    <form id="createAdminForm">
+                        <input type="text" id="newAdminName" placeholder="👤 ឈ្មោះ" required>
+                        <input type="tel" id="newAdminPhone" placeholder="📱 លេខទូរសព្ទ" required>
+                        <div class="input-group">
+                            <input type="password" id="newAdminPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                            <button type="button" class="toggle-pwd" onclick="togglePassword('newAdminPassword', this)">👁️</button>
+                        </div>
+                        <input type="number" id="newAdminBalance" placeholder="💰 ប្រាក់ដំបូង" min="0" step="0.01">
+                        <button type="submit" class="btn btn-gold btn-block">👑 បង្កើត</button>
+                    </form>
+                    <div id="createAdminMessage"></div>
+                </div>
+
+                <!-- Super Admin Search -->
+                <div class="card admin-panel">
+                    <h3>🔍 ស្វែងរកសមាជិក និង Sub Admin</h3>
+                    
+                    <div class="search-tabs">
+                        <button class="search-tab active" onclick="switchSuperSearch('member', this)">👤 សមាជិក</button>
+                        <button class="search-tab" onclick="switchSuperSearch('admin', this)">👑 Sub Admin</button>
+                    </div>
+                    
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <input type="text" id="superSearchInput" placeholder="🔎 បញ្ចូល ID, ឈ្មោះ, ឬ លេខទូរសព្ទ" style="flex:1;min-width:150px;">
+                        <button onclick="superSearch()" class="btn btn-gold">🔍 ស្វែងរក</button>
+                        <button onclick="clearSuperSearch()" class="clear-btn">✖ បិទ</button>
+                    </div>
+                    <div id="superSearchResult" style="margin-top:10px;"></div>
+                </div>
+
+                <!-- Fund Sub Admin -->
+                <div class="card admin-panel">
+                    <h3>💰 បញ្ចូលប្រាក់ទៅ Sub Admin</h3>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <input type="text" id="superFundInput" placeholder="🔎 បញ្ចូល ID (A-0001) ឬ លេខទូរសព្ទ" style="flex:1;min-width:150px;">
+                        <button onclick="searchSubAdminForFund()" class="btn btn-gold">🔍 ស្វែងរក</button>
+                        <button onclick="clearFundSearch()" class="clear-btn">✖ បិទ</button>
+                    </div>
+                    <div id="superFundResult" style="margin-top:10px;"></div>
+                </div>
+
+                <div class="card"><h3>📋 Sub Admin</h3><div class="list-container">${adminListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
+                <div class="card"><h3>📋 សមាជិក</h3><div class="list-container">${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
+
+                <!-- Super Admin Transaction History -->
+                ${getSuperTransactionHistory()}
+
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
+                    <button onclick="exportData()" class="btn btn-secondary btn-sm">📤 នាំចេញ</button>
+                </div>
+            `;
+        }
+
+        // ===== SUPER TRANSACTION HISTORY =====
+        function getSuperTransactionHistory() {
+            if (!data.transactions || data.transactions.length === 0) {
+                return `
+                    <div class="card">
+                        <h3>📋 ប្រវត្តិប្រតិបត្តិការទាំងអស់</h3>
+                        <p style="opacity:0.4;font-size:13px;padding:10px 0;">មិនទាន់មានប្រតិបត្តិការ</p>
+                    </div>
+                `;
+            }
+            
+            const totals = calculateTotals(data.transactions);
+            let html = `
+                <div class="card">
+                    <h3>📋 ប្រវត្តិប្រតិបត្តិការទាំងអស់</h3>
+                    <div class="summary-stats">
+                        <div class="summary-box">
+                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="label">ដាក់ប្រាក់សរុប</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">ដកប្រាក់សរុប</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="label">សល់សរុប</div>
+                        </div>
+                    </div>
+                    <div class="transaction-list">
+            `;
+            
+            data.transactions.slice(0, 50).forEach(tx => {
+                const member = data.members[tx.memberPhone];
+                const memberName = member ? member.username || member.phone : tx.memberPhone;
+                const admin = data.subAdmins[tx.adminId];
+                const adminName = admin ? admin.username : 'N/A';
+                const date = new Date(tx.timestamp);
+                const dateStr = date.toLocaleDateString('km-KH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const timeStr = date.toLocaleTimeString('km-KH', { hour: '2-digit', minute: '2-digit' });
+                const typeLabel = tx.type === 'deposit' ? 'ដាក់ប្រាក់' : tx.type === 'withdraw' ? 'ដកប្រាក់' : 'ផ្ទេរ';
+                const typeClass = tx.type === 'deposit' ? 'deposit' : tx.type === 'withdraw' ? 'withdraw' : 'transfer';
+                const amountClass = tx.type === 'deposit' ? 'positive' : 'negative';
+                const amountSign = tx.type === 'deposit' ? '+' : '-';
+                const statusText = tx.status === 'pending' ? '⏳ រង់ចាំ' : tx.status === 'completed' ? '✅ បានបញ្ចប់' : '❌ បដិសេធ';
+                
+                html += `
+                    <div class="transaction-item">
+                        <div class="tx-info">
+                            <div>
+                                <span class="tx-type ${typeClass}">${typeLabel}</span>
+                                <span class="tx-status ${tx.status}">${statusText}</span>
+                                <span style="font-size:10px;color:rgba(255,255,255,0.3);margin-left:6px;">${tx.id}</span>
+                            </div>
+                            <div class="tx-desc">👤 ${memberName} | 👑 ${adminName} | ${tx.description || ''}</div>
+                            <div class="tx-time">${dateStr} ${timeStr}</div>
+                        </div>
+                        <div class="tx-amount ${amountClass}">${amountSign}$${tx.amount.toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                    ${data.transactions.length > 50 ? `<p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.2);padding-top:8px;">បង្ហាញ ៥០ ចុងក្រោយ (សរុប ${data.transactions.length})</p>` : ''}
+                </div>
+            `;
+            
+            return html;
+        }
+        // ================================================================
         // ===== SEARCH FUNCTIONS =====
         // ================================================================
 
