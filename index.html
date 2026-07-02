@@ -1250,7 +1250,7 @@
 
     <script>
         // ================================================================
-        // DATA LAYER - ប្រើ var ជំនួស let
+        // DATA LAYER
         // ================================================================
 
         var data = JSON.parse(localStorage.getItem('memberSystemData')) || {
@@ -1846,7 +1846,6 @@
         }
 
         // ===== PAGE BUILDERS =====
-        // [ផ្នែកនេះវែងណាស់ ខ្ញុំនឹងបង្ហាញតែមុខងារសំខាន់ៗ]
 
         function getHomePage() {
             return `
@@ -2104,8 +2103,6 @@
                 </div>
             `;
 
-            // [បន្តជាមួយ withdraw, transaction, commission, benefits...]
-
             var withdrawHtml = `
                 <div class="payment-section">
                     <h4>🏦 ដកប្រាក់</h4>
@@ -2204,7 +2201,6 @@
                 }
             }
 
-            // Commission
             var comms = [];
             for (var j = 0; j < data.commissions.length; j++) {
                 if (data.commissions[j].memberPhone === user.phone) {
@@ -2287,6 +2283,618 @@
                 </div>
 
                 <div class="text-center mt-10 op-3 fs-12">v4.1</div>
+            `;
+        }
+
+        // ================================================================
+        // ADMIN DASHBOARD
+        // ================================================================
+
+        function getAdminDashboardPage() {
+            var user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                return '<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>';
+            }
+
+            var admin = data.subAdmins[user.phone];
+            if (!admin) return '<p style="color:red;">មិនឃើញព័ត៌មាន Admin!</p>';
+
+            var memberKeys = Object.keys(data.members);
+            var membersHtml = '';
+            if (memberKeys.length === 0) {
+                membersHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានសមាជិក</p>';
+            } else {
+                for (var i = 0; i < memberKeys.length; i++) {
+                    var m = data.members[memberKeys[i]];
+                    if (!m) continue;
+                    var preferredCurrency = m.preferredCurrency || 'usd';
+                    membersHtml += `
+                        <div class="list-item">
+                            <div class="info">
+                                <span class="name">${m.username || m.phone}</span>
+                                <span class="id">🆔 ${m.id}</span>
+                                <span class="sub">📱 ${m.phone}</span>
+                                <span class="pwd">🔑 ${m.password}</span>
+                                <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
+                            </div>
+                            <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
+                            <div class="actions">
+                                <button onclick="renderPage('transfer-money', {phone:'${m.phone}'})" class="btn btn-warning btn-sm">💸 ផ្ទេរ</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            var notificationsHtml = getAdminNotifications();
+
+            var allTx = [];
+            for (var j = 0; j < memberKeys.length; j++) {
+                var tx = getMemberTransactions(memberKeys[j]);
+                for (var k = 0; k < tx.length; k++) {
+                    allTx.push(tx[k]);
+                }
+            }
+            allTx.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
+
+            var txHtml = '';
+            if (allTx.length === 0) {
+                txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
+            } else {
+                var totals = calculateTotals(allTx);
+                txHtml = `
+                    <div class="summary-stats">
+                        <div class="summary-box">
+                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="label">សរុបដាក់</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">សរុបដក</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="label">សល់សរុប</div>
+                        </div>
+                    </div>
+                    <div class="transaction-list">
+                `;
+                for (var l = 0; l < Math.min(allTx.length, 10); l++) {
+                    var tx = allTx[l];
+                    var member = data.members[tx.memberPhone];
+                    var memberName = member ? member.username || member.phone : tx.memberPhone;
+                    var d = new Date(tx.timestamp);
+                    var typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
+                    var amountSign = tx.type === 'deposit' ? '+' : '-';
+                    var color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
+                    var statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
+                    txHtml += `
+                        <div class="transaction-item">
+                            <div>
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${typeLabel}</span>
+                                <span style="font-size:10px;opacity:0.4;">${statusText}</span>
+                                <span style="opacity:0.5;font-size:11px;">👤 ${memberName}</span>
+                            </div>
+                            <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
+                        </div>
+                    `;
+                }
+                txHtml += '</div>';
+            }
+
+            var bankSetupHtml = `
+                <div class="payment-section admin-panel">
+                    <h4>🏦 កំណត់ព័ត៌មានទូទាត់</h4>
+                    <p style="font-size:12px;color:rgba(255,255,255,0.4);">ព័ត៌មាននេះនឹងបង្ហាញដល់សមាជិកទាំងអស់</p>
+                    <form id="bankInfoForm" onsubmit="event.preventDefault(); saveBankInfo();">
+                        <input type="text" id="bankName" value="${admin.bankName || ''}" placeholder="🏦 ឈ្មោះធនាគារ">
+                        <input type="text" id="bankAccount" value="${admin.bankAccount || ''}" placeholder="🔢 លេខគណនី">
+                        <div style="margin:10px 0;">
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">📷 បញ្ចូលរូបភាព QR Code</label>
+                            <div class="file-upload" id="qrUploadAdmin">
+                                <span class="upload-icon">📷</span>
+                                <span class="upload-text">ចុចដើម្បីបញ្ចូលរូបភាព</span>
+                                <div class="file-name" id="qrAdminFileName">${admin.qrCode ? '✅ មានរូបភាព' : ''}</div>
+                                <div id="qrAdminPreview">${admin.qrCode ? '<img src="' + admin.qrCode + '" class="preview-image" alt="Admin QR">' : ''}</div>
+                                <input type="file" id="qrAdminInput" accept="image/*" onchange="handleAdminQRUpload(this)">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-gold">💾 រក្សាទុក</button>
+                    </form>
+                    <div id="bankInfoMessage"></div>
+                </div>
+            `;
+
+            var commSettingsHtml = `
+                <div class="payment-section admin-panel">
+                    <h4>💰 កំណត់កម្រៃជើងសារ</h4>
+                    <form id="commissionForm" onsubmit="event.preventDefault(); saveCommissionSettings();">
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">អត្រាកម្រៃ (%)</label>
+                        <input type="number" id="commissionRate" value="${admin.commissionRate ? admin.commissionRate * 100 : 5}" placeholder="ឧ. 5" min="0" max="20" step="0.1">
+                        <button type="submit" class="btn btn-secondary">💾 រក្សាទុក</button>
+                    </form>
+                    <div id="commissionMessage"></div>
+                </div>
+            `;
+
+            return `
+                <div class="top-bar">
+                    <div class="left-section">
+                        <span class="badge badge-gold">👑 Sub Admin</span>
+                        <h2 style="margin:2px 0 0;color:#ffd700;">${admin.username}</h2>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">🆔 ${admin.id} | 📱 ${admin.phone}</div>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:6px 0;">
+                    <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
+                        <div style="color:#48bb78;font-weight:700;font-size:16px;">$${admin.balance.toFixed(0)}</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.3);">នៅសល់</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
+                        <div style="color:#ffd700;font-weight:700;font-size:16px;">${memberKeys.length}</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.3);">សមាជិក</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
+                        <div style="color:#ffd700;font-weight:700;font-size:16px;">$${admin.totalReceived || 0}</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.3);">បានទទួល</div>
+                    </div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>🔔 ការជូនដំណឹង</h3>
+                    ${notificationsHtml}
+                </div>
+
+                ${bankSetupHtml}
+                ${commSettingsHtml}
+
+                <div class="card admin-panel">
+                    <h3>📋 បញ្ជីសមាជិក</h3>
+                    ${membersHtml}
+                </div>
+
+                <div class="card">
+                    <h3>📊 ប្រវត្តិប្រតិបត្តិការសមាជិក</h3>
+                    ${txHtml}
+                </div>
+
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple">📋 កំណត់ត្រា</button>
+                    <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
+                </div>
+            `;
+        }
+
+        function getAdminNotifications() {
+            var user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') return '';
+
+            var admin = data.subAdmins[user.phone];
+            if (!admin) return '';
+
+            var notifications = [];
+            var memberKeys = Object.keys(data.members);
+            for (var i = 0; i < memberKeys.length; i++) {
+                var tx = getMemberTransactions(memberKeys[i]);
+                for (var j = 0; j < Math.min(tx.length, 10); j++) {
+                    var t = tx[j];
+                    if (t.status === 'pending') {
+                        notifications.push({
+                            type: t.type,
+                            member: memberKeys[i],
+                            amount: t.amount,
+                            time: t.timestamp,
+                            id: t.id
+                        });
+                    }
+                }
+            }
+
+            if (notifications.length === 0) {
+                return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+            }
+
+            var html = '';
+            for (var k = 0; k < Math.min(notifications.length, 5); k++) {
+                var n = notifications[k];
+                var member = data.members[n.member];
+                var memberName = member ? member.username || member.phone : n.member;
+                var d = new Date(n.time);
+                var typeLabel = n.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
+                var icon = n.type === 'deposit' ? '💳' : '🏦';
+                html += `
+                    <div class="notification-item">
+                        <div>${icon} ${memberName} បានស្នើ${typeLabel} $${n.amount.toFixed(2)}</div>
+                        <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                        <div style="margin-top:4px;">
+                            <button onclick="approveTransaction('${n.id}')" class="btn btn-secondary btn-sm" style="padding:2px 10px;font-size:10px;width:auto;">✅ យល់ព្រម</button>
+                            <button onclick="rejectTransaction('${n.id}')" class="btn btn-danger btn-sm" style="padding:2px 10px;font-size:10px;width:auto;">❌ បដិសេធ</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        // ================================================================
+        // SUPER DASHBOARD
+        // ================================================================
+
+        function getSuperDashboardPage() {
+            var user = getCurrentUser();
+            if (!user || user.role !== 'super_admin') {
+                renderPage('super-login');
+                return '';
+            }
+
+            var superAdmin = Object.values(data.superAdmins)[0];
+            var totalMembers = Object.keys(data.members).length;
+            var totalBalance = 0;
+            var memberKeys = Object.keys(data.members);
+            for (var i = 0; i < memberKeys.length; i++) {
+                totalBalance += data.members[memberKeys[i]].balance;
+            }
+
+            var searchHtml = `
+                <div style="margin: 10px 0;">
+                    <input type="text" id="searchMembersInput" placeholder="🔍 ស្វែងរកសមាជិក (ឈ្មោះ, លេខទូរសព្ទ, ID)..." 
+                           oninput="searchMembersLive(this.value)" 
+                           style="width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                </div>
+                <div id="searchResults"></div>
+            `;
+
+            var adminListHtml = '';
+            var adminList = Object.values(data.subAdmins);
+            for (var j = 0; j < adminList.length; j++) {
+                var a = adminList[j];
+                adminListHtml += `
+                    <div class="list-item" style="border-left-color:#ffd700;">
+                        <div class="info">
+                            <span class="name">👑 ${a.username}</span>
+                            <span class="id">🆔 ${a.id}</span>
+                            <span class="sub">📱 ${a.phone}</span>
+                            <span class="pwd">🔑 ${a.password}</span>
+                            <span class="sub">👥 ${totalMembers} សមាជិក</span>
+                        </div>
+                        <div><span class="balance">$${a.balance.toFixed(2)}</span></div>
+                        <div class="actions">
+                            <button onclick="editBalance('admin', '${a.phone}')" class="btn btn-gold btn-sm">💰</button>
+                            <button onclick="superEditAdmin('${a.phone}')" class="btn btn-warning btn-sm">✏️</button>
+                            <button onclick="superDeleteAdmin('${a.phone}')" class="btn btn-danger btn-sm">🗑️</button>
+                            <button onclick="resetAdminPassword('${a.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            var memberListHtml = '';
+            for (var k = 0; k < memberKeys.length; k++) {
+                var m = data.members[memberKeys[k]];
+                var preferredCurrency = m.preferredCurrency || 'usd';
+                memberListHtml += `
+                    <div class="list-item member-item" data-phone="${m.phone}" data-name="${m.username || ''}" data-id="${m.id}">
+                        <div class="info">
+                            <span class="name">${m.username || m.phone}</span>
+                            <span class="id">🆔 ${m.id}</span>
+                            <span class="sub">📱 ${m.phone}</span>
+                            <span class="pwd">🔑 ${m.password}</span>
+                            <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
+                        </div>
+                        <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
+                        <div class="actions">
+                            <button onclick="editBalance('member', '${m.phone}')" class="btn btn-gold btn-sm">💰</button>
+                            <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
+                            <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
+                            <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            var superNotificationsHtml = getSuperNotifications();
+
+            var txHtml = '';
+            if (!data.transactions || data.transactions.length === 0) {
+                txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
+            } else {
+                var totals = calculateTotals(data.transactions);
+                txHtml = `
+                    <div class="summary-stats">
+                        <div class="summary-box">
+                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="label">ដាក់សរុប</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">ដកសរុប</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="label">សល់សរុប</div>
+                        </div>
+                    </div>
+                    <div class="transaction-list">
+                `;
+                for (var l = 0; l < Math.min(data.transactions.length, 15); l++) {
+                    var tx = data.transactions[l];
+                    var member = data.members[tx.memberPhone];
+                    var memberName = member ? member.username || member.phone : tx.memberPhone;
+                    var admin = data.subAdmins[tx.adminId];
+                    var adminName = admin ? admin.username : 'N/A';
+                    var d = new Date(tx.timestamp);
+                    var typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
+                    var amountSign = tx.type === 'deposit' ? '+' : '-';
+                    var color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
+                    var statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
+                    txHtml += `
+                        <div class="transaction-item">
+                            <div>
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${typeLabel}</span>
+                                <span style="font-size:10px;opacity:0.4;">${statusText}</span>
+                                <span style="opacity:0.5;font-size:11px;">👤 ${memberName} | 👑 ${adminName}</span>
+                            </div>
+                            <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
+                        </div>
+                    `;
+                }
+                txHtml += '</div>';
+            }
+
+            return `
+                <div class="top-bar">
+                    <div class="left-section">
+                        <span class="badge badge-gold">⭐ SUPER ADMIN</span>
+                        <h2 style="margin:2px 0 0;color:#ffd700;">${superAdmin ? superAdmin.username : 'Super Admin'}</h2>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">
+                            🆔 ${superAdmin ? superAdmin.id : 'N/A'} | 📱 ${superAdmin ? superAdmin.phone : 'N/A'}
+                            ${superAdmin ? '| 📧 ' + superAdmin.email : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:6px 0;">
+                    <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
+                        <div style="color:#48bb78;font-weight:700;font-size:16px;">${totalMembers}</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.3);">សមាជិក</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
+                        <div style="color:#ffd700;font-weight:700;font-size:16px;">${Object.keys(data.subAdmins).length}</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.3);">Sub Admin</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
+                        <div style="color:#ffd700;font-weight:700;font-size:16px;">$${totalBalance.toFixed(0)}</div>
+                        <div style="font-size:9px;color:rgba(255,255,255,0.3);">ប្រាក់សរុប</div>
+                    </div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>🔔 ការជូនដំណឹង</h3>
+                    ${superNotificationsHtml}
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>👑 បង្កើត Sub Admin</h3>
+                    <form id="createAdminForm">
+                        <input type="text" id="newAdminName" placeholder="👤 ឈ្មោះ" required>
+                        <input type="tel" id="newAdminPhone" placeholder="📱 លេខទូរសព្ទ" required>
+                        <div class="input-group">
+                            <input type="password" id="newAdminPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                            <button type="button" class="toggle-pwd" onclick="togglePassword('newAdminPassword', this)">👁️</button>
+                        </div>
+                        <button type="submit" class="btn btn-gold">👑 បង្កើត Sub Admin</button>
+                    </form>
+                    <div id="createAdminMessage"></div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>💰 បញ្ចូលប្រាក់ទៅ Sub Admin</h3>
+                    <form id="superFundForm" onsubmit="event.preventDefault(); fundSubAdmin();">
+                        <select id="superFundTarget" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                            ${Object.values(data.subAdmins).map(function(a) { return '<option value="' + a.phone + '">' + a.username + ' ($' + a.balance.toFixed(2) + ')</option>'; }).join('')}
+                            ${Object.keys(data.subAdmins).length === 0 ? '<option value="">មិនទាន់មាន Sub Admin</option>' : ''}
+                        </select>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
+                            <select id="superFundCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
+                                <option value="usd">$ USD</option>
+                                <option value="riel">៛ Riel</option>
+                            </select>
+                            <input type="number" id="superFundAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required style="flex:2;">
+                        </div>
+                        <button type="submit" class="btn btn-gold">💳 បញ្ចូលប្រាក់</button>
+                    </form>
+                    <div id="superFundMessage"></div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>⚙️ កំណត់អត្រាប្តូរប្រាក់</h3>
+                    <form id="exchangeRateForm" onsubmit="event.preventDefault(); updateExchangeRate();">
+                        <input type="number" id="exchangeRateInput" value="${data.exchangeRate}" placeholder="៛ ក្នុង ១ $" min="1000" step="10">
+                        <button type="submit" class="btn btn-secondary">💾 រក្សាទុក</button>
+                    </form>
+                    <div id="exchangeRateMessage"></div>
+                </div>
+
+                ${searchHtml}
+
+                <div class="card"><h3>📋 Sub Admin</h3>${adminListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div>
+
+                <div class="card" id="memberListCard">
+                    <h3>📋 សមាជិក (${Object.keys(data.members).length})</h3>
+                    <div style="max-height:300px;overflow-y:auto;" id="memberListContainer">
+                        ${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}
+                    </div>
+                </div>
+
+                <div class="card"><h3>📊 ប្រវត្តិប្រតិបត្តិការទាំងអស់</h3>${txHtml}</div>
+
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple">📋 កំណត់ត្រា</button>
+                    <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
+                    <button onclick="exportToExcel()" class="btn btn-sm btn-secondary">📊 នាំចេញ Excel</button>
+                    <button onclick="exportData()" class="btn btn-sm btn-secondary">📤 នាំចេញ JSON</button>
+                    <button onclick="importData()" class="btn btn-sm btn-warning">📥 នាំចូល</button>
+                </div>
+            `;
+        }
+
+        function getSuperNotifications() {
+            if (!data.transactions || data.transactions.length === 0) {
+                return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+            }
+
+            var pending = [];
+            for (var i = 0; i < data.transactions.length; i++) {
+                if (data.transactions[i].status === 'pending') {
+                    pending.push(data.transactions[i]);
+                }
+            }
+            if (pending.length === 0) {
+                return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+            }
+
+            var html = '';
+            for (var j = 0; j < Math.min(pending.length, 5); j++) {
+                var tx = pending[j];
+                var member = data.members[tx.memberPhone];
+                var memberName = member ? member.username || member.phone : tx.memberPhone;
+                var admin = data.subAdmins[tx.adminId];
+                var adminName = admin ? admin.username : 'N/A';
+                var d = new Date(tx.timestamp);
+                var typeLabel = tx.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
+                var icon = tx.type === 'deposit' ? '💳' : '🏦';
+                html += `
+                    <div class="notification-item">
+                        <div>${icon} ${memberName} បានស្នើ${typeLabel} $${tx.amount.toFixed(2)} (👑 ${adminName})</div>
+                        <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                        <div style="font-size:10px;color:#ffd700;margin-top:2px;">⏳ កំពុងរង់ចាំការយល់ព្រមពី Sub Admin</div>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        // ================================================================
+        // TRANSFER MONEY
+        // ================================================================
+
+        function getTransferMoneyPage(params) {
+            var user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                return '<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>';
+            }
+
+            var admin = data.subAdmins[user.phone];
+            var targetPhone = params && params.phone;
+            var member = targetPhone ? data.members[targetPhone] : null;
+
+            if (!member) {
+                return `
+                    <div class="top-bar">
+                        <h2>💸 ផ្ទេរប្រាក់</h2>
+                        <span class="back-link" onclick="renderPage('admin-dashboard')">← ត្រឡប់</span>
+                    </div>
+                    <p style="color:red;">មិនឃើញសមាជិក!</p>
+                `;
+            }
+
+            var preferredCurrency = member.preferredCurrency || 'usd';
+
+            return `
+                <div class="top-bar">
+                    <h2>💸 ផ្ទេរប្រាក់ទៅសមាជិក</h2>
+                    <span class="back-link" onclick="renderPage('admin-dashboard')">← ត្រឡប់</span>
+                </div>
+
+                <div class="card">
+                    <h3>👤 ព័ត៌មានសមាជិក</h3>
+                    <div><strong style="color:#fff;">${member.username || member.phone}</strong></div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${member.id} | 📱 ${member.phone}</div>
+                    <div style="font-size:15px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: ${formatCurrency(member.balance, preferredCurrency)}</div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ</h3>
+                    <form id="transferForm">
+                        <input type="hidden" id="transferPhone" value="${member.phone}">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
+                            <select id="transferCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
+                                <option value="usd">$ USD</option>
+                                <option value="riel">៛ Riel</option>
+                            </select>
+                            <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required style="flex:2;">
+                        </div>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">នៅសល់: $${admin.balance.toFixed(2)}</div>
+                        <button type="submit" class="btn btn-warning animate-glow">💸 បញ្ជាក់ការផ្ទេរ</button>
+                    </form>
+                    <div id="transferMessage"></div>
+                </div>
+            `;
+        }
+
+        // ================================================================
+        // ACTIVITY LOG
+        // ================================================================
+
+        function getActivityLogPage() {
+            var logs = data.activityLogs || [];
+            var html = `
+                <div class="top-bar">
+                    <h2>📋 កំណត់ត្រាសកម្មភាព</h2>
+                    <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
+                </div>
+                <p style="font-size:12px;color:rgba(255,255,255,0.3);">សរុប ${logs.length} កំណត់ត្រា</p>
+            `;
+
+            if (logs.length === 0) {
+                html += '<p style="opacity:0.4;">មិនទាន់មានសកម្មភាព</p>';
+            } else {
+                for (var i = 0; i < Math.min(logs.length, 50); i++) {
+                    var log = logs[i];
+                    var d = new Date(log.timestamp);
+                    var borderColor = log.actionType === 'financial' ? '#48bb78' : log.actionType === 'authentication' ? '#667eea' : '#ffd700';
+                    html += `
+                        <div class="list-item" style="border-left-color:${borderColor};">
+                            <div class="info">
+                                <span class="name">${log.adminName}</span>
+                                <span class="sub">${log.action}</span>
+                                ${log.details ? '<span class="sub" style="color:rgba(255,255,255,0.3);">' + log.details + '</span>' : ''}
+                                ${log.amount ? '<span class="sub" style="color:#ffd700;">$' + log.amount.toFixed(2) + '</span>' : ''}
+                            </div>
+                            <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:right;">
+                                ${d.toLocaleDateString('km-KH')}<br>${d.toLocaleTimeString('km-KH')}
+                            </div>
+                        </div>
+                    `;
+                }
+                if (logs.length > 50) {
+                    html += '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ៥០ ចុងក្រោយ</p>';
+                }
+            }
+
+            return html;
+        }
+
+        // ================================================================
+        // REPORT
+        // ================================================================
+
+        function getReportPage() {
+            return `
+                <div class="top-bar">
+                    <h2>📊 របាយការណ៍</h2>
+                    <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
+                </div>
+                <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;">
+                    <button onclick="generateReportDisplay('daily')" class="btn btn-sm btn-gold">📅 ប្រចាំថ្ងៃ</button>
+                    <button onclick="generateReportDisplay('weekly')" class="btn btn-sm btn-secondary">📅 ប្រចាំសប្តាហ៍</button>
+                    <button onclick="generateReportDisplay('monthly')" class="btn btn-sm btn-purple">📅 ប្រចាំខែ</button>
+                    <button onclick="exportToExcel()" class="btn btn-sm btn-secondary">📊 នាំចេញ Excel</button>
+                </div>
+                <div id="reportContent"></div>
             `;
         }
 
@@ -3314,7 +3922,7 @@
         }
 
         // ================================================================
-        // EVENT ATTACHMENT - សម្រួលឲ្យខ្លី
+        // EVENT ATTACHMENT
         // ================================================================
 
         function attachEvents(page, params) {
