@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
-    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.1</title>
+    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.0</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -110,6 +111,7 @@
             border-radius: 10px;
         }
 
+        /* ===== ANIMATIONS ===== */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -154,19 +156,35 @@
             100% { transform: scale(1); }
         }
 
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
         @keyframes glow {
             0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.2); }
             50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
         }
 
         .animate-float {
-            animation: pulse 2s ease-in-out infinite;
+            animation: float 3s ease-in-out infinite;
         }
 
         .animate-glow {
             animation: glow 2s ease-in-out infinite;
         }
 
+        /* ===== TYPOGRAPHY ===== */
         h1 {
             font-size: 2rem;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -191,6 +209,7 @@
             font-size: 14px;
         }
 
+        /* ===== FORM ELEMENTS ===== */
         input, select, textarea {
             width: 100%;
             padding: 12px 16px;
@@ -252,6 +271,7 @@
             transform: translateY(-50%) scale(1.1);
         }
 
+        /* ===== BUTTONS ===== */
         .btn {
             display: inline-block;
             padding: 12px 28px;
@@ -278,6 +298,24 @@
 
         .btn:active {
             transform: scale(0.98);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+            transform: rotate(45deg) translateX(100%);
         }
 
         .btn-gold {
@@ -333,6 +371,7 @@
             box-shadow: 0 12px 35px rgba(159, 122, 234, 0.5);
         }
 
+        /* ===== CARDS ===== */
         .card {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
@@ -359,6 +398,7 @@
             margin-bottom: 5px;
         }
 
+        /* ===== BADGES ===== */
         .badge {
             display: inline-block;
             padding: 2px 10px;
@@ -388,6 +428,7 @@
             color: #fff;
         }
 
+        /* ===== ADMIN PANEL ===== */
         .admin-panel {
             border: 1px solid rgba(255, 215, 0, 0.2);
             background: rgba(255, 215, 0, 0.05);
@@ -397,6 +438,7 @@
             color: #ffd700;
         }
 
+        /* ===== TOP BAR ===== */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -443,6 +485,7 @@
             transform: translateX(-3px);
         }
 
+        /* ===== CLOCK ===== */
         .clock-container {
             display: flex;
             align-items: center;
@@ -483,6 +526,7 @@
             font-size: 11px;
         }
 
+        /* ===== LOGOUT BUTTON ===== */
         .btn-logout {
             background: rgba(252, 129, 129, 0.15);
             border: 1px solid rgba(252, 129, 129, 0.2);
@@ -501,6 +545,7 @@
             border-color: #fc8181;
         }
 
+        /* ===== ROLE SELECTOR ===== */
         .role-selector {
             display: flex;
             flex-direction: column;
@@ -563,6 +608,7 @@
             background: rgba(255, 215, 0, 0.1);
         }
 
+        /* ===== FOOTER ===== */
         .footer-info {
             margin-top: 20px;
             padding: 15px;
@@ -608,6 +654,7 @@
             color: #fff;
         }
 
+        /* ===== PAYMENT SECTION ===== */
         .payment-section {
             margin: 12px 0;
             padding: 15px;
@@ -691,6 +738,7 @@
             font-size: 13px;
         }
 
+        /* ===== FILE UPLOAD ===== */
         .file-upload {
             position: relative;
             padding: 15px;
@@ -750,6 +798,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
+        /* ===== AMOUNT BUTTONS ===== */
         .amount-buttons {
             display: flex;
             gap: 6px;
@@ -780,6 +829,7 @@
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
+        /* ===== LIST ITEMS ===== */
         .list-item {
             background: rgba(255, 255, 255, 0.04);
             padding: 8px 12px;
@@ -840,6 +890,7 @@
             flex-wrap: wrap;
         }
 
+        /* ===== TRANSACTION LIST ===== */
         .transaction-list {
             max-height: 200px;
             overflow-y: auto;
@@ -871,6 +922,7 @@
             padding-left: 10px;
         }
 
+        /* ===== SUMMARY STATS ===== */
         .summary-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -916,6 +968,7 @@
             color: #ffd700;
         }
 
+        /* ===== NOTIFICATIONS ===== */
         .notification-item {
             background: rgba(255, 215, 0, 0.08);
             border-left: 4px solid #ffd700;
@@ -937,6 +990,7 @@
             color: rgba(255, 255, 255, 0.3);
         }
 
+        /* ===== MESSAGES ===== */
         #message .success {
             background: rgba(72, 187, 120, 0.2);
             color: #48bb78;
@@ -959,6 +1013,7 @@
             animation: slideInRight 0.5s ease-out;
         }
 
+        /* ===== MODAL ===== */
         #modalOverlay {
             display: none;
             position: fixed;
@@ -1001,6 +1056,18 @@
             border-radius: 10px;
         }
 
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -1032,6 +1099,7 @@
             background: linear-gradient(135deg, #f6ad55, #ed8936);
         }
 
+        /* ===== THEME TOGGLE ===== */
         .theme-toggle {
             position: fixed;
             bottom: 20px;
@@ -1063,6 +1131,7 @@
             background: rgba(0,0,0,0.2);
         }
 
+        /* ===== SEARCH ===== */
         #searchResults {
             max-height: 300px;
             overflow-y: auto;
@@ -1077,6 +1146,7 @@
             border-radius: 10px;
         }
 
+        /* ===== CAPTCHA ===== */
         #captchaText {
             background: rgba(255,255,255,0.1);
             padding: 10px 15px;
@@ -1091,6 +1161,7 @@
             text-align: center;
         }
 
+        /* ===== UTILITY ===== */
         .text-center { text-align: center; }
         .mt-10 { margin-top: 10px; }
         .mt-15 { margin-top: 15px; }
@@ -1103,6 +1174,7 @@
         .flex-center { display: flex; justify-content: center; align-items: center; }
         .gap-10 { gap: 10px; }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .container {
                 padding: 12px 10px;
@@ -1126,6 +1198,10 @@
             }
 
             .bank-info {
+                grid-template-columns: 1fr;
+            }
+
+            .withdraw-form .form-row {
                 grid-template-columns: 1fr;
             }
 
@@ -1214,6 +1290,7 @@
             }
         }
 
+        /* ===== SCROLLBAR STYLING ===== */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -1236,24 +1313,27 @@
 </head>
 <body>
 
+    <!-- ===== THEME TOGGLE ===== -->
     <button class="theme-toggle" onclick="toggleTheme()" title="ប្តូរពណ៌">🌓</button>
 
+    <!-- ===== MODAL ===== -->
     <div id="modalOverlay">
         <div id="modalContent">
             <div id="modalBody"></div>
         </div>
     </div>
 
+    <!-- ===== MAIN APP ===== -->
     <div class="container" id="app">
         <div id="pageContent"></div>
     </div>
 
     <script>
         // ================================================================
-        // DATA LAYER
+        // ===== DATA LAYER =====
         // ================================================================
 
-        var data = JSON.parse(localStorage.getItem('memberSystemData')) || {
+        let data = JSON.parse(localStorage.getItem('memberSystemData')) || {
             superAdmins: {},
             subAdmins: {},
             members: {},
@@ -1274,21 +1354,9 @@
         }
 
         function generateMemberId() {
-            data.memberCounter = data.memberCounter + 1;
+            data.memberCounter++;
             saveData();
-            var num = data.memberCounter;
-            var str = String(num);
-            while (str.length < 4) str = '0' + str;
-            return 'M-' + str;
-        }
-
-        function generateAdminId() {
-            data.adminCounter = data.adminCounter + 1;
-            saveData();
-            var num = data.adminCounter;
-            var str = String(num);
-            while (str.length < 4) str = '0' + str;
-            return 'A-' + str;
+            return 'M-' + String(data.memberCounter).padStart(4, '0');
         }
 
         function generateOTP() {
@@ -1296,11 +1364,7 @@
         }
 
         function getCurrentUser() {
-            var user = localStorage.getItem('currentUser');
-            if (user) {
-                return JSON.parse(user);
-            }
-            return null;
+            return JSON.parse(localStorage.getItem('currentUser') || 'null');
         }
 
         function setCurrentUser(user) {
@@ -1326,7 +1390,7 @@
         }
 
         function logActivity(adminId, adminName, action, actionType, target, amount, details) {
-            var log = {
+            const log = {
                 id: 'LOG-' + String(data.activityLogs.length + 1).padStart(4, '0'),
                 adminId: adminId || 'unknown',
                 adminName: adminName || 'Unknown',
@@ -1346,7 +1410,7 @@
 
         function createTransaction(type, memberPhone, adminId, amount, status, description, screenshot) {
             if (!data.transactions) data.transactions = [];
-            var tx = {
+            const tx = {
                 id: 'TX-' + String(data.transactions.length + 1).padStart(6, '0'),
                 type: type,
                 memberPhone: memberPhone,
@@ -1364,91 +1428,83 @@
 
         function getMemberTransactions(phone) {
             if (!data.transactions) return [];
-            var result = [];
-            for (var i = 0; i < data.transactions.length; i++) {
-                if (data.transactions[i].memberPhone === phone) {
-                    result.push(data.transactions[i]);
-                }
-            }
-            return result;
+            return data.transactions.filter(t => t.memberPhone === phone);
         }
 
         function calculateTotals(transactions) {
-            var totalDeposits = 0, totalWithdraws = 0;
-            for (var i = 0; i < transactions.length; i++) {
-                var t = transactions[i];
+            let totalDeposits = 0, totalWithdraws = 0;
+            transactions.forEach(t => {
                 if (t.status === 'completed') {
                     if (t.type === 'deposit') totalDeposits += t.amount;
                     else if (t.type === 'withdraw') totalWithdraws += t.amount;
                 }
-            }
-            return { totalDeposits: totalDeposits, totalWithdraws: totalWithdraws, netBalance: totalDeposits - totalWithdraws };
+            });
+            return { totalDeposits, totalWithdraws, netBalance: totalDeposits - totalWithdraws };
         }
 
-        // ===== COMMISSION =====
-        function calculateCommission(amount, rate) {
-            return amount * (rate || 0.05);
+        // ===== COMMISSION SYSTEM =====
+        function calculateCommission(amount, rate = 0.05) {
+            return amount * rate;
         }
 
         function addCommission(memberPhone, transactionId, amount) {
-            var member = data.members[memberPhone];
+            const member = data.members[memberPhone];
             if (!member) return null;
-            var rate = member.commissionRate || 0.05;
-            var commission = calculateCommission(amount, rate);
+
+            const commission = calculateCommission(amount, member.commissionRate || 0.05);
             if (commission <= 0) return null;
+
             member.totalCommission = (member.totalCommission || 0) + commission;
-            var commRecord = {
+
+            const commRecord = {
                 id: 'C-' + String(data.commissions.length + 1).padStart(4, '0'),
                 memberPhone: memberPhone,
                 transactionId: transactionId,
                 amount: amount,
                 commission: commission,
-                rate: rate,
+                rate: member.commissionRate || 0.05,
                 timestamp: new Date().toISOString(),
                 status: 'pending'
             };
+
             data.commissions.push(commRecord);
             saveData();
             return commRecord;
         }
 
         function approveCommission(commId) {
-            var comm = null;
-            for (var i = 0; i < data.commissions.length; i++) {
-                if (data.commissions[i].id === commId) {
-                    comm = data.commissions[i];
-                    break;
-                }
-            }
+            const comm = data.commissions.find(c => c.id === commId);
             if (!comm) return false;
+
             comm.status = 'approved';
-            var member = data.members[comm.memberPhone];
+            const member = data.members[comm.memberPhone];
             if (member) {
                 member.balance += comm.commission;
-                member.benefits.push('💰 បានទទួលកម្រៃ $' + comm.commission.toFixed(2) + ' ពីប្រតិបត្តិការ ' + comm.transactionId);
+                member.benefits.push(`💰 បានទទួលកម្រៃ $${comm.commission.toFixed(2)} ពីប្រតិបត្តិការ ${comm.transactionId}`);
+                sendNotification('email', member.phone + '@example.com', `អ្នកបានទទួលកម្រៃ $${comm.commission.toFixed(2)}`);
             }
             saveData();
             return true;
         }
 
         // ===== CURRENCY =====
-        function formatCurrency(amount, currency) {
+        function formatCurrency(amount, currency = 'usd') {
             if (currency === 'riel') {
-                var riel = Math.round(amount * (data.exchangeRate || 4000));
+                const riel = Math.round(amount * data.exchangeRate);
                 return riel.toLocaleString('km-KH') + ' ៛';
             }
             return '$' + amount.toFixed(2);
         }
 
         function convertToRiel(usd) {
-            return usd * (data.exchangeRate || 4000);
+            return usd * data.exchangeRate;
         }
 
         function convertToUSD(riel) {
-            return riel / (data.exchangeRate || 4000);
+            return riel / data.exchangeRate;
         }
 
-        // ===== NOTIFICATION =====
+        // ===== NOTIFICATION SYSTEM =====
         function sendNotification(type, recipient, message) {
             if (!data.notifications) data.notifications = [];
             data.notifications.push({
@@ -1460,31 +1516,38 @@
                 timestamp: new Date().toISOString()
             });
             saveData();
+
+            // Show toast
             showToast(message, 'info');
-            console.log('📨 [' + type + '] ទៅ ' + recipient + ': ' + message);
+
+            // Log to console for simulation
+            console.log(`📨 [${type}] ទៅ ${recipient}: ${message}`);
         }
 
-        function showToast(message, type) {
-            var existing = document.querySelector('.toast');
+        // ===== TOAST =====
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
             if (existing) existing.remove();
-            var toast = document.createElement('div');
-            toast.className = 'toast ' + (type || 'info');
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
             toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(function() {
+
+            setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(100px)';
-                setTimeout(function() { toast.remove(); }, 500);
+                setTimeout(() => toast.remove(), 500);
             }, 4000);
         }
 
         // ===== CAPTCHA =====
-        var currentCaptcha = '';
+        let currentCaptcha = '';
 
         function generateCaptcha() {
-            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            var result = '';
-            for (var i = 0; i < 6; i++) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
                 result += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             currentCaptcha = result;
@@ -1492,278 +1555,74 @@
         }
 
         function refreshCaptcha() {
-            var captchaText = document.getElementById('captchaText');
+            const captchaText = document.getElementById('captchaText');
             if (captchaText) {
                 captchaText.textContent = generateCaptcha();
             }
         }
 
         function verifyCaptcha() {
-            var input = document.getElementById('captchaInput');
+            const input = document.getElementById('captchaInput');
             if (!input) return true;
             return input.value.toUpperCase() === currentCaptcha;
         }
 
-        // ===== EXPORT TO EXCEL =====
-        function exportToExcel() {
-            try {
-                var csvRows = [];
-                csvRows.push(['លេខរៀង', 'ឈ្មោះ', 'លេខទូរសព្ទ', 'ID', 'សមតុល្យ', 'រូបិយប័ណ្ណ', 'កម្រៃសរុប', 'អត្ថប្រយោជន៍', 'កាលបរិច្ឆេទបង្កើត']);
-                
-                var memberKeys = Object.keys(data.members);
-                for (var i = 0; i < memberKeys.length; i++) {
-                    var m = data.members[memberKeys[i]];
-                    csvRows.push([
-                        i + 1,
-                        m.username || '',
-                        m.phone || '',
-                        m.id || '',
-                        m.balance || 0,
-                        m.preferredCurrency || 'usd',
-                        m.totalCommission || 0,
-                        (m.benefits || []).join('; '),
-                        m.createdAt ? new Date(m.createdAt).toLocaleDateString('km-KH') : ''
-                    ]);
-                }
-                
-                csvRows.push([]);
-                csvRows.push(['=== ប្រវត្តិប្រតិបត្តិការ ===']);
-                csvRows.push(['លេខប្រតិបត្តិការ', 'ប្រភេទ', 'សមាជិក', 'ចំនួន', 'ស្ថានភាព', 'កាលបរិច្ឆេទ']);
-                
-                var txList = data.transactions || [];
-                for (var j = 0; j < txList.length; j++) {
-                    var tx = txList[j];
-                    var member = data.members[tx.memberPhone];
-                    csvRows.push([
-                        tx.id || '',
-                        tx.type || '',
-                        member ? member.username || member.phone : tx.memberPhone || '',
-                        tx.amount || 0,
-                        tx.status || '',
-                        tx.timestamp ? new Date(tx.timestamp).toLocaleString('km-KH') : ''
-                    ]);
-                }
-                
-                csvRows.push([]);
-                csvRows.push(['=== Sub Admins ===']);
-                csvRows.push(['ឈ្មោះ', 'លេខទូរសព្ទ', 'ID', 'សមតុល្យ', 'បានទទួល', 'បានផ្ទេរ', 'ចំនួនសមាជិក']);
-                
-                var adminList = Object.values(data.subAdmins);
-                for (var k = 0; k < adminList.length; k++) {
-                    var a = adminList[k];
-                    csvRows.push([
-                        a.username || '',
-                        a.phone || '',
-                        a.id || '',
-                        a.balance || 0,
-                        a.totalReceived || 0,
-                        a.totalTransferred || 0,
-                        Object.keys(data.members).length
-                    ]);
-                }
-                
-                var csvString = '';
-                for (var r = 0; r < csvRows.length; r++) {
-                    var row = csvRows[r];
-                    var rowStr = '';
-                    for (var c = 0; c < row.length; c++) {
-                        var cell = row[c];
-                        if (typeof cell === 'string' && (cell.indexOf(',') !== -1 || cell.indexOf('"') !== -1 || cell.indexOf('\n') !== -1)) {
-                            cell = '"' + cell.replace(/"/g, '""') + '"';
-                        }
-                        if (c > 0) rowStr += ',';
-                        rowStr += cell;
-                    }
-                    csvString += rowStr + '\n';
-                }
-                
-                var blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
-                var link = document.createElement('a');
-                var url = URL.createObjectURL(blob);
-                link.href = url;
-                link.download = 'របាយការណ៍_' + new Date().toISOString().slice(0,10) + '.csv';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                showToast('📤 នាំចេញរបាយការណ៍ជោគជ័យ!', 'success');
-            } catch (err) {
-                showToast('កំហុសក្នុងការនាំចេញ!', 'error');
-                console.error(err);
-            }
-        }
-
-        // ===== EDIT BALANCE =====
-        function editBalance(type, phone) {
-            var entity;
-            var entityName;
-            var isMember = type === 'member';
-            if (isMember) {
-                entity = data.members[phone];
-                if (!entity) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
-                entityName = entity.username || entity.phone;
-            } else {
-                entity = data.subAdmins[phone];
-                if (!entity) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
-                entityName = entity.username;
-            }
-
-            showModal(`
-                <div style="text-align:center;">
-                    <h3 style="color:#ffd700;margin-bottom:15px;">✏️ កែសម្រួលទឹកប្រាក់</h3>
-                    <p style="color:rgba(255,255,255,0.6);">${isMember ? 'សមាជិក' : 'Sub Admin'}: <strong>${entityName}</strong></p>
-                    <p style="color:rgba(255,255,255,0.4);font-size:12px;">បច្ចុប្បន្ន: ${formatCurrency(entity.balance, entity.preferredCurrency || 'usd')}</p>
-                    <form id="editBalanceForm">
-                        <input type="hidden" id="editBalanceType" value="${type}">
-                        <input type="hidden" id="editBalancePhone" value="${phone}">
-                        <select id="editBalanceAction" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
-                            <option value="add">➕ បញ្ចូល</option>
-                            <option value="subtract">➖ ដក</option>
-                            <option value="set">🎯 កំណត់តម្លៃថ្មី</option>
-                        </select>
-                        <input type="number" id="editBalanceAmount" placeholder="💰 ចំនួនប្រាក់" min="0" step="0.01" required>
-                        <select id="editBalanceCurrency" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
-                            <option value="usd">$ USD</option>
-                            <option value="riel">៛ Riel</option>
-                        </select>
-                        <textarea id="editBalanceReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)" rows="2"></textarea>
-                        <div style="display:flex;gap:10px;margin-top:15px;">
-                            <button type="submit" class="btn btn-gold" style="flex:1;">💾 រក្សាទុក</button>
-                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
-                        </div>
-                    </form>
-                    <div id="editBalanceMessage"></div>
-                </div>
-            `);
-
-            document.getElementById('editBalanceForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                var type = document.getElementById('editBalanceType').value;
-                var phone = document.getElementById('editBalancePhone').value;
-                var action = document.getElementById('editBalanceAction').value;
-                var amount = parseFloat(document.getElementById('editBalanceAmount').value);
-                var currency = document.getElementById('editBalanceCurrency').value;
-                var reason = document.getElementById('editBalanceReason').value.trim();
-                var msg = document.getElementById('editBalanceMessage');
-
-                if (!amount || amount <= 0) {
-                    msg.innerHTML = '<div class="error">សូមបញ្ចូលចំនួនត្រឹមត្រូវ!</div>';
-                    return;
-                }
-
-                var amountUSD = amount;
-                if (currency === 'riel') {
-                    amountUSD = convertToUSD(amount);
-                }
-
-                var entity;
-                var entityName;
-                var isMember = type === 'member';
-                if (isMember) {
-                    entity = data.members[phone];
-                } else {
-                    entity = data.subAdmins[phone];
-                }
-
-                if (!entity) {
-                    msg.innerHTML = '<div class="error">មិនឃើញ ' + (isMember ? 'សមាជិក' : 'Sub Admin') + '!</div>';
-                    return;
-                }
-
-                var oldBalance = entity.balance;
-                var newBalance = oldBalance;
-
-                if (action === 'add') {
-                    newBalance = oldBalance + amountUSD;
-                } else if (action === 'subtract') {
-                    if (amountUSD > oldBalance) {
-                        msg.innerHTML = '<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ ' + formatCurrency(oldBalance, entity.preferredCurrency || 'usd') + ')</div>';
-                        return;
-                    }
-                    newBalance = oldBalance - amountUSD;
-                } else if (action === 'set') {
-                    newBalance = amountUSD;
-                }
-
-                entity.balance = newBalance;
-
-                var adminUser = getCurrentUser();
-                var adminId = adminUser ? adminUser.phone : 'unknown';
-                var adminName = adminUser ? adminUser.name : 'Unknown';
-
-                logActivity(
-                    adminId,
-                    adminName,
-                    action === 'add' ? 'balance_add' : action === 'subtract' ? 'balance_subtract' : 'balance_set',
-                    'financial',
-                    phone,
-                    amountUSD,
-                    (isMember ? 'សមាជិក' : 'Sub Admin') + ' ' + entityName + ': ' + action + ' ' + formatCurrency(amountUSD, entity.preferredCurrency || 'usd') + (reason ? ' (' + reason + ')' : '')
-                );
-
-                if (isMember) {
-                    var actionText = action === 'add' ? 'បញ្ចូល' : action === 'subtract' ? 'ដក' : 'កំណត់';
-                    entity.benefits.push('💰 ' + actionText + ' ' + formatCurrency(amountUSD, entity.preferredCurrency || 'usd') + (reason ? ' - ' + reason : ''));
-                }
-
-                saveData();
-                msg.innerHTML = '<div class="success">✅ កែសម្រួលជោគជ័យ!<br>ចាស់: ' + formatCurrency(oldBalance, entity.preferredCurrency || 'usd') + '<br>ថ្មី: ' + formatCurrency(newBalance, entity.preferredCurrency || 'usd') + '</div>';
-
-                setTimeout(function() {
-                    hideModal();
-                    renderPage('super-dashboard');
-                }, 1500);
-            });
-        }
-
+        // ================================================================
         // ===== CLOCK =====
-        var clockInterval = null;
+        // ================================================================
+
+        let clockInterval = null;
 
         function startClock() {
             if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
 
             function updateClock() {
-                var now = new Date();
-                var days = ['អាទិត្យ', 'ចន្ទ', 'អង្គារ', 'ពុធ', 'ព្រហស្បតិ៍', 'សុក្រ', 'សៅរ៍'];
-                var dayName = days[now.getDay()];
-                var dateStr = now.getDate().toString().padStart(2, '0');
-                var monthStr = (now.getMonth() + 1).toString().padStart(2, '0');
-                var yearStr = now.getFullYear();
-                var fullDate = dayName + ' ' + dateStr + '/' + monthStr + '/' + yearStr;
-                var hours = now.getHours().toString().padStart(2, '0');
-                var minutes = now.getMinutes().toString().padStart(2, '0');
-                var seconds = now.getSeconds().toString().padStart(2, '0');
+                const now = new Date();
+                const days = ['អាទិត្យ', 'ចន្ទ', 'អង្គារ', 'ពុធ', 'ព្រហស្បតិ៍', 'សុក្រ', 'សៅរ៍'];
+                const dayName = days[now.getDay()];
+                const dateStr = now.getDate().toString().padStart(2, '0');
+                const monthStr = (now.getMonth() + 1).toString().padStart(2, '0');
+                const yearStr = now.getFullYear();
+                const fullDate = `${dayName} ${dateStr}/${monthStr}/${yearStr}`;
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
 
-                var dateEl = document.getElementById('clockDate');
-                var timeEl = document.getElementById('clockTime');
-                var secEl = document.getElementById('clockSeconds');
+                const dateEl = document.getElementById('clockDate');
+                const timeEl = document.getElementById('clockTime');
+                const secEl = document.getElementById('clockSeconds');
                 if (dateEl) dateEl.textContent = fullDate;
-                if (timeEl) timeEl.textContent = hours + ':' + minutes;
+                if (timeEl) timeEl.textContent = `${hours}:${minutes}`;
                 if (secEl) secEl.textContent = seconds;
             }
             updateClock();
             clockInterval = setInterval(updateClock, 1000);
         }
 
+        // ================================================================
         // ===== MODAL =====
-        function showModal(html, options) {
-            var overlay = document.getElementById('modalOverlay');
-            var body = document.getElementById('modalBody');
-            var content = document.getElementById('modalContent');
+        // ================================================================
+
+        function showModal(html, options = {}) {
+            const overlay = document.getElementById('modalOverlay');
+            const body = document.getElementById('modalBody');
+            const content = document.getElementById('modalContent');
 
             body.innerHTML = html;
             overlay.style.display = 'flex';
 
-            setTimeout(function() {
+            // Trigger animation
+            setTimeout(() => {
                 content.classList.add('show');
             }, 10);
 
-            if (options && options.closeOnOverlay !== false) {
+            if (options.closeOnOverlay !== false) {
                 overlay.onclick = function(e) {
                     if (e.target === overlay) hideModal();
                 };
             }
 
+            // Close on Escape key
             document.addEventListener('keydown', function handler(e) {
                 if (e.key === 'Escape') {
                     hideModal();
@@ -1773,36 +1632,37 @@
         }
 
         function hideModal() {
-            var overlay = document.getElementById('modalOverlay');
-            var content = document.getElementById('modalContent');
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
             content.classList.remove('show');
-            setTimeout(function() {
+            setTimeout(() => {
                 overlay.style.display = 'none';
             }, 300);
         }
 
-        // ===== THEME =====
+        // ===== THEME TOGGLE =====
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
-            var isLight = document.body.classList.contains('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
         }
 
+        // Load theme from localStorage
         if (localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light-mode');
         }
 
         // ================================================================
-        // RENDER ENGINE
+        // ===== RENDER ENGINE =====
         // ================================================================
 
         function renderPage(page, params) {
-            var container = document.getElementById('pageContent');
-            var html = '';
+            const container = document.getElementById('pageContent');
+            let html = '';
 
-            var showClock = (page !== 'home' && page !== 'login' && page !== 'register' && page !== 'super-login' && page !== 'super-otp');
+            const showClock = !['home', 'login', 'register', 'super-login', 'super-otp'].includes(page);
 
-            var clockHtml = '';
+            let clockHtml = '';
             if (showClock) {
                 clockHtml = `
                     <div class="clock-container">
@@ -1840,18 +1700,21 @@
             attachEvents(page, params);
             if (showClock) startClock();
 
+            // Setup search if on super dashboard
             if (page === 'super-dashboard') {
                 setupSearch();
             }
         }
 
+        // ================================================================
         // ===== PAGE BUILDERS =====
+        // ================================================================
 
         function getHomePage() {
             return `
                 <div class="text-center">
                     <div style="margin-bottom:4px;">
-                        <span class="badge badge-gold animate-float">🚀 v4.1</span>
+                        <span class="badge badge-gold animate-float">🚀 v4.0</span>
                     </div>
                     <h1>ស្វាគមន៍!</h1>
                     <p style="font-size:0.9rem;color:rgba(255,255,255,0.5);">${data.systemName}</p>
@@ -1899,9 +1762,9 @@
         }
 
         function getLoginPage(params) {
-            var role = (params && params.role) || 'member';
-            var isAdmin = role === 'sub_admin';
-            var title = isAdmin ? '👑 ចូលប្រើជា Sub Admin' : '👤 ចូលប្រើជាសមាជិក';
+            const role = (params && params.role) || 'member';
+            const isAdmin = role === 'sub_admin';
+            const title = isAdmin ? '👑 ចូលប្រើជា Sub Admin' : '👤 ចូលប្រើជាសមាជិក';
 
             return `
                 <div class="top-bar">
@@ -1918,6 +1781,7 @@
                         <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword', this)">👁️</button>
                     </div>
 
+                    <!-- CAPTCHA -->
                     <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
                             ${generateCaptcha()}
@@ -1962,6 +1826,7 @@
                         </select>
                     </div>
 
+                    <!-- CAPTCHA -->
                     <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
                             ${generateCaptcha()}
@@ -1996,6 +1861,7 @@
                         <button type="button" class="toggle-pwd" onclick="togglePassword('superPassword', this)">👁️</button>
                     </div>
 
+                    <!-- CAPTCHA -->
                     <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
                             ${generateCaptcha()}
@@ -2012,7 +1878,7 @@
         }
 
         function getSuperOTPPage(params) {
-            var phone = params && params.phone ? params.phone : '066817407';
+            const phone = params && params.phone ? params.phone : '066817407';
             return `
                 <div class="top-bar">
                     <h2>🔑 បញ្ចូល OTP</h2>
@@ -2039,20 +1905,21 @@
             `;
         }
 
-        // ===== DASHBOARD =====
+        // ===== MEMBER DASHBOARD =====
         function getDashboardPage() {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (!user || user.role !== 'member') {
-                return '<p style="color:red;">សូមចូលប្រើជាមុន! <button onclick="renderPage(\'home\')" class="btn btn-sm">ចូលប្រើ</button></p>';
+                return `<p style="color:red;">សូមចូលប្រើជាមុន! <button onclick="renderPage('home')" class="btn btn-sm">ចូលប្រើ</button></p>`;
             }
 
-            var member = data.members[user.phone];
-            if (!member) return '<p style="color:red;">មិនឃើញព័ត៌មាន!</p>';
+            const member = data.members[user.phone];
+            if (!member) return `<p style="color:red;">មិនឃើញព័ត៌មាន!</p>`;
 
-            var admin = Object.values(data.subAdmins)[0];
-            var preferredCurrency = member.preferredCurrency || 'usd';
+            const admin = data.subAdmins[member.adminId];
+            const preferredCurrency = member.preferredCurrency || 'usd';
 
-            var depositHtml = `
+            // Deposit Section
+            let depositHtml = `
                 <div class="payment-section">
                     <h4>💳 ដាក់ប្រាក់</h4>
             `;
@@ -2071,23 +1938,19 @@
                         </div>
                     </div>
                     <div class="qr-container">
-                        ${admin.qrCode ? '<img src="' + admin.qrCode + '" alt="QR Code">' : '<span class="qr-placeholder">📷 មិនទាន់មាន QR Code</span>'}
+                        ${admin.qrCode ? `<img src="${admin.qrCode}" alt="QR Code">` : '<span class="qr-placeholder">📷 មិនទាន់មាន QR Code</span>'}
                     </div>
                 `;
             } else {
-                depositHtml += '<p style="color:rgba(255,255,255,0.3);font-size:13px;">⚠️ ប្រព័ន្ធកំពុងរៀបចំ! សូមទាក់ទង Admin</p>';
+                depositHtml += `
+                    <p style="color:rgba(255,255,255,0.3);font-size:13px;">⚠️ អ្នកមិនទាន់ត្រូវបានចាត់តាំងឲ្យ Admin ណាមួយទេ!</p>
+                `;
             }
 
             depositHtml += `
                     <div style="margin:12px 0;">
-                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">💰 ចំនួនប្រាក់ដែលបានផ្ទេរ</label>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
-                            <select id="depositCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
-                                <option value="usd">$ USD</option>
-                                <option value="riel">៛ Riel</option>
-                            </select>
-                            <input type="number" id="depositAmount" placeholder="បញ្ចូលចំនួន" min="0.01" step="0.01" required style="flex:2;">
-                        </div>
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">💰 ចំនួនប្រាក់ដែលបានផ្ទេរ (${preferredCurrency === 'riel' ? '៛' : '$'})</label>
+                        <input type="number" id="depositAmount" placeholder="បញ្ចូលចំនួនប្រាក់" min="0.01" step="0.01" required>
                     </div>
                     <div style="margin:12px 0;">
                         <label style="font-size:12px;color:rgba(255,255,255,0.4);">📸 បញ្ចូលរូបភាពថតអេក្រង់</label>
@@ -2103,29 +1966,25 @@
                 </div>
             `;
 
-            var withdrawHtml = `
+            // Withdraw Section
+            let withdrawHtml = `
                 <div class="payment-section">
                     <h4>🏦 ដកប្រាក់</h4>
                     <form id="withdrawForm" onsubmit="event.preventDefault(); submitWithdraw();">
-                        <div>
-                            <input type="text" id="withdrawId" value="${member.id}" readonly placeholder="🆔 លេខ ID" style="opacity:0.6;">
-                        </div>
-                        <div>
-                            <input type="text" id="withdrawName" value="${member.username || ''}" placeholder="👤 ឈ្មោះ" required>
-                        </div>
-                        <div>
-                            <input type="tel" id="withdrawPhone" value="${member.phone}" placeholder="📱 លេខទូរសព្ទ" required>
+                        <div class="form-row">
+                            <div class="full-width">
+                                <input type="text" id="withdrawId" value="${member.id}" readonly placeholder="🆔 លេខ ID" style="opacity:0.6;">
+                            </div>
+                            <div>
+                                <input type="text" id="withdrawName" value="${member.username || ''}" placeholder="👤 ឈ្មោះ" required>
+                            </div>
+                            <div>
+                                <input type="tel" id="withdrawPhone" value="${member.phone}" placeholder="📱 លេខទូរសព្ទ" required>
+                            </div>
                         </div>
 
-                        <div>
-                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">ជ្រើសរើសចំនួនប្រាក់</label>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
-                                <select id="withdrawCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
-                                    <option value="usd">$ USD</option>
-                                    <option value="riel">៛ Riel</option>
-                                </select>
-                                <input type="number" id="withdrawAmount" placeholder="💰 បញ្ចូលចំនួន" min="1" step="0.01" style="flex:2;">
-                            </div>
+                        <div class="full-width">
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">ជ្រើសរើសចំនួនប្រាក់ (${preferredCurrency === 'riel' ? '៛' : '$'})</label>
                             <div class="amount-buttons">
                                 <button type="button" class="amount-btn" onclick="selectAmount(1)">$1</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(5)">$5</button>
@@ -2135,9 +1994,10 @@
                                 <button type="button" class="amount-btn" onclick="selectAmount(50)">$50</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(100)">$100</button>
                             </div>
+                            <input type="number" id="withdrawAmount" placeholder="💰 បញ្ចូលចំនួនដោយដៃ" min="1" step="0.01">
                         </div>
 
-                        <div>
+                        <div class="full-width">
                             <label style="font-size:12px;color:rgba(255,255,255,0.4);">📷 បញ្ចូលរូបភាព QR Code</label>
                             <div class="file-upload" id="withdrawUpload">
                                 <span class="upload-icon">📷</span>
@@ -2154,12 +2014,13 @@
                 </div>
             `;
 
-            var transactions = getMemberTransactions(user.phone);
-            var txHtml = '';
+            // Transaction History
+            const transactions = getMemberTransactions(user.phone);
+            let txHtml = '';
             if (transactions.length === 0) {
                 txHtml = '<p style="opacity:0.4;font-size:13px;padding:5px 0;">មិនទាន់មានប្រតិបត្តិការ</p>';
             } else {
-                var totals = calculateTotals(transactions);
+                const totals = calculateTotals(transactions);
                 txHtml = `
                     <div class="summary-stats">
                         <div class="summary-box">
@@ -2177,13 +2038,12 @@
                     </div>
                     <div class="transaction-list">
                 `;
-                for (var i = 0; i < Math.min(transactions.length, 10); i++) {
-                    var tx = transactions[i];
-                    var d = new Date(tx.timestamp);
-                    var typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
-                    var amountSign = tx.type === 'deposit' ? '+' : '-';
-                    var color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
-                    var statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
+                transactions.slice(0, 10).forEach(tx => {
+                    const d = new Date(tx.timestamp);
+                    const typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
+                    const amountSign = tx.type === 'deposit' ? '+' : '-';
+                    const color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
+                    const statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
                     txHtml += `
                         <div class="transaction-item">
                             <div>
@@ -2194,34 +2054,26 @@
                             <div style="color:${color};font-weight:600;">${amountSign}${formatCurrency(tx.amount, preferredCurrency)}</div>
                         </div>
                     `;
-                }
-                txHtml += '</div>';
+                });
+                txHtml += `</div>`;
                 if (transactions.length > 10) {
-                    txHtml += '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>';
+                    txHtml += `<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>`;
                 }
             }
 
-            var comms = [];
-            for (var j = 0; j < data.commissions.length; j++) {
-                if (data.commissions[j].memberPhone === user.phone) {
-                    comms.push(data.commissions[j]);
-                }
-            }
-            var commHtml = '';
+            // Commission History
+            let commHtml = '';
+            const comms = data.commissions.filter(c => c.memberPhone === user.phone);
             if (comms.length === 0) {
                 commHtml = '<p style="opacity:0.4;font-size:13px;">មិនទាន់មានកម្រៃ</p>';
             } else {
-                var totalComm = 0;
-                for (var k = 0; k < comms.length; k++) {
-                    totalComm += comms[k].commission;
-                }
+                const totalComm = comms.reduce((s, c) => s + c.commission, 0);
                 commHtml = `
                     <div style="margin:5px 0;color:#9f7aea;font-weight:600;">កម្រៃសរុប: ${formatCurrency(totalComm, preferredCurrency)}</div>
                     <div style="max-height:100px;overflow-y:auto;">
                 `;
-                for (var l = 0; l < Math.min(comms.length, 5); l++) {
-                    var c = comms[l];
-                    var d = new Date(c.timestamp);
+                comms.slice(0, 5).forEach(c => {
+                    const d = new Date(c.timestamp);
                     commHtml += `
                         <div class="transaction-item">
                             <div>
@@ -2231,17 +2083,18 @@
                             <div style="color:#9f7aea;font-weight:600;">+${formatCurrency(c.commission, preferredCurrency)}</div>
                         </div>
                     `;
-                }
-                commHtml += '</div>';
+                });
+                commHtml += `</div>`;
             }
 
-            var benefitsHtml = '';
+            // Benefits
+            let benefitsHtml = '';
             if (member.benefits && member.benefits.length > 0) {
-                for (var b = 0; b < member.benefits.length; b++) {
-                    benefitsHtml += '<li style="padding:5px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin:3px 0;color:rgba(255,255,255,0.8);border-left:3px solid #667eea;font-size:13px;">' + member.benefits[b] + '</li>';
-                }
+                member.benefits.forEach(b => {
+                    benefitsHtml += `<li style="padding:5px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin:3px 0;color:rgba(255,255,255,0.8);border-left:3px solid #667eea;font-size:13px;">${b}</li>`;
+                });
             } else {
-                benefitsHtml = '<li style="opacity:0.4;font-size:13px;">មិនទាន់មាន</li>';
+                benefitsHtml = `<li style="opacity:0.4;font-size:13px;">មិនទាន់មាន</li>`;
             }
 
             return `
@@ -2262,7 +2115,7 @@
                     <div style="font-size:2.4rem;font-weight:800;color:#48bb78;">
                         ${formatCurrency(member.balance, preferredCurrency)}
                     </div>
-                    ${member.totalCommission ? '<div style="font-size:12px;color:#9f7aea;">កម្រៃ: ' + formatCurrency(member.totalCommission, preferredCurrency) + '</div>' : ''}
+                    ${member.totalCommission ? `<div style="font-size:12px;color:#9f7aea;">កម្រៃ: ${formatCurrency(member.totalCommission, preferredCurrency)}</div>` : ''}
                 </div>
 
                 ${depositHtml}
@@ -2282,36 +2135,33 @@
                     <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
                 </div>
 
-                <div class="text-center mt-10 op-3 fs-12">v4.1</div>
+                <div class="text-center mt-10 op-3 fs-12">v4.0</div>
             `;
         }
 
-        // ================================================================
-        // ADMIN DASHBOARD
-        // ================================================================
-
+        // ===== ADMIN DASHBOARD =====
         function getAdminDashboardPage() {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
-                return '<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>';
+                return `<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>`;
             }
 
-            var admin = data.subAdmins[user.phone];
-            if (!admin) return '<p style="color:red;">មិនឃើញព័ត៌មាន Admin!</p>';
+            const admin = data.subAdmins[user.phone];
+            if (!admin) return `<p style="color:red;">មិនឃើញព័ត៌មាន Admin!</p>`;
 
-            var memberKeys = Object.keys(data.members);
-            var membersHtml = '';
+            const memberKeys = Object.keys(data.members).filter(phone => data.members[phone].adminId === admin.id);
+            let membersHtml = '';
             if (memberKeys.length === 0) {
-                membersHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានសមាជិក</p>';
+                membersHtml = `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានសមាជិក</p>`;
             } else {
-                for (var i = 0; i < memberKeys.length; i++) {
-                    var m = data.members[memberKeys[i]];
-                    if (!m) continue;
-                    var preferredCurrency = m.preferredCurrency || 'usd';
+                memberKeys.forEach(phone => {
+                    const m = data.members[phone];
+                    if (!m) return;
+                    const preferredCurrency = m.preferredCurrency || 'usd';
                     membersHtml += `
                         <div class="list-item">
                             <div class="info">
-                                <span class="name">${m.username || m.phone}</span>
+                                <span class="name">${m.username || phone}</span>
                                 <span class="id">🆔 ${m.id}</span>
                                 <span class="sub">📱 ${m.phone}</span>
                                 <span class="pwd">🔑 ${m.password}</span>
@@ -2319,29 +2169,29 @@
                             </div>
                             <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                             <div class="actions">
-                                <button onclick="renderPage('transfer-money', {phone:'${m.phone}'})" class="btn btn-warning btn-sm">💸 ផ្ទេរ</button>
+                                <button onclick="renderPage('transfer-money', {phone:'${phone}'})" class="btn btn-warning btn-sm">💸 ផ្ទេរ</button>
                             </div>
                         </div>
                     `;
-                }
+                });
             }
 
-            var notificationsHtml = getAdminNotifications();
+            // Notifications
+            let notificationsHtml = getAdminNotifications();
 
-            var allTx = [];
-            for (var j = 0; j < memberKeys.length; j++) {
-                var tx = getMemberTransactions(memberKeys[j]);
-                for (var k = 0; k < tx.length; k++) {
-                    allTx.push(tx[k]);
-                }
-            }
-            allTx.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
+            // Transaction History
+            let txHtml = '';
+            const allTx = [];
+            memberKeys.forEach(phone => {
+                const tx = getMemberTransactions(phone);
+                allTx.push(...tx);
+            });
+            allTx.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-            var txHtml = '';
             if (allTx.length === 0) {
                 txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
             } else {
-                var totals = calculateTotals(allTx);
+                const totals = calculateTotals(allTx);
                 txHtml = `
                     <div class="summary-stats">
                         <div class="summary-box">
@@ -2359,15 +2209,14 @@
                     </div>
                     <div class="transaction-list">
                 `;
-                for (var l = 0; l < Math.min(allTx.length, 10); l++) {
-                    var tx = allTx[l];
-                    var member = data.members[tx.memberPhone];
-                    var memberName = member ? member.username || member.phone : tx.memberPhone;
-                    var d = new Date(tx.timestamp);
-                    var typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
-                    var amountSign = tx.type === 'deposit' ? '+' : '-';
-                    var color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
-                    var statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
+                allTx.slice(0, 10).forEach(tx => {
+                    const member = data.members[tx.memberPhone];
+                    const memberName = member ? member.username || member.phone : tx.memberPhone;
+                    const d = new Date(tx.timestamp);
+                    const typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
+                    const amountSign = tx.type === 'deposit' ? '+' : '-';
+                    const color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
+                    const statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
                     txHtml += `
                         <div class="transaction-item">
                             <div>
@@ -2378,14 +2227,14 @@
                             <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
                         </div>
                     `;
-                }
-                txHtml += '</div>';
+                });
+                txHtml += `</div>`;
             }
 
-            var bankSetupHtml = `
+            // Bank Setup
+            let bankSetupHtml = `
                 <div class="payment-section admin-panel">
                     <h4>🏦 កំណត់ព័ត៌មានទូទាត់</h4>
-                    <p style="font-size:12px;color:rgba(255,255,255,0.4);">ព័ត៌មាននេះនឹងបង្ហាញដល់សមាជិកទាំងអស់</p>
                     <form id="bankInfoForm" onsubmit="event.preventDefault(); saveBankInfo();">
                         <input type="text" id="bankName" value="${admin.bankName || ''}" placeholder="🏦 ឈ្មោះធនាគារ">
                         <input type="text" id="bankAccount" value="${admin.bankAccount || ''}" placeholder="🔢 លេខគណនី">
@@ -2395,7 +2244,7 @@
                                 <span class="upload-icon">📷</span>
                                 <span class="upload-text">ចុចដើម្បីបញ្ចូលរូបភាព</span>
                                 <div class="file-name" id="qrAdminFileName">${admin.qrCode ? '✅ មានរូបភាព' : ''}</div>
-                                <div id="qrAdminPreview">${admin.qrCode ? '<img src="' + admin.qrCode + '" class="preview-image" alt="Admin QR">' : ''}</div>
+                                <div id="qrAdminPreview">${admin.qrCode ? `<img src="${admin.qrCode}" class="preview-image" alt="Admin QR">` : ''}</div>
                                 <input type="file" id="qrAdminInput" accept="image/*" onchange="handleAdminQRUpload(this)">
                             </div>
                         </div>
@@ -2405,7 +2254,8 @@
                 </div>
             `;
 
-            var commSettingsHtml = `
+            // Commission Settings
+            let commSettingsHtml = `
                 <div class="payment-section admin-panel">
                     <h4>💰 កំណត់កម្រៃជើងសារ</h4>
                     <form id="commissionForm" onsubmit="event.preventDefault(); saveCommissionSettings();">
@@ -2466,43 +2316,42 @@
             `;
         }
 
+        // ===== ADMIN NOTIFICATIONS =====
         function getAdminNotifications() {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') return '';
 
-            var admin = data.subAdmins[user.phone];
+            const admin = data.subAdmins[user.phone];
             if (!admin) return '';
 
-            var notifications = [];
-            var memberKeys = Object.keys(data.members);
-            for (var i = 0; i < memberKeys.length; i++) {
-                var tx = getMemberTransactions(memberKeys[i]);
-                for (var j = 0; j < Math.min(tx.length, 10); j++) {
-                    var t = tx[j];
+            const memberPhones = admin.members || [];
+            let notifications = [];
+            memberPhones.forEach(phone => {
+                const tx = getMemberTransactions(phone);
+                tx.slice(0, 10).forEach(t => {
                     if (t.status === 'pending') {
                         notifications.push({
                             type: t.type,
-                            member: memberKeys[i],
+                            member: phone,
                             amount: t.amount,
                             time: t.timestamp,
                             id: t.id
                         });
                     }
-                }
-            }
+                });
+            });
 
             if (notifications.length === 0) {
-                return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+                return `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>`;
             }
 
-            var html = '';
-            for (var k = 0; k < Math.min(notifications.length, 5); k++) {
-                var n = notifications[k];
-                var member = data.members[n.member];
-                var memberName = member ? member.username || member.phone : n.member;
-                var d = new Date(n.time);
-                var typeLabel = n.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
-                var icon = n.type === 'deposit' ? '💳' : '🏦';
+            let html = '';
+            notifications.slice(0, 5).forEach(n => {
+                const member = data.members[n.member];
+                const memberName = member ? member.username || member.phone : n.member;
+                const d = new Date(n.time);
+                const typeLabel = n.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
+                const icon = n.type === 'deposit' ? '💳' : '🏦';
                 html += `
                     <div class="notification-item">
                         <div>${icon} ${memberName} បានស្នើ${typeLabel} $${n.amount.toFixed(2)}</div>
@@ -2513,31 +2362,25 @@
                         </div>
                     </div>
                 `;
-            }
+            });
 
             return html;
         }
 
-        // ================================================================
-        // SUPER DASHBOARD
-        // ================================================================
-
+        // ===== SUPER ADMIN DASHBOARD =====
         function getSuperDashboardPage() {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (!user || user.role !== 'super_admin') {
                 renderPage('super-login');
                 return '';
             }
 
-            var superAdmin = Object.values(data.superAdmins)[0];
-            var totalMembers = Object.keys(data.members).length;
-            var totalBalance = 0;
-            var memberKeys = Object.keys(data.members);
-            for (var i = 0; i < memberKeys.length; i++) {
-                totalBalance += data.members[memberKeys[i]].balance;
-            }
+            const superAdmin = Object.values(data.superAdmins)[0];
+            const totalMembers = Object.keys(data.members).length;
+            const totalBalance = Object.values(data.members).reduce((s, m) => s + m.balance, 0);
 
-            var searchHtml = `
+            // Search bar
+            const searchHtml = `
                 <div style="margin: 10px 0;">
                     <input type="text" id="searchMembersInput" placeholder="🔍 ស្វែងរកសមាជិក (ឈ្មោះ, លេខទូរសព្ទ, ID)..." 
                            oninput="searchMembersLive(this.value)" 
@@ -2546,10 +2389,9 @@
                 <div id="searchResults"></div>
             `;
 
-            var adminListHtml = '';
-            var adminList = Object.values(data.subAdmins);
-            for (var j = 0; j < adminList.length; j++) {
-                var a = adminList[j];
+            // Sub Admin List
+            let adminListHtml = '';
+            Object.values(data.subAdmins).forEach(a => {
                 adminListHtml += `
                     <div class="list-item" style="border-left-color:#ffd700;">
                         <div class="info">
@@ -2557,23 +2399,23 @@
                             <span class="id">🆔 ${a.id}</span>
                             <span class="sub">📱 ${a.phone}</span>
                             <span class="pwd">🔑 ${a.password}</span>
-                            <span class="sub">👥 ${totalMembers} សមាជិក</span>
+                            <span class="sub">👥 ${(a.members || []).length} សមាជិក</span>
                         </div>
                         <div><span class="balance">$${a.balance.toFixed(2)}</span></div>
                         <div class="actions">
-                            <button onclick="editBalance('admin', '${a.phone}')" class="btn btn-gold btn-sm">💰</button>
                             <button onclick="superEditAdmin('${a.phone}')" class="btn btn-warning btn-sm">✏️</button>
                             <button onclick="superDeleteAdmin('${a.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                             <button onclick="resetAdminPassword('${a.phone}')" class="btn btn-secondary btn-sm">🔑</button>
                         </div>
                     </div>
                 `;
-            }
+            });
 
-            var memberListHtml = '';
-            for (var k = 0; k < memberKeys.length; k++) {
-                var m = data.members[memberKeys[k]];
-                var preferredCurrency = m.preferredCurrency || 'usd';
+            // Member List with search
+            let memberListHtml = '';
+            Object.values(data.members).forEach(m => {
+                const admin = data.subAdmins[m.adminId];
+                const preferredCurrency = m.preferredCurrency || 'usd';
                 memberListHtml += `
                     <div class="list-item member-item" data-phone="${m.phone}" data-name="${m.username || ''}" data-id="${m.id}">
                         <div class="info">
@@ -2581,26 +2423,29 @@
                             <span class="id">🆔 ${m.id}</span>
                             <span class="sub">📱 ${m.phone}</span>
                             <span class="pwd">🔑 ${m.password}</span>
+                            <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
                             <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
                         </div>
                         <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                         <div class="actions">
-                            <button onclick="editBalance('member', '${m.phone}')" class="btn btn-gold btn-sm">💰</button>
                             <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
                             <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                             <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                         </div>
                     </div>
                 `;
-            }
+            });
 
-            var superNotificationsHtml = getSuperNotifications();
+            // Super Notifications
+            let superNotificationsHtml = getSuperNotifications();
 
-            var txHtml = '';
+            // Super Transaction History
+            let txHtml = '';
             if (!data.transactions || data.transactions.length === 0) {
                 txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
             } else {
-                var totals = calculateTotals(data.transactions);
+                const totals = calculateTotals(data.transactions);
                 txHtml = `
                     <div class="summary-stats">
                         <div class="summary-box">
@@ -2618,17 +2463,16 @@
                     </div>
                     <div class="transaction-list">
                 `;
-                for (var l = 0; l < Math.min(data.transactions.length, 15); l++) {
-                    var tx = data.transactions[l];
-                    var member = data.members[tx.memberPhone];
-                    var memberName = member ? member.username || member.phone : tx.memberPhone;
-                    var admin = data.subAdmins[tx.adminId];
-                    var adminName = admin ? admin.username : 'N/A';
-                    var d = new Date(tx.timestamp);
-                    var typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
-                    var amountSign = tx.type === 'deposit' ? '+' : '-';
-                    var color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
-                    var statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
+                data.transactions.slice(0, 15).forEach(tx => {
+                    const member = data.members[tx.memberPhone];
+                    const memberName = member ? member.username || member.phone : tx.memberPhone;
+                    const admin = data.subAdmins[tx.adminId];
+                    const adminName = admin ? admin.username : 'N/A';
+                    const d = new Date(tx.timestamp);
+                    const typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
+                    const amountSign = tx.type === 'deposit' ? '+' : '-';
+                    const color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
+                    const statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
                     txHtml += `
                         <div class="transaction-item">
                             <div>
@@ -2639,8 +2483,8 @@
                             <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
                         </div>
                     `;
-                }
-                txHtml += '</div>';
+                });
+                txHtml += `</div>`;
             }
 
             return `
@@ -2684,6 +2528,7 @@
                             <input type="password" id="newAdminPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
                             <button type="button" class="toggle-pwd" onclick="togglePassword('newAdminPassword', this)">👁️</button>
                         </div>
+                        <input type="number" id="newAdminBalance" placeholder="💰 ប្រាក់ដំបូង" min="0" step="0.01">
                         <button type="submit" class="btn btn-gold">👑 បង្កើត Sub Admin</button>
                     </form>
                     <div id="createAdminMessage"></div>
@@ -2693,16 +2538,10 @@
                     <h3>💰 បញ្ចូលប្រាក់ទៅ Sub Admin</h3>
                     <form id="superFundForm" onsubmit="event.preventDefault(); fundSubAdmin();">
                         <select id="superFundTarget" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
-                            ${Object.values(data.subAdmins).map(function(a) { return '<option value="' + a.phone + '">' + a.username + ' ($' + a.balance.toFixed(2) + ')</option>'; }).join('')}
+                            ${Object.values(data.subAdmins).map(a => `<option value="${a.phone}">${a.username} ($${a.balance.toFixed(2)})</option>`).join('')}
                             ${Object.keys(data.subAdmins).length === 0 ? '<option value="">មិនទាន់មាន Sub Admin</option>' : ''}
                         </select>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
-                            <select id="superFundCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
-                                <option value="usd">$ USD</option>
-                                <option value="riel">៛ Riel</option>
-                            </select>
-                            <input type="number" id="superFundAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required style="flex:2;">
-                        </div>
+                        <input type="number" id="superFundAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
                         <button type="submit" class="btn btn-gold">💳 បញ្ចូលប្រាក់</button>
                     </form>
                     <div id="superFundMessage"></div>
@@ -2733,38 +2572,32 @@
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
                     <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple">📋 កំណត់ត្រា</button>
                     <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
-                    <button onclick="exportToExcel()" class="btn btn-sm btn-secondary">📊 នាំចេញ Excel</button>
-                    <button onclick="exportData()" class="btn btn-sm btn-secondary">📤 នាំចេញ JSON</button>
+                    <button onclick="exportData()" class="btn btn-sm btn-secondary">📤 នាំចេញ</button>
                     <button onclick="importData()" class="btn btn-sm btn-warning">📥 នាំចូល</button>
                 </div>
             `;
         }
 
+        // ===== SUPER NOTIFICATIONS =====
         function getSuperNotifications() {
             if (!data.transactions || data.transactions.length === 0) {
-                return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+                return `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>`;
             }
 
-            var pending = [];
-            for (var i = 0; i < data.transactions.length; i++) {
-                if (data.transactions[i].status === 'pending') {
-                    pending.push(data.transactions[i]);
-                }
-            }
+            const pending = data.transactions.filter(t => t.status === 'pending');
             if (pending.length === 0) {
-                return '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+                return `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>`;
             }
 
-            var html = '';
-            for (var j = 0; j < Math.min(pending.length, 5); j++) {
-                var tx = pending[j];
-                var member = data.members[tx.memberPhone];
-                var memberName = member ? member.username || member.phone : tx.memberPhone;
-                var admin = data.subAdmins[tx.adminId];
-                var adminName = admin ? admin.username : 'N/A';
-                var d = new Date(tx.timestamp);
-                var typeLabel = tx.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
-                var icon = tx.type === 'deposit' ? '💳' : '🏦';
+            let html = '';
+            pending.slice(0, 5).forEach(tx => {
+                const member = data.members[tx.memberPhone];
+                const memberName = member ? member.username || member.phone : tx.memberPhone;
+                const admin = data.subAdmins[tx.adminId];
+                const adminName = admin ? admin.username : 'N/A';
+                const d = new Date(tx.timestamp);
+                const typeLabel = tx.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
+                const icon = tx.type === 'deposit' ? '💳' : '🏦';
                 html += `
                     <div class="notification-item">
                         <div>${icon} ${memberName} បានស្នើ${typeLabel} $${tx.amount.toFixed(2)} (👑 ${adminName})</div>
@@ -2772,24 +2605,21 @@
                         <div style="font-size:10px;color:#ffd700;margin-top:2px;">⏳ កំពុងរង់ចាំការយល់ព្រមពី Sub Admin</div>
                     </div>
                 `;
-            }
+            });
 
             return html;
         }
 
-        // ================================================================
-        // TRANSFER MONEY
-        // ================================================================
-
+        // ===== TRANSFER MONEY PAGE =====
         function getTransferMoneyPage(params) {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
-                return '<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>';
+                return `<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>`;
             }
 
-            var admin = data.subAdmins[user.phone];
-            var targetPhone = params && params.phone;
-            var member = targetPhone ? data.members[targetPhone] : null;
+            const admin = data.subAdmins[user.phone];
+            const targetPhone = params && params.phone;
+            const member = targetPhone ? data.members[targetPhone] : null;
 
             if (!member) {
                 return `
@@ -2801,7 +2631,7 @@
                 `;
             }
 
-            var preferredCurrency = member.preferredCurrency || 'usd';
+            const preferredCurrency = member.preferredCurrency || 'usd';
 
             return `
                 <div class="top-bar">
@@ -2817,16 +2647,10 @@
                 </div>
 
                 <div class="card admin-panel">
-                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ</h3>
+                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ (${preferredCurrency === 'riel' ? '៛' : '$'})</h3>
                     <form id="transferForm">
                         <input type="hidden" id="transferPhone" value="${member.phone}">
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
-                            <select id="transferCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
-                                <option value="usd">$ USD</option>
-                                <option value="riel">៛ Riel</option>
-                            </select>
-                            <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required style="flex:2;">
-                        </div>
+                        <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
                         <div style="font-size:12px;color:rgba(255,255,255,0.4);">នៅសល់: $${admin.balance.toFixed(2)}</div>
                         <button type="submit" class="btn btn-warning animate-glow">💸 បញ្ជាក់ការផ្ទេរ</button>
                     </form>
@@ -2835,13 +2659,10 @@
             `;
         }
 
-        // ================================================================
-        // ACTIVITY LOG
-        // ================================================================
-
+        // ===== ACTIVITY LOG PAGE =====
         function getActivityLogPage() {
-            var logs = data.activityLogs || [];
-            var html = `
+            const logs = data.activityLogs || [];
+            let html = `
                 <div class="top-bar">
                     <h2>📋 កំណត់ត្រាសកម្មភាព</h2>
                     <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
@@ -2850,38 +2671,33 @@
             `;
 
             if (logs.length === 0) {
-                html += '<p style="opacity:0.4;">មិនទាន់មានសកម្មភាព</p>';
+                html += `<p style="opacity:0.4;">មិនទាន់មានសកម្មភាព</p>`;
             } else {
-                for (var i = 0; i < Math.min(logs.length, 50); i++) {
-                    var log = logs[i];
-                    var d = new Date(log.timestamp);
-                    var borderColor = log.actionType === 'financial' ? '#48bb78' : log.actionType === 'authentication' ? '#667eea' : '#ffd700';
+                logs.slice(0, 50).forEach(log => {
+                    const d = new Date(log.timestamp);
                     html += `
-                        <div class="list-item" style="border-left-color:${borderColor};">
+                        <div class="list-item" style="border-left-color:${log.actionType === 'financial' ? '#48bb78' : log.actionType === 'authentication' ? '#667eea' : '#ffd700'};">
                             <div class="info">
                                 <span class="name">${log.adminName}</span>
                                 <span class="sub">${log.action}</span>
-                                ${log.details ? '<span class="sub" style="color:rgba(255,255,255,0.3);">' + log.details + '</span>' : ''}
-                                ${log.amount ? '<span class="sub" style="color:#ffd700;">$' + log.amount.toFixed(2) + '</span>' : ''}
+                                ${log.details ? `<span class="sub" style="color:rgba(255,255,255,0.3);">${log.details}</span>` : ''}
+                                ${log.amount ? `<span class="sub" style="color:#ffd700;">$${log.amount.toFixed(2)}</span>` : ''}
                             </div>
                             <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:right;">
                                 ${d.toLocaleDateString('km-KH')}<br>${d.toLocaleTimeString('km-KH')}
                             </div>
                         </div>
                     `;
-                }
+                });
                 if (logs.length > 50) {
-                    html += '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ៥០ ចុងក្រោយ</p>';
+                    html += `<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ៥០ ចុងក្រោយ</p>`;
                 }
             }
 
             return html;
         }
 
-        // ================================================================
-        // REPORT
-        // ================================================================
-
+        // ===== REPORT PAGE =====
         function getReportPage() {
             return `
                 <div class="top-bar">
@@ -2892,82 +2708,76 @@
                     <button onclick="generateReportDisplay('daily')" class="btn btn-sm btn-gold">📅 ប្រចាំថ្ងៃ</button>
                     <button onclick="generateReportDisplay('weekly')" class="btn btn-sm btn-secondary">📅 ប្រចាំសប្តាហ៍</button>
                     <button onclick="generateReportDisplay('monthly')" class="btn btn-sm btn-purple">📅 ប្រចាំខែ</button>
-                    <button onclick="exportToExcel()" class="btn btn-sm btn-secondary">📊 នាំចេញ Excel</button>
                 </div>
                 <div id="reportContent"></div>
             `;
         }
 
         // ================================================================
-        // PAYMENT FUNCTIONS
+        // ===== PAYMENT FUNCTIONS =====
         // ================================================================
 
         function selectAmount(amount) {
-            var input = document.getElementById('withdrawAmount');
+            const input = document.getElementById('withdrawAmount');
             if (input) {
                 input.value = amount;
-                var btns = document.querySelectorAll('.amount-btn');
-                for (var i = 0; i < btns.length; i++) {
-                    btns[i].classList.remove('active');
-                    if (btns[i].textContent.trim() === '$' + amount) {
-                        btns[i].classList.add('active');
-                    }
-                }
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.amount-btn').forEach(b => {
+                    if (b.textContent.trim() === '$' + amount) b.classList.add('active');
+                });
             }
         }
 
         function handleDepositQRUpload(input) {
-            var file = input.files[0];
+            const file = input.files[0];
             if (!file) return;
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function(e) {
-                var fileName = document.getElementById('depositFileName');
+                const fileName = document.getElementById('depositFileName');
                 if (fileName) fileName.textContent = '✅ ' + file.name;
-                var preview = document.getElementById('depositQRPreview');
-                if (preview) preview.innerHTML = '<img src="' + e.target.result + '" class="preview-image" alt="Deposit">';
-                var qrInput = document.getElementById('depositQRInput');
+                const preview = document.getElementById('depositQRPreview');
+                if (preview) preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Deposit">`;
+                const qrInput = document.getElementById('depositQRInput');
                 if (qrInput) qrInput.dataset.qrData = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
         function handleWithdrawQRUpload(input) {
-            var file = input.files[0];
+            const file = input.files[0];
             if (!file) return;
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function(e) {
-                var fileName = document.getElementById('withdrawFileName');
+                const fileName = document.getElementById('withdrawFileName');
                 if (fileName) fileName.textContent = '✅ ' + file.name;
-                var preview = document.getElementById('withdrawQRPreview');
-                if (preview) preview.innerHTML = '<img src="' + e.target.result + '" class="preview-image" alt="Withdraw QR">';
-                var qrInput = document.getElementById('withdrawQRInput');
+                const preview = document.getElementById('withdrawQRPreview');
+                if (preview) preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Withdraw QR">`;
+                const qrInput = document.getElementById('withdrawQRInput');
                 if (qrInput) qrInput.dataset.qrData = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
         function handleAdminQRUpload(input) {
-            var file = input.files[0];
+            const file = input.files[0];
             if (!file) return;
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function(e) {
-                var fileName = document.getElementById('qrAdminFileName');
+                const fileName = document.getElementById('qrAdminFileName');
                 if (fileName) fileName.textContent = '✅ ' + file.name;
-                var preview = document.getElementById('qrAdminPreview');
-                if (preview) preview.innerHTML = '<img src="' + e.target.result + '" class="preview-image" alt="Admin QR">';
-                var qrInput = document.getElementById('qrAdminInput');
+                const preview = document.getElementById('qrAdminPreview');
+                if (preview) preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Admin QR">`;
+                const qrInput = document.getElementById('qrAdminInput');
                 if (qrInput) qrInput.dataset.qrData = e.target.result;
             };
             reader.readAsDataURL(file);
         }
 
         function showDepositConfirm() {
-            var amountInput = document.getElementById('depositAmount');
-            var currencySelect = document.getElementById('depositCurrency');
-            var amount = amountInput ? parseFloat(amountInput.value) : 0;
-            var currency = currencySelect ? currencySelect.value : 'usd';
-            var qrInput = document.getElementById('depositQRInput');
-            var hasScreenshot = qrInput && qrInput.dataset.qrData;
+            const amountInput = document.getElementById('depositAmount');
+            const amount = amountInput ? parseFloat(amountInput.value) : 0;
+            const qrInput = document.getElementById('depositQRInput');
+            const hasScreenshot = qrInput && qrInput.dataset.qrData;
 
             if (!amount || amount <= 0) {
                 showModal(`
@@ -2993,23 +2803,19 @@
                 return;
             }
 
-            var amountUSD = amount;
-            if (currency === 'riel') {
-                amountUSD = convertToUSD(amount);
-            }
-
-            var user = getCurrentUser();
-            var member = user ? data.members[user.phone] : null;
-            var preferredCurrency = member ? member.preferredCurrency || 'usd' : 'usd';
+            // Confirm Modal
+            const user = getCurrentUser();
+            const member = user ? data.members[user.phone] : null;
+            const preferredCurrency = member ? member.preferredCurrency || 'usd' : 'usd';
 
             showModal(`
                 <div style="text-align:center;">
                     <div style="font-size:48px;margin-bottom:10px;">💳</div>
                     <h3 style="color:#fff;margin-bottom:10px;">បញ្ជាក់ការដាក់ប្រាក់</h3>
                     <p style="color:rgba(255,255,255,0.6);margin-bottom:5px;">អ្នកបានផ្ទេរប្រាក់</p>
-                    <p style="font-size:32px;font-weight:700;color:#ffd700;margin:10px 0;">${formatCurrency(amountUSD, preferredCurrency)}</p>
+                    <p style="font-size:32px;font-weight:700;color:#ffd700;margin:10px 0;">${formatCurrency(amount, preferredCurrency)}</p>
                     <div style="display:flex;gap:10px;margin-top:20px;">
-                        <button onclick="hideModal(); confirmDeposit(${amountUSD});" class="btn btn-gold" style="flex:1;">✅ បញ្ជាក់</button>
+                        <button onclick="hideModal(); confirmDeposit(${amount});" class="btn btn-gold" style="flex:1;">✅ បញ្ជាក់</button>
                         <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
                     </div>
                 </div>
@@ -3017,15 +2823,15 @@
         }
 
         function confirmDeposit(amount) {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (user) {
-                var member = data.members[user.phone];
+                const member = data.members[user.phone];
                 if (member) {
-                    var qrInput = document.getElementById('depositQRInput');
-                    var tx = createTransaction(
+                    const qrInput = document.getElementById('depositQRInput');
+                    const tx = createTransaction(
                         'deposit',
                         member.phone,
-                        null,
+                        member.adminId,
                         amount,
                         'pending',
                         'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2),
@@ -3036,7 +2842,7 @@
                         'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
 
                     sendNotification('email', member.phone + '@example.com', 
-                        'សំណើដាក់ប្រាក់ $' + amount.toFixed(2) + ' ត្រូវបានផ្ញើរួច! TX: ' + tx.id);
+                        `សំណើដាក់ប្រាក់ $${amount.toFixed(2)} ត្រូវបានផ្ញើរួច! TX: ${tx.id}`);
 
                     showModal(`
                         <div style="text-align:center;">
@@ -3058,53 +2864,47 @@
         }
 
         function submitWithdraw() {
-            var name = document.getElementById('withdrawName').value.trim();
-            var phone = document.getElementById('withdrawPhone').value.trim();
-            var amount = parseFloat(document.getElementById('withdrawAmount').value);
-            var currency = document.getElementById('withdrawCurrency').value;
-            var qrInput = document.getElementById('withdrawQRInput');
-            var hasQR = qrInput && qrInput.dataset.qrData;
+            const name = document.getElementById('withdrawName').value.trim();
+            const phone = document.getElementById('withdrawPhone').value.trim();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const qrInput = document.getElementById('withdrawQRInput');
+            const hasQR = qrInput && qrInput.dataset.qrData;
 
             if (!name) { showToast('សូមបញ្ចូលឈ្មោះ!', 'error'); return; }
             if (!phone) { showToast('សូមបញ្ចូលលេខទូរសព្ទ!', 'error'); return; }
             if (!amount || amount <= 0) { showToast('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!', 'error'); return; }
             if (!hasQR) { showToast('សូមបញ្ចូលរូបភាព QR Code!', 'error'); return; }
 
-            var amountUSD = amount;
-            if (currency === 'riel') {
-                amountUSD = convertToUSD(amount);
-            }
-
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (user) {
-                var member = data.members[user.phone];
+                const member = data.members[user.phone];
                 if (member) {
-                    if (amountUSD > member.balance) {
-                        showToast('ប្រាក់មិនគ្រប់! (នៅសល់ ' + formatCurrency(member.balance, member.preferredCurrency || 'usd') + ')', 'error');
+                    if (amount > member.balance) {
+                        showToast(`ប្រាក់មិនគ្រប់! (នៅសល់ ${formatCurrency(member.balance, member.preferredCurrency || 'usd')})`, 'error');
                         return;
                     }
 
-                    var tx = createTransaction(
+                    const tx = createTransaction(
                         'withdraw',
                         member.phone,
-                        null,
-                        amountUSD,
+                        member.adminId,
+                        amount,
                         'pending',
-                        'ស្នើដកប្រាក់ $' + amountUSD.toFixed(2),
+                        'ស្នើដកប្រាក់ $' + amount.toFixed(2),
                         qrInput.dataset.qrData
                     );
 
-                    logActivity(member.id || 'member', member.username || member.phone, 'withdraw_request', 'financial', null, amountUSD,
-                        'ស្នើដកប្រាក់ $' + amountUSD.toFixed(2) + ' (TX: ' + tx.id + ')');
+                    logActivity(member.id || 'member', member.username || member.phone, 'withdraw_request', 'financial', null, amount,
+                        'ស្នើដកប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
 
                     sendNotification('email', member.phone + '@example.com',
-                        'សំណើដកប្រាក់ $' + amountUSD.toFixed(2) + ' ត្រូវបានផ្ញើរួច! TX: ' + tx.id);
+                        `សំណើដកប្រាក់ $${amount.toFixed(2)} ត្រូវបានផ្ញើរួច! TX: ${tx.id}`);
 
                     showModal(`
                         <div style="text-align:center;">
                             <div style="font-size:48px;margin-bottom:10px;">✅</div>
                             <h3 style="color:#48bb78;margin-bottom:10px;">ជោគជ័យ!</h3>
-                            <p style="color:rgba(255,255,255,0.6);">សំណើរដកប្រាក់ ${formatCurrency(amountUSD, member.preferredCurrency || 'usd')} របស់អ្នកត្រូវបានផ្ញើរួច!</p>
+                            <p style="color:rgba(255,255,255,0.6);">សំណើរដកប្រាក់ ${formatCurrency(amount, member.preferredCurrency || 'usd')} របស់អ្នកត្រូវបានផ្ញើរួច!</p>
                             <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:5px;">លេខប្រតិបត្តិការ: ${tx.id}</p>
                             <button onclick="hideModal(); renderPage('dashboard');" class="btn" style="margin-top:15px;">ទៅកាន់ Dashboard</button>
                         </div>
@@ -3115,28 +2915,25 @@
                     document.getElementById('withdrawQRPreview').innerHTML = '';
                     if (qrInput) qrInput.dataset.qrData = '';
                     document.getElementById('withdrawAmount').value = '';
-                    var btns = document.querySelectorAll('.amount-btn');
-                    for (var i = 0; i < btns.length; i++) {
-                        btns[i].classList.remove('active');
-                    }
+                    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
                 }
             }
         }
 
         function saveBankInfo() {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
                 showToast('សូមចូលប្រើជា Sub Admin!', 'error');
                 return;
             }
 
-            var admin = data.subAdmins[user.phone];
+            const admin = data.subAdmins[user.phone];
             if (!admin) { showToast('មិនឃើញព័ត៌មាន Admin!', 'error'); return; }
 
-            var bankName = document.getElementById('bankName').value.trim();
-            var bankAccount = document.getElementById('bankAccount').value.trim();
-            var qrInput = document.getElementById('qrAdminInput');
-            var qrData = qrInput ? qrInput.dataset.qrData : null;
+            const bankName = document.getElementById('bankName').value.trim();
+            const bankAccount = document.getElementById('bankAccount').value.trim();
+            const qrInput = document.getElementById('qrAdminInput');
+            const qrData = qrInput ? qrInput.dataset.qrData : null;
 
             admin.bankName = bankName || admin.bankName || '';
             admin.bankAccount = bankAccount || admin.bankAccount || '';
@@ -3146,20 +2943,20 @@
             logActivity(admin.id, admin.username, 'update_bank_info', 'administration', null, null,
                 'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានទូទាត់');
 
-            showToast('✅ រក្សាទុកព័ត៌មានជោគជ័យ! សមាជិកទាំងអស់អាចមើលឃើញ', 'success');
+            showToast('✅ រក្សាទុកព័ត៌មានជោគជ័យ!', 'success');
         }
 
         function saveCommissionSettings() {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
                 showToast('សូមចូលប្រើជា Sub Admin!', 'error');
                 return;
             }
 
-            var admin = data.subAdmins[user.phone];
+            const admin = data.subAdmins[user.phone];
             if (!admin) { showToast('មិនឃើញព័ត៌មាន Admin!', 'error'); return; }
 
-            var rate = parseFloat(document.getElementById('commissionRate').value);
+            const rate = parseFloat(document.getElementById('commissionRate').value);
             if (isNaN(rate) || rate < 0 || rate > 20) {
                 showToast('សូមបញ្ចូលអត្រាចន្លោះ 0-20%!', 'error');
                 return;
@@ -3170,57 +2967,51 @@
             logActivity(admin.id, admin.username, 'update_commission', 'administration', null, null,
                 'កំណត់អត្រាកម្រៃ ' + rate + '%');
 
-            showToast('✅ កំណត់អត្រាកម្រៃ ' + rate + '% ជោគជ័យ!', 'success');
+            showToast(`✅ កំណត់អត្រាកម្រៃ ${rate}% ជោគជ័យ!`, 'success');
         }
 
         function fundSubAdmin() {
-            var amount = parseFloat(document.getElementById('superFundAmount').value);
-            var targetPhone = document.getElementById('superFundTarget').value;
-            var currency = document.getElementById('superFundCurrency').value;
-            var msg = document.getElementById('superFundMessage');
+            const amount = parseFloat(document.getElementById('superFundAmount').value);
+            const targetPhone = document.getElementById('superFundTarget').value;
+            const msg = document.getElementById('superFundMessage');
 
             if (!targetPhone) {
-                msg.innerHTML = '<div class="error">មិនទាន់មាន Sub Admin!</div>';
+                msg.innerHTML = `<div class="error">មិនទាន់មាន Sub Admin!</div>`;
                 return;
             }
 
             if (!amount || amount <= 0) {
-                msg.innerHTML = '<div class="error">សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!</div>';
+                msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!</div>`;
                 return;
             }
 
-            var amountUSD = amount;
-            if (currency === 'riel') {
-                amountUSD = convertToUSD(amount);
-            }
-
-            var subAdmin = data.subAdmins[targetPhone];
+            const subAdmin = data.subAdmins[targetPhone];
             if (!subAdmin) {
-                msg.innerHTML = '<div class="error">មិនឃើញ Sub Admin!</div>';
+                msg.innerHTML = `<div class="error">មិនឃើញ Sub Admin!</div>`;
                 return;
             }
 
-            subAdmin.balance += amountUSD;
-            subAdmin.totalReceived = (subAdmin.totalReceived || 0) + amountUSD;
+            subAdmin.balance += amount;
+            subAdmin.totalReceived = (subAdmin.totalReceived || 0) + amount;
             saveData();
 
-            logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', subAdmin.phone, amountUSD,
-                'បញ្ចូល $' + amountUSD.toFixed(2) + ' ទៅ ' + subAdmin.username);
+            logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', subAdmin.phone, amount,
+                'បញ្ចូល $' + amount.toFixed(2) + ' ទៅ ' + subAdmin.username);
 
             sendNotification('email', subAdmin.phone + '@example.com',
-                'អ្នកបានទទួលប្រាក់ $' + amountUSD.toFixed(2) + ' ពី Super Admin');
+                `អ្នកបានទទួលប្រាក់ $${amount.toFixed(2)} ពី Super Admin`);
 
-            msg.innerHTML = '<div class="success">✅ បញ្ចូល $' + amountUSD.toFixed(2) + ' ទៅ ' + subAdmin.username + ' ជោគជ័យ!</div>';
+            msg.innerHTML = `<div class="success">✅ បញ្ចូល $${amount.toFixed(2)} ទៅ ${subAdmin.username} ជោគជ័យ!</div>`;
             document.getElementById('superFundAmount').value = '';
-            setTimeout(function() { renderPage('super-dashboard'); }, 1500);
+            setTimeout(() => renderPage('super-dashboard'), 1500);
         }
 
         function updateExchangeRate() {
-            var rate = parseFloat(document.getElementById('exchangeRateInput').value);
-            var msg = document.getElementById('exchangeRateMessage');
+            const rate = parseFloat(document.getElementById('exchangeRateInput').value);
+            const msg = document.getElementById('exchangeRateMessage');
 
             if (!rate || rate < 1000) {
-                msg.innerHTML = '<div class="error">សូមបញ្ចូលអត្រាត្រឹមត្រូវ! (យ៉ាងតិច 1000៛)</div>';
+                msg.innerHTML = `<div class="error">សូមបញ្ចូលអត្រាត្រឹមត្រូវ! (យ៉ាងតិច 1000៛)</div>`;
                 return;
             }
 
@@ -3229,12 +3020,12 @@
             logActivity('SUPER-001', 'Super Admin', 'update_exchange_rate', 'administration', null, null,
                 'កំណត់អត្រាប្តូរប្រាក់ ' + rate + '៛/$');
 
-            msg.innerHTML = '<div class="success">✅ កំណត់អត្រា ' + rate + '៛/$ ជោគជ័យ!</div>';
-            setTimeout(function() { msg.innerHTML = ''; }, 3000);
+            msg.innerHTML = `<div class="success">✅ កំណត់អត្រា ${rate}៛/$ ជោគជ័យ!</div>`;
+            setTimeout(() => { msg.innerHTML = ''; }, 3000);
         }
 
         // ================================================================
-        // TRANSACTION APPROVAL
+        // ===== TRANSACTION APPROVAL =====
         // ================================================================
 
         function approveTransaction(txId) {
@@ -3252,24 +3043,19 @@
         }
 
         function confirmApprove(txId) {
-            var tx = null;
-            for (var i = 0; i < data.transactions.length; i++) {
-                if (data.transactions[i].id === txId) {
-                    tx = data.transactions[i];
-                    break;
-                }
-            }
+            const tx = data.transactions.find(t => t.id === txId);
             if (!tx) { showToast('មិនឃើញប្រតិបត្តិការ!', 'error'); return; }
 
             tx.status = 'completed';
 
-            var member = data.members[tx.memberPhone];
+            const member = data.members[tx.memberPhone];
             if (member) {
                 if (tx.type === 'deposit') {
                     member.balance += tx.amount;
                     member.benefits.push('💰 បានដាក់ប្រាក់ $' + tx.amount.toFixed(2) + ' នៅថ្ងៃ ' + new Date().toLocaleDateString('km-KH'));
 
-                    var comm = addCommission(tx.memberPhone, tx.id, tx.amount);
+                    // Add commission
+                    const comm = addCommission(tx.memberPhone, tx.id, tx.amount);
                     if (comm) {
                         approveCommission(comm.id);
                     }
@@ -3282,17 +3068,14 @@
 
             saveData();
 
-            var adminUser = getCurrentUser();
-            if (adminUser) {
-                var admin = data.subAdmins[adminUser.phone];
-                if (admin) {
-                    logActivity(admin.id, admin.username, 'approve_transaction', 'financial', tx.memberPhone, tx.amount,
-                        'យល់ព្រមលើប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
-                }
+            const admin = data.subAdmins[tx.adminId];
+            if (admin) {
+                logActivity(admin.id, admin.username, 'approve_transaction', 'financial', tx.memberPhone, tx.amount,
+                    'យល់ព្រមលើប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
             }
 
             sendNotification('email', tx.memberPhone + '@example.com',
-                'ប្រតិបត្តិការ ' + tx.id + ' ត្រូវបានអនុម័ត! ចំនួន: $' + tx.amount.toFixed(2));
+                `ប្រតិបត្តិការ ${tx.id} ត្រូវបានអនុម័ត! ចំនួន: $${tx.amount.toFixed(2)}`);
 
             showToast('✅ ប្រតិបត្តិការត្រូវបានយល់ព្រម!', 'success');
             renderPage('admin-dashboard');
@@ -3313,40 +3096,31 @@
         }
 
         function confirmReject(txId) {
-            var tx = null;
-            for (var i = 0; i < data.transactions.length; i++) {
-                if (data.transactions[i].id === txId) {
-                    tx = data.transactions[i];
-                    break;
-                }
-            }
+            const tx = data.transactions.find(t => t.id === txId);
             if (!tx) { showToast('មិនឃើញប្រតិបត្តិការ!', 'error'); return; }
 
             tx.status = 'rejected';
             saveData();
 
-            var adminUser = getCurrentUser();
-            if (adminUser) {
-                var admin = data.subAdmins[adminUser.phone];
-                if (admin) {
-                    logActivity(admin.id, admin.username, 'reject_transaction', 'financial', tx.memberPhone, tx.amount,
-                        'បដិសេធប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
-                }
+            const admin = data.subAdmins[tx.adminId];
+            if (admin) {
+                logActivity(admin.id, admin.username, 'reject_transaction', 'financial', tx.memberPhone, tx.amount,
+                    'បដិសេធប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
             }
 
             sendNotification('email', tx.memberPhone + '@example.com',
-                'ប្រតិបត្តិការ ' + tx.id + ' ត្រូវបានបដិសេធ!');
+                `ប្រតិបត្តិការ ${tx.id} ត្រូវបានបដិសេធ!`);
 
             showToast('❌ ប្រតិបត្តិការត្រូវបានបដិសេធ!', 'error');
             renderPage('admin-dashboard');
         }
 
         // ================================================================
-        // SUPER ADMIN CRUD
+        // ===== SUPER ADMIN CRUD FUNCTIONS =====
         // ================================================================
 
         function superEditMember(phone) {
-            var member = data.members[phone];
+            const member = data.members[phone];
             if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
 
             showModal(`
@@ -3371,40 +3145,34 @@
 
             document.getElementById('superEditMemberForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                var oldPhone = document.getElementById('editMemberPhone').value;
-                var username = document.getElementById('editMemberUsername').value.trim();
-                var newPhone = document.getElementById('editMemberNewPhone').value.trim();
-                var currency = document.getElementById('editMemberCurrency').value;
-                var msg = document.getElementById('superEditMemberMessage');
+                const oldPhone = document.getElementById('editMemberPhone').value;
+                const username = document.getElementById('editMemberUsername').value.trim();
+                const newPhone = document.getElementById('editMemberNewPhone').value.trim();
+                const currency = document.getElementById('editMemberCurrency').value;
+                const msg = document.getElementById('superEditMemberMessage');
 
                 if (!newPhone || !/^\d{9,}$/.test(newPhone)) {
-                    msg.innerHTML = '<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>';
+                    msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
                     return;
                 }
 
-                var member = data.members[oldPhone];
-                if (!member) { msg.innerHTML = '<div class="error">មិនឃើញសមាជិក!</div>'; return; }
+                const member = data.members[oldPhone];
+                if (!member) { msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`; return; }
 
                 if (newPhone !== oldPhone && data.members[newPhone]) {
-                    msg.innerHTML = '<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>';
+                    msg.innerHTML = `<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>`;
                     return;
+                }
+
+                if (newPhone !== oldPhone && member.adminId) {
+                    const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
+                    if (admin) {
+                        admin.members = admin.members.map(p => p === oldPhone ? newPhone : p);
+                    }
                 }
 
                 if (newPhone !== oldPhone) {
-                    data.members[newPhone] = { 
-                        username: username || newPhone,
-                        password: member.password,
-                        phone: newPhone,
-                        id: member.id,
-                        role: member.role,
-                        balance: member.balance,
-                        benefits: member.benefits || [],
-                        adminId: member.adminId,
-                        preferredCurrency: currency,
-                        createdAt: member.createdAt,
-                        commissionRate: member.commissionRate || 0.05,
-                        totalCommission: member.totalCommission || 0
-                    };
+                    data.members[newPhone] = { ...member, phone: newPhone, username: username || newPhone, preferredCurrency: currency };
                     delete data.members[oldPhone];
                 } else {
                     member.username = username || member.phone;
@@ -3415,8 +3183,8 @@
                 logActivity('SUPER-001', 'Super Admin', 'edit_member', 'administration', newPhone, null,
                     'កែប្រែសមាជិក ' + (username || newPhone));
 
-                msg.innerHTML = '<div class="success">✅ កែប្រែជោគជ័យ!</div>';
-                setTimeout(function() { hideModal(); renderPage('super-dashboard'); }, 1000);
+                msg.innerHTML = `<div class="success">✅ កែប្រែជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
             });
         }
 
@@ -3436,8 +3204,15 @@
         }
 
         function confirmSuperDeleteMember(phone) {
-            var member = data.members[phone];
+            const member = data.members[phone];
             if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
+
+            if (member.adminId) {
+                const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
+                if (admin) {
+                    admin.members = admin.members.filter(p => p !== phone);
+                }
+            }
 
             delete data.members[phone];
             saveData();
@@ -3449,7 +3224,7 @@
         }
 
         function superEditAdmin(phone) {
-            var admin = data.subAdmins[phone];
+            const admin = data.subAdmins[phone];
             if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
 
             showModal(`
@@ -3470,39 +3245,23 @@
 
             document.getElementById('superEditAdminForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                var oldPhone = document.getElementById('editAdminPhone').value;
-                var name = document.getElementById('editAdminName').value.trim();
-                var newPhone = document.getElementById('editAdminNewPhone').value.trim();
-                var msg = document.getElementById('superEditAdminMessage');
+                const oldPhone = document.getElementById('editAdminPhone').value;
+                const name = document.getElementById('editAdminName').value.trim();
+                const newPhone = document.getElementById('editAdminNewPhone').value.trim();
+                const msg = document.getElementById('superEditAdminMessage');
 
                 if (!name || !newPhone || !/^\d{9,}$/.test(newPhone)) {
-                    msg.innerHTML = '<div class="error">ព័ត៌មានមិនត្រឹមត្រូវ!</div>';
+                    msg.innerHTML = `<div class="error">ព័ត៌មានមិនត្រឹមត្រូវ!</div>`;
                     return;
                 }
 
                 if (newPhone !== oldPhone && data.subAdmins[newPhone]) {
-                    msg.innerHTML = '<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>';
+                    msg.innerHTML = `<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>`;
                     return;
                 }
 
                 if (newPhone !== oldPhone) {
-                    data.subAdmins[newPhone] = { 
-                        username: name,
-                        password: admin.password,
-                        phone: newPhone,
-                        id: admin.id,
-                        role: admin.role,
-                        balance: admin.balance,
-                        totalReceived: admin.totalReceived || 0,
-                        totalTransferred: admin.totalTransferred || 0,
-                        members: admin.members || [],
-                        createdBy: admin.createdBy,
-                        createdAt: admin.createdAt,
-                        commissionRate: admin.commissionRate || 0.05,
-                        bankName: admin.bankName || '',
-                        bankAccount: admin.bankAccount || '',
-                        qrCode: admin.qrCode || ''
-                    };
+                    data.subAdmins[newPhone] = { ...admin, phone: newPhone, username: name };
                     delete data.subAdmins[oldPhone];
                 } else {
                     admin.username = name;
@@ -3512,8 +3271,8 @@
                 logActivity('SUPER-001', 'Super Admin', 'edit_admin', 'administration', newPhone, null,
                     'កែប្រែ Sub Admin ' + name);
 
-                msg.innerHTML = '<div class="success">✅ កែប្រែជោគជ័យ!</div>';
-                setTimeout(function() { hideModal(); renderPage('super-dashboard'); }, 1000);
+                msg.innerHTML = `<div class="success">✅ កែប្រែជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
             });
         }
 
@@ -3533,8 +3292,14 @@
         }
 
         function confirmSuperDeleteAdmin(phone) {
-            var admin = data.subAdmins[phone];
+            const admin = data.subAdmins[phone];
             if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
+
+            Object.values(data.members).forEach(m => {
+                if (m.adminId === admin.id) {
+                    m.adminId = null;
+                }
+            });
 
             delete data.subAdmins[phone];
             saveData();
@@ -3546,11 +3311,11 @@
         }
 
         // ================================================================
-        // HELPER FUNCTIONS
+        // ===== HELPER FUNCTIONS =====
         // ================================================================
 
         function togglePassword(inputId, btn) {
-            var input = document.getElementById(inputId);
+            const input = document.getElementById(inputId);
             if (!input) return;
             if (input.type === 'password') {
                 input.type = 'text';
@@ -3559,6 +3324,61 @@
                 input.type = 'password';
                 btn.textContent = '👁️';
             }
+        }
+
+        function assignAdmin(memberPhone) {
+            const member = data.members[memberPhone];
+            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
+
+            const adminList = Object.values(data.subAdmins);
+            if (adminList.length === 0) {
+                showToast('មិនទាន់មាន Sub Admin! សូមបង្កើតមុន', 'error');
+                return;
+            }
+
+            showModal(`
+                <div style="text-align:center;">
+                    <h3 style="color:#ffd700;margin-bottom:15px;">👑 ចាត់តាំង Admin</h3>
+                    <p style="color:rgba(255,255,255,0.6);">ជ្រើសរើស Sub Admin សម្រាប់ ${member.username || member.phone}</p>
+                    <select id="assignAdminSelect" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                        ${adminList.map(a => `<option value="${a.phone}" ${member.adminId === a.id ? 'selected' : ''}>${a.username} ($${a.balance.toFixed(2)})</option>`).join('')}
+                    </select>
+                    <div style="display:flex;gap:10px;margin-top:15px;">
+                        <button onclick="confirmAssignAdmin('${memberPhone}')" class="btn btn-gold" style="flex:1;">✅ ចាត់តាំង</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function confirmAssignAdmin(memberPhone) {
+            const member = data.members[memberPhone];
+            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
+
+            const adminPhone = document.getElementById('assignAdminSelect').value;
+            const admin = data.subAdmins[adminPhone];
+            if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
+
+            // Remove from old admin
+            if (member.adminId) {
+                const oldAdmin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
+                if (oldAdmin) {
+                    oldAdmin.members = oldAdmin.members.filter(p => p !== memberPhone);
+                }
+            }
+
+            member.adminId = admin.id;
+            if (!admin.members.includes(memberPhone)) {
+                admin.members.push(memberPhone);
+            }
+
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'assign_admin', 'administration', memberPhone, null,
+                'ចាត់តាំង ' + admin.username + ' ឲ្យ ' + (member.username || member.phone));
+
+            hideModal();
+            showToast(`✅ ចាត់តាំង ${admin.username} ជោគជ័យ!`, 'success');
+            renderPage('super-dashboard');
         }
 
         function resetAdminPassword(phone) {
@@ -3579,25 +3399,25 @@
 
             document.getElementById('resetPwdForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                var phone = document.getElementById('resetPwdPhone').value;
-                var newPwd = document.getElementById('resetPwdNew').value.trim();
-                var msg = document.getElementById('resetPwdMessage');
+                const phone = document.getElementById('resetPwdPhone').value;
+                const newPwd = document.getElementById('resetPwdNew').value.trim();
+                const msg = document.getElementById('resetPwdMessage');
 
                 if (!newPwd || newPwd.length < 4) {
-                    msg.innerHTML = '<div class="error">ត្រូវមានយ៉ាងតិច ៤ តួ!</div>';
+                    msg.innerHTML = `<div class="error">ត្រូវមានយ៉ាងតិច ៤ តួ!</div>`;
                     return;
                 }
 
-                var admin = data.subAdmins[phone];
-                if (!admin) { msg.innerHTML = '<div class="error">មិនឃើញ Sub Admin!</div>'; return; }
+                const admin = data.subAdmins[phone];
+                if (!admin) { msg.innerHTML = `<div class="error">មិនឃើញ Sub Admin!</div>`; return; }
 
                 admin.password = newPwd;
                 saveData();
                 logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null,
                     'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + admin.username);
 
-                msg.innerHTML = '<div class="success">✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!</div>';
-                setTimeout(function() { hideModal(); renderPage('super-dashboard'); }, 1000);
+                msg.innerHTML = `<div class="success">✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
             });
         }
 
@@ -3619,32 +3439,32 @@
 
             document.getElementById('resetMemberPwdForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                var phone = document.getElementById('resetMemberPwdPhone').value;
-                var newPwd = document.getElementById('resetMemberPwdNew').value.trim();
-                var msg = document.getElementById('resetMemberPwdMessage');
+                const phone = document.getElementById('resetMemberPwdPhone').value;
+                const newPwd = document.getElementById('resetMemberPwdNew').value.trim();
+                const msg = document.getElementById('resetMemberPwdMessage');
 
                 if (!newPwd || newPwd.length < 4) {
-                    msg.innerHTML = '<div class="error">ត្រូវមានយ៉ាងតិច ៤ តួ!</div>';
+                    msg.innerHTML = `<div class="error">ត្រូវមានយ៉ាងតិច ៤ តួ!</div>`;
                     return;
                 }
 
-                var member = data.members[phone];
-                if (!member) { msg.innerHTML = '<div class="error">មិនឃើញសមាជិក!</div>'; return; }
+                const member = data.members[phone];
+                if (!member) { msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`; return; }
 
                 member.password = newPwd;
                 saveData();
                 logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null,
                     'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + (member.username || phone));
 
-                msg.innerHTML = '<div class="success">✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!</div>';
-                setTimeout(function() { hideModal(); renderPage('super-dashboard'); }, 1000);
+                msg.innerHTML = `<div class="success">✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
             });
         }
 
         function resendOTP(phone) {
-            var superAdmin = Object.values(data.superAdmins)[0];
+            const superAdmin = Object.values(data.superAdmins)[0];
             if (!superAdmin) { showToast('មិនឃើញ Super Admin!', 'error'); return; }
-            var otp = generateOTP();
+            const otp = generateOTP();
             data.superAdminOTP = otp;
             data.superAdminOTPTime = Date.now();
             saveData();
@@ -3653,28 +3473,28 @@
         }
 
         function exportData() {
-            var str = JSON.stringify(data, null, 2);
-            var blob = new Blob([str], { type: 'application/json' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
+            const str = JSON.stringify(data, null, 2);
+            const blob = new Blob([str], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
             a.href = url;
-            a.download = 'backup_' + new Date().toISOString().slice(0,10) + '.json';
+            a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
             a.click();
             URL.revokeObjectURL(url);
             showToast('📤 នាំចេញទិន្នន័យជោគជ័យ!', 'success');
         }
 
         function importData() {
-            var input = document.createElement('input');
+            const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
             input.onchange = function(e) {
-                var file = e.target.files[0];
+                const file = e.target.files[0];
                 if (!file) return;
-                var reader = new FileReader();
+                const reader = new FileReader();
                 reader.onload = function(ev) {
                     try {
-                        var imported = JSON.parse(ev.target.result);
+                        const imported = JSON.parse(ev.target.result);
                         if (!imported.members || !imported.transactions) {
                             showToast('ទម្រង់ទិន្នន័យមិនត្រឹមត្រូវ!', 'error');
                             return;
@@ -3695,7 +3515,7 @@
         }
 
         function goBack() {
-            var user = getCurrentUser();
+            const user = getCurrentUser();
             if (user) {
                 if (user.role === 'super_admin') renderPage('super-dashboard');
                 else if (user.role === 'sub_admin') renderPage('admin-dashboard');
@@ -3707,7 +3527,7 @@
 
         // ===== SEARCH =====
         function setupSearch() {
-            var searchInput = document.getElementById('searchMembersInput');
+            const searchInput = document.getElementById('searchMembersInput');
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
                     searchMembersLive(this.value);
@@ -3716,62 +3536,62 @@
         }
 
         function searchMembersLive(query) {
-            var container = document.getElementById('memberListContainer');
-            var resultsContainer = document.getElementById('searchResults');
+            const container = document.getElementById('memberListContainer');
+            const resultsContainer = document.getElementById('searchResults');
             if (!container) return;
 
-            var q = query.toLowerCase().trim();
+            const q = query.toLowerCase().trim();
 
             if (!q) {
+                // Show all members
                 if (resultsContainer) {
                     resultsContainer.innerHTML = '';
                     resultsContainer.style.display = 'none';
                 }
+                // Re-render member list
                 renderMemberList();
                 return;
             }
 
-            var members = Object.values(data.members);
-            var filtered = [];
-            for (var i = 0; i < members.length; i++) {
-                var m = members[i];
-                if ((m.username && m.username.toLowerCase().indexOf(q) !== -1) ||
-                    m.phone.indexOf(q) !== -1 ||
-                    m.id.toLowerCase().indexOf(q) !== -1) {
-                    filtered.push(m);
-                }
-            }
+            const members = Object.values(data.members);
+            const filtered = members.filter(m =>
+                (m.username && m.username.toLowerCase().includes(q)) ||
+                m.phone.includes(q) ||
+                m.id.toLowerCase().includes(q)
+            );
 
             if (resultsContainer) {
                 resultsContainer.style.display = 'block';
                 if (filtered.length === 0) {
-                    resultsContainer.innerHTML = '<p style="opacity:0.4;padding:10px;text-align:center;">មិនឃើញលទ្ធផល</p>';
+                    resultsContainer.innerHTML = `<p style="opacity:0.4;padding:10px;text-align:center;">មិនឃើញលទ្ធផល</p>`;
                 } else {
-                    var html = '';
-                    for (var j = 0; j < filtered.length; j++) {
-                        var m = filtered[j];
-                        var preferredCurrency = m.preferredCurrency || 'usd';
+                    let html = '';
+                    filtered.forEach(m => {
+                        const admin = data.subAdmins[m.adminId];
+                        const preferredCurrency = m.preferredCurrency || 'usd';
                         html += `
                             <div class="list-item">
                                 <div class="info">
                                     <span class="name">${m.username || m.phone}</span>
                                     <span class="id">🆔 ${m.id}</span>
                                     <span class="sub">📱 ${m.phone}</span>
+                                    <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
                                 </div>
                                 <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                                 <div class="actions">
-                                    <button onclick="editBalance('member', '${m.phone}')" class="btn btn-gold btn-sm">💰</button>
                                     <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
                                     <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                                     <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                                    <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                                 </div>
                             </div>
                         `;
-                    }
+                    });
                     resultsContainer.innerHTML = html;
                 }
             }
 
+            // Hide the main member list when searching
             if (q) {
                 container.style.display = 'none';
             } else {
@@ -3780,14 +3600,13 @@
         }
 
         function renderMemberList() {
-            var container = document.getElementById('memberListContainer');
+            const container = document.getElementById('memberListContainer');
             if (!container) return;
 
-            var memberKeys = Object.keys(data.members);
-            var html = '';
-            for (var i = 0; i < memberKeys.length; i++) {
-                var m = data.members[memberKeys[i]];
-                var preferredCurrency = m.preferredCurrency || 'usd';
+            let html = '';
+            Object.values(data.members).forEach(m => {
+                const admin = data.subAdmins[m.adminId];
+                const preferredCurrency = m.preferredCurrency || 'usd';
                 html += `
                     <div class="list-item member-item" data-phone="${m.phone}" data-name="${m.username || ''}" data-id="${m.id}">
                         <div class="info">
@@ -3795,22 +3614,24 @@
                             <span class="id">🆔 ${m.id}</span>
                             <span class="sub">📱 ${m.phone}</span>
                             <span class="pwd">🔑 ${m.password}</span>
+                            <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
                             <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
                         </div>
                         <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                         <div class="actions">
-                            <button onclick="editBalance('member', '${m.phone}')" class="btn btn-gold btn-sm">💰</button>
                             <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
                             <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                             <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                         </div>
                     </div>
                 `;
-            }
+            });
 
             container.innerHTML = html || '<p style="opacity:0.4;">មិនទាន់មាន</p>';
 
-            var resultsContainer = document.getElementById('searchResults');
+            // Restore search results visibility
+            const resultsContainer = document.getElementById('searchResults');
             if (resultsContainer) {
                 resultsContainer.innerHTML = '';
                 resultsContainer.style.display = 'none';
@@ -3823,12 +3644,12 @@
         }
 
         function generateReportDisplay(period) {
-            var container = document.getElementById('reportContent');
+            const container = document.getElementById('reportContent');
             if (!container) return;
 
-            var report = generateReport(period);
+            const report = generateReport(period);
 
-            var html = `
+            let html = `
                 <div class="card">
                     <h3>📊 របាយការណ៍ ${period === 'daily' ? 'ប្រចាំថ្ងៃ' : period === 'weekly' ? 'ប្រចាំសប្តាហ៍' : 'ប្រចាំខែ'}</h3>
                     <div style="font-size:12px;color:rgba(255,255,255,0.4);">
@@ -3861,18 +3682,16 @@
                         </div>
                     </div>
                     <div style="margin-top:10px;max-height:150px;overflow-y:auto;">
-                        ${report.transactions.slice(0, 10).map(function(tx) {
-                            return `
-                                <div class="transaction-item">
-                                    <div>
-                                        <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${tx.type}</span>
-                                        <span style="opacity:0.5;font-size:11px;">${tx.description || ''}</span>
-                                    </div>
-                                    <div style="color:${tx.type === 'deposit' ? '#48bb78' : '#fc8181'};font-weight:600;">${tx.type === 'deposit' ? '+' : '-'}$${tx.amount.toFixed(2)}</div>
+                        ${report.transactions.slice(0, 10).map(tx => `
+                            <div class="transaction-item">
+                                <div>
+                                    <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${tx.type}</span>
+                                    <span style="opacity:0.5;font-size:11px;">${tx.description || ''}</span>
                                 </div>
-                            `;
-                        }).join('')}
-                        ${report.transactions.length > 10 ? '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>' : ''}
+                                <div style="color:${tx.type === 'deposit' ? '#48bb78' : '#fc8181'};font-weight:600;">${tx.type === 'deposit' ? '+' : '-'}$${tx.amount.toFixed(2)}</div>
+                            </div>
+                        `).join('')}
+                        ${report.transactions.length > 10 ? `<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>` : ''}
                     </div>
                 </div>
             `;
@@ -3880,9 +3699,9 @@
             container.innerHTML = html;
         }
 
-        function generateReport(period) {
-            var now = new Date();
-            var startDate = new Date();
+        function generateReport(period = 'daily') {
+            const now = new Date();
+            let startDate = new Date();
 
             if (period === 'daily') {
                 startDate.setHours(0, 0, 0, 0);
@@ -3892,21 +3711,13 @@
                 startDate.setMonth(now.getMonth() - 1);
             }
 
-            var filtered = [];
-            for (var i = 0; i < data.transactions.length; i++) {
-                var t = data.transactions[i];
-                if (new Date(t.timestamp) >= startDate &&
-                    new Date(t.timestamp) <= now &&
-                    t.status === 'completed') {
-                    filtered.push(t);
-                }
-            }
+            const filtered = data.transactions.filter(t =>
+                new Date(t.timestamp) >= startDate &&
+                new Date(t.timestamp) <= now &&
+                t.status === 'completed'
+            );
 
-            var totals = calculateTotals(filtered);
-            var totalCommissions = 0;
-            for (var j = 0; j < data.commissions.length; j++) {
-                totalCommissions += data.commissions[j].commission;
-            }
+            const totals = calculateTotals(filtered);
 
             return {
                 period: period,
@@ -3917,43 +3728,43 @@
                 totalWithdraws: totals.totalWithdraws,
                 netBalance: totals.netBalance,
                 totalMembers: Object.keys(data.members).length,
-                totalCommissions: totalCommissions
+                totalCommissions: data.commissions.reduce((sum, c) => sum + c.commission, 0)
             };
         }
 
         // ================================================================
-        // EVENT ATTACHMENT
+        // ===== EVENT ATTACHMENT =====
         // ================================================================
 
         function attachEvents(page, params) {
-            // Super Login
-            var superLoginForm = document.getElementById('superLoginForm');
+            // ---- SUPER LOGIN ----
+            const superLoginForm = document.getElementById('superLoginForm');
             if (superLoginForm) {
                 superLoginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    var phone = document.getElementById('superPhone').value.trim();
-                    var email = document.getElementById('superEmail').value.trim();
-                    var password = document.getElementById('superPassword').value.trim();
-                    var msg = document.getElementById('message');
+                    const phone = document.getElementById('superPhone').value.trim();
+                    const email = document.getElementById('superEmail').value.trim();
+                    const password = document.getElementById('superPassword').value.trim();
+                    const msg = document.getElementById('message');
 
                     if (!verifyCaptcha()) {
-                        msg.innerHTML = '<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>';
+                        msg.innerHTML = `<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>`;
                         refreshCaptcha();
                         return;
                     }
 
-                    var superAdmin = Object.values(data.superAdmins)[0];
+                    const superAdmin = Object.values(data.superAdmins)[0];
                     if (!superAdmin) {
-                        msg.innerHTML = '<div class="error">មិនឃើញ Super Admin!</div>';
+                        msg.innerHTML = `<div class="error">មិនឃើញ Super Admin!</div>`;
                         return;
                     }
 
                     if (password !== superAdmin.password) {
-                        msg.innerHTML = '<div class="error">❌ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>';
+                        msg.innerHTML = `<div class="error">❌ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!</div>`;
                         return;
                     }
 
-                    var otp = generateOTP();
+                    const otp = generateOTP();
                     data.superAdminOTP = otp;
                     data.superAdminOTPTime = Date.now();
                     saveData();
@@ -3971,58 +3782,48 @@
                 });
             }
 
-            // Super OTP
-            var superOTPForm = document.getElementById('superOTPForm');
+            // ---- SUPER OTP ----
+            const superOTPForm = document.getElementById('superOTPForm');
             if (superOTPForm) {
-                var otpDigits = document.querySelectorAll('.otp-digit');
-                for (var i = 0; i < otpDigits.length; i++) {
-                    (function(index, arr) {
-                        otpDigits[index].addEventListener('input', function() {
-                            if (this.value.length === 1 && index < arr.length - 1) {
-                                arr[index + 1].focus();
-                            }
-                        });
-                        otpDigits[index].addEventListener('keydown', function(e) {
-                            if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
-                                arr[index - 1].focus();
-                            }
-                        });
-                    })(i, otpDigits);
-                }
+                document.querySelectorAll('.otp-digit').forEach((input, index, arr) => {
+                    input.addEventListener('input', function() {
+                        if (this.value.length === 1 && index < arr.length - 1) arr[index + 1].focus();
+                    });
+                    input.addEventListener('keydown', function(e) {
+                        if (e.key === 'Backspace' && this.value.length === 0 && index > 0) arr[index - 1].focus();
+                    });
+                });
 
                 superOTPForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    var phone = document.getElementById('otpPhone').value;
-                    var msg = document.getElementById('message');
+                    const phone = document.getElementById('otpPhone').value;
+                    const msg = document.getElementById('message');
 
-                    var otp = '';
-                    var digits = document.querySelectorAll('.otp-digit');
-                    for (var j = 0; j < digits.length; j++) {
-                        otp += digits[j].value;
-                    }
+                    let otp = '';
+                    document.querySelectorAll('.otp-digit').forEach(inp => otp += inp.value);
 
                     if (otp.length !== 6) {
-                        msg.innerHTML = '<div class="error">សូមបញ្ចូល ៦ ខ្ទង់!</div>';
+                        msg.innerHTML = `<div class="error">សូមបញ្ចូល ៦ ខ្ទង់!</div>`;
                         return;
                     }
 
-                    var superAdmin = Object.values(data.superAdmins)[0];
+                    const superAdmin = Object.values(data.superAdmins)[0];
                     if (!superAdmin) {
-                        msg.innerHTML = '<div class="error">មិនឃើញ Super Admin!</div>';
+                        msg.innerHTML = `<div class="error">មិនឃើញ Super Admin!</div>`;
                         return;
                     }
 
-                    var storedOTP = data.superAdminOTP;
-                    var otpTime = data.superAdminOTPTime || 0;
-                    var now = Date.now();
+                    const storedOTP = data.superAdminOTP;
+                    const otpTime = data.superAdminOTPTime || 0;
+                    const now = Date.now();
 
                     if (!storedOTP || now - otpTime > 5 * 60 * 1000) {
-                        msg.innerHTML = '<div class="error">⏱️ OTP ផុតកំណត់!</div>';
+                        msg.innerHTML = `<div class="error">⏱️ OTP ផុតកំណត់!</div>`;
                         return;
                     }
 
                     if (otp !== storedOTP) {
-                        msg.innerHTML = '<div class="error">❌ OTP មិនត្រឹមត្រូវ!</div>';
+                        msg.innerHTML = `<div class="error">❌ OTP មិនត្រឹមត្រូវ!</div>`;
                         return;
                     }
 
@@ -4039,40 +3840,40 @@
                 });
             }
 
-            // Login
-            var loginForm = document.getElementById('loginForm');
+            // ---- LOGIN ----
+            const loginForm = document.getElementById('loginForm');
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    var role = document.getElementById('loginRole').value;
-                    var phone = document.getElementById('loginPhone').value.trim();
-                    var password = document.getElementById('loginPassword').value.trim();
-                    var msg = document.getElementById('message');
+                    const role = document.getElementById('loginRole').value;
+                    const phone = document.getElementById('loginPhone').value.trim();
+                    const password = document.getElementById('loginPassword').value.trim();
+                    const msg = document.getElementById('message');
 
                     if (!phone || !password) {
-                        msg.innerHTML = '<div class="error">សូមបំពេញព័ត៌មាន!</div>';
+                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
                         return;
                     }
 
                     if (!verifyCaptcha()) {
-                        msg.innerHTML = '<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>';
+                        msg.innerHTML = `<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>`;
                         refreshCaptcha();
                         return;
                     }
 
                     if (role === 'sub_admin') {
-                        var admin = data.subAdmins[phone];
+                        const admin = data.subAdmins[phone];
                         if (!admin || admin.password !== password) {
-                            msg.innerHTML = '<div class="error">❌ មិនត្រឹមត្រូវ!</div>';
+                            msg.innerHTML = `<div class="error">❌ មិនត្រឹមត្រូវ!</div>`;
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'sub_admin', name: admin.username });
                         logActivity(admin.id, admin.username, 'login', 'authentication', null, null, 'ចូលប្រើជា Sub Admin');
                         renderPage('admin-dashboard');
                     } else {
-                        var member = data.members[phone];
+                        const member = data.members[phone];
                         if (!member || member.password !== password) {
-                            msg.innerHTML = '<div class="error">❌ មិនត្រឹមត្រូវ!</div>';
+                            msg.innerHTML = `<div class="error">❌ មិនត្រឹមត្រូវ!</div>`;
                             return;
                         }
                         setCurrentUser({ phone: phone, role: 'member', name: member.username || phone });
@@ -4082,49 +3883,43 @@
                 });
             }
 
-            // Register
-            var registerForm = document.getElementById('registerForm');
+            // ---- REGISTER ----
+            const registerForm = document.getElementById('registerForm');
             if (registerForm) {
                 registerForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    var username = document.getElementById('regUsername').value.trim();
-                    var phone = document.getElementById('regPhone').value.trim();
-                    var password = document.getElementById('regPassword').value.trim();
-                    var confirm = document.getElementById('regConfirmPassword').value.trim();
-                    var preferredCurrency = document.getElementById('regCurrency').value;
-                    var msg = document.getElementById('message');
+                    const username = document.getElementById('regUsername').value.trim();
+                    const phone = document.getElementById('regPhone').value.trim();
+                    const password = document.getElementById('regPassword').value.trim();
+                    const confirm = document.getElementById('regConfirmPassword').value.trim();
+                    const preferredCurrency = document.getElementById('regCurrency').value;
+                    const msg = document.getElementById('message');
 
                     if (!phone || !password || !confirm) {
-                        msg.innerHTML = '<div class="error">សូមបំពេញព័ត៌មាន!</div>';
+                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
                         return;
                     }
 
                     if (!verifyCaptcha()) {
-                        msg.innerHTML = '<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>';
+                        msg.innerHTML = `<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>`;
                         refreshCaptcha();
                         return;
                     }
 
                     if (!/^\d{9,}$/.test(phone)) {
-                        msg.innerHTML = '<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>';
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
                         return;
                     }
                     if (password !== confirm) {
-                        msg.innerHTML = '<div class="error">ពាក្យសម្ងាត់មិនដូចគ្នា!</div>';
+                        msg.innerHTML = `<div class="error">ពាក្យសម្ងាត់មិនដូចគ្នា!</div>`;
                         return;
                     }
                     if (data.members[phone]) {
-                        msg.innerHTML = '<div class="error">លេខទូរសព្ទមានរួចហើយ!</div>';
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមានរួចហើយ!</div>`;
                         return;
                     }
 
-                    var admin = Object.values(data.subAdmins)[0];
-                    var adminId = admin ? admin.id : null;
-                    if (admin && admin.members.indexOf(phone) === -1) {
-                        admin.members.push(phone);
-                    }
-
-                    var newId = generateMemberId();
+                    const newId = generateMemberId();
                     data.members[phone] = {
                         username: username || phone,
                         password: password,
@@ -4133,7 +3928,7 @@
                         role: 'member',
                         balance: 0,
                         benefits: ['✨ សមាជិកថ្មី'],
-                        adminId: adminId,
+                        adminId: null,
                         preferredCurrency: preferredCurrency || 'usd',
                         createdAt: new Date().toISOString(),
                         commissionRate: 0.05,
@@ -4141,6 +3936,7 @@
                     };
                     saveData();
 
+                    // Auto-login
                     setCurrentUser({
                         phone: phone,
                         role: 'member',
@@ -4160,48 +3956,55 @@
                     registerForm.reset();
 
                     sendNotification('email', phone + '@example.com',
-                        'ស្វាគមន៍ ' + (username || phone) + '! អ្នកបានចុះឈ្មោះជោគជ័យ។');
+                        `ស្វាគមន៍ ${username || phone}! អ្នកបានចុះឈ្មោះជោគជ័យ។`);
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         renderPage('dashboard');
                     }, 2000);
                 });
             }
 
-            // Create Admin
-            var createAdminForm = document.getElementById('createAdminForm');
+            // ---- CREATE ADMIN ----
+            const createAdminForm = document.getElementById('createAdminForm');
             if (createAdminForm) {
                 createAdminForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    var name = document.getElementById('newAdminName').value.trim();
-                    var phone = document.getElementById('newAdminPhone').value.trim();
-                    var password = document.getElementById('newAdminPassword').value.trim();
-                    var msg = document.getElementById('createAdminMessage');
+                    const name = document.getElementById('newAdminName').value.trim();
+                    const phone = document.getElementById('newAdminPhone').value.trim();
+                    const password = document.getElementById('newAdminPassword').value.trim();
+                    const balance = parseFloat(document.getElementById('newAdminBalance').value) || 0;
+                    const msg = document.getElementById('createAdminMessage');
 
                     if (!name || !phone || !password) {
-                        msg.innerHTML = '<div class="error">សូមបំពេញព័ត៌មាន!</div>';
+                        msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
                         return;
                     }
                     if (!/^\d{9,}$/.test(phone)) {
-                        msg.innerHTML = '<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>';
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
                         return;
                     }
                     if (data.subAdmins[phone]) {
-                        msg.innerHTML = '<div class="error">លេខទូរសព្ទមានរួចហើយ!</div>';
+                        msg.innerHTML = `<div class="error">លេខទូរសព្ទមានរួចហើយ!</div>`;
                         return;
                     }
 
-                    var newId = generateAdminId();
+                    if (Object.keys(data.subAdmins).length >= 1) {
+                        msg.innerHTML = `<div class="error">ប្រព័ន្ធអនុញ្ញាតតែ Sub Admin ម្នាក់ប៉ុណ្ណោះ!</div>`;
+                        return;
+                    }
+
+                    const newId = 'A-0001';
+                    data.adminCounter++;
                     data.subAdmins[phone] = {
                         username: name,
                         password: password,
                         phone: phone,
                         id: newId,
                         role: 'sub_admin',
-                        balance: 0,
-                        totalReceived: 0,
+                        balance: balance,
+                        totalReceived: balance,
                         totalTransferred: 0,
-                        members: Object.keys(data.members),
+                        members: [],
                         createdBy: 'super_admin',
                         createdAt: new Date().toISOString(),
                         commissionRate: 0.05,
@@ -4209,104 +4012,96 @@
                         bankAccount: '',
                         qrCode: ''
                     };
-
-                    // Update all members to use this admin
-                    var memberKeys = Object.keys(data.members);
-                    for (var i = 0; i < memberKeys.length; i++) {
-                        data.members[memberKeys[i]].adminId = newId;
-                    }
-
                     saveData();
                     logActivity('SUPER-001', 'Super Admin', 'create_admin', 'administration', phone, null, 'បង្កើត Sub Admin "' + name + '" (' + newId + ')');
 
                     sendNotification('email', phone + '@example.com',
-                        'អ្នកត្រូវបានតែងតាំងជា Sub Admin! ឈ្មោះ: ' + name + ', ពាក្យសម្ងាត់: ' + password);
+                        `អ្នកត្រូវបានតែងតាំងជា Sub Admin! ឈ្មោះ: ${name}, ពាក្យសម្ងាត់: ${password}`);
 
-                    msg.innerHTML = '<div class="success">✅ បង្កើតជោគជ័យ! 🆔 ' + newId + '<br>🔒 ' + password + '</div>';
+                    msg.innerHTML = `<div class="success">✅ បង្កើតជោគជ័យ! 🆔 ${newId}<br>🔒 ${password}</div>`;
                     createAdminForm.reset();
-                    setTimeout(function() { renderPage('super-dashboard'); }, 2000);
+                    setTimeout(() => renderPage('super-dashboard'), 2000);
                 });
             }
 
-            // Transfer Money
-            var transferForm = document.getElementById('transferForm');
+            // ---- TRANSFER MONEY ----
+            const transferForm = document.getElementById('transferForm');
             if (transferForm) {
                 transferForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    var user = getCurrentUser();
+                    const user = getCurrentUser();
                     if (!user || user.role !== 'sub_admin') {
                         showToast('សូមចូលប្រើជា Sub Admin!', 'error');
                         return;
                     }
 
-                    var admin = data.subAdmins[user.phone];
+                    const admin = data.subAdmins[user.phone];
                     if (!admin) {
                         showToast('មិនឃើញព័ត៌មាន Admin!', 'error');
                         return;
                     }
 
-                    var phone = document.getElementById('transferPhone').value;
-                    var amount = parseFloat(document.getElementById('transferAmount').value);
-                    var currency = document.getElementById('transferCurrency').value;
-                    var msg = document.getElementById('transferMessage');
+                    const phone = document.getElementById('transferPhone').value;
+                    const amount = parseFloat(document.getElementById('transferAmount').value);
+                    const msg = document.getElementById('transferMessage');
 
-                    var amountUSD = amount;
-                    if (currency === 'riel') {
-                        amountUSD = convertToUSD(amount);
-                    }
-
-                    if (!amountUSD || amountUSD <= 0) {
-                        msg.innerHTML = '<div class="error">សូមបញ្ចូលចំនួនត្រឹមត្រូវ!</div>';
+                    if (!amount || amount <= 0) {
+                        msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនត្រឹមត្រូវ!</div>`;
                         return;
                     }
-                    if (amountUSD > admin.balance) {
-                        msg.innerHTML = '<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ $' + admin.balance.toFixed(2) + ')</div>';
+                    if (amount > admin.balance) {
+                        msg.innerHTML = `<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ $${admin.balance.toFixed(2)})</div>`;
                         return;
                     }
 
-                    var member = data.members[phone];
+                    const member = data.members[phone];
                     if (!member) {
-                        msg.innerHTML = '<div class="error">មិនឃើញសមាជិក!</div>';
+                        msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`;
                         return;
                     }
 
-                    admin.balance -= amountUSD;
-                    admin.totalTransferred = (admin.totalTransferred || 0) + amountUSD;
-                    member.balance += amountUSD;
-                    var date = new Date().toLocaleDateString('km-KH');
-                    member.benefits.push('💰 បានទទួល $' + amountUSD.toFixed(2) + ' នៅថ្ងៃ ' + date);
-                    if (admin.members.indexOf(phone) === -1) admin.members.push(phone);
+                    if (member.adminId !== admin.id) {
+                        msg.innerHTML = `<div class="error">សមាជិកនេះមិនស្ថិតក្រោមការគ្រប់គ្រងរបស់អ្នកទេ!</div>`;
+                        return;
+                    }
+
+                    admin.balance -= amount;
+                    admin.totalTransferred = (admin.totalTransferred || 0) + amount;
+                    member.balance += amount;
+                    const date = new Date().toLocaleDateString('km-KH');
+                    member.benefits.push('💰 បានទទួល $' + amount.toFixed(2) + ' នៅថ្ងៃ ' + date);
+                    if (!admin.members.includes(phone)) admin.members.push(phone);
 
                     saveData();
-                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', member.username || member.phone, amountUSD,
-                        'ផ្ទេរ $' + amountUSD.toFixed(2) + ' ទៅ ' + (member.username || member.phone));
+                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', member.username || member.phone, amount,
+                        'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || member.phone));
 
                     createTransaction(
                         'transfer',
                         member.phone,
                         admin.id,
-                        amountUSD,
+                        amount,
                         'completed',
-                        'ផ្ទេរប្រាក់ $' + amountUSD.toFixed(2) + ' ពី ' + admin.username,
+                        'ផ្ទេរប្រាក់ $' + amount.toFixed(2) + ' ពី ' + admin.username,
                         null
                     );
 
                     sendNotification('email', member.phone + '@example.com',
-                        'អ្នកបានទទួលប្រាក់ $' + amountUSD.toFixed(2) + ' ពី ' + admin.username);
+                        `អ្នកបានទទួលប្រាក់ $${amount.toFixed(2)} ពី ${admin.username}`);
 
                     msg.innerHTML = `
                         <div class="success">
-                            ✅ ផ្ទេរ $${amountUSD.toFixed(2)} ទៅ ${member.username || member.phone} ជោគជ័យ!<br>
+                            ✅ ផ្ទេរ $${amount.toFixed(2)} ទៅ ${member.username || member.phone} ជោគជ័យ!<br>
                             💰 ប្រាក់ដែលនៅសល់: $${admin.balance.toFixed(2)}
                         </div>
                     `;
                     document.getElementById('transferAmount').value = '';
-                    setTimeout(function() { renderPage('admin-dashboard'); }, 1500);
+                    setTimeout(() => renderPage('admin-dashboard'), 1500);
                 });
             }
 
-            // Bank Info
-            var bankInfoForm = document.getElementById('bankInfoForm');
+            // ---- BANK INFO FORM ----
+            const bankInfoForm = document.getElementById('bankInfoForm');
             if (bankInfoForm) {
                 bankInfoForm.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -4314,8 +4109,8 @@
                 });
             }
 
-            // Commission
-            var commissionForm = document.getElementById('commissionForm');
+            // ---- COMMISSION FORM ----
+            const commissionForm = document.getElementById('commissionForm');
             if (commissionForm) {
                 commissionForm.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -4323,8 +4118,8 @@
                 });
             }
 
-            // Exchange Rate
-            var exchangeRateForm = document.getElementById('exchangeRateForm');
+            // ---- EXCHANGE RATE FORM ----
+            const exchangeRateForm = document.getElementById('exchangeRateForm');
             if (exchangeRateForm) {
                 exchangeRateForm.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -4334,9 +4129,10 @@
         }
 
         // ================================================================
-        // INIT
+        // ===== INIT =====
         // ================================================================
 
+        // Initialize Super Admin if not exists
         if (!data.superAdminExists) {
             data.superAdmins['066817407'] = {
                 username: 'Super Admin',
@@ -4353,7 +4149,8 @@
             logActivity('SUPER-001', 'Super Admin', 'system_init', 'system', null, null, 'បង្កើតប្រព័ន្ធ Super Admin');
         }
 
-        var currentUser = getCurrentUser();
+        // Check current user and render appropriate page
+        const currentUser = getCurrentUser();
         if (currentUser) {
             if (currentUser.role === 'super_admin') renderPage('super-dashboard');
             else if (currentUser.role === 'sub_admin' && data.subAdmins[currentUser.phone]) renderPage('admin-dashboard');
@@ -4363,10 +4160,12 @@
             renderPage('home');
         }
 
-        setInterval(function() {
-            var pending = data.transactions ? data.transactions.filter(function(t) { return t.status === 'pending'; }) : [];
+        // ===== REAL-TIME NOTIFICATIONS (Simulation) =====
+        setInterval(() => {
+            const pending = data.transactions ? data.transactions.filter(t => t.status === 'pending') : [];
             if (pending.length > 0) {
-                var badge = document.querySelector('.notification-badge');
+                // Update notification badge if exists
+                const badge = document.querySelector('.notification-badge');
                 if (badge) {
                     badge.textContent = pending.length;
                     badge.style.display = pending.length > 0 ? 'block' : 'none';
@@ -4374,7 +4173,7 @@
             }
         }, 10000);
 
-        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.1 បានដំណើរការ!');
+        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.0 បានដំណើរការ!');
         console.log('📊 ទិន្នន័យបច្ចុប្បន្ន:', data);
         console.log('👤 អ្នកប្រើបច្ចុប្បន្ន:', currentUser);
     </script>
