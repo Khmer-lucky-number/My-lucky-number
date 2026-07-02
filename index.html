@@ -30,7 +30,7 @@
             border-radius: 20px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 520px;
+            max-width: 560px;
             animation: fadeInUp 0.6s ease-out;
             max-height: 98vh;
             overflow-y: auto;
@@ -667,6 +667,19 @@
             color: #ffd700;
         }
 
+        .notification-item {
+            background: rgba(255, 215, 0, 0.08);
+            border-left: 4px solid #ffd700;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+        .notification-item .time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
         .text-center {
             text-align: center;
         }
@@ -1057,7 +1070,7 @@
         }
 
         // ================================================================
-        // ===== MEMBER DASHBOARD (with Deposit & Withdraw) =====
+        // ===== MEMBER DASHBOARD =====
         // ================================================================
 
         function getDashboardPage() {
@@ -1284,7 +1297,10 @@
                 });
             }
 
-            // Admin Transaction History
+            // ===== Admin Notifications =====
+            let notificationsHtml = getAdminNotifications();
+
+            // ===== Admin Transaction History =====
             let txHtml = '';
             const allTx = [];
             memberKeys.forEach(phone => {
@@ -1327,7 +1343,7 @@
                             <div>
                                 <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${typeLabel}</span>
                                 <span style="font-size:10px;opacity:0.4;">${statusText}</span>
-                                <span style="opacity:0.5;font-size:11px;">👤 ${memberName} ${tx.description || ''}</span>
+                                <span style="opacity:0.5;font-size:11px;">👤 ${memberName}</span>
                             </div>
                             <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
                         </div>
@@ -1336,7 +1352,7 @@
                 txHtml += `</div>`;
             }
 
-            // Bank Setup
+            // ===== Bank Setup =====
             let bankSetupHtml = `
                 <div class="payment-section admin-panel">
                     <h4>🏦 កំណត់ព័ត៌មានទូទាត់</h4>
@@ -1383,6 +1399,11 @@
                     </div>
                 </div>
 
+                <div class="card admin-panel">
+                    <h3>🔔 ការជូនដំណឹង</h3>
+                    ${notificationsHtml}
+                </div>
+
                 ${bankSetupHtml}
 
                 <div class="card admin-panel">
@@ -1401,6 +1422,57 @@
             `;
         }
 
+        // ===== ADMIN NOTIFICATIONS =====
+        function getAdminNotifications() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') return '';
+
+            const admin = data.subAdmins[user.phone];
+            if (!admin) return '';
+
+            const memberPhones = admin.members || [];
+            let notifications = [];
+            memberPhones.forEach(phone => {
+                const tx = getMemberTransactions(phone);
+                tx.slice(0, 10).forEach(t => {
+                    if (t.status === 'pending') {
+                        notifications.push({
+                            type: t.type,
+                            member: phone,
+                            amount: t.amount,
+                            time: t.timestamp,
+                            id: t.id
+                        });
+                    }
+                });
+            });
+
+            if (notifications.length === 0) {
+                return `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>`;
+            }
+
+            let html = '';
+            notifications.slice(0, 5).forEach(n => {
+                const member = data.members[n.member];
+                const memberName = member ? member.username || member.phone : n.member;
+                const d = new Date(n.time);
+                const typeLabel = n.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
+                const icon = n.type === 'deposit' ? '💳' : '🏦';
+                html += `
+                    <div class="notification-item">
+                        <div>${icon} ${memberName} បានស្នើ${typeLabel} $${n.amount.toFixed(2)}</div>
+                        <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                        <div style="margin-top:4px;">
+                            <button onclick="approveTransaction('${n.id}')" class="btn btn-secondary btn-sm" style="padding:2px 10px;font-size:10px;width:auto;">✅ យល់ព្រម</button>
+                            <button onclick="rejectTransaction('${n.id}')" class="btn btn-danger btn-sm" style="padding:2px 10px;font-size:10px;width:auto;">❌ បដិសេធ</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            return html;
+        }
+
         // ================================================================
         // ===== SUPER ADMIN DASHBOARD =====
         // ================================================================
@@ -1416,27 +1488,29 @@
             const totalMembers = Object.keys(data.members).length;
             const totalBalance = Object.values(data.members).reduce((s, m) => s + m.balance, 0);
 
-            const subAdmin = Object.values(data.subAdmins)[0] || null;
-            let adminInfo = '';
-            if (subAdmin) {
-                adminInfo = `
+            // ===== Sub Admin List with Edit/Delete =====
+            let adminListHtml = '';
+            Object.values(data.subAdmins).forEach(a => {
+                adminListHtml += `
                     <div class="list-item" style="border-left-color:#ffd700;">
                         <div class="info">
-                            <span class="name">👑 ${subAdmin.username}</span>
-                            <span class="id">🆔 ${subAdmin.id}</span>
-                            <span class="sub">📱 ${subAdmin.phone}</span>
-                            <span class="pwd">🔑 ${subAdmin.password}</span>
+                            <span class="name">👑 ${a.username}</span>
+                            <span class="id">🆔 ${a.id}</span>
+                            <span class="sub">📱 ${a.phone}</span>
+                            <span class="pwd">🔑 ${a.password}</span>
+                            <span class="sub">👥 ${(a.members || []).length} សមាជិក</span>
                         </div>
-                        <div><span class="balance">$${subAdmin.balance.toFixed(2)}</span></div>
+                        <div><span class="balance">$${a.balance.toFixed(2)}</span></div>
                         <div class="actions">
-                            <button onclick="resetAdminPassword('${subAdmin.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                            <button onclick="superEditAdmin('${a.phone}')" class="btn btn-warning btn-sm">✏️</button>
+                            <button onclick="superDeleteAdmin('${a.phone}')" class="btn btn-danger btn-sm">🗑️</button>
+                            <button onclick="resetAdminPassword('${a.phone}')" class="btn btn-secondary btn-sm">🔑</button>
                         </div>
                     </div>
                 `;
-            } else {
-                adminInfo = `<p style="opacity:0.4;font-size:13px;">មិនទាន់មាន Sub Admin</p>`;
-            }
+            });
 
+            // ===== Member List with Edit/Delete/Assign =====
             let memberListHtml = '';
             Object.values(data.members).forEach(m => {
                 const admin = data.subAdmins[m.adminId];
@@ -1451,13 +1525,19 @@
                         </div>
                         <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
                         <div class="actions">
+                            <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
+                            <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
+                            <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
                             <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                         </div>
                     </div>
                 `;
             });
 
-            // Super Admin Transaction History
+            // ===== Super Notifications =====
+            let superNotificationsHtml = getSuperNotifications();
+
+            // ===== Super Transaction History =====
             let txHtml = '';
             if (!data.transactions || data.transactions.length === 0) {
                 txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
@@ -1532,6 +1612,11 @@
                 </div>
 
                 <div class="card admin-panel">
+                    <h3>🔔 ការជូនដំណឹង</h3>
+                    ${superNotificationsHtml}
+                </div>
+
+                <div class="card admin-panel">
                     <h3>👑 បង្កើត Sub Admin</h3>
                     <form id="createAdminForm">
                         <input type="text" id="newAdminName" placeholder="👤 ឈ្មោះ" required>
@@ -1555,7 +1640,7 @@
                     <div id="superFundMessage"></div>
                 </div>
 
-                <div class="card"><h3>📋 Sub Admin</h3>${adminInfo}</div>
+                <div class="card"><h3>📋 Sub Admin</h3>${adminListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div>
 
                 <div class="card"><h3>📋 សមាជិក</h3><div style="max-height:200px;overflow-y:auto;">${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
 
@@ -1566,6 +1651,38 @@
                     <button onclick="exportData()" class="btn btn-secondary btn-sm">📤 នាំចេញ</button>
                 </div>
             `;
+        }
+
+        // ===== SUPER NOTIFICATIONS =====
+        function getSuperNotifications() {
+            if (!data.transactions || data.transactions.length === 0) {
+                return `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>`;
+            }
+
+            const pending = data.transactions.filter(t => t.status === 'pending');
+            if (pending.length === 0) {
+                return `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>`;
+            }
+
+            let html = '';
+            pending.slice(0, 5).forEach(tx => {
+                const member = data.members[tx.memberPhone];
+                const memberName = member ? member.username || member.phone : tx.memberPhone;
+                const admin = data.subAdmins[tx.adminId];
+                const adminName = admin ? admin.username : 'N/A';
+                const d = new Date(tx.timestamp);
+                const typeLabel = tx.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់';
+                const icon = tx.type === 'deposit' ? '💳' : '🏦';
+                html += `
+                    <div class="notification-item">
+                        <div>${icon} ${memberName} បានស្នើ${typeLabel} $${tx.amount.toFixed(2)} (👑 ${adminName})</div>
+                        <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                        <div style="font-size:10px;color:#ffd700;margin-top:2px;">⏳ កំពុងរង់ចាំការយល់ព្រមពី Sub Admin</div>
+                    </div>
+                `;
+            });
+
+            return html;
         }
 
         // ================================================================
@@ -1832,6 +1949,180 @@
         }
 
         // ================================================================
+        // ===== TRANSACTION APPROVAL =====
+        // ================================================================
+
+        function approveTransaction(txId) {
+            if (!confirm('តើអ្នកចង់យល់ព្រមលើប្រតិបត្តិការនេះមែនទេ?')) return;
+
+            const tx = data.transactions.find(t => t.id === txId);
+            if (!tx) { alert('មិនឃើញប្រតិបត្តិការ!'); return; }
+
+            tx.status = 'completed';
+
+            const member = data.members[tx.memberPhone];
+            if (member) {
+                if (tx.type === 'deposit') {
+                    member.balance += tx.amount;
+                    member.benefits.push('💰 បានដាក់ប្រាក់ $' + tx.amount.toFixed(2) + ' នៅថ្ងៃ ' + new Date().toLocaleDateString('km-KH'));
+                } else if (tx.type === 'withdraw') {
+                    member.balance -= tx.amount;
+                    member.benefits.push('🏦 បានដកប្រាក់ $' + tx.amount.toFixed(2) + ' នៅថ្ងៃ ' + new Date().toLocaleDateString('km-KH'));
+                }
+            }
+
+            saveData();
+
+            const admin = data.subAdmins[tx.adminId];
+            if (admin) {
+                logActivity(admin.id, admin.username, 'approve_transaction', 'financial', tx.memberPhone, tx.amount,
+                    'យល់ព្រមលើប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
+            }
+
+            alert('✅ ប្រតិបត្តិការត្រូវបានយល់ព្រម!');
+            renderPage('admin-dashboard');
+        }
+
+        function rejectTransaction(txId) {
+            if (!confirm('តើអ្នកចង់បដិសេធប្រតិបត្តិការនេះមែនទេ?')) return;
+
+            const tx = data.transactions.find(t => t.id === txId);
+            if (!tx) { alert('មិនឃើញប្រតិបត្តិការ!'); return; }
+
+            tx.status = 'rejected';
+            saveData();
+
+            const admin = data.subAdmins[tx.adminId];
+            if (admin) {
+                logActivity(admin.id, admin.username, 'reject_transaction', 'financial', tx.memberPhone, tx.amount,
+                    'បដិសេធប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
+            }
+
+            alert('❌ ប្រតិបត្តិការត្រូវបានបដិសេធ!');
+            renderPage('admin-dashboard');
+        }
+
+        // ================================================================
+        // ===== SUPER ADMIN CRUD FUNCTIONS =====
+        // ================================================================
+
+        function superEditMember(phone) {
+            const member = data.members[phone];
+            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
+
+            const newUsername = prompt('ឈ្មោះថ្មី:', member.username || '');
+            if (newUsername === null) return;
+
+            const newPhone = prompt('លេខទូរសព្ទថ្មី:', member.phone);
+            if (newPhone === null) return;
+
+            if (!/^\d{9,}$/.test(newPhone)) {
+                alert('លេខទូរសព្ទមិនត្រឹមត្រូវ!');
+                return;
+            }
+
+            if (newPhone !== phone && data.members[newPhone]) {
+                alert('លេខទូរសព្ទថ្មីមានរួចហើយ!');
+                return;
+            }
+
+            if (newPhone !== phone && member.adminId) {
+                const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
+                if (admin) {
+                    admin.members = admin.members.map(p => p === phone ? newPhone : p);
+                }
+            }
+
+            if (newPhone !== phone) {
+                data.members[newPhone] = { ...member, phone: newPhone, username: newUsername || newPhone };
+                delete data.members[phone];
+            } else {
+                member.username = newUsername || member.phone;
+            }
+
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'edit_member', 'administration', newPhone, null,
+                'កែប្រែសមាជិក ' + (newUsername || newPhone));
+            alert('✅ កែប្រែជោគជ័យ!');
+            renderPage('super-dashboard');
+        }
+
+        function superDeleteMember(phone) {
+            if (!confirm('តើអ្នកចង់លុបសមាជិកនេះមែនទេ?')) return;
+
+            const member = data.members[phone];
+            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
+
+            if (member.adminId) {
+                const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
+                if (admin) {
+                    admin.members = admin.members.filter(p => p !== phone);
+                }
+            }
+
+            delete data.members[phone];
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'delete_member', 'administration', phone, null,
+                'លុបសមាជិក ' + (member.username || member.phone));
+            alert('✅ លុបជោគជ័យ!');
+            renderPage('super-dashboard');
+        }
+
+        function superEditAdmin(phone) {
+            const admin = data.subAdmins[phone];
+            if (!admin) { alert('មិនឃើញ Sub Admin!'); return; }
+
+            const newName = prompt('ឈ្មោះថ្មី:', admin.username);
+            if (newName === null) return;
+
+            const newPhone = prompt('លេខទូរសព្ទថ្មី:', admin.phone);
+            if (newPhone === null) return;
+
+            if (!/^\d{9,}$/.test(newPhone)) {
+                alert('លេខទូរសព្ទមិនត្រឹមត្រូវ!');
+                return;
+            }
+
+            if (newPhone !== phone && data.subAdmins[newPhone]) {
+                alert('លេខទូរសព្ទថ្មីមានរួចហើយ!');
+                return;
+            }
+
+            if (newPhone !== phone) {
+                data.subAdmins[newPhone] = { ...admin, phone: newPhone, username: newName };
+                delete data.subAdmins[phone];
+            } else {
+                admin.username = newName;
+            }
+
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'edit_admin', 'administration', newPhone, null,
+                'កែប្រែ Sub Admin ' + newName);
+            alert('✅ កែប្រែជោគជ័យ!');
+            renderPage('super-dashboard');
+        }
+
+        function superDeleteAdmin(phone) {
+            if (!confirm('តើអ្នកចង់លុប Sub Admin នេះមែនទេ?')) return;
+
+            const admin = data.subAdmins[phone];
+            if (!admin) { alert('មិនឃើញ Sub Admin!'); return; }
+
+            Object.values(data.members).forEach(m => {
+                if (m.adminId === admin.id) {
+                    m.adminId = null;
+                }
+            });
+
+            delete data.subAdmins[phone];
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null,
+                'លុប Sub Admin ' + admin.username);
+            alert('✅ លុបជោគជ័យ!');
+            renderPage('super-dashboard');
+        }
+
+        // ================================================================
         // ===== HELPER FUNCTIONS =====
         // ================================================================
 
@@ -1878,7 +2169,7 @@
 
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'assign_admin', 'administration', memberPhone, null,
-                'ចាត់តាំង ' + admin.username + ' ឲ្យ ' + (member.username || memberPhone));
+                'ចាត់តាំង ' + admin.username + ' ឲ្យ ' + (member.username || member.phone));
 
             alert('✅ ចាត់តាំងជោគជ័យ!');
             renderPage('super-dashboard');
@@ -1892,6 +2183,19 @@
             admin.password = newPwd;
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + admin.username);
+            alert('✅ ជោគជ័យ!');
+            renderPage('super-dashboard');
+        }
+
+        function resetMemberPassword(phone) {
+            const newPwd = prompt('ពាក្យសម្ងាត់ថ្មីសម្រាប់សមាជិក:');
+            if (!newPwd || newPwd.length < 4) { alert('ត្រូវមានយ៉ាងតិច ៤ តួ!'); return; }
+            const member = data.members[phone];
+            if (!member) return;
+            member.password = newPwd;
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null,
+                'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + (member.username || phone));
             alert('✅ ជោគជ័យ!');
             renderPage('super-dashboard');
         }
