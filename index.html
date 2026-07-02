@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
-    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក</title>
+    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.0</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -19,6 +20,67 @@
             justify-content: center;
             align-items: center;
             padding: 10px;
+            transition: background 0.5s ease;
+        }
+
+        body.light-mode {
+            background: #f0f2f5;
+        }
+
+        body.light-mode .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: none;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        body.light-mode h2,
+        body.light-mode .card h3,
+        body.light-mode .list-item .info .name,
+        body.light-mode .clock-display .time-part,
+        body.light-mode .clock-display .date-part {
+            color: #1a1a2e;
+        }
+
+        body.light-mode p,
+        body.light-mode .clock-display {
+            color: rgba(0,0,0,0.6);
+        }
+
+        body.light-mode .card {
+            background: rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+
+        body.light-mode input, 
+        body.light-mode select, 
+        body.light-mode textarea {
+            background: rgba(0,0,0,0.05);
+            color: #1a1a2e;
+            border-color: rgba(0,0,0,0.1);
+        }
+
+        body.light-mode .list-item {
+            background: rgba(0,0,0,0.04);
+            border-left-color: #667eea;
+        }
+
+        body.light-mode .role-card {
+            background: rgba(0,0,0,0.04);
+            border-color: rgba(0,0,0,0.08);
+        }
+
+        body.light-mode .role-card:hover {
+            background: rgba(0,0,0,0.08);
+        }
+
+        body.light-mode .footer-info {
+            background: rgba(0,0,0,0.03);
+            border-color: rgba(0,0,0,0.05);
+        }
+
+        body.light-mode .footer-info .role-desc {
+            background: rgba(0,0,0,0.03);
+            border-left-color: #667eea;
         }
 
         .container {
@@ -31,9 +93,10 @@
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             width: 100%;
             max-width: 560px;
-            animation: fadeInUp 0.6s ease-out;
             max-height: 98vh;
             overflow-y: auto;
+            animation: fadeInUp 0.6s ease-out;
+            transition: all 0.3s ease;
         }
 
         .container::-webkit-scrollbar {
@@ -48,17 +111,80 @@
             border-radius: 10px;
         }
 
+        /* ===== ANIMATIONS ===== */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(30px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
         h1 {
             font-size: 2rem;
             background: linear-gradient(135deg, #667eea, #764ba2);
@@ -83,6 +209,7 @@
             font-size: 14px;
         }
 
+        /* ===== FORM ELEMENTS ===== */
         input, select, textarea {
             width: 100%;
             padding: 12px 16px;
@@ -95,18 +222,23 @@
             transition: all 0.3s ease;
             outline: none;
         }
+
         input::placeholder, textarea::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
+
         input:focus, select:focus, textarea:focus {
             border-color: #667eea;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.15);
+            transform: scale(1.01);
         }
+
         select option {
             background: #1a1a2e;
             color: #fff;
         }
+
         textarea {
             resize: vertical;
             min-height: 50px;
@@ -115,9 +247,11 @@
         .input-group {
             position: relative;
         }
+
         .input-group input {
             padding-right: 45px;
         }
+
         .input-group .toggle-pwd {
             position: absolute;
             right: 12px;
@@ -129,11 +263,15 @@
             cursor: pointer;
             font-size: 18px;
             padding: 4px;
-        }
-        .input-group .toggle-pwd:hover {
-            color: #fff;
+            transition: all 0.3s ease;
         }
 
+        .input-group .toggle-pwd:hover {
+            color: #fff;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* ===== BUTTONS ===== */
         .btn {
             display: inline-block;
             padding: 12px 28px;
@@ -149,10 +287,35 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
             width: 100%;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+
         .btn:hover {
-            transform: translateY(-2px) scale(1.02);
+            transform: translateY(-3px) scale(1.02);
             box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
+            transform: rotate(45deg) translateX(100%);
         }
 
         .btn-gold {
@@ -160,6 +323,7 @@
             box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
             color: #1a1a2e;
         }
+
         .btn-gold:hover {
             box-shadow: 0 12px 35px rgba(255, 215, 0, 0.5);
         }
@@ -168,6 +332,7 @@
             background: linear-gradient(135deg, #48bb78, #38a169);
             box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
         }
+
         .btn-secondary:hover {
             box-shadow: 0 12px 35px rgba(72, 187, 120, 0.5);
         }
@@ -176,6 +341,7 @@
             background: linear-gradient(135deg, #fc8181, #e53e3e);
             box-shadow: 0 8px 25px rgba(252, 129, 129, 0.3);
         }
+
         .btn-danger:hover {
             box-shadow: 0 12px 35px rgba(252, 129, 129, 0.5);
         }
@@ -185,6 +351,7 @@
             box-shadow: 0 8px 25px rgba(246, 173, 85, 0.3);
             color: #fff;
         }
+
         .btn-warning:hover {
             box-shadow: 0 12px 35px rgba(246, 173, 85, 0.5);
         }
@@ -195,6 +362,16 @@
             width: auto;
         }
 
+        .btn-purple {
+            background: linear-gradient(135deg, #9f7aea, #805ad5);
+            box-shadow: 0 8px 25px rgba(159, 122, 234, 0.3);
+        }
+
+        .btn-purple:hover {
+            box-shadow: 0 12px 35px rgba(159, 122, 234, 0.5);
+        }
+
+        /* ===== CARDS ===== */
         .card {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
@@ -203,12 +380,16 @@
             border-radius: 16px;
             margin: 10px 0;
             text-align: left;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: slideInRight 0.5s ease-out;
         }
+
         .card:hover {
             background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
         }
+
         .card h3 {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -217,6 +398,7 @@
             margin-bottom: 5px;
         }
 
+        /* ===== BADGES ===== */
         .badge {
             display: inline-block;
             padding: 2px 10px;
@@ -225,23 +407,38 @@
             font-weight: 600;
             text-transform: uppercase;
         }
+
         .badge-gold {
             background: linear-gradient(135deg, #ffd700, #f59e0b);
             color: #1a1a2e;
         }
+
         .badge-purple {
             background: linear-gradient(135deg, #9f7aea, #805ad5);
             color: #fff;
         }
 
+        .badge-green {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: #fff;
+        }
+
+        .badge-red {
+            background: linear-gradient(135deg, #fc8181, #e53e3e);
+            color: #fff;
+        }
+
+        /* ===== ADMIN PANEL ===== */
         .admin-panel {
             border: 1px solid rgba(255, 215, 0, 0.2);
             background: rgba(255, 215, 0, 0.05);
         }
+
         .admin-panel h3 {
             color: #ffd700;
         }
 
+        /* ===== TOP BAR ===== */
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -250,18 +447,21 @@
             flex-wrap: wrap;
             gap: 8px;
         }
+
         .top-bar .left-section {
             display: flex;
             flex-direction: column;
             gap: 2px;
             flex: 1;
         }
+
         .top-bar .right-section {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             gap: 4px;
         }
+
         .top-bar h2 {
             margin: 0;
             font-size: 1.2rem;
@@ -278,11 +478,14 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
         }
+
         .back-link:hover {
             background: rgba(255, 255, 255, 0.12);
             color: #fff;
+            transform: translateX(-3px);
         }
 
+        /* ===== CLOCK ===== */
         .clock-container {
             display: flex;
             align-items: center;
@@ -305,21 +508,25 @@
             font-variant-numeric: tabular-nums;
             flex-wrap: wrap;
         }
+
         .clock-display .date-part {
             color: rgba(255, 255, 255, 0.4);
             font-weight: 400;
             font-size: 10px;
         }
+
         .clock-display .time-part {
             color: #ffd700;
             font-weight: 700;
             font-size: 14px;
         }
+
         .clock-display .seconds {
             color: rgba(255, 215, 0, 0.4);
             font-size: 11px;
         }
 
+        /* ===== LOGOUT BUTTON ===== */
         .btn-logout {
             background: rgba(252, 129, 129, 0.15);
             border: 1px solid rgba(252, 129, 129, 0.2);
@@ -331,18 +538,21 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .btn-logout:hover {
             background: rgba(252, 129, 129, 0.25);
             transform: scale(1.05);
             border-color: #fc8181;
         }
 
+        /* ===== ROLE SELECTOR ===== */
         .role-selector {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin: 15px 0;
         }
+
         .role-card {
             background: rgba(255, 255, 255, 0.05);
             border: 2px solid rgba(255, 255, 255, 0.08);
@@ -350,44 +560,55 @@
             padding: 16px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: slideInLeft 0.5s ease-out;
         }
+
         .role-card:hover {
             background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
+            transform: translateY(-8px) scale(1.02);
             border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
         }
+
         .role-card .icon {
             font-size: 32px;
             display: block;
             margin-bottom: 4px;
         }
+
         .role-card .title {
             color: #fff;
             font-weight: 600;
             font-size: 16px;
         }
+
         .role-card .desc {
             color: rgba(255, 255, 255, 0.4);
             font-size: 12px;
             margin-top: 2px;
         }
+
         .role-card.admin-card {
             border-color: rgba(255, 215, 0, 0.2);
         }
+
         .role-card.admin-card:hover {
             border-color: #ffd700;
             background: rgba(255, 215, 0, 0.08);
         }
+
         .role-card.super-card {
             border-color: rgba(255, 215, 0, 0.1);
             background: rgba(255, 215, 0, 0.03);
         }
+
         .role-card.super-card:hover {
             border-color: #ffd700;
             background: rgba(255, 215, 0, 0.1);
         }
 
+        /* ===== FOOTER ===== */
         .footer-info {
             margin-top: 20px;
             padding: 15px;
@@ -395,6 +616,7 @@
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
+
         .footer-info h4 {
             color: rgba(255, 215, 0, 0.7);
             font-size: 13px;
@@ -402,6 +624,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
         .footer-info .role-desc {
             display: flex;
             gap: 10px;
@@ -411,25 +634,36 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 8px;
             border-left: 3px solid #667eea;
+            transition: all 0.3s ease;
         }
+
+        .footer-info .role-desc:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
         .footer-info .role-desc .r-icon {
             font-size: 18px;
         }
+
         .footer-info .role-desc .r-text {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.6);
         }
+
         .footer-info .role-desc .r-text strong {
             color: #fff;
         }
 
+        /* ===== PAYMENT SECTION ===== */
         .payment-section {
             margin: 12px 0;
             padding: 15px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             border: 1px solid rgba(255, 215, 0, 0.15);
+            animation: fadeIn 0.6s ease-out;
         }
+
         .payment-section h4 {
             color: #ffd700;
             font-size: 14px;
@@ -444,17 +678,26 @@
             gap: 10px;
             margin: 10px 0;
         }
+
         .bank-info .info-item {
             background: rgba(255, 255, 255, 0.04);
             padding: 10px 14px;
             border-radius: 10px;
             border-left: 3px solid #ffd700;
+            transition: all 0.3s ease;
         }
+
+        .bank-info .info-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
         .bank-info .info-item .label {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
         }
+
         .bank-info .info-item .value {
             font-size: 15px;
             color: #fff;
@@ -471,17 +714,31 @@
             border: 2px dashed rgba(255, 215, 0, 0.15);
             min-height: 100px;
             margin: 10px 0;
+            transition: all 0.3s ease;
         }
+
+        .qr-container:hover {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.05);
+        }
+
         .qr-container img {
             max-width: 150px;
             max-height: 150px;
             border-radius: 10px;
+            transition: all 0.3s ease;
         }
+
+        .qr-container img:hover {
+            transform: scale(1.05);
+        }
+
         .qr-container .qr-placeholder {
             color: rgba(255, 255, 255, 0.2);
             font-size: 13px;
         }
 
+        /* ===== FILE UPLOAD ===== */
         .file-upload {
             position: relative;
             padding: 15px;
@@ -493,10 +750,13 @@
             background: rgba(255, 255, 255, 0.03);
             margin: 5px 0;
         }
+
         .file-upload:hover {
             border-color: #667eea;
             background: rgba(255, 255, 255, 0.05);
+            transform: scale(1.01);
         }
+
         .file-upload input[type="file"] {
             position: absolute;
             top: 0;
@@ -506,15 +766,18 @@
             opacity: 0;
             cursor: pointer;
         }
+
         .file-upload .upload-icon {
             font-size: 24px;
             display: block;
             margin-bottom: 4px;
         }
+
         .file-upload .upload-text {
             color: rgba(255, 255, 255, 0.4);
             font-size: 12px;
         }
+
         .file-upload .file-name {
             color: #48bb78;
             font-size: 12px;
@@ -527,14 +790,22 @@
             border-radius: 8px;
             margin-top: 5px;
             border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
         }
 
+        .preview-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* ===== AMOUNT BUTTONS ===== */
         .amount-buttons {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             margin: 8px 0;
         }
+
         .amount-btn {
             padding: 6px 14px;
             background: rgba(255, 215, 0, 0.1);
@@ -546,24 +817,19 @@
             transition: all 0.3s ease;
             font-size: 13px;
         }
+
         .amount-btn:hover {
             background: rgba(255, 215, 0, 0.2);
             transform: scale(1.05);
         }
+
         .amount-btn.active {
             background: rgba(255, 215, 0, 0.3);
             border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
-        .withdraw-form .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .withdraw-form .form-row .full-width {
-            grid-column: 1 / -1;
-        }
-
+        /* ===== LIST ITEMS ===== */
         .list-item {
             background: rgba(255, 255, 255, 0.04);
             padding: 8px 12px;
@@ -576,7 +842,14 @@
             flex-wrap: wrap;
             gap: 5px;
             font-size: 13px;
+            transition: all 0.3s ease;
         }
+
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
         .list-item .info {
             display: flex;
             flex-direction: column;
@@ -584,41 +857,50 @@
             flex: 1;
             min-width: 100px;
         }
+
         .list-item .info .name {
             color: #fff;
             font-weight: 600;
         }
+
         .list-item .info .sub {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
         }
+
         .list-item .info .id {
             font-size: 10px;
             color: rgba(255, 215, 0, 0.5);
         }
+
         .list-item .info .pwd {
             font-size: 11px;
             color: #48bb78;
         }
+
         .list-item .balance {
             color: #48bb78;
             font-weight: 600;
             font-size: 14px;
         }
+
         .list-item .actions {
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
         }
 
+        /* ===== TRANSACTION LIST ===== */
         .transaction-list {
             max-height: 200px;
             overflow-y: auto;
             margin-top: 6px;
         }
+
         .transaction-list::-webkit-scrollbar {
             width: 4px;
         }
+
         .transaction-list::-webkit-scrollbar-thumb {
             background: #667eea;
             border-radius: 10px;
@@ -632,41 +914,61 @@
             font-size: 12px;
             flex-wrap: wrap;
             gap: 4px;
+            transition: all 0.3s ease;
         }
 
+        .transaction-item:hover {
+            background: rgba(255,255,255,0.03);
+            padding-left: 10px;
+        }
+
+        /* ===== SUMMARY STATS ===== */
         .summary-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 6px;
             margin: 6px 0;
         }
+
         .summary-stats .summary-box {
             background: rgba(255, 255, 255, 0.04);
             padding: 6px;
             border-radius: 8px;
             text-align: center;
+            transition: all 0.3s ease;
         }
+
+        .summary-stats .summary-box:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
         .summary-stats .summary-box .number {
             font-size: 16px;
             font-weight: 700;
             color: #fff;
         }
+
         .summary-stats .summary-box .label {
             font-size: 9px;
             color: rgba(255, 255, 255, 0.3);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
         .summary-stats .summary-box .number.green {
             color: #48bb78;
         }
+
         .summary-stats .summary-box .number.red {
             color: #fc8181;
         }
+
         .summary-stats .summary-box .number.gold {
             color: #ffd700;
         }
 
+        /* ===== NOTIFICATIONS ===== */
         .notification-item {
             background: rgba(255, 215, 0, 0.08);
             border-left: 4px solid #ffd700;
@@ -674,22 +976,21 @@
             border-radius: 8px;
             margin: 5px 0;
             font-size: 13px;
+            transition: all 0.3s ease;
+            animation: slideInRight 0.5s ease-out;
         }
+
+        .notification-item:hover {
+            background: rgba(255, 215, 0, 0.12);
+            transform: translateX(5px);
+        }
+
         .notification-item .time {
             font-size: 10px;
             color: rgba(255, 255, 255, 0.3);
         }
 
-        .text-center {
-            text-align: center;
-        }
-        .mt-10 { margin-top: 10px; }
-        .mt-15 { margin-top: 15px; }
-        .mt-20 { margin-top: 20px; }
-        .op-3 { opacity: 0.3; }
-        .fs-12 { font-size: 12px; }
-        .fs-13 { font-size: 13px; }
-
+        /* ===== MESSAGES ===== */
         #message .success {
             background: rgba(72, 187, 120, 0.2);
             color: #48bb78;
@@ -698,7 +999,9 @@
             border-radius: 10px;
             margin-top: 8px;
             font-size: 13px;
+            animation: slideInRight 0.5s ease-out;
         }
+
         #message .error {
             background: rgba(252, 129, 129, 0.2);
             color: #fc8181;
@@ -707,26 +1010,320 @@
             border-radius: 10px;
             margin-top: 8px;
             font-size: 13px;
+            animation: slideInRight 0.5s ease-out;
         }
 
+        /* ===== MODAL ===== */
+        #modalOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        #modalContent {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 420px;
+            width: 90%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #modalContent.show {
+            transform: scale(1);
+        }
+
+        #modalContent::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #modalContent::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 10000;
+            animation: slideInRight 0.5s ease-out;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 300px;
+        }
+
+        .toast.success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #fc8181, #e53e3e);
+        }
+
+        .toast.info {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .toast.warning {
+            background: linear-gradient(135deg, #f6ad55, #ed8936);
+        }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 999;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg) scale(1.1);
+            background: rgba(255,255,255,0.2);
+        }
+
+        body.light-mode .theme-toggle {
+            background: rgba(0,0,0,0.1);
+            color: #1a1a2e;
+        }
+
+        body.light-mode .theme-toggle:hover {
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* ===== SEARCH ===== */
+        #searchResults {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #searchResults::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #searchResults::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        /* ===== CAPTCHA ===== */
+        #captchaText {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffd700;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+            user-select: none;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* ===== UTILITY ===== */
+        .text-center { text-align: center; }
+        .mt-10 { margin-top: 10px; }
+        .mt-15 { margin-top: 15px; }
+        .mt-20 { margin-top: 20px; }
+        .op-3 { opacity: 0.3; }
+        .fs-12 { font-size: 12px; }
+        .fs-13 { font-size: 13px; }
+        .fs-14 { font-size: 14px; }
+        .fw-700 { font-weight: 700; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        .gap-10 { gap: 10px; }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
-            .container { padding: 12px 10px; border-radius: 16px; }
-            h1 { font-size: 1.6rem; }
-            h2 { font-size: 1.1rem; }
-            .btn { font-size: 13px; padding: 10px 20px; }
-            .bank-info { grid-template-columns: 1fr; }
-            .withdraw-form .form-row { grid-template-columns: 1fr; }
-            .role-card { padding: 12px; }
-            .role-card .icon { font-size: 26px; }
-            .footer-info .role-desc { padding: 6px 10px; }
-            .footer-info .role-desc .r-text { font-size: 12px; }
-            .summary-stats { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
-            .summary-stats .summary-box .number { font-size: 14px; }
+            .container {
+                padding: 12px 10px;
+                border-radius: 16px;
+                max-height: 100vh;
+                overflow-y: auto;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            h2 {
+                font-size: 1.1rem;
+            }
+
+            .btn {
+                font-size: 13px;
+                padding: 10px 20px;
+                width: 100%;
+            }
+
+            .bank-info {
+                grid-template-columns: 1fr;
+            }
+
+            .withdraw-form .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .role-card {
+                padding: 12px;
+            }
+
+            .role-card .icon {
+                font-size: 26px;
+            }
+
+            .summary-stats {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 4px;
+            }
+
+            .summary-stats .summary-box .number {
+                font-size: 14px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .top-bar .right-section {
+                align-items: stretch;
+                margin-top: 8px;
+            }
+
+            .clock-container {
+                justify-content: space-between;
+            }
+
+            .list-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .list-item .actions {
+                margin-top: 5px;
+                justify-content: flex-end;
+            }
+
+            .amount-buttons {
+                justify-content: center;
+            }
+
+            .amount-btn {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+
+            #modalContent {
+                padding: 20px;
+                max-width: 95%;
+            }
+
+            .footer-info .role-desc {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .theme-toggle {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+                bottom: 10px;
+                left: 10px;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .bank-info {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .container {
+                max-width: 600px;
+            }
+        }
+
+        /* ===== SCROLLBAR STYLING ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
         }
     </style>
 </head>
 <body>
 
+    <!-- ===== THEME TOGGLE ===== -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="ប្តូរពណ៌">🌓</button>
+
+    <!-- ===== MODAL ===== -->
+    <div id="modalOverlay">
+        <div id="modalContent">
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN APP ===== -->
     <div class="container" id="app">
         <div id="pageContent"></div>
     </div>
@@ -742,10 +1339,14 @@
             members: {},
             activityLogs: [],
             transactions: [],
+            commissions: [],
+            notifications: [],
             memberCounter: 0,
             adminCounter: 0,
             superAdminOTP: null,
-            superAdminOTPTime: null
+            superAdminOTPTime: null,
+            exchangeRate: 4000,
+            systemName: 'ប្រព័ន្ធគ្រប់គ្រងសមាជិក'
         };
 
         function saveData() {
@@ -775,10 +1376,17 @@
         }
 
         function logoutUser() {
-            if (confirm('តើអ្នកចង់ចាកចេញមែនទេ?')) {
-                setCurrentUser(null);
-                renderPage('home');
-            }
+            showModal(`
+                <div style="text-align:center;">
+                    <div style="font-size:48px;margin-bottom:10px;">🚪</div>
+                    <h3 style="color:#fff;margin-bottom:10px;">ចាកចេញ</h3>
+                    <p style="color:rgba(255,255,255,0.6);">តើអ្នកចង់ចាកចេញមែនទេ?</p>
+                    <div style="display:flex;gap:10px;margin-top:20px;">
+                        <button onclick="hideModal(); setCurrentUser(null); renderPage('home');" class="btn btn-danger" style="flex:1;">✅ ចាកចេញ</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                    </div>
+                </div>
+            `);
         }
 
         function logActivity(adminId, adminName, action, actionType, target, amount, details) {
@@ -834,6 +1442,131 @@
             return { totalDeposits, totalWithdraws, netBalance: totalDeposits - totalWithdraws };
         }
 
+        // ===== COMMISSION SYSTEM =====
+        function calculateCommission(amount, rate = 0.05) {
+            return amount * rate;
+        }
+
+        function addCommission(memberPhone, transactionId, amount) {
+            const member = data.members[memberPhone];
+            if (!member) return null;
+
+            const commission = calculateCommission(amount, member.commissionRate || 0.05);
+            if (commission <= 0) return null;
+
+            member.totalCommission = (member.totalCommission || 0) + commission;
+
+            const commRecord = {
+                id: 'C-' + String(data.commissions.length + 1).padStart(4, '0'),
+                memberPhone: memberPhone,
+                transactionId: transactionId,
+                amount: amount,
+                commission: commission,
+                rate: member.commissionRate || 0.05,
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            data.commissions.push(commRecord);
+            saveData();
+            return commRecord;
+        }
+
+        function approveCommission(commId) {
+            const comm = data.commissions.find(c => c.id === commId);
+            if (!comm) return false;
+
+            comm.status = 'approved';
+            const member = data.members[comm.memberPhone];
+            if (member) {
+                member.balance += comm.commission;
+                member.benefits.push(`💰 បានទទួលកម្រៃ $${comm.commission.toFixed(2)} ពីប្រតិបត្តិការ ${comm.transactionId}`);
+                sendNotification('email', member.phone + '@example.com', `អ្នកបានទទួលកម្រៃ $${comm.commission.toFixed(2)}`);
+            }
+            saveData();
+            return true;
+        }
+
+        // ===== CURRENCY =====
+        function formatCurrency(amount, currency = 'usd') {
+            if (currency === 'riel') {
+                const riel = Math.round(amount * data.exchangeRate);
+                return riel.toLocaleString('km-KH') + ' ៛';
+            }
+            return '$' + amount.toFixed(2);
+        }
+
+        function convertToRiel(usd) {
+            return usd * data.exchangeRate;
+        }
+
+        function convertToUSD(riel) {
+            return riel / data.exchangeRate;
+        }
+
+        // ===== NOTIFICATION SYSTEM =====
+        function sendNotification(type, recipient, message) {
+            if (!data.notifications) data.notifications = [];
+            data.notifications.push({
+                id: 'N-' + String(data.notifications.length + 1).padStart(4, '0'),
+                type: type,
+                recipient: recipient,
+                message: message,
+                read: false,
+                timestamp: new Date().toISOString()
+            });
+            saveData();
+
+            // Show toast
+            showToast(message, 'info');
+
+            // Log to console for simulation
+            console.log(`📨 [${type}] ទៅ ${recipient}: ${message}`);
+        }
+
+        // ===== TOAST =====
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100px)';
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+
+        // ===== CAPTCHA =====
+        let currentCaptcha = '';
+
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptcha = result;
+            return result;
+        }
+
+        function refreshCaptcha() {
+            const captchaText = document.getElementById('captchaText');
+            if (captchaText) {
+                captchaText.textContent = generateCaptcha();
+            }
+        }
+
+        function verifyCaptcha() {
+            const input = document.getElementById('captchaInput');
+            if (!input) return true;
+            return input.value.toUpperCase() === currentCaptcha;
+        }
+
         // ================================================================
         // ===== CLOCK =====
         // ================================================================
@@ -842,6 +1575,7 @@
 
         function startClock() {
             if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
+
             function updateClock() {
                 const now = new Date();
                 const days = ['អាទិត្យ', 'ចន្ទ', 'អង្គារ', 'ពុធ', 'ព្រហស្បតិ៍', 'សុក្រ', 'សៅរ៍'];
@@ -863,6 +1597,59 @@
             }
             updateClock();
             clockInterval = setInterval(updateClock, 1000);
+        }
+
+        // ================================================================
+        // ===== MODAL =====
+        // ================================================================
+
+        function showModal(html, options = {}) {
+            const overlay = document.getElementById('modalOverlay');
+            const body = document.getElementById('modalBody');
+            const content = document.getElementById('modalContent');
+
+            body.innerHTML = html;
+            overlay.style.display = 'flex';
+
+            // Trigger animation
+            setTimeout(() => {
+                content.classList.add('show');
+            }, 10);
+
+            if (options.closeOnOverlay !== false) {
+                overlay.onclick = function(e) {
+                    if (e.target === overlay) hideModal();
+                };
+            }
+
+            // Close on Escape key
+            document.addEventListener('keydown', function handler(e) {
+                if (e.key === 'Escape') {
+                    hideModal();
+                    document.removeEventListener('keydown', handler);
+                }
+            });
+        }
+
+        function hideModal() {
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
+            content.classList.remove('show');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        }
+
+        // Load theme from localStorage
+        if (localStorage.getItem('theme') === 'light') {
+            document.body.classList.add('light-mode');
         }
 
         // ================================================================
@@ -899,6 +1686,8 @@
                 case 'admin-dashboard': html = getAdminDashboardPage(); break;
                 case 'super-dashboard': html = getSuperDashboardPage(); break;
                 case 'transfer-money': html = getTransferMoneyPage(params); break;
+                case 'activity-log': html = getActivityLogPage(); break;
+                case 'report': html = getReportPage(); break;
                 default: html = getHomePage();
             }
 
@@ -910,6 +1699,11 @@
             container.innerHTML = html;
             attachEvents(page, params);
             if (showClock) startClock();
+
+            // Setup search if on super dashboard
+            if (page === 'super-dashboard') {
+                setupSearch();
+            }
         }
 
         // ================================================================
@@ -919,9 +1713,11 @@
         function getHomePage() {
             return `
                 <div class="text-center">
-                    <div style="margin-bottom:4px;"><span class="badge badge-gold">🚀 v3.0</span></div>
+                    <div style="margin-bottom:4px;">
+                        <span class="badge badge-gold animate-float">🚀 v4.0</span>
+                    </div>
                     <h1>ស្វាគមន៍!</h1>
-                    <p style="font-size:0.9rem;color:rgba(255,255,255,0.5);">ប្រព័ន្ធគ្រប់គ្រងសមាជិក</p>
+                    <p style="font-size:0.9rem;color:rgba(255,255,255,0.5);">${data.systemName}</p>
                     <div style="height:2px;width:40px;background:linear-gradient(90deg,#667eea,transparent);margin:10px auto;"></div>
 
                     <div class="role-selector">
@@ -943,7 +1739,7 @@
                     </div>
 
                     <div style="margin-top:8px;">
-                        <button onclick="renderPage('register')" class="btn btn-secondary">📝 ចុះឈ្មោះជាសមាជិក</button>
+                        <button onclick="renderPage('register')" class="btn btn-secondary animate-glow">📝 ចុះឈ្មោះជាសមាជិក</button>
                     </div>
 
                     <div class="footer-info">
@@ -954,11 +1750,11 @@
                         </div>
                         <div class="role-desc" style="border-left-color:#ffd700;">
                             <span class="r-icon">👑</span>
-                            <span class="r-text"><strong>Sub Admin៖</strong> គ្រប់គ្រងសមាជិកដែលបានចាត់តាំង, ផ្ទេរប្រាក់, កំណត់ព័ត៌មានទូទាត់, មើលប្រវត្តិប្រតិបត្តិការរបស់សមាជិក</span>
+                            <span class="r-text"><strong>Sub Admin៖</strong> គ្រប់គ្រងសមាជិក, ផ្ទេរប្រាក់, កំណត់ព័ត៌មានទូទាត់, មើលប្រវត្តិប្រតិបត្តិការរបស់សមាជិក</span>
                         </div>
                         <div class="role-desc" style="border-left-color:#ffd700;background:rgba(255,215,0,0.05);">
                             <span class="r-icon">⭐</span>
-                            <span class="r-text"><strong>Super Admin៖</strong> គ្រប់គ្រងប្រព័ន្ធទាំងមូល, បង្កើត Sub Admin, ចាត់តាំងសមាជិក, បញ្ចូលប្រាក់ទៅ Sub Admin, មើលប្រវត្តិទាំងអស់</span>
+                            <span class="r-text"><strong>Super Admin៖</strong> គ្រប់គ្រងប្រព័ន្ធទាំងមូល, បង្កើត Sub Admin, បញ្ចូលប្រាក់, មើលប្រវត្តិទាំងអស់</span>
                         </div>
                     </div>
                 </div>
@@ -984,6 +1780,16 @@
                         <input type="password" id="loginPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
                         <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword', this)">👁️</button>
                     </div>
+
+                    <!-- CAPTCHA -->
+                    <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
+                            ${generateCaptcha()}
+                        </div>
+                        <button type="button" onclick="refreshCaptcha()" style="background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:8px 12px;color:#fff;cursor:pointer;font-size:18px;">🔄</button>
+                        <input type="text" id="captchaInput" placeholder="បញ្ចូលលេខកូដ" style="flex:1;padding:10px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:100px;">
+                    </div>
+
                     <button type="submit" class="btn">🔑 ចូលប្រើ</button>
                 </form>
                 <div id="message"></div>
@@ -999,7 +1805,7 @@
                     <h2>📝 ចុះឈ្មោះជាសមាជិក</h2>
                     <span class="back-link" onclick="renderPage('home')">← ត្រឡប់</span>
                 </div>
-                <p style="font-size:13px;">បង្កើតគណនីថ្មីដើម្បីចូលប្រើ</p>
+                <p style="font-size:13px;">បង្កើតគណនីថ្មី</p>
 
                 <form id="registerForm">
                     <input type="text" id="regUsername" placeholder="👤 ឈ្មោះអ្នកប្រើ (ស្រេចចិត្ត)">
@@ -1012,9 +1818,29 @@
                         <input type="password" id="regConfirmPassword" placeholder="🔑 បញ្ជាក់ពាក្យសម្ងាត់" required>
                         <button type="button" class="toggle-pwd" onclick="togglePassword('regConfirmPassword', this)">👁️</button>
                     </div>
+                    <div style="margin: 10px 0;">
+                        <label style="font-size:12px;color:rgba(255,255,255,0.5);">💰 រូបិយប័ណ្ណចូលចិត្ត</label>
+                        <select id="regCurrency" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                            <option value="usd">$ USD</option>
+                            <option value="riel">៛ Riel</option>
+                        </select>
+                    </div>
+
+                    <!-- CAPTCHA -->
+                    <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
+                            ${generateCaptcha()}
+                        </div>
+                        <button type="button" onclick="refreshCaptcha()" style="background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:8px 12px;color:#fff;cursor:pointer;font-size:18px;">🔄</button>
+                        <input type="text" id="captchaInput" placeholder="បញ្ចូលលេខកូដ" style="flex:1;padding:10px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:100px;">
+                    </div>
+
                     <button type="submit" class="btn btn-secondary">📝 ចុះឈ្មោះ</button>
                 </form>
                 <div id="message"></div>
+                <p class="text-center mt-10 fs-12">
+                    ⚠️ <span style="color:#ffd700;">សូមចំណាំលេខទូរសព្ទ និងពាក្យសម្ងាត់របស់អ្នក!</span>
+                </p>
                 <p class="text-center mt-10 fs-12">មានគណនីរួចហើយ? <span onclick="renderPage('home')" style="color:#667eea;cursor:pointer;">ចូលប្រើ</span></p>
             `;
         }
@@ -1034,6 +1860,16 @@
                         <input type="password" id="superPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
                         <button type="button" class="toggle-pwd" onclick="togglePassword('superPassword', this)">👁️</button>
                     </div>
+
+                    <!-- CAPTCHA -->
+                    <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                        <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
+                            ${generateCaptcha()}
+                        </div>
+                        <button type="button" onclick="refreshCaptcha()" style="background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:8px 12px;color:#fff;cursor:pointer;font-size:18px;">🔄</button>
+                        <input type="text" id="captchaInput" placeholder="បញ្ចូលលេខកូដ" style="flex:1;padding:10px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:100px;">
+                    </div>
+
                     <button type="submit" class="btn btn-gold">📤 ផ្ញើ OTP</button>
                 </form>
                 <div id="message"></div>
@@ -1069,10 +1905,7 @@
             `;
         }
 
-        // ================================================================
         // ===== MEMBER DASHBOARD =====
-        // ================================================================
-
         function getDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'member') {
@@ -1083,8 +1916,9 @@
             if (!member) return `<p style="color:red;">មិនឃើញព័ត៌មាន!</p>`;
 
             const admin = data.subAdmins[member.adminId];
+            const preferredCurrency = member.preferredCurrency || 'usd';
 
-            // ===== Deposit Section =====
+            // Deposit Section
             let depositHtml = `
                 <div class="payment-section">
                     <h4>💳 ដាក់ប្រាក់</h4>
@@ -1115,7 +1949,7 @@
 
             depositHtml += `
                     <div style="margin:12px 0;">
-                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">💰 ចំនួនប្រាក់ដែលបានផ្ទេរ</label>
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">💰 ចំនួនប្រាក់ដែលបានផ្ទេរ (${preferredCurrency === 'riel' ? '៛' : '$'})</label>
                         <input type="number" id="depositAmount" placeholder="បញ្ចូលចំនួនប្រាក់" min="0.01" step="0.01" required>
                     </div>
                     <div style="margin:12px 0;">
@@ -1128,11 +1962,11 @@
                             <input type="file" id="depositQRInput" accept="image/*" onchange="handleDepositQRUpload(this)">
                         </div>
                     </div>
-                    <button onclick="showDepositConfirm()" class="btn btn-gold">✅ បញ្ជាក់ការដាក់ប្រាក់</button>
+                    <button onclick="showDepositConfirm()" class="btn btn-gold animate-glow">✅ បញ្ជាក់ការដាក់ប្រាក់</button>
                 </div>
             `;
 
-            // ===== Withdraw Section =====
+            // Withdraw Section
             let withdrawHtml = `
                 <div class="payment-section">
                     <h4>🏦 ដកប្រាក់</h4>
@@ -1150,13 +1984,15 @@
                         </div>
 
                         <div class="full-width">
-                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">ជ្រើសរើសចំនួនប្រាក់</label>
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">ជ្រើសរើសចំនួនប្រាក់ (${preferredCurrency === 'riel' ? '៛' : '$'})</label>
                             <div class="amount-buttons">
                                 <button type="button" class="amount-btn" onclick="selectAmount(1)">$1</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(5)">$5</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(10)">$10</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(15)">$15</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(20)">$20</button>
+                                <button type="button" class="amount-btn" onclick="selectAmount(50)">$50</button>
+                                <button type="button" class="amount-btn" onclick="selectAmount(100)">$100</button>
                             </div>
                             <input type="number" id="withdrawAmount" placeholder="💰 បញ្ចូលចំនួនដោយដៃ" min="1" step="0.01">
                         </div>
@@ -1178,7 +2014,7 @@
                 </div>
             `;
 
-            // ===== Transaction History =====
+            // Transaction History
             const transactions = getMemberTransactions(user.phone);
             let txHtml = '';
             if (transactions.length === 0) {
@@ -1188,15 +2024,15 @@
                 txHtml = `
                     <div class="summary-stats">
                         <div class="summary-box">
-                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="number green">${formatCurrency(totals.totalDeposits, preferredCurrency)}</div>
                             <div class="label">ដាក់</div>
                         </div>
                         <div class="summary-box">
-                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="number red">${formatCurrency(totals.totalWithdraws, preferredCurrency)}</div>
                             <div class="label">ដក</div>
                         </div>
                         <div class="summary-box">
-                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="number gold">${formatCurrency(totals.netBalance, preferredCurrency)}</div>
                             <div class="label">សល់</div>
                         </div>
                     </div>
@@ -1215,7 +2051,7 @@
                                 <span style="font-size:10px;opacity:0.4;">${statusText}</span>
                                 <span style="opacity:0.5;font-size:11px;">${tx.description || ''}</span>
                             </div>
-                            <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
+                            <div style="color:${color};font-weight:600;">${amountSign}${formatCurrency(tx.amount, preferredCurrency)}</div>
                         </div>
                     `;
                 });
@@ -1225,7 +2061,33 @@
                 }
             }
 
-            // ===== Benefits =====
+            // Commission History
+            let commHtml = '';
+            const comms = data.commissions.filter(c => c.memberPhone === user.phone);
+            if (comms.length === 0) {
+                commHtml = '<p style="opacity:0.4;font-size:13px;">មិនទាន់មានកម្រៃ</p>';
+            } else {
+                const totalComm = comms.reduce((s, c) => s + c.commission, 0);
+                commHtml = `
+                    <div style="margin:5px 0;color:#9f7aea;font-weight:600;">កម្រៃសរុប: ${formatCurrency(totalComm, preferredCurrency)}</div>
+                    <div style="max-height:100px;overflow-y:auto;">
+                `;
+                comms.slice(0, 5).forEach(c => {
+                    const d = new Date(c.timestamp);
+                    commHtml += `
+                        <div class="transaction-item">
+                            <div>
+                                <span style="font-size:10px;color:#9f7aea;">${c.status === 'approved' ? '✅' : '⏳'}</span>
+                                <span style="opacity:0.5;font-size:11px;">${d.toLocaleDateString('km-KH')}</span>
+                            </div>
+                            <div style="color:#9f7aea;font-weight:600;">+${formatCurrency(c.commission, preferredCurrency)}</div>
+                        </div>
+                    `;
+                });
+                commHtml += `</div>`;
+            }
+
+            // Benefits
             let benefitsHtml = '';
             if (member.benefits && member.benefits.length > 0) {
                 member.benefits.forEach(b => {
@@ -1242,27 +2104,42 @@
                         <h2 style="margin:2px 0 0;">${member.username || user.phone}</h2>
                         <div style="font-size:12px;color:rgba(255,255,255,0.4);">
                             🆔 ${member.id} | 📱 ${member.phone}
-                            ${admin ? '| 👑 ' + admin.username : '| ⚠️ មិនទាន់មាន Admin'}
+                            ${admin ? '| 👑 ' + admin.username : ''}
+                            | ${preferredCurrency === 'riel' ? '៛' : '$'}
                         </div>
                     </div>
                 </div>
 
-                <div class="card"><h3>💰 ទឹកប្រាក់</h3><div style="font-size:2.4rem;font-weight:800;color:#48bb78;">$${member.balance.toFixed(2)}</div></div>
+                <div class="card animate-glow">
+                    <h3>💰 ទឹកប្រាក់</h3>
+                    <div style="font-size:2.4rem;font-weight:800;color:#48bb78;">
+                        ${formatCurrency(member.balance, preferredCurrency)}
+                    </div>
+                    ${member.totalCommission ? `<div style="font-size:12px;color:#9f7aea;">កម្រៃ: ${formatCurrency(member.totalCommission, preferredCurrency)}</div>` : ''}
+                </div>
 
                 ${depositHtml}
                 ${withdrawHtml}
 
                 <div class="card"><h3>📋 ប្រវត្តិប្រតិបត្តិការ</h3>${txHtml}</div>
 
+                <div class="card">
+                    <h3>🎁 កម្រៃជើងសារ (Commission)</h3>
+                    ${commHtml}
+                </div>
+
                 <div class="card"><h3>🎁 អត្ថប្រយោជន៍</h3><ul style="list-style:none;padding:0;">${benefitsHtml}</ul></div>
-                <div class="text-center mt-10 op-3 fs-12">v3.0</div>
+
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple">📋 កំណត់ត្រា</button>
+                    <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
+                </div>
+
+                <div class="text-center mt-10 op-3 fs-12">v4.0</div>
             `;
         }
 
-        // ================================================================
         // ===== ADMIN DASHBOARD =====
-        // ================================================================
-
         function getAdminDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
@@ -1280,6 +2157,7 @@
                 memberKeys.forEach(phone => {
                     const m = data.members[phone];
                     if (!m) return;
+                    const preferredCurrency = m.preferredCurrency || 'usd';
                     membersHtml += `
                         <div class="list-item">
                             <div class="info">
@@ -1287,8 +2165,9 @@
                                 <span class="id">🆔 ${m.id}</span>
                                 <span class="sub">📱 ${m.phone}</span>
                                 <span class="pwd">🔑 ${m.password}</span>
+                                <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
                             </div>
-                            <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
+                            <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                             <div class="actions">
                                 <button onclick="renderPage('transfer-money', {phone:'${phone}'})" class="btn btn-warning btn-sm">💸 ផ្ទេរ</button>
                             </div>
@@ -1297,10 +2176,10 @@
                 });
             }
 
-            // ===== Admin Notifications =====
+            // Notifications
             let notificationsHtml = getAdminNotifications();
 
-            // ===== Admin Transaction History =====
+            // Transaction History
             let txHtml = '';
             const allTx = [];
             memberKeys.forEach(phone => {
@@ -1352,7 +2231,7 @@
                 txHtml += `</div>`;
             }
 
-            // ===== Bank Setup =====
+            // Bank Setup
             let bankSetupHtml = `
                 <div class="payment-section admin-panel">
                     <h4>🏦 កំណត់ព័ត៌មានទូទាត់</h4>
@@ -1372,6 +2251,19 @@
                         <button type="submit" class="btn btn-gold">💾 រក្សាទុក</button>
                     </form>
                     <div id="bankInfoMessage"></div>
+                </div>
+            `;
+
+            // Commission Settings
+            let commSettingsHtml = `
+                <div class="payment-section admin-panel">
+                    <h4>💰 កំណត់កម្រៃជើងសារ</h4>
+                    <form id="commissionForm" onsubmit="event.preventDefault(); saveCommissionSettings();">
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">អត្រាកម្រៃ (%)</label>
+                        <input type="number" id="commissionRate" value="${admin.commissionRate ? admin.commissionRate * 100 : 5}" placeholder="ឧ. 5" min="0" max="20" step="0.1">
+                        <button type="submit" class="btn btn-secondary">💾 រក្សាទុក</button>
+                    </form>
+                    <div id="commissionMessage"></div>
                 </div>
             `;
 
@@ -1405,6 +2297,7 @@
                 </div>
 
                 ${bankSetupHtml}
+                ${commSettingsHtml}
 
                 <div class="card admin-panel">
                     <h3>📋 បញ្ជីសមាជិក</h3>
@@ -1417,7 +2310,8 @@
                 </div>
 
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
-                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple">📋 កំណត់ត្រា</button>
+                    <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
                 </div>
             `;
         }
@@ -1473,10 +2367,7 @@
             return html;
         }
 
-        // ================================================================
         // ===== SUPER ADMIN DASHBOARD =====
-        // ================================================================
-
         function getSuperDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'super_admin') {
@@ -1488,7 +2379,17 @@
             const totalMembers = Object.keys(data.members).length;
             const totalBalance = Object.values(data.members).reduce((s, m) => s + m.balance, 0);
 
-            // ===== Sub Admin List with Edit/Delete =====
+            // Search bar
+            const searchHtml = `
+                <div style="margin: 10px 0;">
+                    <input type="text" id="searchMembersInput" placeholder="🔍 ស្វែងរកសមាជិក (ឈ្មោះ, លេខទូរសព្ទ, ID)..." 
+                           oninput="searchMembersLive(this.value)" 
+                           style="width:100%;padding:12px;border-radius:12px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                </div>
+                <div id="searchResults"></div>
+            `;
+
+            // Sub Admin List
             let adminListHtml = '';
             Object.values(data.subAdmins).forEach(a => {
                 adminListHtml += `
@@ -1510,20 +2411,22 @@
                 `;
             });
 
-            // ===== Member List with Edit/Delete/Assign =====
+            // Member List with search
             let memberListHtml = '';
             Object.values(data.members).forEach(m => {
                 const admin = data.subAdmins[m.adminId];
+                const preferredCurrency = m.preferredCurrency || 'usd';
                 memberListHtml += `
-                    <div class="list-item">
+                    <div class="list-item member-item" data-phone="${m.phone}" data-name="${m.username || ''}" data-id="${m.id}">
                         <div class="info">
                             <span class="name">${m.username || m.phone}</span>
                             <span class="id">🆔 ${m.id}</span>
                             <span class="sub">📱 ${m.phone}</span>
                             <span class="pwd">🔑 ${m.password}</span>
                             <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
+                            <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
                         </div>
-                        <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
+                        <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                         <div class="actions">
                             <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
                             <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
@@ -1534,10 +2437,10 @@
                 `;
             });
 
-            // ===== Super Notifications =====
+            // Super Notifications
             let superNotificationsHtml = getSuperNotifications();
 
-            // ===== Super Transaction History =====
+            // Super Transaction History
             let txHtml = '';
             if (!data.transactions || data.transactions.length === 0) {
                 txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
@@ -1634,21 +2537,43 @@
                 <div class="card admin-panel">
                     <h3>💰 បញ្ចូលប្រាក់ទៅ Sub Admin</h3>
                     <form id="superFundForm" onsubmit="event.preventDefault(); fundSubAdmin();">
+                        <select id="superFundTarget" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                            ${Object.values(data.subAdmins).map(a => `<option value="${a.phone}">${a.username} ($${a.balance.toFixed(2)})</option>`).join('')}
+                            ${Object.keys(data.subAdmins).length === 0 ? '<option value="">មិនទាន់មាន Sub Admin</option>' : ''}
+                        </select>
                         <input type="number" id="superFundAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
                         <button type="submit" class="btn btn-gold">💳 បញ្ចូលប្រាក់</button>
                     </form>
                     <div id="superFundMessage"></div>
                 </div>
 
+                <div class="card admin-panel">
+                    <h3>⚙️ កំណត់អត្រាប្តូរប្រាក់</h3>
+                    <form id="exchangeRateForm" onsubmit="event.preventDefault(); updateExchangeRate();">
+                        <input type="number" id="exchangeRateInput" value="${data.exchangeRate}" placeholder="៛ ក្នុង ១ $" min="1000" step="10">
+                        <button type="submit" class="btn btn-secondary">💾 រក្សាទុក</button>
+                    </form>
+                    <div id="exchangeRateMessage"></div>
+                </div>
+
+                ${searchHtml}
+
                 <div class="card"><h3>📋 Sub Admin</h3>${adminListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div>
 
-                <div class="card"><h3>📋 សមាជិក</h3><div style="max-height:200px;overflow-y:auto;">${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
+                <div class="card" id="memberListCard">
+                    <h3>📋 សមាជិក (${Object.keys(data.members).length})</h3>
+                    <div style="max-height:300px;overflow-y:auto;" id="memberListContainer">
+                        ${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}
+                    </div>
+                </div>
 
                 <div class="card"><h3>📊 ប្រវត្តិប្រតិបត្តិការទាំងអស់</h3>${txHtml}</div>
 
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
-                    <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
-                    <button onclick="exportData()" class="btn btn-secondary btn-sm">📤 នាំចេញ</button>
+                    <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple">📋 កំណត់ត្រា</button>
+                    <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
+                    <button onclick="exportData()" class="btn btn-sm btn-secondary">📤 នាំចេញ</button>
+                    <button onclick="importData()" class="btn btn-sm btn-warning">📥 នាំចូល</button>
                 </div>
             `;
         }
@@ -1685,10 +2610,7 @@
             return html;
         }
 
-        // ================================================================
         // ===== TRANSFER MONEY PAGE =====
-        // ================================================================
-
         function getTransferMoneyPage(params) {
             const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
@@ -1709,6 +2631,8 @@
                 `;
             }
 
+            const preferredCurrency = member.preferredCurrency || 'usd';
+
             return `
                 <div class="top-bar">
                     <h2>💸 ផ្ទេរប្រាក់ទៅសមាជិក</h2>
@@ -1719,19 +2643,73 @@
                     <h3>👤 ព័ត៌មានសមាជិក</h3>
                     <div><strong style="color:#fff;">${member.username || member.phone}</strong></div>
                     <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${member.id} | 📱 ${member.phone}</div>
-                    <div style="font-size:15px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: $${member.balance.toFixed(2)}</div>
+                    <div style="font-size:15px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: ${formatCurrency(member.balance, preferredCurrency)}</div>
                 </div>
 
                 <div class="card admin-panel">
-                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ</h3>
+                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ (${preferredCurrency === 'riel' ? '៛' : '$'})</h3>
                     <form id="transferForm">
                         <input type="hidden" id="transferPhone" value="${member.phone}">
                         <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
                         <div style="font-size:12px;color:rgba(255,255,255,0.4);">នៅសល់: $${admin.balance.toFixed(2)}</div>
-                        <button type="submit" class="btn btn-warning">💸 បញ្ជាក់ការផ្ទេរ</button>
+                        <button type="submit" class="btn btn-warning animate-glow">💸 បញ្ជាក់ការផ្ទេរ</button>
                     </form>
                     <div id="transferMessage"></div>
                 </div>
+            `;
+        }
+
+        // ===== ACTIVITY LOG PAGE =====
+        function getActivityLogPage() {
+            const logs = data.activityLogs || [];
+            let html = `
+                <div class="top-bar">
+                    <h2>📋 កំណត់ត្រាសកម្មភាព</h2>
+                    <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
+                </div>
+                <p style="font-size:12px;color:rgba(255,255,255,0.3);">សរុប ${logs.length} កំណត់ត្រា</p>
+            `;
+
+            if (logs.length === 0) {
+                html += `<p style="opacity:0.4;">មិនទាន់មានសកម្មភាព</p>`;
+            } else {
+                logs.slice(0, 50).forEach(log => {
+                    const d = new Date(log.timestamp);
+                    html += `
+                        <div class="list-item" style="border-left-color:${log.actionType === 'financial' ? '#48bb78' : log.actionType === 'authentication' ? '#667eea' : '#ffd700'};">
+                            <div class="info">
+                                <span class="name">${log.adminName}</span>
+                                <span class="sub">${log.action}</span>
+                                ${log.details ? `<span class="sub" style="color:rgba(255,255,255,0.3);">${log.details}</span>` : ''}
+                                ${log.amount ? `<span class="sub" style="color:#ffd700;">$${log.amount.toFixed(2)}</span>` : ''}
+                            </div>
+                            <div style="font-size:10px;color:rgba(255,255,255,0.3);text-align:right;">
+                                ${d.toLocaleDateString('km-KH')}<br>${d.toLocaleTimeString('km-KH')}
+                            </div>
+                        </div>
+                    `;
+                });
+                if (logs.length > 50) {
+                    html += `<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ៥០ ចុងក្រោយ</p>`;
+                }
+            }
+
+            return html;
+        }
+
+        // ===== REPORT PAGE =====
+        function getReportPage() {
+            return `
+                <div class="top-bar">
+                    <h2>📊 របាយការណ៍</h2>
+                    <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
+                </div>
+                <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;">
+                    <button onclick="generateReportDisplay('daily')" class="btn btn-sm btn-gold">📅 ប្រចាំថ្ងៃ</button>
+                    <button onclick="generateReportDisplay('weekly')" class="btn btn-sm btn-secondary">📅 ប្រចាំសប្តាហ៍</button>
+                    <button onclick="generateReportDisplay('monthly')" class="btn btn-sm btn-purple">📅 ប្រចាំខែ</button>
+                </div>
+                <div id="reportContent"></div>
             `;
         }
 
@@ -1802,43 +2780,85 @@
             const hasScreenshot = qrInput && qrInput.dataset.qrData;
 
             if (!amount || amount <= 0) {
-                alert('⚠️ សូមបញ្ចូលចំនួនប្រាក់ដែលអ្នកបានផ្ទេរ!');
+                showModal(`
+                    <div style="text-align:center;">
+                        <div style="font-size:48px;margin-bottom:10px;">⚠️</div>
+                        <h3 style="color:#fff;margin-bottom:10px;">កំហុស!</h3>
+                        <p style="color:rgba(255,255,255,0.6);">សូមបញ្ចូលចំនួនប្រាក់ដែលអ្នកបានផ្ទេរ!</p>
+                        <button onclick="hideModal()" class="btn" style="margin-top:15px;">យល់ព្រម</button>
+                    </div>
+                `);
                 return;
             }
 
             if (!hasScreenshot) {
-                alert('⚠️ សូមបញ្ចូលរូបភាពថតអេក្រង់បន្ទាប់ពីផ្ទេរប្រាក់រួច!');
+                showModal(`
+                    <div style="text-align:center;">
+                        <div style="font-size:48px;margin-bottom:10px;">⚠️</div>
+                        <h3 style="color:#fff;margin-bottom:10px;">ត្រូវការរូបភាព!</h3>
+                        <p style="color:rgba(255,255,255,0.6);">សូមបញ្ចូលរូបភាពថតអេក្រង់បន្ទាប់ពីផ្ទេរប្រាក់រួច!</p>
+                        <button onclick="hideModal()" class="btn" style="margin-top:15px;">យល់ព្រម</button>
+                    </div>
+                `);
                 return;
             }
 
-            if (confirm('តើអ្នកបានផ្ទេរប្រាក់ $' + amount.toFixed(2) + ' រួចហើយមែនទេ?')) {
-                const user = getCurrentUser();
-                if (user) {
-                    const member = data.members[user.phone];
-                    if (member) {
-                        const tx = createTransaction(
-                            'deposit',
-                            member.phone,
-                            member.adminId,
-                            amount,
-                            'pending',
-                            'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2),
-                            qrInput.dataset.qrData
-                        );
+            // Confirm Modal
+            const user = getCurrentUser();
+            const member = user ? data.members[user.phone] : null;
+            const preferredCurrency = member ? member.preferredCurrency || 'usd' : 'usd';
 
-                        logActivity(member.id || 'member', member.username || member.phone, 'deposit_request', 'financial', null, amount,
-                            'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
+            showModal(`
+                <div style="text-align:center;">
+                    <div style="font-size:48px;margin-bottom:10px;">💳</div>
+                    <h3 style="color:#fff;margin-bottom:10px;">បញ្ជាក់ការដាក់ប្រាក់</h3>
+                    <p style="color:rgba(255,255,255,0.6);margin-bottom:5px;">អ្នកបានផ្ទេរប្រាក់</p>
+                    <p style="font-size:32px;font-weight:700;color:#ffd700;margin:10px 0;">${formatCurrency(amount, preferredCurrency)}</p>
+                    <div style="display:flex;gap:10px;margin-top:20px;">
+                        <button onclick="hideModal(); confirmDeposit(${amount});" class="btn btn-gold" style="flex:1;">✅ បញ្ជាក់</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                    </div>
+                </div>
+            `);
+        }
 
-                        alert('✅ សំណើរដាក់ប្រាក់ $' + amount.toFixed(2) + ' របស់អ្នកត្រូវបានផ្ញើរួច! លេខប្រតិបត្តិការ: ' + tx.id);
+        function confirmDeposit(amount) {
+            const user = getCurrentUser();
+            if (user) {
+                const member = data.members[user.phone];
+                if (member) {
+                    const qrInput = document.getElementById('depositQRInput');
+                    const tx = createTransaction(
+                        'deposit',
+                        member.phone,
+                        member.adminId,
+                        amount,
+                        'pending',
+                        'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2),
+                        qrInput.dataset.qrData
+                    );
 
-                        document.getElementById('depositQRInput').value = '';
-                        document.getElementById('depositFileName').textContent = '';
-                        document.getElementById('depositQRPreview').innerHTML = '';
-                        if (qrInput) qrInput.dataset.qrData = '';
-                        if (amountInput) amountInput.value = '';
+                    logActivity(member.id || 'member', member.username || member.phone, 'deposit_request', 'financial', null, amount,
+                        'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
 
-                        renderPage('dashboard');
-                    }
+                    sendNotification('email', member.phone + '@example.com', 
+                        `សំណើដាក់ប្រាក់ $${amount.toFixed(2)} ត្រូវបានផ្ញើរួច! TX: ${tx.id}`);
+
+                    showModal(`
+                        <div style="text-align:center;">
+                            <div style="font-size:48px;margin-bottom:10px;">✅</div>
+                            <h3 style="color:#48bb78;margin-bottom:10px;">ជោគជ័យ!</h3>
+                            <p style="color:rgba(255,255,255,0.6);">សំណើរដាក់ប្រាក់ ${formatCurrency(amount, member.preferredCurrency || 'usd')} របស់អ្នកត្រូវបានផ្ញើរួច!</p>
+                            <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:5px;">លេខប្រតិបត្តិការ: ${tx.id}</p>
+                            <button onclick="hideModal(); renderPage('dashboard');" class="btn" style="margin-top:15px;">ទៅកាន់ Dashboard</button>
+                        </div>
+                    `);
+
+                    document.getElementById('depositQRInput').value = '';
+                    document.getElementById('depositFileName').textContent = '';
+                    document.getElementById('depositQRPreview').innerHTML = '';
+                    if (qrInput) qrInput.dataset.qrData = '';
+                    if (document.getElementById('depositAmount')) document.getElementById('depositAmount').value = '';
                 }
             }
         }
@@ -1850,17 +2870,17 @@
             const qrInput = document.getElementById('withdrawQRInput');
             const hasQR = qrInput && qrInput.dataset.qrData;
 
-            if (!name) { alert('សូមបញ្ចូលឈ្មោះ!'); return; }
-            if (!phone) { alert('សូមបញ្ចូលលេខទូរសព្ទ!'); return; }
-            if (!amount || amount <= 0) { alert('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!'); return; }
-            if (!hasQR) { alert('សូមបញ្ចូលរូបភាព QR Code!'); return; }
+            if (!name) { showToast('សូមបញ្ចូលឈ្មោះ!', 'error'); return; }
+            if (!phone) { showToast('សូមបញ្ចូលលេខទូរសព្ទ!', 'error'); return; }
+            if (!amount || amount <= 0) { showToast('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!', 'error'); return; }
+            if (!hasQR) { showToast('សូមបញ្ចូលរូបភាព QR Code!', 'error'); return; }
 
             const user = getCurrentUser();
             if (user) {
                 const member = data.members[user.phone];
                 if (member) {
                     if (amount > member.balance) {
-                        alert('ប្រាក់របស់អ្នកមិនគ្រប់គ្រាន់! (នៅសល់ $' + member.balance.toFixed(2) + ')');
+                        showToast(`ប្រាក់មិនគ្រប់! (នៅសល់ ${formatCurrency(member.balance, member.preferredCurrency || 'usd')})`, 'error');
                         return;
                     }
 
@@ -1877,7 +2897,18 @@
                     logActivity(member.id || 'member', member.username || member.phone, 'withdraw_request', 'financial', null, amount,
                         'ស្នើដកប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
 
-                    alert('✅ សំណើរដកប្រាក់ $' + amount.toFixed(2) + ' របស់អ្នកត្រូវបានផ្ញើរួច! លេខប្រតិបត្តិការ: ' + tx.id);
+                    sendNotification('email', member.phone + '@example.com',
+                        `សំណើដកប្រាក់ $${amount.toFixed(2)} ត្រូវបានផ្ញើរួច! TX: ${tx.id}`);
+
+                    showModal(`
+                        <div style="text-align:center;">
+                            <div style="font-size:48px;margin-bottom:10px;">✅</div>
+                            <h3 style="color:#48bb78;margin-bottom:10px;">ជោគជ័យ!</h3>
+                            <p style="color:rgba(255,255,255,0.6);">សំណើរដកប្រាក់ ${formatCurrency(amount, member.preferredCurrency || 'usd')} របស់អ្នកត្រូវបានផ្ញើរួច!</p>
+                            <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:5px;">លេខប្រតិបត្តិការ: ${tx.id}</p>
+                            <button onclick="hideModal(); renderPage('dashboard');" class="btn" style="margin-top:15px;">ទៅកាន់ Dashboard</button>
+                        </div>
+                    `);
 
                     document.getElementById('withdrawQRInput').value = '';
                     document.getElementById('withdrawFileName').textContent = '';
@@ -1885,8 +2916,6 @@
                     if (qrInput) qrInput.dataset.qrData = '';
                     document.getElementById('withdrawAmount').value = '';
                     document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-
-                    renderPage('dashboard');
                 }
             }
         }
@@ -1894,12 +2923,12 @@
         function saveBankInfo() {
             const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
-                alert('សូមចូលប្រើជា Sub Admin!');
+                showToast('សូមចូលប្រើជា Sub Admin!', 'error');
                 return;
             }
 
             const admin = data.subAdmins[user.phone];
-            if (!admin) { alert('មិនឃើញព័ត៌មាន Admin!'); return; }
+            if (!admin) { showToast('មិនឃើញព័ត៌មាន Admin!', 'error'); return; }
 
             const bankName = document.getElementById('bankName').value.trim();
             const bankAccount = document.getElementById('bankAccount').value.trim();
@@ -1914,25 +2943,51 @@
             logActivity(admin.id, admin.username, 'update_bank_info', 'administration', null, null,
                 'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានទូទាត់');
 
-            const msg = document.getElementById('bankInfoMessage');
-            if (msg) {
-                msg.innerHTML = `<div class="success">✅ រក្សាទុកព័ត៌មានជោគជ័យ!</div>`;
-                setTimeout(() => { msg.innerHTML = ''; }, 3000);
+            showToast('✅ រក្សាទុកព័ត៌មានជោគជ័យ!', 'success');
+        }
+
+        function saveCommissionSettings() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                showToast('សូមចូលប្រើជា Sub Admin!', 'error');
+                return;
             }
+
+            const admin = data.subAdmins[user.phone];
+            if (!admin) { showToast('មិនឃើញព័ត៌មាន Admin!', 'error'); return; }
+
+            const rate = parseFloat(document.getElementById('commissionRate').value);
+            if (isNaN(rate) || rate < 0 || rate > 20) {
+                showToast('សូមបញ្ចូលអត្រាចន្លោះ 0-20%!', 'error');
+                return;
+            }
+
+            admin.commissionRate = rate / 100;
+            saveData();
+            logActivity(admin.id, admin.username, 'update_commission', 'administration', null, null,
+                'កំណត់អត្រាកម្រៃ ' + rate + '%');
+
+            showToast(`✅ កំណត់អត្រាកម្រៃ ${rate}% ជោគជ័យ!`, 'success');
         }
 
         function fundSubAdmin() {
             const amount = parseFloat(document.getElementById('superFundAmount').value);
+            const targetPhone = document.getElementById('superFundTarget').value;
             const msg = document.getElementById('superFundMessage');
+
+            if (!targetPhone) {
+                msg.innerHTML = `<div class="error">មិនទាន់មាន Sub Admin!</div>`;
+                return;
+            }
 
             if (!amount || amount <= 0) {
                 msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!</div>`;
                 return;
             }
 
-            const subAdmin = Object.values(data.subAdmins)[0];
+            const subAdmin = data.subAdmins[targetPhone];
             if (!subAdmin) {
-                msg.innerHTML = `<div class="error">មិនទាន់មាន Sub Admin!</div>`;
+                msg.innerHTML = `<div class="error">មិនឃើញ Sub Admin!</div>`;
                 return;
             }
 
@@ -1943,9 +2998,30 @@
             logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', subAdmin.phone, amount,
                 'បញ្ចូល $' + amount.toFixed(2) + ' ទៅ ' + subAdmin.username);
 
+            sendNotification('email', subAdmin.phone + '@example.com',
+                `អ្នកបានទទួលប្រាក់ $${amount.toFixed(2)} ពី Super Admin`);
+
             msg.innerHTML = `<div class="success">✅ បញ្ចូល $${amount.toFixed(2)} ទៅ ${subAdmin.username} ជោគជ័យ!</div>`;
             document.getElementById('superFundAmount').value = '';
             setTimeout(() => renderPage('super-dashboard'), 1500);
+        }
+
+        function updateExchangeRate() {
+            const rate = parseFloat(document.getElementById('exchangeRateInput').value);
+            const msg = document.getElementById('exchangeRateMessage');
+
+            if (!rate || rate < 1000) {
+                msg.innerHTML = `<div class="error">សូមបញ្ចូលអត្រាត្រឹមត្រូវ! (យ៉ាងតិច 1000៛)</div>`;
+                return;
+            }
+
+            data.exchangeRate = rate;
+            saveData();
+            logActivity('SUPER-001', 'Super Admin', 'update_exchange_rate', 'administration', null, null,
+                'កំណត់អត្រាប្តូរប្រាក់ ' + rate + '៛/$');
+
+            msg.innerHTML = `<div class="success">✅ កំណត់អត្រា ${rate}៛/$ ជោគជ័យ!</div>`;
+            setTimeout(() => { msg.innerHTML = ''; }, 3000);
         }
 
         // ================================================================
@@ -1953,10 +3029,22 @@
         // ================================================================
 
         function approveTransaction(txId) {
-            if (!confirm('តើអ្នកចង់យល់ព្រមលើប្រតិបត្តិការនេះមែនទេ?')) return;
+            showModal(`
+                <div style="text-align:center;">
+                    <div style="font-size:48px;margin-bottom:10px;">✅</div>
+                    <h3 style="color:#fff;margin-bottom:10px;">យល់ព្រមប្រតិបត្តិការ</h3>
+                    <p style="color:rgba(255,255,255,0.6);">តើអ្នកចង់យល់ព្រមលើប្រតិបត្តិការនេះមែនទេ?</p>
+                    <div style="display:flex;gap:10px;margin-top:20px;">
+                        <button onclick="hideModal(); confirmApprove('${txId}');" class="btn btn-gold" style="flex:1;">✅ យល់ព្រម</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                    </div>
+                </div>
+            `);
+        }
 
+        function confirmApprove(txId) {
             const tx = data.transactions.find(t => t.id === txId);
-            if (!tx) { alert('មិនឃើញប្រតិបត្តិការ!'); return; }
+            if (!tx) { showToast('មិនឃើញប្រតិបត្តិការ!', 'error'); return; }
 
             tx.status = 'completed';
 
@@ -1965,6 +3053,13 @@
                 if (tx.type === 'deposit') {
                     member.balance += tx.amount;
                     member.benefits.push('💰 បានដាក់ប្រាក់ $' + tx.amount.toFixed(2) + ' នៅថ្ងៃ ' + new Date().toLocaleDateString('km-KH'));
+
+                    // Add commission
+                    const comm = addCommission(tx.memberPhone, tx.id, tx.amount);
+                    if (comm) {
+                        approveCommission(comm.id);
+                    }
+
                 } else if (tx.type === 'withdraw') {
                     member.balance -= tx.amount;
                     member.benefits.push('🏦 បានដកប្រាក់ $' + tx.amount.toFixed(2) + ' នៅថ្ងៃ ' + new Date().toLocaleDateString('km-KH'));
@@ -1979,15 +3074,30 @@
                     'យល់ព្រមលើប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
             }
 
-            alert('✅ ប្រតិបត្តិការត្រូវបានយល់ព្រម!');
+            sendNotification('email', tx.memberPhone + '@example.com',
+                `ប្រតិបត្តិការ ${tx.id} ត្រូវបានអនុម័ត! ចំនួន: $${tx.amount.toFixed(2)}`);
+
+            showToast('✅ ប្រតិបត្តិការត្រូវបានយល់ព្រម!', 'success');
             renderPage('admin-dashboard');
         }
 
         function rejectTransaction(txId) {
-            if (!confirm('តើអ្នកចង់បដិសេធប្រតិបត្តិការនេះមែនទេ?')) return;
+            showModal(`
+                <div style="text-align:center;">
+                    <div style="font-size:48px;margin-bottom:10px;">❌</div>
+                    <h3 style="color:#fff;margin-bottom:10px;">បដិសេធប្រតិបត្តិការ</h3>
+                    <p style="color:rgba(255,255,255,0.6);">តើអ្នកចង់បដិសេធប្រតិបត្តិការនេះមែនទេ?</p>
+                    <div style="display:flex;gap:10px;margin-top:20px;">
+                        <button onclick="hideModal(); confirmReject('${txId}');" class="btn btn-danger" style="flex:1;">❌ បដិសេធ</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">បោះបង់</button>
+                    </div>
+                </div>
+            `);
+        }
 
+        function confirmReject(txId) {
             const tx = data.transactions.find(t => t.id === txId);
-            if (!tx) { alert('មិនឃើញប្រតិបត្តិការ!'); return; }
+            if (!tx) { showToast('មិនឃើញប្រតិបត្តិការ!', 'error'); return; }
 
             tx.status = 'rejected';
             saveData();
@@ -1998,7 +3108,10 @@
                     'បដិសេធប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
             }
 
-            alert('❌ ប្រតិបត្តិការត្រូវបានបដិសេធ!');
+            sendNotification('email', tx.memberPhone + '@example.com',
+                `ប្រតិបត្តិការ ${tx.id} ត្រូវបានបដិសេធ!`);
+
+            showToast('❌ ប្រតិបត្តិការត្រូវបានបដិសេធ!', 'error');
             renderPage('admin-dashboard');
         }
 
@@ -2008,50 +3121,91 @@
 
         function superEditMember(phone) {
             const member = data.members[phone];
-            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
+            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
 
-            const newUsername = prompt('ឈ្មោះថ្មី:', member.username || '');
-            if (newUsername === null) return;
+            showModal(`
+                <div style="text-align:center;">
+                    <h3 style="color:#ffd700;margin-bottom:15px;">✏️ កែប្រែសមាជិក</h3>
+                    <form id="superEditMemberForm">
+                        <input type="hidden" id="editMemberPhone" value="${phone}">
+                        <input type="text" id="editMemberUsername" value="${member.username || ''}" placeholder="👤 ឈ្មោះ">
+                        <input type="tel" id="editMemberNewPhone" value="${member.phone}" placeholder="📱 លេខទូរសព្ទ">
+                        <select id="editMemberCurrency" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                            <option value="usd" ${member.preferredCurrency === 'usd' ? 'selected' : ''}>$ USD</option>
+                            <option value="riel" ${member.preferredCurrency === 'riel' ? 'selected' : ''}>៛ Riel</option>
+                        </select>
+                        <div style="display:flex;gap:10px;margin-top:15px;">
+                            <button type="submit" class="btn btn-gold" style="flex:1;">💾 រក្សាទុក</button>
+                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                        </div>
+                    </form>
+                    <div id="superEditMemberMessage"></div>
+                </div>
+            `);
 
-            const newPhone = prompt('លេខទូរសព្ទថ្មី:', member.phone);
-            if (newPhone === null) return;
+            document.getElementById('superEditMemberForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const oldPhone = document.getElementById('editMemberPhone').value;
+                const username = document.getElementById('editMemberUsername').value.trim();
+                const newPhone = document.getElementById('editMemberNewPhone').value.trim();
+                const currency = document.getElementById('editMemberCurrency').value;
+                const msg = document.getElementById('superEditMemberMessage');
 
-            if (!/^\d{9,}$/.test(newPhone)) {
-                alert('លេខទូរសព្ទមិនត្រឹមត្រូវ!');
-                return;
-            }
-
-            if (newPhone !== phone && data.members[newPhone]) {
-                alert('លេខទូរសព្ទថ្មីមានរួចហើយ!');
-                return;
-            }
-
-            if (newPhone !== phone && member.adminId) {
-                const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
-                if (admin) {
-                    admin.members = admin.members.map(p => p === phone ? newPhone : p);
+                if (!newPhone || !/^\d{9,}$/.test(newPhone)) {
+                    msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
+                    return;
                 }
-            }
 
-            if (newPhone !== phone) {
-                data.members[newPhone] = { ...member, phone: newPhone, username: newUsername || newPhone };
-                delete data.members[phone];
-            } else {
-                member.username = newUsername || member.phone;
-            }
+                const member = data.members[oldPhone];
+                if (!member) { msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`; return; }
 
-            saveData();
-            logActivity('SUPER-001', 'Super Admin', 'edit_member', 'administration', newPhone, null,
-                'កែប្រែសមាជិក ' + (newUsername || newPhone));
-            alert('✅ កែប្រែជោគជ័យ!');
-            renderPage('super-dashboard');
+                if (newPhone !== oldPhone && data.members[newPhone]) {
+                    msg.innerHTML = `<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>`;
+                    return;
+                }
+
+                if (newPhone !== oldPhone && member.adminId) {
+                    const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
+                    if (admin) {
+                        admin.members = admin.members.map(p => p === oldPhone ? newPhone : p);
+                    }
+                }
+
+                if (newPhone !== oldPhone) {
+                    data.members[newPhone] = { ...member, phone: newPhone, username: username || newPhone, preferredCurrency: currency };
+                    delete data.members[oldPhone];
+                } else {
+                    member.username = username || member.phone;
+                    member.preferredCurrency = currency;
+                }
+
+                saveData();
+                logActivity('SUPER-001', 'Super Admin', 'edit_member', 'administration', newPhone, null,
+                    'កែប្រែសមាជិក ' + (username || newPhone));
+
+                msg.innerHTML = `<div class="success">✅ កែប្រែជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
+            });
         }
 
         function superDeleteMember(phone) {
-            if (!confirm('តើអ្នកចង់លុបសមាជិកនេះមែនទេ?')) return;
+            showModal(`
+                <div style="text-align:center;">
+                    <div style="font-size:48px;margin-bottom:10px;">🗑️</div>
+                    <h3 style="color:#fff;margin-bottom:10px;">លុបសមាជិក</h3>
+                    <p style="color:rgba(255,255,255,0.6);">តើអ្នកចង់លុបសមាជិកនេះមែនទេ?</p>
+                    <p style="color:rgba(255,255,255,0.4);font-size:12px;">សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
+                    <div style="display:flex;gap:10px;margin-top:20px;">
+                        <button onclick="hideModal(); confirmSuperDeleteMember('${phone}');" class="btn btn-danger" style="flex:1;">🗑️ លុប</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                    </div>
+                </div>
+            `);
+        }
 
+        function confirmSuperDeleteMember(phone) {
             const member = data.members[phone];
-            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
+            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
 
             if (member.adminId) {
                 const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
@@ -2064,49 +3218,82 @@
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'delete_member', 'administration', phone, null,
                 'លុបសមាជិក ' + (member.username || member.phone));
-            alert('✅ លុបជោគជ័យ!');
+
+            showToast('✅ លុបជោគជ័យ!', 'success');
             renderPage('super-dashboard');
         }
 
         function superEditAdmin(phone) {
             const admin = data.subAdmins[phone];
-            if (!admin) { alert('មិនឃើញ Sub Admin!'); return; }
+            if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
 
-            const newName = prompt('ឈ្មោះថ្មី:', admin.username);
-            if (newName === null) return;
+            showModal(`
+                <div style="text-align:center;">
+                    <h3 style="color:#ffd700;margin-bottom:15px;">✏️ កែប្រែ Sub Admin</h3>
+                    <form id="superEditAdminForm">
+                        <input type="hidden" id="editAdminPhone" value="${phone}">
+                        <input type="text" id="editAdminName" value="${admin.username}" placeholder="👤 ឈ្មោះ" required>
+                        <input type="tel" id="editAdminNewPhone" value="${admin.phone}" placeholder="📱 លេខទូរសព្ទ" required>
+                        <div style="display:flex;gap:10px;margin-top:15px;">
+                            <button type="submit" class="btn btn-gold" style="flex:1;">💾 រក្សាទុក</button>
+                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                        </div>
+                    </form>
+                    <div id="superEditAdminMessage"></div>
+                </div>
+            `);
 
-            const newPhone = prompt('លេខទូរសព្ទថ្មី:', admin.phone);
-            if (newPhone === null) return;
+            document.getElementById('superEditAdminForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const oldPhone = document.getElementById('editAdminPhone').value;
+                const name = document.getElementById('editAdminName').value.trim();
+                const newPhone = document.getElementById('editAdminNewPhone').value.trim();
+                const msg = document.getElementById('superEditAdminMessage');
 
-            if (!/^\d{9,}$/.test(newPhone)) {
-                alert('លេខទូរសព្ទមិនត្រឹមត្រូវ!');
-                return;
-            }
+                if (!name || !newPhone || !/^\d{9,}$/.test(newPhone)) {
+                    msg.innerHTML = `<div class="error">ព័ត៌មានមិនត្រឹមត្រូវ!</div>`;
+                    return;
+                }
 
-            if (newPhone !== phone && data.subAdmins[newPhone]) {
-                alert('លេខទូរសព្ទថ្មីមានរួចហើយ!');
-                return;
-            }
+                if (newPhone !== oldPhone && data.subAdmins[newPhone]) {
+                    msg.innerHTML = `<div class="error">លេខទូរសព្ទថ្មីមានរួចហើយ!</div>`;
+                    return;
+                }
 
-            if (newPhone !== phone) {
-                data.subAdmins[newPhone] = { ...admin, phone: newPhone, username: newName };
-                delete data.subAdmins[phone];
-            } else {
-                admin.username = newName;
-            }
+                if (newPhone !== oldPhone) {
+                    data.subAdmins[newPhone] = { ...admin, phone: newPhone, username: name };
+                    delete data.subAdmins[oldPhone];
+                } else {
+                    admin.username = name;
+                }
 
-            saveData();
-            logActivity('SUPER-001', 'Super Admin', 'edit_admin', 'administration', newPhone, null,
-                'កែប្រែ Sub Admin ' + newName);
-            alert('✅ កែប្រែជោគជ័យ!');
-            renderPage('super-dashboard');
+                saveData();
+                logActivity('SUPER-001', 'Super Admin', 'edit_admin', 'administration', newPhone, null,
+                    'កែប្រែ Sub Admin ' + name);
+
+                msg.innerHTML = `<div class="success">✅ កែប្រែជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
+            });
         }
 
         function superDeleteAdmin(phone) {
-            if (!confirm('តើអ្នកចង់លុប Sub Admin នេះមែនទេ?')) return;
+            showModal(`
+                <div style="text-align:center;">
+                    <div style="font-size:48px;margin-bottom:10px;">🗑️</div>
+                    <h3 style="color:#fff;margin-bottom:10px;">លុប Sub Admin</h3>
+                    <p style="color:rgba(255,255,255,0.6);">តើអ្នកចង់លុប Sub Admin នេះមែនទេ?</p>
+                    <p style="color:rgba(255,255,255,0.4);font-size:12px;">សមាជិកទាំងអស់នឹងត្រូវបានផ្តាច់ចេញ!</p>
+                    <div style="display:flex;gap:10px;margin-top:20px;">
+                        <button onclick="hideModal(); confirmSuperDeleteAdmin('${phone}');" class="btn btn-danger" style="flex:1;">🗑️ លុប</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                    </div>
+                </div>
+            `);
+        }
 
+        function confirmSuperDeleteAdmin(phone) {
             const admin = data.subAdmins[phone];
-            if (!admin) { alert('មិនឃើញ Sub Admin!'); return; }
+            if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
 
             Object.values(data.members).forEach(m => {
                 if (m.adminId === admin.id) {
@@ -2118,7 +3305,8 @@
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null,
                 'លុប Sub Admin ' + admin.username);
-            alert('✅ លុបជោគជ័យ!');
+
+            showToast('✅ លុបជោគជ័យ!', 'success');
             renderPage('super-dashboard');
         }
 
@@ -2140,21 +3328,38 @@
 
         function assignAdmin(memberPhone) {
             const member = data.members[memberPhone];
-            if (!member) { alert('មិនឃើញសមាជិក!'); return; }
+            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
 
             const adminList = Object.values(data.subAdmins);
             if (adminList.length === 0) {
-                alert('មិនទាន់មាន Sub Admin! សូមបង្កើតមុន');
+                showToast('មិនទាន់មាន Sub Admin! សូមបង្កើតមុន', 'error');
                 return;
             }
 
-            const admin = adminList[0];
+            showModal(`
+                <div style="text-align:center;">
+                    <h3 style="color:#ffd700;margin-bottom:15px;">👑 ចាត់តាំង Admin</h3>
+                    <p style="color:rgba(255,255,255,0.6);">ជ្រើសរើស Sub Admin សម្រាប់ ${member.username || member.phone}</p>
+                    <select id="assignAdminSelect" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                        ${adminList.map(a => `<option value="${a.phone}" ${member.adminId === a.id ? 'selected' : ''}>${a.username} ($${a.balance.toFixed(2)})</option>`).join('')}
+                    </select>
+                    <div style="display:flex;gap:10px;margin-top:15px;">
+                        <button onclick="confirmAssignAdmin('${memberPhone}')" class="btn btn-gold" style="flex:1;">✅ ចាត់តាំង</button>
+                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                    </div>
+                </div>
+            `);
+        }
 
-            if (member.adminId === admin.id) {
-                alert('សមាជិកនេះត្រូវបានចាត់តាំងរួចហើយ!');
-                return;
-            }
+        function confirmAssignAdmin(memberPhone) {
+            const member = data.members[memberPhone];
+            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
 
+            const adminPhone = document.getElementById('assignAdminSelect').value;
+            const admin = data.subAdmins[adminPhone];
+            if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
+
+            // Remove from old admin
             if (member.adminId) {
                 const oldAdmin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
                 if (oldAdmin) {
@@ -2171,44 +3376,100 @@
             logActivity('SUPER-001', 'Super Admin', 'assign_admin', 'administration', memberPhone, null,
                 'ចាត់តាំង ' + admin.username + ' ឲ្យ ' + (member.username || member.phone));
 
-            alert('✅ ចាត់តាំងជោគជ័យ!');
+            hideModal();
+            showToast(`✅ ចាត់តាំង ${admin.username} ជោគជ័យ!`, 'success');
             renderPage('super-dashboard');
         }
 
         function resetAdminPassword(phone) {
-            const newPwd = prompt('ពាក្យសម្ងាត់ថ្មីសម្រាប់ Sub Admin:');
-            if (!newPwd || newPwd.length < 4) { alert('ត្រូវមានយ៉ាងតិច ៤ តួ!'); return; }
-            const admin = data.subAdmins[phone];
-            if (!admin) return;
-            admin.password = newPwd;
-            saveData();
-            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null, 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + admin.username);
-            alert('✅ ជោគជ័យ!');
-            renderPage('super-dashboard');
+            showModal(`
+                <div style="text-align:center;">
+                    <h3 style="color:#ffd700;margin-bottom:15px;">🔑 កំណត់ពាក្យសម្ងាត់ថ្មី</h3>
+                    <form id="resetPwdForm">
+                        <input type="hidden" id="resetPwdPhone" value="${phone}">
+                        <input type="text" id="resetPwdNew" placeholder="🔒 ពាក្យសម្ងាត់ថ្មី" required>
+                        <div style="display:flex;gap:10px;margin-top:15px;">
+                            <button type="submit" class="btn btn-gold" style="flex:1;">✅ កំណត់</button>
+                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                        </div>
+                    </form>
+                    <div id="resetPwdMessage"></div>
+                </div>
+            `);
+
+            document.getElementById('resetPwdForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const phone = document.getElementById('resetPwdPhone').value;
+                const newPwd = document.getElementById('resetPwdNew').value.trim();
+                const msg = document.getElementById('resetPwdMessage');
+
+                if (!newPwd || newPwd.length < 4) {
+                    msg.innerHTML = `<div class="error">ត្រូវមានយ៉ាងតិច ៤ តួ!</div>`;
+                    return;
+                }
+
+                const admin = data.subAdmins[phone];
+                if (!admin) { msg.innerHTML = `<div class="error">មិនឃើញ Sub Admin!</div>`; return; }
+
+                admin.password = newPwd;
+                saveData();
+                logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null,
+                    'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + admin.username);
+
+                msg.innerHTML = `<div class="success">✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
+            });
         }
 
         function resetMemberPassword(phone) {
-            const newPwd = prompt('ពាក្យសម្ងាត់ថ្មីសម្រាប់សមាជិក:');
-            if (!newPwd || newPwd.length < 4) { alert('ត្រូវមានយ៉ាងតិច ៤ តួ!'); return; }
-            const member = data.members[phone];
-            if (!member) return;
-            member.password = newPwd;
-            saveData();
-            logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null,
-                'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + (member.username || phone));
-            alert('✅ ជោគជ័យ!');
-            renderPage('super-dashboard');
+            showModal(`
+                <div style="text-align:center;">
+                    <h3 style="color:#ffd700;margin-bottom:15px;">🔑 កំណត់ពាក្យសម្ងាត់ថ្មី</h3>
+                    <form id="resetMemberPwdForm">
+                        <input type="hidden" id="resetMemberPwdPhone" value="${phone}">
+                        <input type="text" id="resetMemberPwdNew" placeholder="🔒 ពាក្យសម្ងាត់ថ្មី" required>
+                        <div style="display:flex;gap:10px;margin-top:15px;">
+                            <button type="submit" class="btn btn-gold" style="flex:1;">✅ កំណត់</button>
+                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                        </div>
+                    </form>
+                    <div id="resetMemberPwdMessage"></div>
+                </div>
+            `);
+
+            document.getElementById('resetMemberPwdForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const phone = document.getElementById('resetMemberPwdPhone').value;
+                const newPwd = document.getElementById('resetMemberPwdNew').value.trim();
+                const msg = document.getElementById('resetMemberPwdMessage');
+
+                if (!newPwd || newPwd.length < 4) {
+                    msg.innerHTML = `<div class="error">ត្រូវមានយ៉ាងតិច ៤ តួ!</div>`;
+                    return;
+                }
+
+                const member = data.members[phone];
+                if (!member) { msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`; return; }
+
+                member.password = newPwd;
+                saveData();
+                logActivity('SUPER-001', 'Super Admin', 'reset_password', 'administration', phone, null,
+                    'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + (member.username || phone));
+
+                msg.innerHTML = `<div class="success">✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!</div>`;
+                setTimeout(() => { hideModal(); renderPage('super-dashboard'); }, 1000);
+            });
         }
 
         function resendOTP(phone) {
             const superAdmin = Object.values(data.superAdmins)[0];
-            if (!superAdmin) { alert('មិនឃើញ Super Admin!'); return; }
+            if (!superAdmin) { showToast('មិនឃើញ Super Admin!', 'error'); return; }
             const otp = generateOTP();
             data.superAdminOTP = otp;
             data.superAdminOTPTime = Date.now();
             saveData();
             console.log('📤 OTP: ' + otp);
-            alert('📤 OTP ថ្មី: ' + otp);
+            showToast('📤 OTP ថ្មី: ' + otp, 'info');
         }
 
         function exportData() {
@@ -2220,6 +3481,255 @@
             a.download = `backup_${new Date().toISOString().slice(0,10)}.json`;
             a.click();
             URL.revokeObjectURL(url);
+            showToast('📤 នាំចេញទិន្នន័យជោគជ័យ!', 'success');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const imported = JSON.parse(ev.target.result);
+                        if (!imported.members || !imported.transactions) {
+                            showToast('ទម្រង់ទិន្នន័យមិនត្រឹមត្រូវ!', 'error');
+                            return;
+                        }
+                        if (confirm('តើអ្នកចង់ជំនួសទិន្នន័យបច្ចុប្បន្នមែនទេ?')) {
+                            data = imported;
+                            saveData();
+                            showToast('📥 នាំចូលទិន្នន័យជោគជ័យ!', 'success');
+                            renderPage('super-dashboard');
+                        }
+                    } catch (err) {
+                        showToast('កំហុសក្នុងការនាំចូលទិន្នន័យ!', 'error');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function goBack() {
+            const user = getCurrentUser();
+            if (user) {
+                if (user.role === 'super_admin') renderPage('super-dashboard');
+                else if (user.role === 'sub_admin') renderPage('admin-dashboard');
+                else renderPage('dashboard');
+            } else {
+                renderPage('home');
+            }
+        }
+
+        // ===== SEARCH =====
+        function setupSearch() {
+            const searchInput = document.getElementById('searchMembersInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    searchMembersLive(this.value);
+                });
+            }
+        }
+
+        function searchMembersLive(query) {
+            const container = document.getElementById('memberListContainer');
+            const resultsContainer = document.getElementById('searchResults');
+            if (!container) return;
+
+            const q = query.toLowerCase().trim();
+
+            if (!q) {
+                // Show all members
+                if (resultsContainer) {
+                    resultsContainer.innerHTML = '';
+                    resultsContainer.style.display = 'none';
+                }
+                // Re-render member list
+                renderMemberList();
+                return;
+            }
+
+            const members = Object.values(data.members);
+            const filtered = members.filter(m =>
+                (m.username && m.username.toLowerCase().includes(q)) ||
+                m.phone.includes(q) ||
+                m.id.toLowerCase().includes(q)
+            );
+
+            if (resultsContainer) {
+                resultsContainer.style.display = 'block';
+                if (filtered.length === 0) {
+                    resultsContainer.innerHTML = `<p style="opacity:0.4;padding:10px;text-align:center;">មិនឃើញលទ្ធផល</p>`;
+                } else {
+                    let html = '';
+                    filtered.forEach(m => {
+                        const admin = data.subAdmins[m.adminId];
+                        const preferredCurrency = m.preferredCurrency || 'usd';
+                        html += `
+                            <div class="list-item">
+                                <div class="info">
+                                    <span class="name">${m.username || m.phone}</span>
+                                    <span class="id">🆔 ${m.id}</span>
+                                    <span class="sub">📱 ${m.phone}</span>
+                                    <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
+                                </div>
+                                <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
+                                <div class="actions">
+                                    <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
+                                    <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
+                                    <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                                    <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    resultsContainer.innerHTML = html;
+                }
+            }
+
+            // Hide the main member list when searching
+            if (q) {
+                container.style.display = 'none';
+            } else {
+                container.style.display = 'block';
+            }
+        }
+
+        function renderMemberList() {
+            const container = document.getElementById('memberListContainer');
+            if (!container) return;
+
+            let html = '';
+            Object.values(data.members).forEach(m => {
+                const admin = data.subAdmins[m.adminId];
+                const preferredCurrency = m.preferredCurrency || 'usd';
+                html += `
+                    <div class="list-item member-item" data-phone="${m.phone}" data-name="${m.username || ''}" data-id="${m.id}">
+                        <div class="info">
+                            <span class="name">${m.username || m.phone}</span>
+                            <span class="id">🆔 ${m.id}</span>
+                            <span class="sub">📱 ${m.phone}</span>
+                            <span class="pwd">🔑 ${m.password}</span>
+                            <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
+                            <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
+                        </div>
+                        <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
+                        <div class="actions">
+                            <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
+                            <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
+                            <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
+                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html || '<p style="opacity:0.4;">មិនទាន់មាន</p>';
+
+            // Restore search results visibility
+            const resultsContainer = document.getElementById('searchResults');
+            if (resultsContainer) {
+                resultsContainer.innerHTML = '';
+                resultsContainer.style.display = 'none';
+            }
+        }
+
+        // ===== REPORT =====
+        function showReport() {
+            renderPage('report');
+        }
+
+        function generateReportDisplay(period) {
+            const container = document.getElementById('reportContent');
+            if (!container) return;
+
+            const report = generateReport(period);
+
+            let html = `
+                <div class="card">
+                    <h3>📊 របាយការណ៍ ${period === 'daily' ? 'ប្រចាំថ្ងៃ' : period === 'weekly' ? 'ប្រចាំសប្តាហ៍' : 'ប្រចាំខែ'}</h3>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.4);">
+                        ពី ${report.startDate.toLocaleDateString('km-KH')} ដល់ ${report.endDate.toLocaleDateString('km-KH')}
+                    </div>
+                    <div class="summary-stats" style="margin-top:10px;">
+                        <div class="summary-box">
+                            <div class="number green">$${report.totalDeposits.toFixed(2)}</div>
+                            <div class="label">ប្រាក់ដាក់</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number red">$${report.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">ប្រាក់ដក</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${report.netBalance.toFixed(2)}</div>
+                            <div class="label">ប្រាក់សល់</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">${report.totalMembers}</div>
+                            <div class="label">សមាជិក</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${report.totalCommissions.toFixed(2)}</div>
+                            <div class="label">កម្រៃសរុប</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">${report.transactions.length}</div>
+                            <div class="label">ប្រតិបត្តិការ</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:10px;max-height:150px;overflow-y:auto;">
+                        ${report.transactions.slice(0, 10).map(tx => `
+                            <div class="transaction-item">
+                                <div>
+                                    <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${tx.type}</span>
+                                    <span style="opacity:0.5;font-size:11px;">${tx.description || ''}</span>
+                                </div>
+                                <div style="color:${tx.type === 'deposit' ? '#48bb78' : '#fc8181'};font-weight:600;">${tx.type === 'deposit' ? '+' : '-'}$${tx.amount.toFixed(2)}</div>
+                            </div>
+                        `).join('')}
+                        ${report.transactions.length > 10 ? `<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>` : ''}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function generateReport(period = 'daily') {
+            const now = new Date();
+            let startDate = new Date();
+
+            if (period === 'daily') {
+                startDate.setHours(0, 0, 0, 0);
+            } else if (period === 'weekly') {
+                startDate.setDate(now.getDate() - 7);
+            } else if (period === 'monthly') {
+                startDate.setMonth(now.getMonth() - 1);
+            }
+
+            const filtered = data.transactions.filter(t =>
+                new Date(t.timestamp) >= startDate &&
+                new Date(t.timestamp) <= now &&
+                t.status === 'completed'
+            );
+
+            const totals = calculateTotals(filtered);
+
+            return {
+                period: period,
+                startDate: startDate,
+                endDate: now,
+                transactions: filtered,
+                totalDeposits: totals.totalDeposits,
+                totalWithdraws: totals.totalWithdraws,
+                netBalance: totals.netBalance,
+                totalMembers: Object.keys(data.members).length,
+                totalCommissions: data.commissions.reduce((sum, c) => sum + c.commission, 0)
+            };
         }
 
         // ================================================================
@@ -2236,6 +3746,12 @@
                     const email = document.getElementById('superEmail').value.trim();
                     const password = document.getElementById('superPassword').value.trim();
                     const msg = document.getElementById('message');
+
+                    if (!verifyCaptcha()) {
+                        msg.innerHTML = `<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>`;
+                        refreshCaptcha();
+                        return;
+                    }
 
                     const superAdmin = Object.values(data.superAdmins)[0];
                     if (!superAdmin) {
@@ -2339,6 +3855,12 @@
                         return;
                     }
 
+                    if (!verifyCaptcha()) {
+                        msg.innerHTML = `<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>`;
+                        refreshCaptcha();
+                        return;
+                    }
+
                     if (role === 'sub_admin') {
                         const admin = data.subAdmins[phone];
                         if (!admin || admin.password !== password) {
@@ -2370,12 +3892,20 @@
                     const phone = document.getElementById('regPhone').value.trim();
                     const password = document.getElementById('regPassword').value.trim();
                     const confirm = document.getElementById('regConfirmPassword').value.trim();
+                    const preferredCurrency = document.getElementById('regCurrency').value;
                     const msg = document.getElementById('message');
 
                     if (!phone || !password || !confirm) {
                         msg.innerHTML = `<div class="error">សូមបំពេញព័ត៌មាន!</div>`;
                         return;
                     }
+
+                    if (!verifyCaptcha()) {
+                        msg.innerHTML = `<div class="error">❌ Captcha មិនត្រឹមត្រូវ!</div>`;
+                        refreshCaptcha();
+                        return;
+                    }
+
                     if (!/^\d{9,}$/.test(phone)) {
                         msg.innerHTML = `<div class="error">លេខទូរសព្ទមិនត្រឹមត្រូវ!</div>`;
                         return;
@@ -2399,11 +3929,38 @@
                         balance: 0,
                         benefits: ['✨ សមាជិកថ្មី'],
                         adminId: null,
-                        createdAt: new Date().toISOString()
+                        preferredCurrency: preferredCurrency || 'usd',
+                        createdAt: new Date().toISOString(),
+                        commissionRate: 0.05,
+                        totalCommission: 0
                     };
                     saveData();
-                    msg.innerHTML = `<div class="success">✅ ចុះឈ្មោះជោគជ័យ! 🆔 ${newId}<br><span onclick="renderPage('home')" style="color:#667eea;cursor:pointer;">🔑 ចូលប្រើ</span></div>`;
+
+                    // Auto-login
+                    setCurrentUser({
+                        phone: phone,
+                        role: 'member',
+                        name: username || phone,
+                        preferredCurrency: preferredCurrency || 'usd'
+                    });
+
+                    msg.innerHTML = `
+                        <div class="success">
+                            ✅ ចុះឈ្មោះជោគជ័យ!<br>
+                            🆔 ${newId}<br>
+                            📱 ${phone}<br>
+                            🔑 ${password}<br>
+                            <span style="color:#ffd700;">⚠️ សូមចំណាំលេខទូរសព្ទ និងពាក្យសម្ងាត់សម្រាប់ចូលប្រើនៅពេលក្រោយ!</span>
+                        </div>
+                    `;
                     registerForm.reset();
+
+                    sendNotification('email', phone + '@example.com',
+                        `ស្វាគមន៍ ${username || phone}! អ្នកបានចុះឈ្មោះជោគជ័យ។`);
+
+                    setTimeout(() => {
+                        renderPage('dashboard');
+                    }, 2000);
                 });
             }
 
@@ -2449,10 +4006,18 @@
                         totalTransferred: 0,
                         members: [],
                         createdBy: 'super_admin',
-                        createdAt: new Date().toISOString()
+                        createdAt: new Date().toISOString(),
+                        commissionRate: 0.05,
+                        bankName: '',
+                        bankAccount: '',
+                        qrCode: ''
                     };
                     saveData();
                     logActivity('SUPER-001', 'Super Admin', 'create_admin', 'administration', phone, null, 'បង្កើត Sub Admin "' + name + '" (' + newId + ')');
+
+                    sendNotification('email', phone + '@example.com',
+                        `អ្នកត្រូវបានតែងតាំងជា Sub Admin! ឈ្មោះ: ${name}, ពាក្យសម្ងាត់: ${password}`);
+
                     msg.innerHTML = `<div class="success">✅ បង្កើតជោគជ័យ! 🆔 ${newId}<br>🔒 ${password}</div>`;
                     createAdminForm.reset();
                     setTimeout(() => renderPage('super-dashboard'), 2000);
@@ -2466,13 +4031,13 @@
                     e.preventDefault();
                     const user = getCurrentUser();
                     if (!user || user.role !== 'sub_admin') {
-                        alert('សូមចូលប្រើជា Sub Admin!');
+                        showToast('សូមចូលប្រើជា Sub Admin!', 'error');
                         return;
                     }
 
                     const admin = data.subAdmins[user.phone];
                     if (!admin) {
-                        alert('មិនឃើញព័ត៌មាន Admin!');
+                        showToast('មិនឃើញព័ត៌មាន Admin!', 'error');
                         return;
                     }
 
@@ -2521,6 +4086,9 @@
                         null
                     );
 
+                    sendNotification('email', member.phone + '@example.com',
+                        `អ្នកបានទទួលប្រាក់ $${amount.toFixed(2)} ពី ${admin.username}`);
+
                     msg.innerHTML = `
                         <div class="success">
                             ✅ ផ្ទេរ $${amount.toFixed(2)} ទៅ ${member.username || member.phone} ជោគជ័យ!<br>
@@ -2531,12 +4099,40 @@
                     setTimeout(() => renderPage('admin-dashboard'), 1500);
                 });
             }
+
+            // ---- BANK INFO FORM ----
+            const bankInfoForm = document.getElementById('bankInfoForm');
+            if (bankInfoForm) {
+                bankInfoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveBankInfo();
+                });
+            }
+
+            // ---- COMMISSION FORM ----
+            const commissionForm = document.getElementById('commissionForm');
+            if (commissionForm) {
+                commissionForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    saveCommissionSettings();
+                });
+            }
+
+            // ---- EXCHANGE RATE FORM ----
+            const exchangeRateForm = document.getElementById('exchangeRateForm');
+            if (exchangeRateForm) {
+                exchangeRateForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    updateExchangeRate();
+                });
+            }
         }
 
         // ================================================================
         // ===== INIT =====
         // ================================================================
 
+        // Initialize Super Admin if not exists
         if (!data.superAdminExists) {
             data.superAdmins['066817407'] = {
                 username: 'Super Admin',
@@ -2553,6 +4149,7 @@
             logActivity('SUPER-001', 'Super Admin', 'system_init', 'system', null, null, 'បង្កើតប្រព័ន្ធ Super Admin');
         }
 
+        // Check current user and render appropriate page
         const currentUser = getCurrentUser();
         if (currentUser) {
             if (currentUser.role === 'super_admin') renderPage('super-dashboard');
@@ -2562,6 +4159,23 @@
         } else {
             renderPage('home');
         }
+
+        // ===== REAL-TIME NOTIFICATIONS (Simulation) =====
+        setInterval(() => {
+            const pending = data.transactions ? data.transactions.filter(t => t.status === 'pending') : [];
+            if (pending.length > 0) {
+                // Update notification badge if exists
+                const badge = document.querySelector('.notification-badge');
+                if (badge) {
+                    badge.textContent = pending.length;
+                    badge.style.display = pending.length > 0 ? 'block' : 'none';
+                }
+            }
+        }, 10000);
+
+        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.0 បានដំណើរការ!');
+        console.log('📊 ទិន្នន័យបច្ចុប្បន្ន:', data);
+        console.log('👤 អ្នកប្រើបច្ចុប្បន្ន:', currentUser);
     </script>
 </body>
 </html>
