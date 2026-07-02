@@ -30,7 +30,7 @@
             border-radius: 20px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             width: 100%;
-            max-width: 480px;
+            max-width: 520px;
             animation: fadeInUp 0.6s ease-out;
             max-height: 98vh;
             overflow-y: auto;
@@ -83,7 +83,7 @@
             font-size: 14px;
         }
 
-        input {
+        input, select, textarea {
             width: 100%;
             padding: 12px 16px;
             margin: 5px 0;
@@ -95,13 +95,21 @@
             transition: all 0.3s ease;
             outline: none;
         }
-        input::placeholder {
+        input::placeholder, textarea::placeholder {
             color: rgba(255, 255, 255, 0.4);
         }
-        input:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: #667eea;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.15);
+        }
+        select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 50px;
         }
 
         .input-group {
@@ -170,6 +178,15 @@
         }
         .btn-danger:hover {
             box-shadow: 0 12px 35px rgba(252, 129, 129, 0.5);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f6ad55, #ed8936);
+            box-shadow: 0 8px 25px rgba(246, 173, 85, 0.3);
+            color: #fff;
+        }
+        .btn-warning:hover {
+            box-shadow: 0 12px 35px rgba(246, 173, 85, 0.5);
         }
 
         .btn-sm {
@@ -406,6 +423,147 @@
             color: #fff;
         }
 
+        .payment-section {
+            margin: 12px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+        .payment-section h4 {
+            color: #ffd700;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bank-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .bank-info .info-item {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border-left: 3px solid #ffd700;
+        }
+        .bank-info .info-item .label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+        }
+        .bank-info .info-item .value {
+            font-size: 15px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 215, 0, 0.15);
+            min-height: 100px;
+            margin: 10px 0;
+        }
+        .qr-container img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 10px;
+        }
+        .qr-container .qr-placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 13px;
+        }
+
+        .file-upload {
+            position: relative;
+            padding: 15px;
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.03);
+            margin: 5px 0;
+        }
+        .file-upload:hover {
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .file-upload input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-upload .upload-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .file-upload .upload-text {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+        }
+        .file-upload .file-name {
+            color: #48bb78;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 100px;
+            border-radius: 8px;
+            margin-top: 5px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .amount-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin: 8px 0;
+        }
+        .amount-btn {
+            padding: 6px 14px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            color: #ffd700;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        .amount-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .amount-btn.active {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd700;
+        }
+
+        .withdraw-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .withdraw-form .form-row .full-width {
+            grid-column: 1 / -1;
+        }
+
         .list-item {
             background: rgba(255, 255, 255, 0.04);
             padding: 8px 12px;
@@ -453,6 +611,62 @@
             flex-wrap: wrap;
         }
 
+        .transaction-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 6px;
+        }
+        .transaction-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .transaction-list::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 12px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin: 6px 0;
+        }
+        .summary-stats .summary-box {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 6px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .summary-stats .summary-box .number {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .summary-stats .summary-box .label {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .summary-stats .summary-box .number.green {
+            color: #48bb78;
+        }
+        .summary-stats .summary-box .number.red {
+            color: #fc8181;
+        }
+        .summary-stats .summary-box .number.gold {
+            color: #ffd700;
+        }
+
         .text-center {
             text-align: center;
         }
@@ -487,10 +701,14 @@
             h1 { font-size: 1.6rem; }
             h2 { font-size: 1.1rem; }
             .btn { font-size: 13px; padding: 10px 20px; }
+            .bank-info { grid-template-columns: 1fr; }
+            .withdraw-form .form-row { grid-template-columns: 1fr; }
             .role-card { padding: 12px; }
             .role-card .icon { font-size: 26px; }
             .footer-info .role-desc { padding: 6px 10px; }
             .footer-info .role-desc .r-text { font-size: 12px; }
+            .summary-stats { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+            .summary-stats .summary-box .number { font-size: 14px; }
         }
     </style>
 </head>
@@ -643,7 +861,7 @@
             let html = '';
 
             const showClock = !['home', 'login', 'register', 'super-login', 'super-otp'].includes(page);
-            
+
             let clockHtml = '';
             if (showClock) {
                 clockHtml = `
@@ -667,6 +885,7 @@
                 case 'dashboard': html = getDashboardPage(); break;
                 case 'admin-dashboard': html = getAdminDashboardPage(); break;
                 case 'super-dashboard': html = getSuperDashboardPage(); break;
+                case 'transfer-money': html = getTransferMoneyPage(params); break;
                 default: html = getHomePage();
             }
 
@@ -833,8 +1052,13 @@
                 </form>
                 <div id="message"></div>
                 <p class="text-center mt-10 fs-12 op-3">⏱️ OTP ផុតកំណត់ក្នុង ៥ នាទី</p>
+                <p class="text-center fs-12"><span onclick="resendOTP('${phone}')" style="color:#667eea;cursor:pointer;">📤 ផ្ញើ OTP ឡើងវិញ</span></p>
             `;
         }
+
+        // ================================================================
+        // ===== MEMBER DASHBOARD (with Deposit & Withdraw) =====
+        // ================================================================
 
         function getDashboardPage() {
             const user = getCurrentUser();
@@ -846,30 +1070,102 @@
             if (!member) return `<p style="color:red;">មិនឃើញព័ត៌មាន!</p>`;
 
             const admin = data.subAdmins[member.adminId];
-            let benefitsHtml = '';
-            if (member.benefits && member.benefits.length > 0) {
-                member.benefits.forEach(b => benefitsHtml += `<li style="padding:5px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin:3px 0;color:rgba(255,255,255,0.8);border-left:3px solid #667eea;font-size:13px;">${b}</li>`);
-            } else {
-                benefitsHtml = `<li style="opacity:0.4;font-size:13px;">មិនទាន់មាន</li>`;
-            }
 
-            let notificationsHtml = '';
-            const userLogs = data.activityLogs.filter(log => log.target === user.phone && log.actionType === 'member_transfer');
-            if (userLogs.length > 0) {
-                userLogs.slice(0, 5).forEach(log => {
-                    const d = new Date(log.timestamp);
-                    notificationsHtml += `
-                        <div style="background:rgba(246,173,85,0.1);border-left:4px solid #f6ad55;padding:8px 12px;border-radius:8px;margin:4px 0;font-size:13px;">
-                            💰 ${log.details || 'បានទទួល $' + log.amount}
-                            <div style="font-size:10px;color:rgba(255,255,255,0.3);">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+            // ===== Deposit Section =====
+            let depositHtml = `
+                <div class="payment-section">
+                    <h4>💳 ដាក់ប្រាក់</h4>
+            `;
+
+            if (admin) {
+                depositHtml += `
+                    <p style="font-size:13px;color:rgba(255,255,255,0.5);">សូមផ្ទេរប្រាក់ទៅកាន់គណនីខាងក្រោម</p>
+                    <div class="bank-info">
+                        <div class="info-item">
+                            <div class="label">ឈ្មោះគណនី</div>
+                            <div class="value">${admin.bankName || 'មិនទាន់កំណត់'}</div>
                         </div>
-                    `;
-                });
+                        <div class="info-item">
+                            <div class="label">លេខគណនី</div>
+                            <div class="value">${admin.bankAccount || 'មិនទាន់កំណត់'}</div>
+                        </div>
+                    </div>
+                    <div class="qr-container">
+                        ${admin.qrCode ? `<img src="${admin.qrCode}" alt="QR Code">` : '<span class="qr-placeholder">📷 មិនទាន់មាន QR Code</span>'}
+                    </div>
+                `;
             } else {
-                notificationsHtml = `<p style="opacity:0.4;font-size:12px;">មិនទាន់មាន</p>`;
+                depositHtml += `
+                    <p style="color:rgba(255,255,255,0.3);font-size:13px;">⚠️ អ្នកមិនទាន់ត្រូវបានចាត់តាំងឲ្យ Admin ណាមួយទេ!</p>
+                `;
             }
 
-            // Transaction History
+            depositHtml += `
+                    <div style="margin:12px 0;">
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">💰 ចំនួនប្រាក់ដែលបានផ្ទេរ</label>
+                        <input type="number" id="depositAmount" placeholder="បញ្ចូលចំនួនប្រាក់" min="0.01" step="0.01" required>
+                    </div>
+                    <div style="margin:12px 0;">
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">📸 បញ្ចូលរូបភាពថតអេក្រង់</label>
+                        <div class="file-upload" id="depositUpload">
+                            <span class="upload-icon">📸</span>
+                            <span class="upload-text">ចុចដើម្បីបញ្ចូលរូបភាព</span>
+                            <div class="file-name" id="depositFileName"></div>
+                            <div id="depositQRPreview"></div>
+                            <input type="file" id="depositQRInput" accept="image/*" onchange="handleDepositQRUpload(this)">
+                        </div>
+                    </div>
+                    <button onclick="showDepositConfirm()" class="btn btn-gold">✅ បញ្ជាក់ការដាក់ប្រាក់</button>
+                </div>
+            `;
+
+            // ===== Withdraw Section =====
+            let withdrawHtml = `
+                <div class="payment-section">
+                    <h4>🏦 ដកប្រាក់</h4>
+                    <form id="withdrawForm" onsubmit="event.preventDefault(); submitWithdraw();">
+                        <div class="form-row">
+                            <div class="full-width">
+                                <input type="text" id="withdrawId" value="${member.id}" readonly placeholder="🆔 លេខ ID" style="opacity:0.6;">
+                            </div>
+                            <div>
+                                <input type="text" id="withdrawName" value="${member.username || ''}" placeholder="👤 ឈ្មោះ" required>
+                            </div>
+                            <div>
+                                <input type="tel" id="withdrawPhone" value="${member.phone}" placeholder="📱 លេខទូរសព្ទ" required>
+                            </div>
+                        </div>
+
+                        <div class="full-width">
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">ជ្រើសរើសចំនួនប្រាក់</label>
+                            <div class="amount-buttons">
+                                <button type="button" class="amount-btn" onclick="selectAmount(1)">$1</button>
+                                <button type="button" class="amount-btn" onclick="selectAmount(5)">$5</button>
+                                <button type="button" class="amount-btn" onclick="selectAmount(10)">$10</button>
+                                <button type="button" class="amount-btn" onclick="selectAmount(15)">$15</button>
+                                <button type="button" class="amount-btn" onclick="selectAmount(20)">$20</button>
+                            </div>
+                            <input type="number" id="withdrawAmount" placeholder="💰 បញ្ចូលចំនួនដោយដៃ" min="1" step="0.01">
+                        </div>
+
+                        <div class="full-width">
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">📷 បញ្ចូលរូបភាព QR Code</label>
+                            <div class="file-upload" id="withdrawUpload">
+                                <span class="upload-icon">📷</span>
+                                <span class="upload-text">ចុចដើម្បីបញ្ចូលរូបភាព</span>
+                                <div class="file-name" id="withdrawFileName"></div>
+                                <div id="withdrawQRPreview"></div>
+                                <input type="file" id="withdrawQRInput" accept="image/*" onchange="handleWithdrawQRUpload(this)">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning">📤 ស្នើដកប្រាក់</button>
+                    </form>
+                    <div id="withdrawMessage"></div>
+                </div>
+            `;
+
+            // ===== Transaction History =====
             const transactions = getMemberTransactions(user.phone);
             let txHtml = '';
             if (transactions.length === 0) {
@@ -877,36 +1173,36 @@
             } else {
                 const totals = calculateTotals(transactions);
                 txHtml = `
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:6px 0;">
-                        <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
-                            <div style="color:#48bb78;font-weight:700;font-size:16px;">$${totals.totalDeposits.toFixed(2)}</div>
-                            <div style="font-size:9px;color:rgba(255,255,255,0.3);">ដាក់</div>
+                    <div class="summary-stats">
+                        <div class="summary-box">
+                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="label">ដាក់</div>
                         </div>
-                        <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
-                            <div style="color:#fc8181;font-weight:700;font-size:16px;">$${totals.totalWithdraws.toFixed(2)}</div>
-                            <div style="font-size:9px;color:rgba(255,255,255,0.3);">ដក</div>
+                        <div class="summary-box">
+                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">ដក</div>
                         </div>
-                        <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
-                            <div style="color:#ffd700;font-weight:700;font-size:16px;">$${totals.netBalance.toFixed(2)}</div>
-                            <div style="font-size:9px;color:rgba(255,255,255,0.3);">សល់</div>
+                        <div class="summary-box">
+                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="label">សល់</div>
                         </div>
                     </div>
-                    <div style="max-height:150px;overflow-y:auto;">
+                    <div class="transaction-list">
                 `;
                 transactions.slice(0, 10).forEach(tx => {
                     const d = new Date(tx.timestamp);
                     const typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
-                    const typeClass = tx.type === 'deposit' ? 'color:#48bb78;' : 'color:#fc8181;';
                     const amountSign = tx.type === 'deposit' ? '+' : '-';
+                    const color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
                     const statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
                     txHtml += `
-                        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;flex-wrap:wrap;gap:4px;">
+                        <div class="transaction-item">
                             <div>
                                 <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${typeLabel}</span>
                                 <span style="font-size:10px;opacity:0.4;">${statusText}</span>
                                 <span style="opacity:0.5;font-size:11px;">${tx.description || ''}</span>
                             </div>
-                            <div style="${typeClass}font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
+                            <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
                         </div>
                     `;
                 });
@@ -914,6 +1210,16 @@
                 if (transactions.length > 10) {
                     txHtml += `<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>`;
                 }
+            }
+
+            // ===== Benefits =====
+            let benefitsHtml = '';
+            if (member.benefits && member.benefits.length > 0) {
+                member.benefits.forEach(b => {
+                    benefitsHtml += `<li style="padding:5px 12px;background:rgba(255,255,255,0.04);border-radius:8px;margin:3px 0;color:rgba(255,255,255,0.8);border-left:3px solid #667eea;font-size:13px;">${b}</li>`;
+                });
+            } else {
+                benefitsHtml = `<li style="opacity:0.4;font-size:13px;">មិនទាន់មាន</li>`;
             }
 
             return `
@@ -930,13 +1236,19 @@
 
                 <div class="card"><h3>💰 ទឹកប្រាក់</h3><div style="font-size:2.4rem;font-weight:800;color:#48bb78;">$${member.balance.toFixed(2)}</div></div>
 
+                ${depositHtml}
+                ${withdrawHtml}
+
                 <div class="card"><h3>📋 ប្រវត្តិប្រតិបត្តិការ</h3>${txHtml}</div>
 
-                <div class="card"><h3>🔔 ការជូនដំណឹង</h3>${notificationsHtml}</div>
                 <div class="card"><h3>🎁 អត្ថប្រយោជន៍</h3><ul style="list-style:none;padding:0;">${benefitsHtml}</ul></div>
                 <div class="text-center mt-10 op-3 fs-12">v3.0</div>
             `;
         }
+
+        // ================================================================
+        // ===== ADMIN DASHBOARD =====
+        // ================================================================
 
         function getAdminDashboardPage() {
             const user = getCurrentUser();
@@ -965,12 +1277,87 @@
                             </div>
                             <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
                             <div class="actions">
-                                <button onclick="renderPage('transfer-money', {phone:'${phone}'})" class="btn btn-warning btn-sm" style="background:linear-gradient(135deg,#f6ad55,#ed8936);border:none;color:#fff;padding:3px 10px;border-radius:8px;font-size:11px;cursor:pointer;">💸</button>
+                                <button onclick="renderPage('transfer-money', {phone:'${phone}'})" class="btn btn-warning btn-sm">💸 ផ្ទេរ</button>
                             </div>
                         </div>
                     `;
                 });
             }
+
+            // Admin Transaction History
+            let txHtml = '';
+            const allTx = [];
+            memberKeys.forEach(phone => {
+                const tx = getMemberTransactions(phone);
+                allTx.push(...tx);
+            });
+            allTx.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            if (allTx.length === 0) {
+                txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
+            } else {
+                const totals = calculateTotals(allTx);
+                txHtml = `
+                    <div class="summary-stats">
+                        <div class="summary-box">
+                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="label">សរុបដាក់</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">សរុបដក</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="label">សល់សរុប</div>
+                        </div>
+                    </div>
+                    <div class="transaction-list">
+                `;
+                allTx.slice(0, 10).forEach(tx => {
+                    const member = data.members[tx.memberPhone];
+                    const memberName = member ? member.username || member.phone : tx.memberPhone;
+                    const d = new Date(tx.timestamp);
+                    const typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
+                    const amountSign = tx.type === 'deposit' ? '+' : '-';
+                    const color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
+                    const statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
+                    txHtml += `
+                        <div class="transaction-item">
+                            <div>
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${typeLabel}</span>
+                                <span style="font-size:10px;opacity:0.4;">${statusText}</span>
+                                <span style="opacity:0.5;font-size:11px;">👤 ${memberName} ${tx.description || ''}</span>
+                            </div>
+                            <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
+                        </div>
+                    `;
+                });
+                txHtml += `</div>`;
+            }
+
+            // Bank Setup
+            let bankSetupHtml = `
+                <div class="payment-section admin-panel">
+                    <h4>🏦 កំណត់ព័ត៌មានទូទាត់</h4>
+                    <form id="bankInfoForm" onsubmit="event.preventDefault(); saveBankInfo();">
+                        <input type="text" id="bankName" value="${admin.bankName || ''}" placeholder="🏦 ឈ្មោះធនាគារ">
+                        <input type="text" id="bankAccount" value="${admin.bankAccount || ''}" placeholder="🔢 លេខគណនី">
+                        <div style="margin:10px 0;">
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">📷 បញ្ចូលរូបភាព QR Code</label>
+                            <div class="file-upload" id="qrUploadAdmin">
+                                <span class="upload-icon">📷</span>
+                                <span class="upload-text">ចុចដើម្បីបញ្ចូលរូបភាព</span>
+                                <div class="file-name" id="qrAdminFileName">${admin.qrCode ? '✅ មានរូបភាព' : ''}</div>
+                                <div id="qrAdminPreview">${admin.qrCode ? `<img src="${admin.qrCode}" class="preview-image" alt="Admin QR">` : ''}</div>
+                                <input type="file" id="qrAdminInput" accept="image/*" onchange="handleAdminQRUpload(this)">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-gold">💾 រក្សាទុក</button>
+                    </form>
+                    <div id="bankInfoMessage"></div>
+                </div>
+            `;
 
             return `
                 <div class="top-bar">
@@ -996,13 +1383,27 @@
                     </div>
                 </div>
 
-                <div class="card admin-panel"><h3>📋 បញ្ជីសមាជិក</h3>${membersHtml}</div>
+                ${bankSetupHtml}
+
+                <div class="card admin-panel">
+                    <h3>📋 បញ្ជីសមាជិក</h3>
+                    ${membersHtml}
+                </div>
+
+                <div class="card">
+                    <h3>📊 ប្រវត្តិប្រតិបត្តិការសមាជិក</h3>
+                    ${txHtml}
+                </div>
 
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
                     <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
                 </div>
             `;
         }
+
+        // ================================================================
+        // ===== SUPER ADMIN DASHBOARD =====
+        // ================================================================
 
         function getSuperDashboardPage() {
             const user = getCurrentUser();
@@ -1015,7 +1416,6 @@
             const totalMembers = Object.keys(data.members).length;
             const totalBalance = Object.values(data.members).reduce((s, m) => s + m.balance, 0);
 
-            // Sub Admin (only one)
             const subAdmin = Object.values(data.subAdmins)[0] || null;
             let adminInfo = '';
             if (subAdmin) {
@@ -1029,7 +1429,7 @@
                         </div>
                         <div><span class="balance">$${subAdmin.balance.toFixed(2)}</span></div>
                         <div class="actions">
-                            <button onclick="resetAdminPassword('${subAdmin.phone}')" class="btn btn-secondary btn-sm" style="background:linear-gradient(135deg,#48bb78,#38a169);border:none;color:#fff;padding:3px 10px;border-radius:8px;font-size:11px;cursor:pointer;">🔑</button>
+                            <button onclick="resetAdminPassword('${subAdmin.phone}')" class="btn btn-secondary btn-sm">🔑</button>
                         </div>
                     </div>
                 `;
@@ -1051,11 +1451,58 @@
                         </div>
                         <div><span class="balance">$${m.balance.toFixed(2)}</span></div>
                         <div class="actions">
-                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm" style="background:linear-gradient(135deg,#ffd700,#f59e0b);border:none;color:#1a1a2e;padding:3px 10px;border-radius:8px;font-size:11px;cursor:pointer;">👑</button>
+                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                         </div>
                     </div>
                 `;
             });
+
+            // Super Admin Transaction History
+            let txHtml = '';
+            if (!data.transactions || data.transactions.length === 0) {
+                txHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានប្រតិបត្តិការ</p>';
+            } else {
+                const totals = calculateTotals(data.transactions);
+                txHtml = `
+                    <div class="summary-stats">
+                        <div class="summary-box">
+                            <div class="number green">$${totals.totalDeposits.toFixed(2)}</div>
+                            <div class="label">ដាក់សរុប</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number red">$${totals.totalWithdraws.toFixed(2)}</div>
+                            <div class="label">ដកសរុប</div>
+                        </div>
+                        <div class="summary-box">
+                            <div class="number gold">$${totals.netBalance.toFixed(2)}</div>
+                            <div class="label">សល់សរុប</div>
+                        </div>
+                    </div>
+                    <div class="transaction-list">
+                `;
+                data.transactions.slice(0, 15).forEach(tx => {
+                    const member = data.members[tx.memberPhone];
+                    const memberName = member ? member.username || member.phone : tx.memberPhone;
+                    const admin = data.subAdmins[tx.adminId];
+                    const adminName = admin ? admin.username : 'N/A';
+                    const d = new Date(tx.timestamp);
+                    const typeLabel = tx.type === 'deposit' ? 'ដាក់' : tx.type === 'withdraw' ? 'ដក' : 'ផ្ទេរ';
+                    const amountSign = tx.type === 'deposit' ? '+' : '-';
+                    const color = tx.type === 'deposit' ? '#48bb78' : '#fc8181';
+                    const statusText = tx.status === 'pending' ? '⏳' : tx.status === 'completed' ? '✅' : '❌';
+                    txHtml += `
+                        <div class="transaction-item">
+                            <div>
+                                <span style="font-size:10px;padding:1px 6px;border-radius:8px;background:rgba(255,255,255,0.06);">${typeLabel}</span>
+                                <span style="font-size:10px;opacity:0.4;">${statusText}</span>
+                                <span style="opacity:0.5;font-size:11px;">👤 ${memberName} | 👑 ${adminName}</span>
+                            </div>
+                            <div style="color:${color};font-weight:600;">${amountSign}$${tx.amount.toFixed(2)}</div>
+                        </div>
+                    `;
+                });
+                txHtml += `</div>`;
+            }
 
             return `
                 <div class="top-bar">
@@ -1099,15 +1546,289 @@
                     <div id="createAdminMessage"></div>
                 </div>
 
+                <div class="card admin-panel">
+                    <h3>💰 បញ្ចូលប្រាក់ទៅ Sub Admin</h3>
+                    <form id="superFundForm" onsubmit="event.preventDefault(); fundSubAdmin();">
+                        <input type="number" id="superFundAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
+                        <button type="submit" class="btn btn-gold">💳 បញ្ចូលប្រាក់</button>
+                    </form>
+                    <div id="superFundMessage"></div>
+                </div>
+
                 <div class="card"><h3>📋 Sub Admin</h3>${adminInfo}</div>
 
                 <div class="card"><h3>📋 សមាជិក</h3><div style="max-height:200px;overflow-y:auto;">${memberListHtml || '<p style="opacity:0.4;">មិនទាន់មាន</p>'}</div></div>
+
+                <div class="card"><h3>📊 ប្រវត្តិប្រតិបត្តិការទាំងអស់</h3>${txHtml}</div>
 
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
                     <button onclick="renderPage('activity-log')" class="btn btn-sm">📋 កំណត់ត្រា</button>
                     <button onclick="exportData()" class="btn btn-secondary btn-sm">📤 នាំចេញ</button>
                 </div>
             `;
+        }
+
+        // ================================================================
+        // ===== TRANSFER MONEY PAGE =====
+        // ================================================================
+
+        function getTransferMoneyPage(params) {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                return `<p style="color:red;">សូមចូលប្រើជា Sub Admin!</p>`;
+            }
+
+            const admin = data.subAdmins[user.phone];
+            const targetPhone = params && params.phone;
+            const member = targetPhone ? data.members[targetPhone] : null;
+
+            if (!member) {
+                return `
+                    <div class="top-bar">
+                        <h2>💸 ផ្ទេរប្រាក់</h2>
+                        <span class="back-link" onclick="renderPage('admin-dashboard')">← ត្រឡប់</span>
+                    </div>
+                    <p style="color:red;">មិនឃើញសមាជិក!</p>
+                `;
+            }
+
+            return `
+                <div class="top-bar">
+                    <h2>💸 ផ្ទេរប្រាក់ទៅសមាជិក</h2>
+                    <span class="back-link" onclick="renderPage('admin-dashboard')">← ត្រឡប់</span>
+                </div>
+
+                <div class="card">
+                    <h3>👤 ព័ត៌មានសមាជិក</h3>
+                    <div><strong style="color:#fff;">${member.username || member.phone}</strong></div>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.5);">🆔 ${member.id} | 📱 ${member.phone}</div>
+                    <div style="font-size:15px;color:#48bb78;">💰 ប្រាក់បច្ចុប្បន្ន: $${member.balance.toFixed(2)}</div>
+                </div>
+
+                <div class="card admin-panel">
+                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ</h3>
+                    <form id="transferForm">
+                        <input type="hidden" id="transferPhone" value="${member.phone}">
+                        <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
+                        <div style="font-size:12px;color:rgba(255,255,255,0.4);">នៅសល់: $${admin.balance.toFixed(2)}</div>
+                        <button type="submit" class="btn btn-warning">💸 បញ្ជាក់ការផ្ទេរ</button>
+                    </form>
+                    <div id="transferMessage"></div>
+                </div>
+            `;
+        }
+
+        // ================================================================
+        // ===== PAYMENT FUNCTIONS =====
+        // ================================================================
+
+        function selectAmount(amount) {
+            const input = document.getElementById('withdrawAmount');
+            if (input) {
+                input.value = amount;
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.amount-btn').forEach(b => {
+                    if (b.textContent.trim() === '$' + amount) b.classList.add('active');
+                });
+            }
+        }
+
+        function handleDepositQRUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileName = document.getElementById('depositFileName');
+                if (fileName) fileName.textContent = '✅ ' + file.name;
+                const preview = document.getElementById('depositQRPreview');
+                if (preview) preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Deposit">`;
+                const qrInput = document.getElementById('depositQRInput');
+                if (qrInput) qrInput.dataset.qrData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleWithdrawQRUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileName = document.getElementById('withdrawFileName');
+                if (fileName) fileName.textContent = '✅ ' + file.name;
+                const preview = document.getElementById('withdrawQRPreview');
+                if (preview) preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Withdraw QR">`;
+                const qrInput = document.getElementById('withdrawQRInput');
+                if (qrInput) qrInput.dataset.qrData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleAdminQRUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileName = document.getElementById('qrAdminFileName');
+                if (fileName) fileName.textContent = '✅ ' + file.name;
+                const preview = document.getElementById('qrAdminPreview');
+                if (preview) preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Admin QR">`;
+                const qrInput = document.getElementById('qrAdminInput');
+                if (qrInput) qrInput.dataset.qrData = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showDepositConfirm() {
+            const amountInput = document.getElementById('depositAmount');
+            const amount = amountInput ? parseFloat(amountInput.value) : 0;
+            const qrInput = document.getElementById('depositQRInput');
+            const hasScreenshot = qrInput && qrInput.dataset.qrData;
+
+            if (!amount || amount <= 0) {
+                alert('⚠️ សូមបញ្ចូលចំនួនប្រាក់ដែលអ្នកបានផ្ទេរ!');
+                return;
+            }
+
+            if (!hasScreenshot) {
+                alert('⚠️ សូមបញ្ចូលរូបភាពថតអេក្រង់បន្ទាប់ពីផ្ទេរប្រាក់រួច!');
+                return;
+            }
+
+            if (confirm('តើអ្នកបានផ្ទេរប្រាក់ $' + amount.toFixed(2) + ' រួចហើយមែនទេ?')) {
+                const user = getCurrentUser();
+                if (user) {
+                    const member = data.members[user.phone];
+                    if (member) {
+                        const tx = createTransaction(
+                            'deposit',
+                            member.phone,
+                            member.adminId,
+                            amount,
+                            'pending',
+                            'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2),
+                            qrInput.dataset.qrData
+                        );
+
+                        logActivity(member.id || 'member', member.username || member.phone, 'deposit_request', 'financial', null, amount,
+                            'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
+
+                        alert('✅ សំណើរដាក់ប្រាក់ $' + amount.toFixed(2) + ' របស់អ្នកត្រូវបានផ្ញើរួច! លេខប្រតិបត្តិការ: ' + tx.id);
+
+                        document.getElementById('depositQRInput').value = '';
+                        document.getElementById('depositFileName').textContent = '';
+                        document.getElementById('depositQRPreview').innerHTML = '';
+                        if (qrInput) qrInput.dataset.qrData = '';
+                        if (amountInput) amountInput.value = '';
+
+                        renderPage('dashboard');
+                    }
+                }
+            }
+        }
+
+        function submitWithdraw() {
+            const name = document.getElementById('withdrawName').value.trim();
+            const phone = document.getElementById('withdrawPhone').value.trim();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const qrInput = document.getElementById('withdrawQRInput');
+            const hasQR = qrInput && qrInput.dataset.qrData;
+
+            if (!name) { alert('សូមបញ្ចូលឈ្មោះ!'); return; }
+            if (!phone) { alert('សូមបញ្ចូលលេខទូរសព្ទ!'); return; }
+            if (!amount || amount <= 0) { alert('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!'); return; }
+            if (!hasQR) { alert('សូមបញ្ចូលរូបភាព QR Code!'); return; }
+
+            const user = getCurrentUser();
+            if (user) {
+                const member = data.members[user.phone];
+                if (member) {
+                    if (amount > member.balance) {
+                        alert('ប្រាក់របស់អ្នកមិនគ្រប់គ្រាន់! (នៅសល់ $' + member.balance.toFixed(2) + ')');
+                        return;
+                    }
+
+                    const tx = createTransaction(
+                        'withdraw',
+                        member.phone,
+                        member.adminId,
+                        amount,
+                        'pending',
+                        'ស្នើដកប្រាក់ $' + amount.toFixed(2),
+                        qrInput.dataset.qrData
+                    );
+
+                    logActivity(member.id || 'member', member.username || member.phone, 'withdraw_request', 'financial', null, amount,
+                        'ស្នើដកប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
+
+                    alert('✅ សំណើរដកប្រាក់ $' + amount.toFixed(2) + ' របស់អ្នកត្រូវបានផ្ញើរួច! លេខប្រតិបត្តិការ: ' + tx.id);
+
+                    document.getElementById('withdrawQRInput').value = '';
+                    document.getElementById('withdrawFileName').textContent = '';
+                    document.getElementById('withdrawQRPreview').innerHTML = '';
+                    if (qrInput) qrInput.dataset.qrData = '';
+                    document.getElementById('withdrawAmount').value = '';
+                    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+
+                    renderPage('dashboard');
+                }
+            }
+        }
+
+        function saveBankInfo() {
+            const user = getCurrentUser();
+            if (!user || user.role !== 'sub_admin') {
+                alert('សូមចូលប្រើជា Sub Admin!');
+                return;
+            }
+
+            const admin = data.subAdmins[user.phone];
+            if (!admin) { alert('មិនឃើញព័ត៌មាន Admin!'); return; }
+
+            const bankName = document.getElementById('bankName').value.trim();
+            const bankAccount = document.getElementById('bankAccount').value.trim();
+            const qrInput = document.getElementById('qrAdminInput');
+            const qrData = qrInput ? qrInput.dataset.qrData : null;
+
+            admin.bankName = bankName || admin.bankName || '';
+            admin.bankAccount = bankAccount || admin.bankAccount || '';
+            if (qrData) admin.qrCode = qrData;
+
+            saveData();
+            logActivity(admin.id, admin.username, 'update_bank_info', 'administration', null, null,
+                'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានទូទាត់');
+
+            const msg = document.getElementById('bankInfoMessage');
+            if (msg) {
+                msg.innerHTML = `<div class="success">✅ រក្សាទុកព័ត៌មានជោគជ័យ!</div>`;
+                setTimeout(() => { msg.innerHTML = ''; }, 3000);
+            }
+        }
+
+        function fundSubAdmin() {
+            const amount = parseFloat(document.getElementById('superFundAmount').value);
+            const msg = document.getElementById('superFundMessage');
+
+            if (!amount || amount <= 0) {
+                msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!</div>`;
+                return;
+            }
+
+            const subAdmin = Object.values(data.subAdmins)[0];
+            if (!subAdmin) {
+                msg.innerHTML = `<div class="error">មិនទាន់មាន Sub Admin!</div>`;
+                return;
+            }
+
+            subAdmin.balance += amount;
+            subAdmin.totalReceived = (subAdmin.totalReceived || 0) + amount;
+            saveData();
+
+            logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', subAdmin.phone, amount,
+                'បញ្ចូល $' + amount.toFixed(2) + ' ទៅ ' + subAdmin.username);
+
+            msg.innerHTML = `<div class="success">✅ បញ្ចូល $${amount.toFixed(2)} ទៅ ${subAdmin.username} ជោគជ័យ!</div>`;
+            document.getElementById('superFundAmount').value = '';
+            setTimeout(() => renderPage('super-dashboard'), 1500);
         }
 
         // ================================================================
@@ -1130,18 +1851,16 @@
             const member = data.members[memberPhone];
             if (!member) { alert('មិនឃើញសមាជិក!'); return; }
 
-            // Check if there's a sub admin
             const adminList = Object.values(data.subAdmins);
             if (adminList.length === 0) {
                 alert('មិនទាន់មាន Sub Admin! សូមបង្កើតមុន');
                 return;
             }
 
-            // Use the first (and only) sub admin
             const admin = adminList[0];
 
             if (member.adminId === admin.id) {
-                alert('សមាជិកនេះត្រូវបានចាត់តាំងឲ្យ Admin នេះរួចហើយ!');
+                alert('សមាជិកនេះត្រូវបានចាត់តាំងរួចហើយ!');
                 return;
             }
 
@@ -1408,7 +2127,6 @@
                         return;
                     }
 
-                    // Only allow one sub admin
                     if (Object.keys(data.subAdmins).length >= 1) {
                         msg.innerHTML = `<div class="error">ប្រព័ន្ធអនុញ្ញាតតែ Sub Admin ម្នាក់ប៉ុណ្ណោះ!</div>`;
                         return;
@@ -1434,6 +2152,79 @@
                     msg.innerHTML = `<div class="success">✅ បង្កើតជោគជ័យ! 🆔 ${newId}<br>🔒 ${password}</div>`;
                     createAdminForm.reset();
                     setTimeout(() => renderPage('super-dashboard'), 2000);
+                });
+            }
+
+            // ---- TRANSFER MONEY ----
+            const transferForm = document.getElementById('transferForm');
+            if (transferForm) {
+                transferForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const user = getCurrentUser();
+                    if (!user || user.role !== 'sub_admin') {
+                        alert('សូមចូលប្រើជា Sub Admin!');
+                        return;
+                    }
+
+                    const admin = data.subAdmins[user.phone];
+                    if (!admin) {
+                        alert('មិនឃើញព័ត៌មាន Admin!');
+                        return;
+                    }
+
+                    const phone = document.getElementById('transferPhone').value;
+                    const amount = parseFloat(document.getElementById('transferAmount').value);
+                    const msg = document.getElementById('transferMessage');
+
+                    if (!amount || amount <= 0) {
+                        msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនត្រឹមត្រូវ!</div>`;
+                        return;
+                    }
+                    if (amount > admin.balance) {
+                        msg.innerHTML = `<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ $${admin.balance.toFixed(2)})</div>`;
+                        return;
+                    }
+
+                    const member = data.members[phone];
+                    if (!member) {
+                        msg.innerHTML = `<div class="error">មិនឃើញសមាជិក!</div>`;
+                        return;
+                    }
+
+                    if (member.adminId !== admin.id) {
+                        msg.innerHTML = `<div class="error">សមាជិកនេះមិនស្ថិតក្រោមការគ្រប់គ្រងរបស់អ្នកទេ!</div>`;
+                        return;
+                    }
+
+                    admin.balance -= amount;
+                    admin.totalTransferred = (admin.totalTransferred || 0) + amount;
+                    member.balance += amount;
+                    const date = new Date().toLocaleDateString('km-KH');
+                    member.benefits.push('💰 បានទទួល $' + amount.toFixed(2) + ' នៅថ្ងៃ ' + date);
+                    if (!admin.members.includes(phone)) admin.members.push(phone);
+
+                    saveData();
+                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', member.username || member.phone, amount,
+                        'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || member.phone));
+
+                    createTransaction(
+                        'transfer',
+                        member.phone,
+                        admin.id,
+                        amount,
+                        'completed',
+                        'ផ្ទេរប្រាក់ $' + amount.toFixed(2) + ' ពី ' + admin.username,
+                        null
+                    );
+
+                    msg.innerHTML = `
+                        <div class="success">
+                            ✅ ផ្ទេរ $${amount.toFixed(2)} ទៅ ${member.username || member.phone} ជោគជ័យ!<br>
+                            💰 ប្រាក់ដែលនៅសល់: $${admin.balance.toFixed(2)}
+                        </div>
+                    `;
+                    document.getElementById('transferAmount').value = '';
+                    setTimeout(() => renderPage('admin-dashboard'), 1500);
                 });
             }
         }
