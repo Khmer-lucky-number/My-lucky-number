@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes"/>
-    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.0</title>
+    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.1</title>
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ===== CSS ដូចដើម ===== */
         * {
             margin: 0;
             padding: 0;
@@ -1359,6 +1359,12 @@
             return 'M-' + String(data.memberCounter).padStart(4, '0');
         }
 
+        function generateAdminId() {
+            data.adminCounter++;
+            saveData();
+            return 'A-' + String(data.adminCounter).padStart(4, '0');
+        }
+
         function generateOTP() {
             return String(Math.floor(100000 + Math.random() * 900000));
         }
@@ -1568,6 +1574,229 @@
         }
 
         // ================================================================
+        // ===== EXPORT TO EXCEL =====
+        // ================================================================
+
+        function exportToExcel() {
+            try {
+                // Create CSV data
+                let csvRows = [];
+                
+                // Headers
+                csvRows.push(['លេខរៀង', 'ឈ្មោះ', 'លេខទូរសព្ទ', 'ID', 'សមតុល្យ', 'រូបិយប័ណ្ណ', 'កម្រៃសរុប', 'អត្ថប្រយោជន៍', 'កាលបរិច្ឆេទបង្កើត']);
+
+                // Data
+                Object.values(data.members).forEach((m, index) => {
+                    csvRows.push([
+                        index + 1,
+                        m.username || '',
+                        m.phone || '',
+                        m.id || '',
+                        m.balance || 0,
+                        m.preferredCurrency || 'usd',
+                        m.totalCommission || 0,
+                        (m.benefits || []).join('; '),
+                        m.createdAt ? new Date(m.createdAt).toLocaleDateString('km-KH') : ''
+                    ]);
+                });
+
+                // Transactions
+                csvRows.push([]);
+                csvRows.push(['=== ប្រវត្តិប្រតិបត្តិការ ===']);
+                csvRows.push(['លេខប្រតិបត្តិការ', 'ប្រភេទ', 'សមាជិក', 'ចំនួន', 'ស្ថានភាព', 'កាលបរិច្ឆេទ']);
+                
+                (data.transactions || []).forEach(tx => {
+                    const member = data.members[tx.memberPhone];
+                    csvRows.push([
+                        tx.id || '',
+                        tx.type || '',
+                        member ? member.username || member.phone : tx.memberPhone || '',
+                        tx.amount || 0,
+                        tx.status || '',
+                        tx.timestamp ? new Date(tx.timestamp).toLocaleString('km-KH') : ''
+                    ]);
+                });
+
+                // Sub Admins
+                csvRows.push([]);
+                csvRows.push(['=== Sub Admins ===']);
+                csvRows.push(['ឈ្មោះ', 'លេខទូរសព្ទ', 'ID', 'សមតុល្យ', 'បានទទួល', 'បានផ្ទេរ', 'ចំនួនសមាជិក']);
+                
+                Object.values(data.subAdmins).forEach(a => {
+                    csvRows.push([
+                        a.username || '',
+                        a.phone || '',
+                        a.id || '',
+                        a.balance || 0,
+                        a.totalReceived || 0,
+                        a.totalTransferred || 0,
+                        (a.members || []).length
+                    ]);
+                });
+
+                // Create CSV string
+                const csvString = csvRows.map(row => 
+                    row.map(cell => {
+                        if (typeof cell === 'string' && (cell.includes(',') || cell.includes('"') || cell.includes('\n'))) {
+                            return `"${cell.replace(/"/g, '""')}"`;
+                        }
+                        return cell;
+                    }).join(',')
+                ).join('\n');
+
+                // Add BOM for UTF-8
+                const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(blob);
+                link.href = url;
+                link.download = `របាយការណ៍_${new Date().toISOString().slice(0,10)}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                showToast('📤 នាំចេញរបាយការណ៍ជោគជ័យ!', 'success');
+            } catch (err) {
+                showToast('កំហុសក្នុងការនាំចេញ!', 'error');
+                console.error(err);
+            }
+        }
+
+        // ================================================================
+        // ===== EDIT BALANCE FUNCTIONS =====
+        // ================================================================
+
+        function editBalance(type, phone) {
+            let entity;
+            let entityName;
+            let isMember = type === 'member';
+            
+            if (isMember) {
+                entity = data.members[phone];
+                if (!entity) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
+                entityName = entity.username || entity.phone;
+            } else {
+                entity = data.subAdmins[phone];
+                if (!entity) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
+                entityName = entity.username;
+            }
+
+            showModal(`
+                <div style="text-align:center;">
+                    <h3 style="color:#ffd700;margin-bottom:15px;">✏️ កែសម្រួលទឹកប្រាក់</h3>
+                    <p style="color:rgba(255,255,255,0.6);">${isMember ? 'សមាជិក' : 'Sub Admin'}: <strong>${entityName}</strong></p>
+                    <p style="color:rgba(255,255,255,0.4);font-size:12px;">បច្ចុប្បន្ន: ${formatCurrency(entity.balance, entity.preferredCurrency || 'usd')}</p>
+                    <form id="editBalanceForm">
+                        <input type="hidden" id="editBalanceType" value="${type}">
+                        <input type="hidden" id="editBalancePhone" value="${phone}">
+                        <select id="editBalanceAction" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                            <option value="add">➕ បញ្ចូល</option>
+                            <option value="subtract">➖ ដក</option>
+                            <option value="set">🎯 កំណត់តម្លៃថ្មី</option>
+                        </select>
+                        <input type="number" id="editBalanceAmount" placeholder="💰 ចំនួនប្រាក់" min="0" step="0.01" required>
+                        <select id="editBalanceCurrency" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                            <option value="usd">$ USD</option>
+                            <option value="riel">៛ Riel</option>
+                        </select>
+                        <textarea id="editBalanceReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)" rows="2"></textarea>
+                        <div style="display:flex;gap:10px;margin-top:15px;">
+                            <button type="submit" class="btn btn-gold" style="flex:1;">💾 រក្សាទុក</button>
+                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
+                        </div>
+                    </form>
+                    <div id="editBalanceMessage"></div>
+                </div>
+            `);
+
+            document.getElementById('editBalanceForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const type = document.getElementById('editBalanceType').value;
+                const phone = document.getElementById('editBalancePhone').value;
+                const action = document.getElementById('editBalanceAction').value;
+                const amount = parseFloat(document.getElementById('editBalanceAmount').value);
+                const currency = document.getElementById('editBalanceCurrency').value;
+                const reason = document.getElementById('editBalanceReason').value.trim();
+                const msg = document.getElementById('editBalanceMessage');
+
+                if (!amount || amount <= 0) {
+                    msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនត្រឹមត្រូវ!</div>`;
+                    return;
+                }
+
+                // Convert to USD if currency is Riel
+                let amountUSD = amount;
+                if (currency === 'riel') {
+                    amountUSD = convertToUSD(amount);
+                }
+
+                let entity;
+                let entityName;
+                let isMember = type === 'member';
+                
+                if (isMember) {
+                    entity = data.members[phone];
+                } else {
+                    entity = data.subAdmins[phone];
+                }
+
+                if (!entity) {
+                    msg.innerHTML = `<div class="error">មិនឃើញ ${isMember ? 'សមាជិក' : 'Sub Admin'}!</div>`;
+                    return;
+                }
+
+                const oldBalance = entity.balance;
+                let newBalance = oldBalance;
+
+                if (action === 'add') {
+                    newBalance = oldBalance + amountUSD;
+                } else if (action === 'subtract') {
+                    if (amountUSD > oldBalance) {
+                        msg.innerHTML = `<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ ${formatCurrency(oldBalance, entity.preferredCurrency || 'usd')})</div>`;
+                        return;
+                    }
+                    newBalance = oldBalance - amountUSD;
+                } else if (action === 'set') {
+                    newBalance = amountUSD;
+                }
+
+                entity.balance = newBalance;
+
+                // Log activity
+                const adminUser = getCurrentUser();
+                const adminId = adminUser ? adminUser.phone : 'unknown';
+                const adminName = adminUser ? adminUser.name : 'Unknown';
+
+                logActivity(
+                    adminId,
+                    adminName,
+                    action === 'add' ? 'balance_add' : action === 'subtract' ? 'balance_subtract' : 'balance_set',
+                    'financial',
+                    phone,
+                    amountUSD,
+                    `${isMember ? 'សមាជិក' : 'Sub Admin'} ${entityName}: ${action} ${formatCurrency(amountUSD, entity.preferredCurrency || 'usd')}${reason ? ' (' + reason + ')' : ''}`
+                );
+
+                // Add benefit for member
+                if (isMember) {
+                    const actionText = action === 'add' ? 'បញ្ចូល' : action === 'subtract' ? 'ដក' : 'កំណត់';
+                    entity.benefits.push(`💰 ${actionText} ${formatCurrency(amountUSD, entity.preferredCurrency || 'usd')} ${reason ? ' - ' + reason : ''}`);
+                }
+
+                saveData();
+                msg.innerHTML = `<div class="success">✅ កែសម្រួលជោគជ័យ!<br>ចាស់: ${formatCurrency(oldBalance, entity.preferredCurrency || 'usd')}<br>ថ្មី: ${formatCurrency(newBalance, entity.preferredCurrency || 'usd')}</div>`;
+
+                sendNotification('email', phone + '@example.com', 
+                    `ទឹកប្រាក់របស់អ្នកត្រូវបានកែសម្រួល: ${formatCurrency(oldBalance, entity.preferredCurrency || 'usd')} → ${formatCurrency(newBalance, entity.preferredCurrency || 'usd')}`);
+
+                setTimeout(() => {
+                    hideModal();
+                    renderPage(isMember ? 'super-dashboard' : 'super-dashboard');
+                }, 1500);
+            });
+        }
+
+        // ================================================================
         // ===== CLOCK =====
         // ================================================================
 
@@ -1611,7 +1840,6 @@
             body.innerHTML = html;
             overlay.style.display = 'flex';
 
-            // Trigger animation
             setTimeout(() => {
                 content.classList.add('show');
             }, 10);
@@ -1622,7 +1850,6 @@
                 };
             }
 
-            // Close on Escape key
             document.addEventListener('keydown', function handler(e) {
                 if (e.key === 'Escape') {
                     hideModal();
@@ -1647,7 +1874,6 @@
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
         }
 
-        // Load theme from localStorage
         if (localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light-mode');
         }
@@ -1700,7 +1926,6 @@
             attachEvents(page, params);
             if (showClock) startClock();
 
-            // Setup search if on super dashboard
             if (page === 'super-dashboard') {
                 setupSearch();
             }
@@ -1714,7 +1939,7 @@
             return `
                 <div class="text-center">
                     <div style="margin-bottom:4px;">
-                        <span class="badge badge-gold animate-float">🚀 v4.0</span>
+                        <span class="badge badge-gold animate-float">🚀 v4.1</span>
                     </div>
                     <h1>ស្វាគមន៍!</h1>
                     <p style="font-size:0.9rem;color:rgba(255,255,255,0.5);">${data.systemName}</p>
@@ -1781,7 +2006,6 @@
                         <button type="button" class="toggle-pwd" onclick="togglePassword('loginPassword', this)">👁️</button>
                     </div>
 
-                    <!-- CAPTCHA -->
                     <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
                             ${generateCaptcha()}
@@ -1826,7 +2050,6 @@
                         </select>
                     </div>
 
-                    <!-- CAPTCHA -->
                     <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
                             ${generateCaptcha()}
@@ -1861,7 +2084,6 @@
                         <button type="button" class="toggle-pwd" onclick="togglePassword('superPassword', this)">👁️</button>
                     </div>
 
-                    <!-- CAPTCHA -->
                     <div style="margin:10px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
                         <div id="captchaText" style="background:rgba(255,255,255,0.1);padding:10px 15px;border-radius:8px;font-size:20px;font-weight:700;color:#ffd700;letter-spacing:3px;font-family:monospace;user-select:none;">
                             ${generateCaptcha()}
@@ -1905,7 +2127,10 @@
             `;
         }
 
+        // ================================================================
         // ===== MEMBER DASHBOARD =====
+        // ================================================================
+
         function getDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'member') {
@@ -1915,7 +2140,8 @@
             const member = data.members[user.phone];
             if (!member) return `<p style="color:red;">មិនឃើញព័ត៌មាន!</p>`;
 
-            const admin = data.subAdmins[member.adminId];
+            // Get admin info - ALL members see the same admin info
+            const admin = Object.values(data.subAdmins)[0];
             const preferredCurrency = member.preferredCurrency || 'usd';
 
             // Deposit Section
@@ -1943,14 +2169,20 @@
                 `;
             } else {
                 depositHtml += `
-                    <p style="color:rgba(255,255,255,0.3);font-size:13px;">⚠️ អ្នកមិនទាន់ត្រូវបានចាត់តាំងឲ្យ Admin ណាមួយទេ!</p>
+                    <p style="color:rgba(255,255,255,0.3);font-size:13px;">⚠️ ប្រព័ន្ធកំពុងរៀបចំ! សូមទាក់ទង Admin</p>
                 `;
             }
 
             depositHtml += `
                     <div style="margin:12px 0;">
-                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">💰 ចំនួនប្រាក់ដែលបានផ្ទេរ (${preferredCurrency === 'riel' ? '៛' : '$'})</label>
-                        <input type="number" id="depositAmount" placeholder="បញ្ចូលចំនួនប្រាក់" min="0.01" step="0.01" required>
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">💰 ចំនួនប្រាក់ដែលបានផ្ទេរ</label>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
+                            <select id="depositCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
+                                <option value="usd">$ USD</option>
+                                <option value="riel">៛ Riel</option>
+                            </select>
+                            <input type="number" id="depositAmount" placeholder="បញ្ចូលចំនួន" min="0.01" step="0.01" required style="flex:2;">
+                        </div>
                     </div>
                     <div style="margin:12px 0;">
                         <label style="font-size:12px;color:rgba(255,255,255,0.4);">📸 បញ្ចូលរូបភាពថតអេក្រង់</label>
@@ -1984,7 +2216,14 @@
                         </div>
 
                         <div class="full-width">
-                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">ជ្រើសរើសចំនួនប្រាក់ (${preferredCurrency === 'riel' ? '៛' : '$'})</label>
+                            <label style="font-size:12px;color:rgba(255,255,255,0.4);">ជ្រើសរើសចំនួនប្រាក់</label>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
+                                <select id="withdrawCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
+                                    <option value="usd">$ USD</option>
+                                    <option value="riel">៛ Riel</option>
+                                </select>
+                                <input type="number" id="withdrawAmount" placeholder="💰 បញ្ចូលចំនួន" min="1" step="0.01" style="flex:2;">
+                            </div>
                             <div class="amount-buttons">
                                 <button type="button" class="amount-btn" onclick="selectAmount(1)">$1</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(5)">$5</button>
@@ -1994,7 +2233,6 @@
                                 <button type="button" class="amount-btn" onclick="selectAmount(50)">$50</button>
                                 <button type="button" class="amount-btn" onclick="selectAmount(100)">$100</button>
                             </div>
-                            <input type="number" id="withdrawAmount" placeholder="💰 បញ្ចូលចំនួនដោយដៃ" min="1" step="0.01">
                         </div>
 
                         <div class="full-width">
@@ -2135,11 +2373,14 @@
                     <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
                 </div>
 
-                <div class="text-center mt-10 op-3 fs-12">v4.0</div>
+                <div class="text-center mt-10 op-3 fs-12">v4.1</div>
             `;
         }
 
+        // ================================================================
         // ===== ADMIN DASHBOARD =====
+        // ================================================================
+
         function getAdminDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
@@ -2149,7 +2390,8 @@
             const admin = data.subAdmins[user.phone];
             if (!admin) return `<p style="color:red;">មិនឃើញព័ត៌មាន Admin!</p>`;
 
-            const memberKeys = Object.keys(data.members).filter(phone => data.members[phone].adminId === admin.id);
+            // All members see this admin
+            const memberKeys = Object.keys(data.members);
             let membersHtml = '';
             if (memberKeys.length === 0) {
                 membersHtml = `<p style="opacity:0.4;font-size:12px;">មិនទាន់មានសមាជិក</p>`;
@@ -2235,6 +2477,7 @@
             let bankSetupHtml = `
                 <div class="payment-section admin-panel">
                     <h4>🏦 កំណត់ព័ត៌មានទូទាត់</h4>
+                    <p style="font-size:12px;color:rgba(255,255,255,0.4);">ព័ត៌មាននេះនឹងបង្ហាញដល់សមាជិកទាំងអស់</p>
                     <form id="bankInfoForm" onsubmit="event.preventDefault(); saveBankInfo();">
                         <input type="text" id="bankName" value="${admin.bankName || ''}" placeholder="🏦 ឈ្មោះធនាគារ">
                         <input type="text" id="bankAccount" value="${admin.bankAccount || ''}" placeholder="🔢 លេខគណនី">
@@ -2324,9 +2567,8 @@
             const admin = data.subAdmins[user.phone];
             if (!admin) return '';
 
-            const memberPhones = admin.members || [];
             let notifications = [];
-            memberPhones.forEach(phone => {
+            Object.keys(data.members).forEach(phone => {
                 const tx = getMemberTransactions(phone);
                 tx.slice(0, 10).forEach(t => {
                     if (t.status === 'pending') {
@@ -2367,7 +2609,10 @@
             return html;
         }
 
+        // ================================================================
         // ===== SUPER ADMIN DASHBOARD =====
+        // ================================================================
+
         function getSuperDashboardPage() {
             const user = getCurrentUser();
             if (!user || user.role !== 'super_admin') {
@@ -2399,10 +2644,11 @@
                             <span class="id">🆔 ${a.id}</span>
                             <span class="sub">📱 ${a.phone}</span>
                             <span class="pwd">🔑 ${a.password}</span>
-                            <span class="sub">👥 ${(a.members || []).length} សមាជិក</span>
+                            <span class="sub">👥 ${Object.keys(data.members).length} សមាជិក</span>
                         </div>
                         <div><span class="balance">$${a.balance.toFixed(2)}</span></div>
                         <div class="actions">
+                            <button onclick="editBalance('admin', '${a.phone}')" class="btn btn-gold btn-sm">💰</button>
                             <button onclick="superEditAdmin('${a.phone}')" class="btn btn-warning btn-sm">✏️</button>
                             <button onclick="superDeleteAdmin('${a.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                             <button onclick="resetAdminPassword('${a.phone}')" class="btn btn-secondary btn-sm">🔑</button>
@@ -2414,7 +2660,7 @@
             // Member List with search
             let memberListHtml = '';
             Object.values(data.members).forEach(m => {
-                const admin = data.subAdmins[m.adminId];
+                const admin = Object.values(data.subAdmins)[0];
                 const preferredCurrency = m.preferredCurrency || 'usd';
                 memberListHtml += `
                     <div class="list-item member-item" data-phone="${m.phone}" data-name="${m.username || ''}" data-id="${m.id}">
@@ -2423,15 +2669,14 @@
                             <span class="id">🆔 ${m.id}</span>
                             <span class="sub">📱 ${m.phone}</span>
                             <span class="pwd">🔑 ${m.password}</span>
-                            <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
                             <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
                         </div>
                         <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                         <div class="actions">
+                            <button onclick="editBalance('member', '${m.phone}')" class="btn btn-gold btn-sm">💰</button>
                             <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
                             <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                             <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
-                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                         </div>
                     </div>
                 `;
@@ -2528,7 +2773,7 @@
                             <input type="password" id="newAdminPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
                             <button type="button" class="toggle-pwd" onclick="togglePassword('newAdminPassword', this)">👁️</button>
                         </div>
-                        <input type="number" id="newAdminBalance" placeholder="💰 ប្រាក់ដំបូង" min="0" step="0.01">
+                        <!-- លុបចេញ: មិនឲ្យបញ្ចូលប្រាក់ពេលបង្កើតទេ -->
                         <button type="submit" class="btn btn-gold">👑 បង្កើត Sub Admin</button>
                     </form>
                     <div id="createAdminMessage"></div>
@@ -2541,7 +2786,13 @@
                             ${Object.values(data.subAdmins).map(a => `<option value="${a.phone}">${a.username} ($${a.balance.toFixed(2)})</option>`).join('')}
                             ${Object.keys(data.subAdmins).length === 0 ? '<option value="">មិនទាន់មាន Sub Admin</option>' : ''}
                         </select>
-                        <input type="number" id="superFundAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
+                            <select id="superFundCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
+                                <option value="usd">$ USD</option>
+                                <option value="riel">៛ Riel</option>
+                            </select>
+                            <input type="number" id="superFundAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required style="flex:2;">
+                        </div>
                         <button type="submit" class="btn btn-gold">💳 បញ្ចូលប្រាក់</button>
                     </form>
                     <div id="superFundMessage"></div>
@@ -2572,7 +2823,8 @@
                 <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">
                     <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple">📋 កំណត់ត្រា</button>
                     <button onclick="showReport()" class="btn btn-sm btn-gold">📊 របាយការណ៍</button>
-                    <button onclick="exportData()" class="btn btn-sm btn-secondary">📤 នាំចេញ</button>
+                    <button onclick="exportToExcel()" class="btn btn-sm btn-secondary">📊 នាំចេញ Excel</button>
+                    <button onclick="exportData()" class="btn btn-sm btn-secondary">📤 នាំចេញ JSON</button>
                     <button onclick="importData()" class="btn btn-sm btn-warning">📥 នាំចូល</button>
                 </div>
             `;
@@ -2610,7 +2862,10 @@
             return html;
         }
 
+        // ================================================================
         // ===== TRANSFER MONEY PAGE =====
+        // ================================================================
+
         function getTransferMoneyPage(params) {
             const user = getCurrentUser();
             if (!user || user.role !== 'sub_admin') {
@@ -2647,10 +2902,16 @@
                 </div>
 
                 <div class="card admin-panel">
-                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ (${preferredCurrency === 'riel' ? '៛' : '$'})</h3>
+                    <h3>💵 ចំនួនប្រាក់ដែលត្រូវផ្ទេរ</h3>
                     <form id="transferForm">
                         <input type="hidden" id="transferPhone" value="${member.phone}">
-                        <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:5px 0;">
+                            <select id="transferCurrency" style="flex:1;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);min-width:80px;">
+                                <option value="usd">$ USD</option>
+                                <option value="riel">៛ Riel</option>
+                            </select>
+                            <input type="number" id="transferAmount" placeholder="💰 ចំនួនប្រាក់" min="0.01" step="0.01" required style="flex:2;">
+                        </div>
                         <div style="font-size:12px;color:rgba(255,255,255,0.4);">នៅសល់: $${admin.balance.toFixed(2)}</div>
                         <button type="submit" class="btn btn-warning animate-glow">💸 បញ្ជាក់ការផ្ទេរ</button>
                     </form>
@@ -2659,7 +2920,10 @@
             `;
         }
 
+        // ================================================================
         // ===== ACTIVITY LOG PAGE =====
+        // ================================================================
+
         function getActivityLogPage() {
             const logs = data.activityLogs || [];
             let html = `
@@ -2697,7 +2961,10 @@
             return html;
         }
 
+        // ================================================================
         // ===== REPORT PAGE =====
+        // ================================================================
+
         function getReportPage() {
             return `
                 <div class="top-bar">
@@ -2708,6 +2975,7 @@
                     <button onclick="generateReportDisplay('daily')" class="btn btn-sm btn-gold">📅 ប្រចាំថ្ងៃ</button>
                     <button onclick="generateReportDisplay('weekly')" class="btn btn-sm btn-secondary">📅 ប្រចាំសប្តាហ៍</button>
                     <button onclick="generateReportDisplay('monthly')" class="btn btn-sm btn-purple">📅 ប្រចាំខែ</button>
+                    <button onclick="exportToExcel()" class="btn btn-sm btn-secondary">📊 នាំចេញ Excel</button>
                 </div>
                 <div id="reportContent"></div>
             `;
@@ -2775,7 +3043,9 @@
 
         function showDepositConfirm() {
             const amountInput = document.getElementById('depositAmount');
+            const currencySelect = document.getElementById('depositCurrency');
             const amount = amountInput ? parseFloat(amountInput.value) : 0;
+            const currency = currencySelect ? currencySelect.value : 'usd';
             const qrInput = document.getElementById('depositQRInput');
             const hasScreenshot = qrInput && qrInput.dataset.qrData;
 
@@ -2803,7 +3073,12 @@
                 return;
             }
 
-            // Confirm Modal
+            // Convert to USD if needed
+            let amountUSD = amount;
+            if (currency === 'riel') {
+                amountUSD = convertToUSD(amount);
+            }
+
             const user = getCurrentUser();
             const member = user ? data.members[user.phone] : null;
             const preferredCurrency = member ? member.preferredCurrency || 'usd' : 'usd';
@@ -2813,9 +3088,9 @@
                     <div style="font-size:48px;margin-bottom:10px;">💳</div>
                     <h3 style="color:#fff;margin-bottom:10px;">បញ្ជាក់ការដាក់ប្រាក់</h3>
                     <p style="color:rgba(255,255,255,0.6);margin-bottom:5px;">អ្នកបានផ្ទេរប្រាក់</p>
-                    <p style="font-size:32px;font-weight:700;color:#ffd700;margin:10px 0;">${formatCurrency(amount, preferredCurrency)}</p>
+                    <p style="font-size:32px;font-weight:700;color:#ffd700;margin:10px 0;">${formatCurrency(amountUSD, preferredCurrency)}</p>
                     <div style="display:flex;gap:10px;margin-top:20px;">
-                        <button onclick="hideModal(); confirmDeposit(${amount});" class="btn btn-gold" style="flex:1;">✅ បញ្ជាក់</button>
+                        <button onclick="hideModal(); confirmDeposit(${amountUSD});" class="btn btn-gold" style="flex:1;">✅ បញ្ជាក់</button>
                         <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
                     </div>
                 </div>
@@ -2831,7 +3106,7 @@
                     const tx = createTransaction(
                         'deposit',
                         member.phone,
-                        member.adminId,
+                        null,
                         amount,
                         'pending',
                         'ស្នើដាក់ប្រាក់ $' + amount.toFixed(2),
@@ -2867,6 +3142,7 @@
             const name = document.getElementById('withdrawName').value.trim();
             const phone = document.getElementById('withdrawPhone').value.trim();
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const currency = document.getElementById('withdrawCurrency').value;
             const qrInput = document.getElementById('withdrawQRInput');
             const hasQR = qrInput && qrInput.dataset.qrData;
 
@@ -2875,11 +3151,17 @@
             if (!amount || amount <= 0) { showToast('សូមបញ្ចូលចំនួនប្រាក់ត្រឹមត្រូវ!', 'error'); return; }
             if (!hasQR) { showToast('សូមបញ្ចូលរូបភាព QR Code!', 'error'); return; }
 
+            // Convert to USD if needed
+            let amountUSD = amount;
+            if (currency === 'riel') {
+                amountUSD = convertToUSD(amount);
+            }
+
             const user = getCurrentUser();
             if (user) {
                 const member = data.members[user.phone];
                 if (member) {
-                    if (amount > member.balance) {
+                    if (amountUSD > member.balance) {
                         showToast(`ប្រាក់មិនគ្រប់! (នៅសល់ ${formatCurrency(member.balance, member.preferredCurrency || 'usd')})`, 'error');
                         return;
                     }
@@ -2887,24 +3169,24 @@
                     const tx = createTransaction(
                         'withdraw',
                         member.phone,
-                        member.adminId,
-                        amount,
+                        null,
+                        amountUSD,
                         'pending',
-                        'ស្នើដកប្រាក់ $' + amount.toFixed(2),
+                        'ស្នើដកប្រាក់ $' + amountUSD.toFixed(2),
                         qrInput.dataset.qrData
                     );
 
-                    logActivity(member.id || 'member', member.username || member.phone, 'withdraw_request', 'financial', null, amount,
-                        'ស្នើដកប្រាក់ $' + amount.toFixed(2) + ' (TX: ' + tx.id + ')');
+                    logActivity(member.id || 'member', member.username || member.phone, 'withdraw_request', 'financial', null, amountUSD,
+                        'ស្នើដកប្រាក់ $' + amountUSD.toFixed(2) + ' (TX: ' + tx.id + ')');
 
                     sendNotification('email', member.phone + '@example.com',
-                        `សំណើដកប្រាក់ $${amount.toFixed(2)} ត្រូវបានផ្ញើរួច! TX: ${tx.id}`);
+                        `សំណើដកប្រាក់ $${amountUSD.toFixed(2)} ត្រូវបានផ្ញើរួច! TX: ${tx.id}`);
 
                     showModal(`
                         <div style="text-align:center;">
                             <div style="font-size:48px;margin-bottom:10px;">✅</div>
                             <h3 style="color:#48bb78;margin-bottom:10px;">ជោគជ័យ!</h3>
-                            <p style="color:rgba(255,255,255,0.6);">សំណើរដកប្រាក់ ${formatCurrency(amount, member.preferredCurrency || 'usd')} របស់អ្នកត្រូវបានផ្ញើរួច!</p>
+                            <p style="color:rgba(255,255,255,0.6);">សំណើរដកប្រាក់ ${formatCurrency(amountUSD, member.preferredCurrency || 'usd')} របស់អ្នកត្រូវបានផ្ញើរួច!</p>
                             <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:5px;">លេខប្រតិបត្តិការ: ${tx.id}</p>
                             <button onclick="hideModal(); renderPage('dashboard');" class="btn" style="margin-top:15px;">ទៅកាន់ Dashboard</button>
                         </div>
@@ -2943,7 +3225,7 @@
             logActivity(admin.id, admin.username, 'update_bank_info', 'administration', null, null,
                 'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានទូទាត់');
 
-            showToast('✅ រក្សាទុកព័ត៌មានជោគជ័យ!', 'success');
+            showToast('✅ រក្សាទុកព័ត៌មានជោគជ័យ! សមាជិកទាំងអស់អាចមើលឃើញ', 'success');
         }
 
         function saveCommissionSettings() {
@@ -2973,6 +3255,7 @@
         function fundSubAdmin() {
             const amount = parseFloat(document.getElementById('superFundAmount').value);
             const targetPhone = document.getElementById('superFundTarget').value;
+            const currency = document.getElementById('superFundCurrency').value;
             const msg = document.getElementById('superFundMessage');
 
             if (!targetPhone) {
@@ -2985,23 +3268,29 @@
                 return;
             }
 
+            // Convert to USD if needed
+            let amountUSD = amount;
+            if (currency === 'riel') {
+                amountUSD = convertToUSD(amount);
+            }
+
             const subAdmin = data.subAdmins[targetPhone];
             if (!subAdmin) {
                 msg.innerHTML = `<div class="error">មិនឃើញ Sub Admin!</div>`;
                 return;
             }
 
-            subAdmin.balance += amount;
-            subAdmin.totalReceived = (subAdmin.totalReceived || 0) + amount;
+            subAdmin.balance += amountUSD;
+            subAdmin.totalReceived = (subAdmin.totalReceived || 0) + amountUSD;
             saveData();
 
-            logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', subAdmin.phone, amount,
-                'បញ្ចូល $' + amount.toFixed(2) + ' ទៅ ' + subAdmin.username);
+            logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', subAdmin.phone, amountUSD,
+                'បញ្ចូល $' + amountUSD.toFixed(2) + ' ទៅ ' + subAdmin.username);
 
             sendNotification('email', subAdmin.phone + '@example.com',
-                `អ្នកបានទទួលប្រាក់ $${amount.toFixed(2)} ពី Super Admin`);
+                `អ្នកបានទទួលប្រាក់ $${amountUSD.toFixed(2)} ពី Super Admin`);
 
-            msg.innerHTML = `<div class="success">✅ បញ្ចូល $${amount.toFixed(2)} ទៅ ${subAdmin.username} ជោគជ័យ!</div>`;
+            msg.innerHTML = `<div class="success">✅ បញ្ចូល $${amountUSD.toFixed(2)} ទៅ ${subAdmin.username} ជោគជ័យ!</div>`;
             document.getElementById('superFundAmount').value = '';
             setTimeout(() => renderPage('super-dashboard'), 1500);
         }
@@ -3054,7 +3343,6 @@
                     member.balance += tx.amount;
                     member.benefits.push('💰 បានដាក់ប្រាក់ $' + tx.amount.toFixed(2) + ' នៅថ្ងៃ ' + new Date().toLocaleDateString('km-KH'));
 
-                    // Add commission
                     const comm = addCommission(tx.memberPhone, tx.id, tx.amount);
                     if (comm) {
                         approveCommission(comm.id);
@@ -3068,10 +3356,13 @@
 
             saveData();
 
-            const admin = data.subAdmins[tx.adminId];
-            if (admin) {
-                logActivity(admin.id, admin.username, 'approve_transaction', 'financial', tx.memberPhone, tx.amount,
-                    'យល់ព្រមលើប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
+            const adminUser = getCurrentUser();
+            if (adminUser) {
+                const admin = data.subAdmins[adminUser.phone];
+                if (admin) {
+                    logActivity(admin.id, admin.username, 'approve_transaction', 'financial', tx.memberPhone, tx.amount,
+                        'យល់ព្រមលើប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
+                }
             }
 
             sendNotification('email', tx.memberPhone + '@example.com',
@@ -3102,10 +3393,13 @@
             tx.status = 'rejected';
             saveData();
 
-            const admin = data.subAdmins[tx.adminId];
-            if (admin) {
-                logActivity(admin.id, admin.username, 'reject_transaction', 'financial', tx.memberPhone, tx.amount,
-                    'បដិសេធប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
+            const adminUser = getCurrentUser();
+            if (adminUser) {
+                const admin = data.subAdmins[adminUser.phone];
+                if (admin) {
+                    logActivity(admin.id, admin.username, 'reject_transaction', 'financial', tx.memberPhone, tx.amount,
+                        'បដិសេធប្រតិបត្តិការ ' + tx.id + ' ($' + tx.amount.toFixed(2) + ')');
+                }
             }
 
             sendNotification('email', tx.memberPhone + '@example.com',
@@ -3164,13 +3458,6 @@
                     return;
                 }
 
-                if (newPhone !== oldPhone && member.adminId) {
-                    const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
-                    if (admin) {
-                        admin.members = admin.members.map(p => p === oldPhone ? newPhone : p);
-                    }
-                }
-
                 if (newPhone !== oldPhone) {
                     data.members[newPhone] = { ...member, phone: newPhone, username: username || newPhone, preferredCurrency: currency };
                     delete data.members[oldPhone];
@@ -3206,13 +3493,6 @@
         function confirmSuperDeleteMember(phone) {
             const member = data.members[phone];
             if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
-
-            if (member.adminId) {
-                const admin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
-                if (admin) {
-                    admin.members = admin.members.filter(p => p !== phone);
-                }
-            }
 
             delete data.members[phone];
             saveData();
@@ -3295,12 +3575,6 @@
             const admin = data.subAdmins[phone];
             if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
 
-            Object.values(data.members).forEach(m => {
-                if (m.adminId === admin.id) {
-                    m.adminId = null;
-                }
-            });
-
             delete data.subAdmins[phone];
             saveData();
             logActivity('SUPER-001', 'Super Admin', 'delete_admin', 'administration', phone, null,
@@ -3324,61 +3598,6 @@
                 input.type = 'password';
                 btn.textContent = '👁️';
             }
-        }
-
-        function assignAdmin(memberPhone) {
-            const member = data.members[memberPhone];
-            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
-
-            const adminList = Object.values(data.subAdmins);
-            if (adminList.length === 0) {
-                showToast('មិនទាន់មាន Sub Admin! សូមបង្កើតមុន', 'error');
-                return;
-            }
-
-            showModal(`
-                <div style="text-align:center;">
-                    <h3 style="color:#ffd700;margin-bottom:15px;">👑 ចាត់តាំង Admin</h3>
-                    <p style="color:rgba(255,255,255,0.6);">ជ្រើសរើស Sub Admin សម្រាប់ ${member.username || member.phone}</p>
-                    <select id="assignAdminSelect" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
-                        ${adminList.map(a => `<option value="${a.phone}" ${member.adminId === a.id ? 'selected' : ''}>${a.username} ($${a.balance.toFixed(2)})</option>`).join('')}
-                    </select>
-                    <div style="display:flex;gap:10px;margin-top:15px;">
-                        <button onclick="confirmAssignAdmin('${memberPhone}')" class="btn btn-gold" style="flex:1;">✅ ចាត់តាំង</button>
-                        <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">❌ បោះបង់</button>
-                    </div>
-                </div>
-            `);
-        }
-
-        function confirmAssignAdmin(memberPhone) {
-            const member = data.members[memberPhone];
-            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
-
-            const adminPhone = document.getElementById('assignAdminSelect').value;
-            const admin = data.subAdmins[adminPhone];
-            if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
-
-            // Remove from old admin
-            if (member.adminId) {
-                const oldAdmin = Object.values(data.subAdmins).find(a => a.id === member.adminId);
-                if (oldAdmin) {
-                    oldAdmin.members = oldAdmin.members.filter(p => p !== memberPhone);
-                }
-            }
-
-            member.adminId = admin.id;
-            if (!admin.members.includes(memberPhone)) {
-                admin.members.push(memberPhone);
-            }
-
-            saveData();
-            logActivity('SUPER-001', 'Super Admin', 'assign_admin', 'administration', memberPhone, null,
-                'ចាត់តាំង ' + admin.username + ' ឲ្យ ' + (member.username || member.phone));
-
-            hideModal();
-            showToast(`✅ ចាត់តាំង ${admin.username} ជោគជ័យ!`, 'success');
-            renderPage('super-dashboard');
         }
 
         function resetAdminPassword(phone) {
@@ -3543,12 +3762,10 @@
             const q = query.toLowerCase().trim();
 
             if (!q) {
-                // Show all members
                 if (resultsContainer) {
                     resultsContainer.innerHTML = '';
                     resultsContainer.style.display = 'none';
                 }
-                // Re-render member list
                 renderMemberList();
                 return;
             }
@@ -3567,7 +3784,6 @@
                 } else {
                     let html = '';
                     filtered.forEach(m => {
-                        const admin = data.subAdmins[m.adminId];
                         const preferredCurrency = m.preferredCurrency || 'usd';
                         html += `
                             <div class="list-item">
@@ -3575,14 +3791,13 @@
                                     <span class="name">${m.username || m.phone}</span>
                                     <span class="id">🆔 ${m.id}</span>
                                     <span class="sub">📱 ${m.phone}</span>
-                                    <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
                                 </div>
                                 <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                                 <div class="actions">
+                                    <button onclick="editBalance('member', '${m.phone}')" class="btn btn-gold btn-sm">💰</button>
                                     <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
                                     <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                                     <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
-                                    <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                                 </div>
                             </div>
                         `;
@@ -3591,7 +3806,6 @@
                 }
             }
 
-            // Hide the main member list when searching
             if (q) {
                 container.style.display = 'none';
             } else {
@@ -3605,7 +3819,6 @@
 
             let html = '';
             Object.values(data.members).forEach(m => {
-                const admin = data.subAdmins[m.adminId];
                 const preferredCurrency = m.preferredCurrency || 'usd';
                 html += `
                     <div class="list-item member-item" data-phone="${m.phone}" data-name="${m.username || ''}" data-id="${m.id}">
@@ -3614,15 +3827,14 @@
                             <span class="id">🆔 ${m.id}</span>
                             <span class="sub">📱 ${m.phone}</span>
                             <span class="pwd">🔑 ${m.password}</span>
-                            <span class="sub" style="color:#ffd700;">👑 ${admin ? admin.username : '⚠️ មិនទាន់មាន Admin'}</span>
                             <span class="sub">${preferredCurrency === 'riel' ? '៛' : '$'}</span>
                         </div>
                         <div><span class="balance">${formatCurrency(m.balance, preferredCurrency)}</span></div>
                         <div class="actions">
+                            <button onclick="editBalance('member', '${m.phone}')" class="btn btn-gold btn-sm">💰</button>
                             <button onclick="superEditMember('${m.phone}')" class="btn btn-warning btn-sm">✏️</button>
                             <button onclick="superDeleteMember('${m.phone}')" class="btn btn-danger btn-sm">🗑️</button>
                             <button onclick="resetMemberPassword('${m.phone}')" class="btn btn-secondary btn-sm">🔑</button>
-                            <button onclick="assignAdmin('${m.phone}')" class="btn btn-gold btn-sm">👑</button>
                         </div>
                     </div>
                 `;
@@ -3630,7 +3842,6 @@
 
             container.innerHTML = html || '<p style="opacity:0.4;">មិនទាន់មាន</p>';
 
-            // Restore search results visibility
             const resultsContainer = document.getElementById('searchResults');
             if (resultsContainer) {
                 resultsContainer.innerHTML = '';
@@ -3919,6 +4130,13 @@
                         return;
                     }
 
+                    // Auto-assign to first admin
+                    const admin = Object.values(data.subAdmins)[0];
+                    const adminId = admin ? admin.id : null;
+                    if (admin && !admin.members.includes(phone)) {
+                        admin.members.push(phone);
+                    }
+
                     const newId = generateMemberId();
                     data.members[phone] = {
                         username: username || phone,
@@ -3928,7 +4146,7 @@
                         role: 'member',
                         balance: 0,
                         benefits: ['✨ សមាជិកថ្មី'],
-                        adminId: null,
+                        adminId: adminId,
                         preferredCurrency: preferredCurrency || 'usd',
                         createdAt: new Date().toISOString(),
                         commissionRate: 0.05,
@@ -3972,7 +4190,6 @@
                     const name = document.getElementById('newAdminName').value.trim();
                     const phone = document.getElementById('newAdminPhone').value.trim();
                     const password = document.getElementById('newAdminPassword').value.trim();
-                    const balance = parseFloat(document.getElementById('newAdminBalance').value) || 0;
                     const msg = document.getElementById('createAdminMessage');
 
                     if (!name || !phone || !password) {
@@ -3988,23 +4205,17 @@
                         return;
                     }
 
-                    if (Object.keys(data.subAdmins).length >= 1) {
-                        msg.innerHTML = `<div class="error">ប្រព័ន្ធអនុញ្ញាតតែ Sub Admin ម្នាក់ប៉ុណ្ណោះ!</div>`;
-                        return;
-                    }
-
-                    const newId = 'A-0001';
-                    data.adminCounter++;
+                    const newId = generateAdminId();
                     data.subAdmins[phone] = {
                         username: name,
                         password: password,
                         phone: phone,
                         id: newId,
                         role: 'sub_admin',
-                        balance: balance,
-                        totalReceived: balance,
+                        balance: 0,
+                        totalReceived: 0,
                         totalTransferred: 0,
-                        members: [],
+                        members: Object.keys(data.members),
                         createdBy: 'super_admin',
                         createdAt: new Date().toISOString(),
                         commissionRate: 0.05,
@@ -4012,6 +4223,12 @@
                         bankAccount: '',
                         qrCode: ''
                     };
+
+                    // Update all members to use this admin
+                    Object.keys(data.members).forEach(mPhone => {
+                        data.members[mPhone].adminId = newId;
+                    });
+
                     saveData();
                     logActivity('SUPER-001', 'Super Admin', 'create_admin', 'administration', phone, null, 'បង្កើត Sub Admin "' + name + '" (' + newId + ')');
 
@@ -4043,13 +4260,20 @@
 
                     const phone = document.getElementById('transferPhone').value;
                     const amount = parseFloat(document.getElementById('transferAmount').value);
+                    const currency = document.getElementById('transferCurrency').value;
                     const msg = document.getElementById('transferMessage');
 
-                    if (!amount || amount <= 0) {
+                    // Convert to USD if needed
+                    let amountUSD = amount;
+                    if (currency === 'riel') {
+                        amountUSD = convertToUSD(amount);
+                    }
+
+                    if (!amountUSD || amountUSD <= 0) {
                         msg.innerHTML = `<div class="error">សូមបញ្ចូលចំនួនត្រឹមត្រូវ!</div>`;
                         return;
                     }
-                    if (amount > admin.balance) {
+                    if (amountUSD > admin.balance) {
                         msg.innerHTML = `<div class="error">មិនគ្រប់គ្រាន់! (នៅសល់ $${admin.balance.toFixed(2)})</div>`;
                         return;
                     }
@@ -4060,38 +4284,33 @@
                         return;
                     }
 
-                    if (member.adminId !== admin.id) {
-                        msg.innerHTML = `<div class="error">សមាជិកនេះមិនស្ថិតក្រោមការគ្រប់គ្រងរបស់អ្នកទេ!</div>`;
-                        return;
-                    }
-
-                    admin.balance -= amount;
-                    admin.totalTransferred = (admin.totalTransferred || 0) + amount;
-                    member.balance += amount;
+                    admin.balance -= amountUSD;
+                    admin.totalTransferred = (admin.totalTransferred || 0) + amountUSD;
+                    member.balance += amountUSD;
                     const date = new Date().toLocaleDateString('km-KH');
-                    member.benefits.push('💰 បានទទួល $' + amount.toFixed(2) + ' នៅថ្ងៃ ' + date);
+                    member.benefits.push('💰 បានទទួល $' + amountUSD.toFixed(2) + ' នៅថ្ងៃ ' + date);
                     if (!admin.members.includes(phone)) admin.members.push(phone);
 
                     saveData();
-                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', member.username || member.phone, amount,
-                        'ផ្ទេរ $' + amount.toFixed(2) + ' ទៅ ' + (member.username || member.phone));
+                    logActivity(admin.id, admin.username, 'member_transfer', 'financial', member.username || member.phone, amountUSD,
+                        'ផ្ទេរ $' + amountUSD.toFixed(2) + ' ទៅ ' + (member.username || member.phone));
 
                     createTransaction(
                         'transfer',
                         member.phone,
                         admin.id,
-                        amount,
+                        amountUSD,
                         'completed',
-                        'ផ្ទេរប្រាក់ $' + amount.toFixed(2) + ' ពី ' + admin.username,
+                        'ផ្ទេរប្រាក់ $' + amountUSD.toFixed(2) + ' ពី ' + admin.username,
                         null
                     );
 
                     sendNotification('email', member.phone + '@example.com',
-                        `អ្នកបានទទួលប្រាក់ $${amount.toFixed(2)} ពី ${admin.username}`);
+                        `អ្នកបានទទួលប្រាក់ $${amountUSD.toFixed(2)} ពី ${admin.username}`);
 
                     msg.innerHTML = `
                         <div class="success">
-                            ✅ ផ្ទេរ $${amount.toFixed(2)} ទៅ ${member.username || member.phone} ជោគជ័យ!<br>
+                            ✅ ផ្ទេរ $${amountUSD.toFixed(2)} ទៅ ${member.username || member.phone} ជោគជ័យ!<br>
                             💰 ប្រាក់ដែលនៅសល់: $${admin.balance.toFixed(2)}
                         </div>
                     `;
@@ -4160,11 +4379,10 @@
             renderPage('home');
         }
 
-        // ===== REAL-TIME NOTIFICATIONS (Simulation) =====
+        // Real-time notifications simulation
         setInterval(() => {
             const pending = data.transactions ? data.transactions.filter(t => t.status === 'pending') : [];
             if (pending.length > 0) {
-                // Update notification badge if exists
                 const badge = document.querySelector('.notification-badge');
                 if (badge) {
                     badge.textContent = pending.length;
@@ -4173,7 +4391,7 @@
             }
         }, 10000);
 
-        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.0 បានដំណើរការ!');
+        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v4.1 បានដំណើរការ!');
         console.log('📊 ទិន្នន័យបច្ចុប្បន្ន:', data);
         console.log('👤 អ្នកប្រើបច្ចុប្បន្ន:', currentUser);
     </script>
