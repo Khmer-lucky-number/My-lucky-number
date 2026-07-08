@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v6.5</title>
+    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v7.0</title>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
@@ -11,7 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js">
     </script>
     <style>
-        /* CSS Styles */
+        /* ===== CSS Styles ===== */
         * {
             margin: 0;
             padding: 0;
@@ -66,6 +66,10 @@
             border-left-color: #667eea;
         }
 
+        body.light-mode .notification-item {
+            background: rgba(0, 0, 0, 0.04);
+        }
+
         .container {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
@@ -82,12 +86,10 @@
         .container::-webkit-scrollbar {
             width: 4px;
         }
-
         .container::-webkit-scrollbar-track {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
         }
-
         .container::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #667eea, #764ba2);
             border-radius: 10px;
@@ -142,6 +144,16 @@
             }
             50% {
                 box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        @keyframes notificationPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
             }
         }
 
@@ -356,6 +368,19 @@
             box-shadow: 0 12px 35px rgba(168, 237, 234, 0.5);
         }
 
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+
         .card {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
@@ -408,6 +433,12 @@
         .badge-red {
             background: #fc8181;
             color: #fff;
+        }
+
+        .badge-new {
+            background: #ff6b6b;
+            color: #fff;
+            animation: notificationPulse 1.5s ease-in-out infinite;
         }
 
         .admin-panel {
@@ -899,6 +930,44 @@
             color: rgba(255, 255, 255, 0.3);
         }
 
+        .notification-item .noti-icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+
+        .notification-item .noti-type {
+            font-size: 10px;
+            padding: 1px 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .notification-item .noti-type.system {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.15);
+        }
+
+        .notification-item .noti-type.commission {
+            color: #f5576c;
+            background: rgba(245, 87, 108, 0.15);
+        }
+
+        .notification-item .noti-type.payment {
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .notification-item .noti-type.alert {
+            color: #fc8181;
+            background: rgba(252, 129, 129, 0.15);
+        }
+
+        .notification-item .noti-type.new-member {
+            color: #48bb78;
+            background: rgba(72, 187, 120, 0.15);
+        }
+
         .commission-item {
             background: rgba(245, 87, 108, 0.06);
             border-left: 4px solid #f5576c;
@@ -1214,7 +1283,26 @@
             font-size: 9px;
             font-weight: 700;
             margin-left: 4px;
-            animation: pulse 2s ease-in-out infinite;
+            animation: notificationPulse 2s ease-in-out infinite;
+        }
+
+        .new-member-alert {
+            background: rgba(72, 187, 120, 0.1);
+            border-left: 4px solid #48bb78;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin: 5px 0;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .new-member-alert .member-name {
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        .new-member-alert .time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
         }
 
         .text-center {
@@ -1346,6 +1434,41 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(135deg, #764ba2, #667eea);
         }
+
+        .member-register-item {
+            background: rgba(72, 187, 120, 0.05);
+            border-left: 3px solid #48bb78;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .member-register-item:hover {
+            background: rgba(72, 187, 120, 0.1);
+            transform: translateX(3px);
+        }
+
+        .member-register-item .reg-name {
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        .member-register-item .reg-info {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+        }
+
+        .member-register-item .reg-time {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -1370,10 +1493,10 @@
     <div class="container" id="app">
         <div id="pageContent"></div>
         <div class="text-center mt-10" style="font-size:10px;color:rgba(255,255,255,0.2);">
-            🔥 Firebase Cloud
-            <span style="margin-left:8px;" id="cloudStatus">
-                <span class="cloud-status disconnected">☁️ Connecting...</span>
+            <span id="cloudStatus">
+                <span class="cloud-status disconnected">⏳ កំពុងភ្ជាប់...</span>
             </span>
+            <span style="margin-left:8px;opacity:0.5;">v7.0</span>
         </div>
     </div>
 
@@ -1412,10 +1535,11 @@
             commissions: [],
             memberNotifications: [],
             activityLogs: [],
+            memberRegistrations: [],
             memberCounter: 0,
             adminCounter: 0,
             exchangeRate: 4000,
-            version: '6.5',
+            version: '7.0',
             lastUpdated: null
         };
 
@@ -1423,6 +1547,8 @@
         var isLoading = false;
         var isSaving = false;
         var currentUser = null;
+        var logoutTimer = null;
+        var sessionTimeout = 30 * 60 * 1000; // 30 minutes
 
         // ================================================================
         // FIREBASE FUNCTIONS
@@ -1433,15 +1559,15 @@
             var statusEl = document.getElementById('cloudStatus');
             if (statusEl) {
                 statusEl.innerHTML = connected ?
-                    '<span class="cloud-status connected">☁️ Connected</span>' :
-                    '<span class="cloud-status disconnected">☁️ Disconnected</span>';
+                    '<span class="cloud-status connected">✅ ដំណើរការ</span>' :
+                    '<span class="cloud-status disconnected">⏳ កំពុងភ្ជាប់...</span>';
             }
         }
 
         function saveToFirebase() {
             if (isSaving) { showToast('⏳ កំពុងដំណើរការ...', 'info'); return; }
             isSaving = true;
-            showToast('⏳ កំពុងរក្សាទុកលើ Cloud...', 'info');
+            showToast('⏳ កំពុងរក្សាទុក...', 'info');
 
             var dataToSave = {
                 members: localData.members || {},
@@ -1452,17 +1578,18 @@
                 commissions: localData.commissions || [],
                 memberNotifications: localData.memberNotifications || [],
                 activityLogs: localData.activityLogs || [],
+                memberRegistrations: localData.memberRegistrations || [],
                 memberCounter: localData.memberCounter || 0,
                 adminCounter: localData.adminCounter || 0,
                 exchangeRate: localData.exchangeRate || 4000,
-                version: '6.5',
+                version: '7.0',
                 lastUpdated: new Date().toISOString()
             };
 
             database.ref('memberSystem').set(dataToSave)
                 .then(function() {
                     updateCloudStatus(true);
-                    showToast('💾 បានរក្សាទុកលើ Cloud ជោគជ័យ!', 'success');
+                    showToast('💾 រក្សាទុកជោគជ័យ!', 'success');
                     isSaving = false;
                 })
                 .catch(function(error) {
@@ -1475,7 +1602,7 @@
         function loadFromFirebase() {
             if (isLoading) { showToast('⏳ កំពុងដំណើរការ...', 'info'); return; }
             isLoading = true;
-            showToast('⏳ កំពុងទាញយកពី Cloud...', 'info');
+            showToast('⏳ កំពុងទាញយកទិន្នន័យ...', 'info');
 
             database.ref('memberSystem').once('value')
                 .then(function(snapshot) {
@@ -1489,15 +1616,16 @@
                         localData.commissions = data.commissions || [];
                         localData.memberNotifications = data.memberNotifications || [];
                         localData.activityLogs = data.activityLogs || [];
+                        localData.memberRegistrations = data.memberRegistrations || [];
                         localData.memberCounter = data.memberCounter || 0;
                         localData.adminCounter = data.adminCounter || 0;
                         localData.exchangeRate = data.exchangeRate || 4000;
 
                         updateCloudStatus(true);
-                        showToast('📥 បានទាញយកពី Cloud ជោគជ័យ!', 'success');
+                        showToast('📥 ទាញយកទិន្នន័យជោគជ័យ!', 'success');
                         refreshCurrentPage();
                     } else {
-                        showToast('ℹ️ មិនទាន់មានទិន្នន័យក្នុង Cloud', 'info');
+                        showToast('ℹ️ មិនទាន់មានទិន្នន័យ', 'info');
                         updateCloudStatus(false);
                     }
                     isLoading = false;
@@ -1522,6 +1650,7 @@
                     localData.commissions = data.commissions || [];
                     localData.memberNotifications = data.memberNotifications || [];
                     localData.activityLogs = data.activityLogs || [];
+                    localData.memberRegistrations = data.memberRegistrations || [];
                     localData.memberCounter = data.memberCounter || 0;
                     localData.adminCounter = data.adminCounter || 0;
                     localData.exchangeRate = data.exchangeRate || 4000;
@@ -1529,22 +1658,39 @@
 
                     var newCount = Object.keys(localData.members || {}).length;
                     if (newCount !== oldCount && oldCount > 0) {
-                        showToast('🔄 ទិន្នន័យត្រូវបានធ្វើបច្ចុប្បន្នភាព!', 'info');
+                        showToast('🔄 មានសមាជិកថ្មីចុះឈ្មោះ!', 'info');
                     }
                     refreshCurrentPage();
                 }
             });
         }
 
-        function refreshCurrentPage() {
+        // ================================================================
+        // SESSION MANAGEMENT
+        // ================================================================
+
+        function resetSessionTimer() {
+            if (logoutTimer) {
+                clearTimeout(logoutTimer);
+                logoutTimer = null;
+            }
             var user = getCurrentUser();
             if (user) {
-                if (user.role === 'super_admin') renderPage('super-dashboard');
-                else if (user.role === 'sub_admin') renderPage('admin-dashboard');
-                else renderPage('dashboard');
-            } else {
-                renderPage('login');
+                logoutTimer = setTimeout(function() {
+                    showToast('⏰ សេវាកម្មផុតកំណត់ សូមចូលប្រើឡើងវិញ', 'warning');
+                    logoutUser();
+                }, sessionTimeout);
             }
+        }
+
+        function logoutUser() {
+            setCurrentUser(null);
+            if (logoutTimer) {
+                clearTimeout(logoutTimer);
+                logoutTimer = null;
+            }
+            renderPage('login');
+            showToast('🚪 ចាកចេញដោយស្វ័យប្រវត្តិ', 'info');
         }
 
         // ================================================================
@@ -1576,8 +1722,13 @@
             currentUser = user;
             if (user) {
                 localStorage.setItem('firebaseCurrentUser', JSON.stringify(user));
+                resetSessionTimer();
             } else {
                 localStorage.removeItem('firebaseCurrentUser');
+                if (logoutTimer) {
+                    clearTimeout(logoutTimer);
+                    logoutTimer = null;
+                }
             }
         }
 
@@ -1813,7 +1964,8 @@
                 read: false,
                 timestamp: new Date().toISOString()
             });
-            if (localData.memberNotifications.length > 200) localData.memberNotifications = localData.memberNotifications.slice(-200);
+            if (localData.memberNotifications.length > 200) localData.memberNotifications = localData.memberNotifications.slice(-
+            200);
             saveToFirebase();
         }
 
@@ -1863,6 +2015,46 @@
         }
 
         // ================================================================
+        // MEMBER REGISTRATION TRACKING
+        // ================================================================
+
+        function addMemberRegistration(name, phone, id, role) {
+            if (!localData.memberRegistrations) localData.memberRegistrations = [];
+            var reg = {
+                id: 'REG-' + String(localData.memberRegistrations.length + 1).padStart(4, '0'),
+                name: name || phone,
+                phone: phone,
+                memberId: id,
+                role: role || 'member',
+                timestamp: new Date().toISOString()
+            };
+            localData.memberRegistrations.unshift(reg);
+            if (localData.memberRegistrations.length > 200) localData.memberRegistrations = localData.memberRegistrations.slice(0,
+                200);
+            saveToFirebase();
+
+            // Send notification to all admins about new registration
+            var adminPhones = Object.keys(localData.subAdmins);
+            for (var i = 0; i < adminPhones.length; i++) {
+                sendMemberNotification(adminPhones[i], 'new-member', 'សមាជិកថ្មីចុះឈ្មោះ',
+                    (name || phone) + ' បានចុះឈ្មោះជាសមាជិកថ្មី! 🎉', '👤');
+            }
+
+            // Also send to super admin
+            var superPhones = Object.keys(localData.superAdmins);
+            for (var j = 0; j < superPhones.length; j++) {
+                sendMemberNotification(superPhones[j], 'new-member', 'សមាជិកថ្មីចុះឈ្មោះ',
+                    (name || phone) + ' បានចុះឈ្មោះជាសមាជិកថ្មី! 🎉', '👤');
+            }
+
+            return reg;
+        }
+
+        function getMemberRegistrations() {
+            return localData.memberRegistrations || [];
+        }
+
+        // ================================================================
         // RENDER ENGINE
         // ================================================================
 
@@ -1904,6 +2096,18 @@
 
             container.innerHTML = html;
             attachEvents(page);
+            resetSessionTimer();
+        }
+
+        function refreshCurrentPage() {
+            var user = getCurrentUser();
+            if (user) {
+                if (user.role === 'super_admin') renderPage('super-dashboard');
+                else if (user.role === 'sub_admin') renderPage('admin-dashboard');
+                else renderPage('dashboard');
+            } else {
+                renderPage('login');
+            }
         }
 
         // ================================================================
@@ -1989,6 +2193,7 @@
                             <option value="riel">៛ Riel</option>
                         </select>
                         <button type="submit" class="btn btn-green">📝 ចុះឈ្មោះ</button>
+                        <button type="button" onclick="renderPage('login')" class="btn btn-cancel">❌ បោះបង់</button>
                     </form>
                     <div id="regMsg"></div>
                     <p class="text-center mt-10 fs-12 op-3">⚠️ សូមចំណាំលេខទូរសព្ទ និងពាក្យសម្ងាត់!</p>
@@ -2027,12 +2232,15 @@
                 for (var i = 0; i < displayNotis.length; i++) {
                     var n = displayNotis[i];
                     var d = new Date(n.timestamp);
+                    var typeClass = n.type === 'system' ? 'system' : n.type === 'commission' ? 'commission' : n.type ===
+                        'payment' ? 'payment' : n.type === 'new-member' ? 'new-member' : 'alert';
                     var isRead = n.read ? '' : 'style="border-left-color:#ffd700;background:rgba(255,215,0,0.12);"';
                     notiHtml += `
                             <div class="notification-item" ${isRead} onclick="markNotificationRead('${n.id}');renderPage('dashboard');">
                                 <div>
-                                    <span style="font-size:18px;">${n.icon || '📢'}</span>
+                                    <span class="noti-icon">${n.icon || '📢'}</span>
                                     <span style="font-weight:600;">${n.title}</span>
+                                    <span class="noti-type ${typeClass}">${n.type === 'new-member' ? 'សមាជិកថ្មី' : n.type}</span>
                                 </div>
                                 <div style="font-size:12px;color:rgba(255,255,255,0.7);">${n.message}</div>
                                 <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
@@ -2216,6 +2424,7 @@
                             <input type="file" id="depositFile" accept="image/*" onchange="handleDepositFile(this)">
                         </div>
                         <button onclick="submitDeposit()" class="btn btn-gold">✅ បញ្ជាក់ដាក់ប្រាក់</button>
+                        <button onclick="cancelAction()" class="btn btn-cancel">❌ បោះបង់</button>
                         <div id="depositMsg"></div>
                     </div>
 
@@ -2236,6 +2445,7 @@
                             <input type="file" id="withdrawFile" accept="image/*" onchange="handleWithdrawFile(this)">
                         </div>
                         <button onclick="submitWithdraw()" class="btn btn-warning">📤 ស្នើដកប្រាក់</button>
+                        <button onclick="cancelAction()" class="btn btn-cancel">❌ បោះបង់</button>
                         <div id="withdrawMsg"></div>
                     </div>
 
@@ -2260,7 +2470,7 @@
                     <div class="flex mt-10">
                         <button onclick="renderPage('payment-requests')" class="btn btn-sm btn-payment" style="flex:1;">💳 សំណើ</button>
                         <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple" style="flex:1;">📋 កំណត់ត្រា</button>
-                        <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">☁️ Sync</button>
+                        <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">💾 រក្សាទុក</button>
                     </div>
                 `;
         }
@@ -2285,7 +2495,7 @@
 
             var mk = Object.keys(localData.members);
 
-            // Search
+            // Search - exclude super admin
             var searchHtml = `
                     <div style="margin:10px 0;">
                         <input type="text" id="adminSearch" class="search-box" placeholder="🔍 ស្វែងរកសមាជិក..." oninput="searchMembers(this.value)">
@@ -2293,14 +2503,21 @@
                     <div id="adminSearchResults"></div>
                 `;
 
-            // Members
+            // Members - exclude super admin (066817407)
             var memHtml = '';
-            if (mk.length === 0) {
+            var filteredMembers = [];
+            for (var i = 0; i < mk.length; i++) {
+                var m = localData.members[mk[i]];
+                if (m && m.phone !== '066817407') {
+                    filteredMembers.push(m);
+                }
+            }
+
+            if (filteredMembers.length === 0) {
                 memHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានសមាជិក</p>';
             } else {
-                for (var i = 0; i < mk.length; i++) {
-                    var m = localData.members[mk[i]];
-                    if (!m) continue;
+                for (var i = 0; i < filteredMembers.length; i++) {
+                    var m = filteredMembers[i];
                     var curr = m.currency || 'usd';
                     memHtml += `
                             <div class="list-item member-item" data-phone="${m.phone}">
@@ -2313,6 +2530,7 @@
                                     <button onclick="approveMemberRequests('${m.phone}')" class="btn btn-gold btn-sm">✅</button>
                                     <button onclick="addCommissionToMember('${m.phone}')" class="btn btn-commission btn-sm">🎁</button>
                                     <button onclick="sendNotificationForm('${m.phone}')" class="btn btn-notification btn-sm">🔔</button>
+                                    <button onclick="addMoneyToMember('${m.phone}')" class="btn btn-green btn-sm">💰</button>
                                 </div>
                             </div>
                         `;
@@ -2377,6 +2595,58 @@
                 }
             }
 
+            // Notifications for admin
+            var adminNotis = getMemberNotifications(user.phone);
+            var adminNotiHtml = '';
+            if (adminNotis.length === 0) {
+                adminNotiHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+            } else {
+                var displayAdminNotis = adminNotis.slice(0, 3);
+                for (var n = 0; n < displayAdminNotis.length; n++) {
+                    var noti = displayAdminNotis[n];
+                    var d = new Date(noti.timestamp);
+                    var typeClass = noti.type === 'new-member' ? 'new-member' : noti.type;
+                    adminNotiHtml += `
+                            <div class="notification-item">
+                                <div>
+                                    <span class="noti-icon">${noti.icon || '📢'}</span>
+                                    <span style="font-weight:600;">${noti.title}</span>
+                                    <span class="noti-type ${typeClass}">${noti.type === 'new-member' ? 'សមាជិកថ្មី' : noti.type}</span>
+                                </div>
+                                <div style="font-size:12px;color:rgba(255,255,255,0.7);">${noti.message}</div>
+                                <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                            </div>
+                        `;
+                }
+            }
+
+            // Member Registrations
+            var regs = getMemberRegistrations();
+            var regHtml = '';
+            if (regs.length === 0) {
+                regHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការចុះឈ្មោះថ្មី</p>';
+            } else {
+                var displayRegs = regs.slice(0, 5);
+                for (var r = 0; r < displayRegs.length; r++) {
+                    var reg = displayRegs[r];
+                    var d = new Date(reg.timestamp);
+                    regHtml += `
+                            <div class="member-register-item">
+                                <div>
+                                    <span class="reg-name">${reg.name}</span>
+                                    <span class="reg-info">📱 ${reg.phone}</span>
+                                    <span class="reg-info">🆔 ${reg.memberId}</span>
+                                </div>
+                                <div class="reg-time">${d.toLocaleDateString('km-KH')}</div>
+                            </div>
+                        `;
+                }
+                if (regs.length > 5) {
+                    regHtml +=
+                        '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ៥ ចុងក្រោយ</p>';
+                }
+            }
+
             return `
                     <div class="top-bar">
                         <div class="left-section">
@@ -2393,13 +2663,23 @@
                             <div style="font-size:9px;color:rgba(255,255,255,0.3);">នៅសល់</div>
                         </div>
                         <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
-                            <div style="color:#ffd700;font-weight:700;font-size:16px;">${mk.length}</div>
+                            <div style="color:#ffd700;font-weight:700;font-size:16px;">${filteredMembers.length}</div>
                             <div style="font-size:9px;color:rgba(255,255,255,0.3);">សមាជិក</div>
                         </div>
                         <div style="background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;">
                             <div style="color:#ffd700;font-weight:700;font-size:16px;">$${admin.totalReceived || 0}</div>
                             <div style="font-size:9px;color:rgba(255,255,255,0.3);">បានទទួល</div>
                         </div>
+                    </div>
+
+                    <div class="card admin-panel">
+                        <h3>🔔 ការជូនដំណឹង</h3>
+                        ${adminNotiHtml}
+                    </div>
+
+                    <div class="card admin-panel">
+                        <h3>👤 សមាជិកចុះឈ្មោះថ្មី</h3>
+                        ${regHtml}
                     </div>
 
                     <div class="card admin-panel">
@@ -2432,6 +2712,7 @@
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-gold">💾 រក្សាទុក</button>
+                            <button type="button" onclick="cancelAction()" class="btn btn-cancel">❌ បោះបង់</button>
                         </form>
                         <div id="bankInfoMsg"></div>
                     </div>
@@ -2439,7 +2720,8 @@
                     <div class="flex mt-10">
                         <button onclick="renderPage('payment-requests')" class="btn btn-sm btn-payment" style="flex:1;">💳 សំណើ</button>
                         <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple" style="flex:1;">📋 កំណត់ត្រា</button>
-                        <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">☁️ Sync</button>
+                        <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">💾 រក្សាទុក</button>
+                        <button onclick="loadFromFirebase()" class="btn btn-sm btn-cloud" style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">📥 ទាញយក</button>
                     </div>
                 `;
         }
@@ -2476,6 +2758,7 @@
                             <div><span class="balance">$${a.balance.toFixed(2)}</span></div>
                             <div class="actions">
                                 <button onclick="editAdminBalance('${a.phone}')" class="btn btn-gold btn-sm">💰</button>
+                                <button onclick="addMoneyToAdmin('${a.phone}')" class="btn btn-green btn-sm">💳</button>
                                 <button onclick="deleteAdmin('${a.phone}')" class="btn btn-red btn-sm">🗑️</button>
                                 <button onclick="resetPassword('${a.phone}','admin')" class="btn btn-purple btn-sm">🔑</button>
                             </div>
@@ -2483,7 +2766,7 @@
                     `;
             }
 
-            // Members
+            // Members - show all
             var memHtml = '';
             for (var k = 0; k < mk.length; k++) {
                 var m = localData.members[mk[k]];
@@ -2498,12 +2781,67 @@
                             <div><span class="balance">${formatCurrency(m.balance, curr)}</span></div>
                             <div class="actions">
                                 <button onclick="editMemberBalance('${m.phone}')" class="btn btn-gold btn-sm">💰</button>
+                                <button onclick="addMoneyToMember('${m.phone}')" class="btn btn-green btn-sm">💳</button>
                                 <button onclick="deleteMember('${m.phone}')" class="btn btn-red btn-sm">🗑️</button>
                                 <button onclick="resetPassword('${m.phone}','member')" class="btn btn-purple btn-sm">🔑</button>
                                 <button onclick="sendNotificationForm('${m.phone}')" class="btn btn-notification btn-sm">🔔</button>
                             </div>
                         </div>
                     `;
+            }
+
+            // Member Registrations
+            var regs = getMemberRegistrations();
+            var regHtml = '';
+            if (regs.length === 0) {
+                regHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការចុះឈ្មោះថ្មី</p>';
+            } else {
+                var displayRegs = regs.slice(0, 10);
+                for (var r = 0; r < displayRegs.length; r++) {
+                    var reg = displayRegs[r];
+                    var d = new Date(reg.timestamp);
+                    var roleLabel = reg.role === 'sub_admin' ? '👑 Sub Admin' : '👤 សមាជិក';
+                    regHtml += `
+                            <div class="member-register-item">
+                                <div>
+                                    <span class="reg-name">${reg.name}</span>
+                                    <span class="reg-info">📱 ${reg.phone}</span>
+                                    <span class="reg-info">🆔 ${reg.memberId}</span>
+                                    <span class="reg-info" style="color:#ffd700;">${roleLabel}</span>
+                                </div>
+                                <div class="reg-time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                            </div>
+                        `;
+                }
+                if (regs.length > 10) {
+                    regHtml +=
+                        '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>';
+                }
+            }
+
+            // Notifications for super admin
+            var superNotis = getMemberNotifications(user.phone);
+            var superNotiHtml = '';
+            if (superNotis.length === 0) {
+                superNotiHtml = '<p style="opacity:0.4;font-size:12px;">មិនទាន់មានការជូនដំណឹង</p>';
+            } else {
+                var displaySuperNotis = superNotis.slice(0, 5);
+                for (var sn = 0; sn < displaySuperNotis.length; sn++) {
+                    var noti = displaySuperNotis[sn];
+                    var d = new Date(noti.timestamp);
+                    var typeClass = noti.type === 'new-member' ? 'new-member' : noti.type;
+                    superNotiHtml += `
+                            <div class="notification-item">
+                                <div>
+                                    <span class="noti-icon">${noti.icon || '📢'}</span>
+                                    <span style="font-weight:600;">${noti.title}</span>
+                                    <span class="noti-type ${typeClass}">${noti.type === 'new-member' ? 'សមាជិកថ្មី' : noti.type}</span>
+                                </div>
+                                <div style="font-size:12px;color:rgba(255,255,255,0.7);">${noti.message}</div>
+                                <div class="time">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                            </div>
+                        `;
+                }
             }
 
             return `
@@ -2532,12 +2870,23 @@
                     </div>
 
                     <div class="card admin-panel">
+                        <h3>🔔 ការជូនដំណឹង</h3>
+                        ${superNotiHtml}
+                    </div>
+
+                    <div class="card admin-panel">
+                        <h3>👤 កំណត់ត្រាចុះឈ្មោះ</h3>
+                        ${regHtml}
+                    </div>
+
+                    <div class="card admin-panel">
                         <h3>👑 បង្កើត Sub Admin</h3>
                         <form id="createAdminForm">
                             <input type="text" id="newAdminName" placeholder="👤 ឈ្មោះ" required>
                             <input type="tel" id="newAdminPhone" placeholder="📱 លេខទូរសព្ទ" required>
                             <input type="password" id="newAdminPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
                             <button type="submit" class="btn btn-gold">👑 បង្កើត Sub Admin</button>
+                            <button type="button" onclick="cancelAction()" class="btn btn-cancel">❌ បោះបង់</button>
                         </form>
                         <div id="createAdminMsg"></div>
                     </div>
@@ -2557,6 +2906,7 @@
                                 <input type="number" id="fundAmount" placeholder="ចំនួន" min="0.01" step="0.01" style="flex:2;">
                             </div>
                             <button type="submit" class="btn btn-gold">💳 បញ្ចូលប្រាក់</button>
+                            <button type="button" onclick="cancelAction()" class="btn btn-cancel">❌ បោះបង់</button>
                         </form>
                         <div id="fundAdminMsg"></div>
                     </div>
@@ -2567,16 +2917,16 @@
                     </div>
 
                     <div class="card">
-                        <h3>📋 សមាជិក</h3>
-                        <div style="max-height:300px;overflow-y:auto;">${memHtml}</div>
+                        <h3>📋 សមាជិកទាំងអស់</h3>
+                        <div style="max-height:400px;overflow-y:auto;">${memHtml}</div>
                     </div>
 
                     <div class="flex mt-10">
                         <button onclick="renderPage('payment-requests')" class="btn btn-sm btn-payment" style="flex:1;">💳 សំណើ</button>
                         <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple" style="flex:1;">📋 កំណត់ត្រា</button>
                         <button onclick="renderPage('report')" class="btn btn-sm btn-gold" style="flex:1;">📊 របាយការណ៍</button>
-                        <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">☁️ Sync</button>
-                        <button onclick="loadFromFirebase()" class="btn btn-sm btn-cloud" style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">☁️ Load</button>
+                        <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">💾 រក្សាទុក</button>
+                        <button onclick="loadFromFirebase()" class="btn btn-sm btn-cloud" style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">📥 ទាញយក</button>
                     </div>
                 `;
         }
@@ -2599,6 +2949,7 @@
                         <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
                     </div>
                     <p style="font-size:12px;color:rgba(255,255,255,0.3);">សរុប ${prs.length} សំណើ</p>
+                    <button onclick="cancelAction()" class="btn btn-cancel btn-sm" style="width:auto;margin-bottom:10px;">❌ បោះបង់</button>
                 `;
 
             if (prs.length === 0) {
@@ -2662,6 +3013,7 @@
                         <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
                     </div>
                     <p style="font-size:12px;color:rgba(255,255,255,0.3);">សរុប ${logs.length} កំណត់ត្រា</p>
+                    <button onclick="cancelAction()" class="btn btn-cancel btn-sm" style="width:auto;margin-bottom:10px;">❌ បោះបង់</button>
                 `;
 
             if (logs.length === 0) {
@@ -2708,6 +3060,7 @@
                         <h2>📊 របាយការណ៍</h2>
                         <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
                     </div>
+                    <button onclick="cancelAction()" class="btn btn-cancel btn-sm" style="width:auto;margin-bottom:10px;">❌ បោះបង់</button>
                     <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;">
                         <button onclick="generateReport('daily')" class="btn btn-sm btn-gold">📅 ប្រចាំថ្ងៃ</button>
                         <button onclick="generateReport('weekly')" class="btn btn-sm btn-purple">📅 ប្រចាំសប្តាហ៍</button>
@@ -2831,6 +3184,18 @@
             reader.readAsDataURL(file);
         }
 
+        function cancelAction() {
+            var user = getCurrentUser();
+            if (user) {
+                if (user.role === 'super_admin') renderPage('super-dashboard');
+                else if (user.role === 'sub_admin') renderPage('admin-dashboard');
+                else renderPage('dashboard');
+            } else {
+                renderPage('login');
+            }
+            showToast('បានបោះបង់', 'info');
+        }
+
         function submitDeposit() {
             var user = getCurrentUser();
             if (!user) { showToast('សូមចូលប្រើជាមុន!', 'error'); return; }
@@ -2853,7 +3218,6 @@
 
             var admin = Object.values(localData.subAdmins)[0];
             if (!admin) {
-                // Create default admin from first member
                 var firstMember = Object.values(localData.members)[0];
                 if (firstMember) {
                     var adminId = generateAdminId();
@@ -2884,7 +3248,6 @@
                     'pending'
                 );
 
-                // Create transaction
                 createTransaction('deposit', member.phone, admin.id, amountUSD, 'pending',
                     'ស្នើដាក់ប្រាក់ $' + amountUSD.toFixed(2), screenshot);
 
@@ -2892,11 +3255,10 @@
                     amountUSD,
                     'ស្នើដាក់ប្រាក់ $' + amountUSD.toFixed(2) + ' (PR: ' + pr.id + ')');
 
-                // Send notification to admin
+                // Send notification
                 sendMemberNotification(admin.phone, 'payment', 'សំណើដាក់ប្រាក់ថ្មី',
                     'សមាជិក ' + (member.name || member.phone) + ' បានស្នើដាក់ប្រាក់ $' + amountUSD.toFixed(2), '💳');
 
-                // Send notification to member
                 sendMemberNotification(member.phone, 'payment', 'សំណើដាក់ប្រាក់ត្រូវបានផ្ញើ',
                     'សំណើដាក់ប្រាក់ $' + amountUSD.toFixed(2) + ' ត្រូវបានផ្ញើរួច! សូមរង់ចាំការអនុម័ត', '💳');
 
@@ -2908,6 +3270,7 @@
                             <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:5px;">⏳ សូមរង់ចាំការអនុម័តពី Sub Admin</p>
                             <p style="color:rgba(255,255,255,0.3);font-size:11px;">លេខប្រតិបត្តិការ: ${pr.id}</p>
                             <button onclick="hideModal();renderPage('dashboard');" class="btn" style="margin-top:15px;">ទៅកាន់ Dashboard</button>
+                            <button onclick="hideModal()" class="btn btn-cancel" style="margin-top:10px;">❌ បោះបង់</button>
                         </div>
                     `);
 
@@ -2969,6 +3332,7 @@
                     amountUSD,
                     'ស្នើដកប្រាក់ $' + amountUSD.toFixed(2) + ' (PR: ' + pr.id + ')');
 
+                // Send notification
                 sendMemberNotification(admin.phone, 'payment', 'សំណើដកប្រាក់ថ្មី',
                     'សមាជិក ' + (member.name || member.phone) + ' បានស្នើដកប្រាក់ $' + amountUSD.toFixed(2), '🏦');
 
@@ -2983,6 +3347,7 @@
                             <p style="color:rgba(255,255,255,0.4);font-size:12px;margin-top:5px;">⏳ សូមរង់ចាំការអនុម័តពី Sub Admin</p>
                             <p style="color:rgba(255,255,255,0.3);font-size:11px;">លេខប្រតិបត្តិការ: ${pr.id}</p>
                             <button onclick="hideModal();renderPage('dashboard');" class="btn" style="margin-top:15px;">ទៅកាន់ Dashboard</button>
+                            <button onclick="hideModal()" class="btn btn-cancel" style="margin-top:10px;">❌ បោះបង់</button>
                         </div>
                     `);
 
@@ -2995,6 +3360,147 @@
             } else {
                 showToast('⚠️ មិនទាន់មាន Admin!', 'error');
             }
+        }
+
+        function addMoneyToMember(phone) {
+            var member = localData.members[phone];
+            if (!member) { showToast('មិនឃើញសមាជិក!', 'error'); return; }
+
+            showModal(`
+                    <div style="text-align:center;">
+                        <h3 style="color:#48bb78;margin-bottom:15px;">💰 បញ្ចូលទឹកប្រាក់</h3>
+                        <p style="color:rgba(255,255,255,0.6);">សមាជិក: <strong>${member.name || member.phone}</strong></p>
+                        <p style="color:rgba(255,255,255,0.3);font-size:12px;">បច្ចុប្បន្ន: ${formatCurrency(member.balance, member.currency || 'usd')}</p>
+                        <form id="addMoneyForm">
+                            <input type="hidden" id="addMoneyPhone" value="${phone}">
+                            <div style="display:flex;gap:8px;margin:5px 0;">
+                                <select id="addMoneyCurrency" style="flex:1;padding:8px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                                    <option value="usd">$ USD</option>
+                                    <option value="riel">៛ Riel</option>
+                                </select>
+                                <input type="number" id="addMoneyAmount" placeholder="ចំនួន" min="0.01" step="0.01" style="flex:2;" required>
+                            </div>
+                            <input type="text" id="addMoneyReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)">
+                            <button type="submit" class="btn btn-green">💳 បញ្ចូលប្រាក់</button>
+                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
+                        </form>
+                        <div id="addMoneyMsg"></div>
+                    </div>
+                `);
+
+            document.getElementById('addMoneyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                var phone = document.getElementById('addMoneyPhone').value;
+                var amount = parseFloat(document.getElementById('addMoneyAmount').value);
+                var currency = document.getElementById('addMoneyCurrency').value;
+                var reason = document.getElementById('addMoneyReason').value.trim();
+                var msg = document.getElementById('addMoneyMsg');
+
+                if (!amount || amount <= 0) {
+                    msg.innerHTML =
+                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">សូមបញ្ចូលចំនួន!</div>';
+                    return;
+                }
+
+                var amountUSD = currency === 'riel' ? convertToUSD(amount) : amount;
+                var target = localData.members[phone];
+                if (!target) {
+                    msg.innerHTML =
+                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">មិនឃើញសមាជិក!</div>';
+                    return;
+                }
+
+                target.balance += amountUSD;
+                if (!target.benefits) target.benefits = [];
+                target.benefits.push('💰 បានទទួលប្រាក់ ' + formatCurrency(amountUSD, target.currency || 'usd') + (reason ?
+                    ' (' + reason + ')' : ''));
+
+                // Create transaction
+                createTransaction('deposit', phone, 'admin', amountUSD, 'completed',
+                    reason || 'បញ្ចូលប្រាក់ដោយផ្ទាល់', null);
+
+                // Send notification
+                sendMemberNotification(phone, 'payment', 'បានទទួលប្រាក់',
+                    'អ្នកបានទទួលប្រាក់ ' + formatCurrency(amountUSD, target.currency || 'usd') + (reason ? ' (' + reason +
+                        ')' : ''), '💰');
+
+                var user = getCurrentUser();
+                logActivity(user ? user.phone : 'system', user ? user.name : 'System', 'add_money', 'financial', phone,
+                    amountUSD,
+                    'បញ្ចូលប្រាក់ $' + amountUSD.toFixed(2) + ' ទៅ ' + (target.name || target.phone));
+
+                saveToFirebase();
+                msg.innerHTML =
+                    '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ បញ្ចូលប្រាក់ជោគជ័យ!</div>';
+                setTimeout(function() { hideModal();
+                    refreshCurrentPage(); }, 1500);
+            });
+        }
+
+        function addMoneyToAdmin(phone) {
+            var admin = localData.subAdmins[phone];
+            if (!admin) { showToast('មិនឃើញ Sub Admin!', 'error'); return; }
+
+            showModal(`
+                    <div style="text-align:center;">
+                        <h3 style="color:#48bb78;margin-bottom:15px;">💰 បញ្ចូលទឹកប្រាក់ទៅ Sub Admin</h3>
+                        <p style="color:rgba(255,255,255,0.6);">Sub Admin: <strong>${admin.name || admin.username}</strong></p>
+                        <p style="color:rgba(255,255,255,0.3);font-size:12px;">បច្ចុប្បន្ន: $${admin.balance.toFixed(2)}</p>
+                        <form id="addAdminMoneyForm">
+                            <input type="hidden" id="addAdminPhone" value="${phone}">
+                            <div style="display:flex;gap:8px;margin:5px 0;">
+                                <select id="addAdminCurrency" style="flex:1;padding:8px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                                    <option value="usd">$ USD</option>
+                                    <option value="riel">៛ Riel</option>
+                                </select>
+                                <input type="number" id="addAdminAmount" placeholder="ចំនួន" min="0.01" step="0.01" style="flex:2;" required>
+                            </div>
+                            <input type="text" id="addAdminReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)">
+                            <button type="submit" class="btn btn-green">💳 បញ្ចូលប្រាក់</button>
+                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
+                        </form>
+                        <div id="addAdminMoneyMsg"></div>
+                    </div>
+                `);
+
+            document.getElementById('addAdminMoneyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                var phone = document.getElementById('addAdminPhone').value;
+                var amount = parseFloat(document.getElementById('addAdminAmount').value);
+                var currency = document.getElementById('addAdminCurrency').value;
+                var reason = document.getElementById('addAdminReason').value.trim();
+                var msg = document.getElementById('addAdminMoneyMsg');
+
+                if (!amount || amount <= 0) {
+                    msg.innerHTML =
+                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">សូមបញ្ចូលចំនួន!</div>';
+                    return;
+                }
+
+                var amountUSD = currency === 'riel' ? convertToUSD(amount) : amount;
+                var target = localData.subAdmins[phone];
+                if (!target) {
+                    msg.innerHTML =
+                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">មិនឃើញ Sub Admin!</div>';
+                    return;
+                }
+
+                target.balance += amountUSD;
+                target.totalReceived = (target.totalReceived || 0) + amountUSD;
+
+                // Send notification
+                sendMemberNotification(phone, 'payment', 'បានទទួលប្រាក់ពី Super Admin',
+                    'អ្នកបានទទួលប្រាក់ $' + amountUSD.toFixed(2) + (reason ? ' (' + reason + ')' : ''), '💰');
+
+                logActivity('SUPER-001', 'Super Admin', 'add_money_to_admin', 'financial', phone, amountUSD,
+                    'បញ្ចូលប្រាក់ $' + amountUSD.toFixed(2) + ' ទៅ ' + (target.name || target.username));
+
+                saveToFirebase();
+                msg.innerHTML =
+                    '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ បញ្ចូលប្រាក់ជោគជ័យ!</div>';
+                setTimeout(function() { hideModal();
+                    refreshCurrentPage(); }, 1500);
+            });
         }
 
         function approveMemberRequests(phone) {
@@ -3026,7 +3532,7 @@
                         </div>
                     `;
             }
-            html += '<button onclick="hideModal()" class="btn btn-sm" style="background:rgba(255,255,255,0.1);">បិទ</button></div>';
+            html += '<button onclick="hideModal()" class="btn btn-cancel" style="margin-top:10px;">❌ បោះបង់</button></div>';
             showModal(html);
         }
 
@@ -3053,7 +3559,6 @@
                     target.benefits.push('💰 បានទទួលទូទាត់ ' + formatCurrency(amountUSD, target.currency || 'usd') +
                         ' (សំណើ: ' + pr.id + ')');
 
-                    // Add commission
                     var comm = addCommission(pr.to, pr.id, amountUSD);
                     if (comm) {
                         target.benefits.push('🎁 បានទទួលកម្រៃ ' + formatCurrency(comm.commission, target.currency ||
@@ -3063,7 +3568,6 @@
                             ' ពីការដាក់ប្រាក់', '🎁');
                     }
 
-                    // Update transaction
                     updateTransactionStatus(pr.id, 'completed');
 
                     sendMemberNotification(pr.to, 'payment', 'ការទូទាត់ត្រូវបានអនុម័ត',
@@ -3082,7 +3586,6 @@
                     target.benefits.push('🏦 បានដកប្រាក់ ' + formatCurrency(amountUSD, target.currency || 'usd') +
                         ' (សំណើ: ' + pr.id + ')');
 
-                    // Update transaction
                     updateTransactionStatus(pr.id, 'completed');
 
                     sendMemberNotification(pr.from, 'payment', 'ការដកប្រាក់ត្រូវបានអនុម័ត',
@@ -3132,7 +3635,6 @@
 
             pr.status = 'rejected';
 
-            // Update transaction
             for (var j = 0; j < localData.transactions.length; j++) {
                 if (localData.transactions[j].id === prId) {
                     localData.transactions[j].status = 'rejected';
@@ -3140,7 +3642,6 @@
                 }
             }
 
-            // Send notification
             var member = localData.members[pr.from];
             if (member) {
                 sendMemberNotification(pr.from, 'alert', 'សំណើទូទាត់ត្រូវបានបដិសេធ',
@@ -3182,6 +3683,7 @@
                             </div>
                             <input type="text" id="commReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)">
                             <button type="submit" class="btn btn-commission">🎁 បញ្ចូលកម្រៃ</button>
+                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
                         </form>
                         <div id="commMsg"></div>
                     </div>
@@ -3221,14 +3723,16 @@
                     'អ្នកបានទទួលកម្រៃ ' + formatCurrency(amountUSD, target.currency || 'usd') + (reason ?
                         ' (' + reason + ')' : ''), '🎁');
 
-                logActivity('admin', 'Admin', 'add_commission', 'financial', phone, amountUSD,
+                var user = getCurrentUser();
+                logActivity(user ? user.phone : 'admin', user ? user.name : 'Admin', 'add_commission', 'financial', phone,
+                    amountUSD,
                     'បញ្ចូលកម្រៃ $' + amountUSD.toFixed(2) + ' ទៅ ' + (target.name || target.phone));
 
                 saveToFirebase();
                 msg.innerHTML =
                     '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ ជោគជ័យ!</div>';
                 setTimeout(function() { hideModal();
-                    renderPage('admin-dashboard'); }, 1000);
+                    refreshCurrentPage(); }, 1000);
             });
         }
 
@@ -3251,6 +3755,7 @@
                             <input type="text" id="notiTitle" placeholder="📝 ចំណងជើង" required>
                             <textarea id="notiMessage" placeholder="✏️ សារជូនដំណឹង" rows="3" required></textarea>
                             <button type="submit" class="btn btn-notification">📤 ផ្ញើ</button>
+                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
                         </form>
                         <div id="sendNotiMsg"></div>
                     </div>
@@ -3273,7 +3778,9 @@
                 var icons = { 'system': '📢', 'commission': '🎁', 'payment': '💳', 'alert': '⚠️' };
                 sendMemberNotification(phone, type, title, message, icons[type] || '📢');
 
-                logActivity('admin', 'Admin', 'send_notification', 'notification', phone, null,
+                var user = getCurrentUser();
+                logActivity(user ? user.phone : 'admin', user ? user.name : 'Admin', 'send_notification', 'notification',
+                    phone, null,
                     'ផ្ញើការជូនដំណឹង "' + title + '" ទៅ ' + (member.name || phone));
 
                 msg.innerHTML =
@@ -3305,6 +3812,7 @@
                                 <option value="riel">៛ Riel</option>
                             </select>
                             <button type="submit" class="btn btn-gold">💾 រក្សាទុក</button>
+                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
                         </form>
                         <div id="editMsg"></div>
                     </div>
@@ -3357,7 +3865,7 @@
                 msg.innerHTML =
                     '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ ជោគជ័យ!</div>';
                 setTimeout(function() { hideModal();
-                    renderPage('super-dashboard'); }, 1000);
+                    refreshCurrentPage(); }, 1000);
             });
         }
 
@@ -3379,6 +3887,7 @@
                             </select>
                             <input type="number" id="editAdminAmount" placeholder="ចំនួន" min="0" step="0.01" required>
                             <button type="submit" class="btn btn-gold">💾 រក្សាទុក</button>
+                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
                         </form>
                         <div id="editAdminMsg"></div>
                     </div>
@@ -3427,7 +3936,7 @@
                 msg.innerHTML =
                     '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ ជោគជ័យ!</div>';
                 setTimeout(function() { hideModal();
-                    renderPage('super-dashboard'); }, 1000);
+                    refreshCurrentPage(); }, 1000);
             });
         }
 
@@ -3439,7 +3948,7 @@
                         <p style="color:rgba(255,255,255,0.6);">តើអ្នកចង់លុបសមាជិកនេះមែនទេ?</p>
                         <div class="flex">
                             <button onclick="hideModal();confirmDeleteMember('${phone}');" class="btn btn-red" style="flex:1;">🗑️ លុប</button>
-                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">បោះបង់</button>
+                            <button onclick="hideModal()" class="btn btn-cancel" style="flex:1;">❌ បោះបង់</button>
                         </div>
                     </div>
                 `);
@@ -3452,7 +3961,7 @@
                 'លុបសមាជិក ' + (member ? member.name || phone : phone));
             saveToFirebase();
             showToast('✅ លុបជោគជ័យ!', 'success');
-            renderPage('super-dashboard');
+            refreshCurrentPage();
         }
 
         function deleteAdmin(phone) {
@@ -3463,7 +3972,7 @@
                         <p style="color:rgba(255,255,255,0.6);">តើអ្នកចង់លុប Sub Admin នេះមែនទេ?</p>
                         <div class="flex">
                             <button onclick="hideModal();confirmDeleteAdmin('${phone}');" class="btn btn-red" style="flex:1;">🗑️ លុប</button>
-                            <button onclick="hideModal()" class="btn" style="flex:1;background:rgba(255,255,255,0.1);">បោះបង់</button>
+                            <button onclick="hideModal()" class="btn btn-cancel" style="flex:1;">❌ បោះបង់</button>
                         </div>
                     </div>
                 `);
@@ -3476,7 +3985,7 @@
                 'លុប Sub Admin ' + (admin ? admin.name || admin.username : phone));
             saveToFirebase();
             showToast('✅ លុបជោគជ័យ!', 'success');
-            renderPage('super-dashboard');
+            refreshCurrentPage();
         }
 
         function resetPassword(phone, type) {
@@ -3494,7 +4003,7 @@
                 'កំណត់ពាក្យសម្ងាត់ថ្មីឲ្យ ' + (entity.name || entity.username || phone));
             saveToFirebase();
             showToast('✅ កំណត់ពាក្យសម្ងាត់ថ្មីជោគជ័យ!', 'success');
-            renderPage('super-dashboard');
+            refreshCurrentPage();
         }
 
         function searchMembers(query) {
@@ -3515,6 +4024,7 @@
             var filtered = [];
             for (var i = 0; i < members.length; i++) {
                 var m = members[i];
+                if (m.phone === '066817407') continue; // Exclude super admin
                 if ((m.name && m.name.toLowerCase().indexOf(q) !== -1) ||
                     m.phone.indexOf(q) !== -1 ||
                     m.id.toLowerCase().indexOf(q) !== -1) {
@@ -3544,6 +4054,7 @@
                                         <button onclick="approveMemberRequests('${m.phone}')" class="btn btn-gold btn-sm">✅</button>
                                         <button onclick="addCommissionToMember('${m.phone}')" class="btn btn-commission btn-sm">🎁</button>
                                         <button onclick="sendNotificationForm('${m.phone}')" class="btn btn-notification btn-sm">🔔</button>
+                                        <button onclick="addMoneyToMember('${m.phone}')" class="btn btn-green btn-sm">💰</button>
                                     </div>
                                 </div>
                             `;
@@ -3617,6 +4128,9 @@
                         date: new Date().toISOString()
                     };
 
+                    // Add registration record
+                    addMemberRegistration(name || phone, phone, id, 'member');
+
                     // Auto create sub admin if none exists
                     if (Object.keys(localData.subAdmins).length === 0) {
                         var adminId = generateAdminId();
@@ -3630,6 +4144,8 @@
                             totalTransferred: 0,
                             members: [phone]
                         };
+                        // Add admin registration
+                        addMemberRegistration(name || phone, phone, adminId, 'sub_admin');
                     }
 
                     logActivity('system', 'System', 'register', 'authentication', phone, null, 'សមាជិកថ្មី ' + phone);
@@ -3733,6 +4249,13 @@
                         totalTransferred: 0,
                         members: Object.keys(localData.members)
                     };
+
+                    // Add registration record
+                    addMemberRegistration(name, phone, id, 'sub_admin');
+
+                    // Send notification to new admin
+                    sendMemberNotification(phone, 'system', 'អ្នកត្រូវបានតែងតាំងជា Sub Admin',
+                        'ឈ្មោះ: ' + name + ', ពាក្យសម្ងាត់: ' + password, '👑');
 
                     logActivity('SUPER-001', 'Super Admin', 'create_admin', 'administration', phone, null,
                         'បង្កើត Sub Admin "' + name + '" (' + id + ')');
@@ -3842,6 +4365,8 @@
                 balance: 10000,
                 createdAt: new Date().toISOString()
             };
+            // Add registration record
+            addMemberRegistration('Super Admin', '066817407', 'SUPER-001', 'super_admin');
         }
 
         // Initialize default member if none exists
@@ -3876,6 +4401,9 @@
                     totalTransferred: 0,
                     members: Object.keys(localData.members)
                 };
+                // Add registration record
+                addMemberRegistration(firstMember.name || firstMember.phone, firstMember.phone, adminId,
+                'sub_admin');
             }
         }
 
@@ -3902,7 +4430,12 @@
 
         setupRealtimeListeners();
 
-        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v6.5 បានដំណើរការ!');
+        // Reset session timer on user interaction
+        document.addEventListener('click', resetSessionTimer);
+        document.addEventListener('keydown', resetSessionTimer);
+        document.addEventListener('touchstart', resetSessionTimer);
+
+        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v7.0 បានដំណើរការ!');
         console.log('📊 ទិន្នន័យបច្ចុប្បន្ន:', localData);
         console.log('👤 អ្នកប្រើបច្ចុប្បន្ន:', cu);
     </script>
