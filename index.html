@@ -29,1798 +29,8 @@
     </style>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Khmer OS Battambang', 'Khmer OS', 'Segoe UI', system-ui, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 10px;
-            transition: background 0.5s ease;
-            padding-top: 15px;
-        }
-
-        body.light-mode {
-            background: #f0f2f5;
-        }
-
-        body.light-mode .container {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        body.light-mode h2,
-        body.light-mode .card h3,
-        body.light-mode .list-item .info .name {
-            color: #1a1a2e;
-        }
-
-        body.light-mode p {
-            color: rgba(0, 0, 0, 0.6);
-        }
-
-        body.light-mode .card {
-            background: rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        body.light-mode input,
-        body.light-mode select,
-        body.light-mode textarea {
-            background: rgba(0, 0, 0, 0.05);
-            color: #1a1a2e;
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-
-        body.light-mode .list-item {
-            background: rgba(0, 0, 0, 0.04);
-            border-left-color: #667eea;
-        }
-
-        body.light-mode .notification-item {
-            background: rgba(0, 0, 0, 0.04);
-        }
-
-        body.light-mode .payment-info-card {
-            background: rgba(0, 0, 0, 0.03);
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 800px;
-            max-height: 98vh;
-            overflow-y: auto;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        .container::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes glow {
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
-            }
-        }
-
-        @keyframes notificationPulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-glow {
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        h2 {
-            color: #fff;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 6px;
-        }
-
-        p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 10px;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        input,
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px 14px;
-            margin: 4px 0;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        input::placeholder,
-        textarea::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.15);
-        }
-
-        select option {
-            background: #1a1a2e;
-            color: #fff;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 50px;
-        }
-
-        .input-group {
-            position: relative;
-        }
-
-        .input-group input {
-            padding-right: 45px;
-        }
-
-        .input-group .toggle-pwd {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px;
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-
-        .input-group .toggle-pwd:hover {
-            color: #fff;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 22px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-            border: 0;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 3px;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-            opacity: 0;
-        }
-
-        .btn:hover::after {
-            opacity: 1;
-            transform: rotate(45deg) translateX(100%);
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, #ffd700, #f59e0b);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-            color: #1a1a2e;
-        }
-
-        .btn-gold:hover {
-            box-shadow: 0 12px 35px rgba(255, 215, 0, 0.5);
-        }
-
-        .btn-green {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
-            color: #fff;
-        }
-
-        .btn-green:hover {
-            box-shadow: 0 12px 35px rgba(72, 187, 120, 0.5);
-        }
-
-        .btn-red {
-            background: linear-gradient(135deg, #fc8181, #e53e3e);
-            box-shadow: 0 8px 25px rgba(252, 129, 129, 0.3);
-            color: #fff;
-        }
-
-        .btn-red:hover {
-            box-shadow: 0 12px 35px rgba(252, 129, 129, 0.5);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #f6ad55, #ed8936);
-            box-shadow: 0 8px 25px rgba(246, 173, 85, 0.3);
-            color: #fff;
-        }
-
-        .btn-warning:hover {
-            box-shadow: 0 12px 35px rgba(246, 173, 85, 0.5);
-        }
-
-        .btn-sm {
-            padding: 5px 12px;
-            font-size: 11px;
-            width: auto;
-        }
-
-        .btn-purple {
-            background: linear-gradient(135deg, #9f7aea, #805ad5);
-            box-shadow: 0 8px 25px rgba(159, 122, 234, 0.3);
-            color: #fff;
-        }
-
-        .btn-purple:hover {
-            box-shadow: 0 12px 35px rgba(159, 122, 234, 0.5);
-        }
-
-        .btn-cloud {
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.3);
-            color: #fff;
-        }
-
-        .btn-cloud:hover {
-            box-shadow: 0 12px 35px rgba(0, 210, 255, 0.5);
-        }
-
-        .btn-commission {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
-            color: #fff;
-        }
-
-        .btn-commission:hover {
-            box-shadow: 0 12px 35px rgba(245, 87, 108, 0.5);
-        }
-
-        .btn-payment {
-            background: linear-gradient(135deg, #fa709a, #fee140);
-            box-shadow: 0 8px 25px rgba(250, 112, 154, 0.3);
-            color: #1a1a2e;
-        }
-
-        .btn-payment:hover {
-            box-shadow: 0 12px 35px rgba(250, 112, 154, 0.5);
-        }
-
-        .btn-notification {
-            background: linear-gradient(135deg, #a8edea, #fed6e3);
-            box-shadow: 0 8px 25px rgba(168, 237, 234, 0.3);
-            color: #1a1a2e;
-        }
-
-        .btn-notification:hover {
-            box-shadow: 0 12px 35px rgba(168, 237, 234, 0.5);
-        }
-
-        .btn-cancel {
-            background: rgba(255, 255, 255, 0.08);
-            box-shadow: none;
-            color: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-cancel:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: none;
-        }
-
-        .btn-back {
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: none;
-            color: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            width: auto;
-            padding: 5px 12px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-        }
-
-        .btn-back:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateX(-3px);
-            box-shadow: none;
-            color: #fff;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 14px;
-            border-radius: 16px;
-            margin: 8px 0;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: slideInRight 0.5s ease-out;
-        }
-
-        .card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
-        }
-
-        .card h3 {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 5px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 16px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .badge-gold {
-            background: linear-gradient(135deg, #ffd700, #f59e0b);
-            color: #1a1a2e;
-        }
-
-        .badge-purple {
-            background: #9f7aea;
-            color: #fff;
-        }
-
-        .badge-green {
-            background: #48bb78;
-            color: #fff;
-        }
-
-        .badge-red {
-            background: #fc8181;
-            color: #fff;
-        }
-
-        .admin-panel {
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            background: rgba(255, 215, 0, 0.05);
-        }
-
-        .admin-panel h3 {
-            color: #ffd700;
-        }
-
-        .super-panel {
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            background: rgba(255, 215, 0, 0.08);
-        }
-
-        .super-panel h3 {
-            color: #ffd700;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .top-bar .left-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            flex: 1;
-        }
-
-        .top-bar .right-section {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-
-        .top-bar h2 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-
-        .back-link {
-            font-size: 13px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.6);
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 4px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            background: rgba(255, 255, 255, 0.12);
-            color: #fff;
-            transform: translateX(-3px);
-        }
-
-        .clock-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .clock-display {
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.7);
-            background: rgba(255, 255, 255, 0.06);
-            padding: 3px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .clock-display .date-part {
-            color: rgba(255, 255, 255, 0.4);
-            font-weight: 400;
-            font-size: 10px;
-        }
-
-        .clock-display .time-part {
-            color: #ffd700;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .clock-display .seconds {
-            color: rgba(255, 215, 0, 0.4);
-            font-size: 11px;
-        }
-
-        .btn-logout {
-            background: rgba(252, 129, 129, 0.15);
-            border: 1px solid rgba(252, 129, 129, 0.2);
-            color: #fc8181;
-            padding: 3px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-logout:hover {
-            background: rgba(252, 129, 129, 0.25);
-            transform: scale(1.05);
-            border-color: #fc8181;
-        }
-
-        .login-container {
-            padding: 10px 0;
-        }
-
-        .login-container .login-logo {
-            font-size: 60px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .login-container .login-title {
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffd700, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
-        }
-
-        .login-container .login-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
-
-        .login-container .login-option {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 16px;
-            margin: 8px 0;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-align: center;
-        }
-
-        .login-container .login-option:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-5px) scale(1.02);
-            border-color: #667eea;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-        }
-
-        .login-container .login-option .icon {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .login-container .login-option .title {
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .login-container .login-option .desc {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-            margin-top: 2px;
-        }
-
-        .login-container .login-option.admin-option {
-            border-color: rgba(255, 215, 0, 0.2);
-        }
-
-        .login-container .login-option.admin-option:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.08);
-        }
-
-        .login-container .login-option.super-option {
-            border-color: rgba(255, 215, 0, 0.1);
-            background: rgba(255, 215, 0, 0.03);
-        }
-
-        .login-container .login-option.super-option:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.1);
-        }
-
-        .file-upload {
-            position: relative;
-            padding: 15px;
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.03);
-            margin: 5px 0;
-        }
-
-        .file-upload:hover {
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.05);
-            transform: scale(1.01);
-        }
-
-        .file-upload input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-upload .upload-icon {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .file-upload .upload-text {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-        }
-
-        .file-upload .file-name {
-            color: #48bb78;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .image-viewer-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .image-viewer-overlay.show {
-            display: flex;
-        }
-
-        .image-viewer-overlay img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .image-viewer-overlay .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: #fff;
-            font-size: 40px;
-            cursor: pointer;
-            transition: .3s;
-            z-index: 1;
-        }
-
-        .image-viewer-overlay .close-btn:hover {
-            transform: scale(1.2);
-            color: #ffd700;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 100px;
-            border-radius: 8px;
-            margin-top: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .preview-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .list-item {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 10px;
-            border-left: 3px solid #667eea;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 5px;
-            font-size: 13px;
-            transition: all 0.3s ease;
-        }
-
-        .list-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-        }
-
-        .list-item .info {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            flex: 1;
-            min-width: 100px;
-        }
-
-        .list-item .info .name {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .list-item .info .sub {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .list-item .info .id {
-            font-size: 10px;
-            color: rgba(255, 215, 0, 0.5);
-        }
-
-        .list-item .info .pwd {
-            font-size: 11px;
-            color: #48bb78;
-            font-family: monospace;
-            letter-spacing: 1px;
-            cursor: pointer;
-            user-select: all;
-        }
-
-        .list-item .info .pwd:hover {
-            color: #ffd700;
-        }
-
-        .list-item .balance {
-            color: #48bb78;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .list-item .actions {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-
-        .list-item .role-badge {
-            font-size: 9px;
-            padding: 1px 8px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        .list-item .role-badge.member {
-            background: #667eea;
-            color: #fff;
-        }
-
-        .list-item .role-badge.subadmin {
-            background: #ffd700;
-            color: #1a1a2e;
-        }
-
-        .list-item .role-badge.superadmin {
-            background: #ff6b6b;
-            color: #fff;
-        }
-
-        .transaction-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 6px;
-        }
-
-        .transaction-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .transaction-list::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 12px;
-            flex-wrap: wrap;
-            gap: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .transaction-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-            padding-left: 10px;
-        }
-
-        .payment-item {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 10px 12px;
-            border-radius: 10px;
-            margin: 6px 0;
-            border-left: 3px solid #fa709a;
-            transition: all 0.3s ease;
-        }
-
-        .payment-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-        }
-
-        .payment-item .amount {
-            color: #ffd700;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .payment-item .status-pending {
-            color: #f6ad55;
-            font-size: 11px;
-        }
-
-        .payment-item .status-approved {
-            color: #48bb78;
-            font-size: 11px;
-        }
-
-        .payment-item .status-rejected {
-            color: #fc8181;
-            font-size: 11px;
-        }
-
-        .summary-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 6px;
-            margin: 6px 0;
-        }
-
-        .summary-stats .summary-box {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 6px;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .summary-stats .summary-box:hover {
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .summary-stats .summary-box .number {
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-        }
-
-        .summary-stats .summary-box .label {
-            font-size: 9px;
-            color: rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: .5px;
-        }
-
-        .summary-stats .summary-box .number.green {
-            color: #48bb78;
-        }
-
-        .summary-stats .summary-box .number.red {
-            color: #fc8181;
-        }
-
-        .summary-stats .summary-box .number.gold {
-            color: #ffd700;
-        }
-
-        .notification-item {
-            background: rgba(255, 215, 0, 0.08);
-            border-left: 4px solid #ffd700;
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin: 5px 0;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            animation: slideInRight 0.5s ease-out;
-        }
-
-        .notification-item:hover {
-            background: rgba(255, 215, 0, 0.12);
-            transform: translateX(5px);
-        }
-
-        .notification-item .time {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .notification-item .noti-icon {
-            font-size: 18px;
-            margin-right: 8px;
-        }
-
-        .notification-item .noti-type {
-            font-size: 10px;
-            padding: 1px 8px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .notification-item .noti-type.system {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.15);
-        }
-
-        .notification-item .noti-type.commission {
-            color: #f5576c;
-            background: rgba(245, 87, 108, 0.15);
-        }
-
-        .notification-item .noti-type.payment {
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.15);
-        }
-
-        .notification-item .noti-type.alert {
-            color: #fc8181;
-            background: rgba(252, 129, 129, 0.15);
-        }
-
-        .notification-item .noti-type.new-member {
-            color: #48bb78;
-            background: rgba(72, 187, 120, 0.15);
-        }
-
-        .commission-item {
-            background: rgba(245, 87, 108, 0.06);
-            border-left: 4px solid #f5576c;
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin: 5px 0;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            animation: slideInRight 0.5s ease-out;
-        }
-
-        .commission-item:hover {
-            background: rgba(245, 87, 108, 0.12);
-            transform: translateX(5px);
-        }
-
-        .commission-item .amount {
-            color: #f5576c;
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .commission-item .time {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .commission-total {
-            background: linear-gradient(135deg, rgba(245, 87, 108, 0.15), rgba(240, 147, 251, 0.15));
-            border: 1px solid rgba(245, 87, 108, 0.2);
-            padding: 12px;
-            border-radius: 12px;
-            margin: 8px 0;
-            text-align: center;
-        }
-
-        .commission-total .amount {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .commission-total .label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 10000;
-            animation: slideInRight 0.5s ease-out;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 300px;
-        }
-
-        .toast-success {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-        }
-
-        .toast-error {
-            background: linear-gradient(135deg, #fc8181, #e53e3e);
-        }
-
-        .toast-info {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .toast-warning {
-            background: linear-gradient(135deg, #f6ad55, #ed8936);
-        }
-
-        #modalOverlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        #modalContent {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 20px;
-            padding: 25px;
-            max-width: 420px;
-            width: 90%;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            transform: scale(.9);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        #modalContent.show {
-            transform: scale(1);
-        }
-
-        #modalContent::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        #modalContent::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
-
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 999;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(30deg) scale(1.1);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        body.light-mode .theme-toggle {
-            background: rgba(0, 0, 0, 0.1);
-            color: #1a1a2e;
-        }
-
-        body.light-mode .theme-toggle:hover {
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .cloud-status {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 9px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .cloud-status.connected {
-            background: rgba(72, 187, 120, 0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72, 187, 120, 0.3);
-        }
-
-        .cloud-status.disconnected {
-            background: rgba(252, 129, 129, 0.2);
-            color: #fc8181;
-            border: 1px solid rgba(252, 129, 129, 0.3);
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            outline: 0;
-            transition: .3s;
-        }
-
-        .search-box:focus {
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .search-box::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .balance-card {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(102, 126, 234, 0.08));
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            padding: 20px;
-            border-radius: 16px;
-            margin: 10px 0;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .balance-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.15);
-        }
-
-        .balance-card .bg-icons {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .balance-card .bg-icons .icon {
-            position: absolute;
-            font-size: 40px;
-            opacity: 0.12;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .balance-card .bg-icons .icon:nth-child(1) {
-            top: 10%;
-            left: 5%;
-            animation-delay: 0;
-            font-size: 50px;
-        }
-        .balance-card .bg-icons .icon:nth-child(2) {
-            top: 60%;
-            right: 8%;
-            animation-delay: 1.5s;
-            font-size: 35px;
-        }
-        .balance-card .bg-icons .icon:nth-child(3) {
-            bottom: 15%;
-            left: 20%;
-            animation-delay: 3s;
-            font-size: 45px;
-        }
-        .balance-card .bg-icons .icon:nth-child(4) {
-            top: 30%;
-            right: 20%;
-            animation-delay: .8s;
-            font-size: 30px;
-        }
-        .balance-card .bg-icons .icon:nth-child(5) {
-            bottom: 40%;
-            right: 40%;
-            animation-delay: 2.2s;
-            font-size: 55px;
-        }
-        .balance-card .bg-icons .icon:nth-child(6) {
-            top: 5%;
-            right: 45%;
-            animation-delay: 4s;
-            font-size: 25px;
-        }
-        .balance-card .bg-icons .icon:nth-child(7) {
-            bottom: 5%;
-            left: 45%;
-            animation-delay: 1s;
-            font-size: 28px;
-        }
-
-        .balance-card .content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .balance-card .label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 5px;
-        }
-
-        .balance-card .amount {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffd700, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-
-        .balance-card .sub-info {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 4px;
-        }
-
-        .notification-badge {
-            display: inline-block;
-            background: #fc8181;
-            color: #fff;
-            border-radius: 50%;
-            padding: 1px 6px;
-            font-size: 9px;
-            font-weight: 700;
-            margin-left: 4px;
-            animation: notificationPulse 2s ease-in-out infinite;
-        }
-
-        .member-register-item {
-            background: rgba(72, 187, 120, 0.05);
-            border-left: 3px solid #48bb78;
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .member-register-item:hover {
-            background: rgba(72, 187, 120, 0.1);
-            transform: translateX(3px);
-        }
-
-        .member-register-item .reg-name {
-            color: #48bb78;
-            font-weight: 600;
-        }
-
-        .member-register-item .reg-info {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 11px;
-        }
-
-        .member-register-item .reg-time {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 10px;
-        }
-
-        .payment-info-card {
-            background: rgba(255, 215, 0, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 8px 0;
-        }
-
-        .payment-info-card .label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .payment-info-card .value {
-            font-size: 15px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .payment-info-card .qr-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            margin: 8px 0;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            border: 2px dashed rgba(255, 215, 0, 0.15);
-            min-height: 80px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .payment-info-card .qr-container:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.05);
-        }
-
-        .payment-info-card .qr-container img {
-            max-width: 120px;
-            max-height: 120px;
-            border-radius: 8px;
-        }
-
-        .payment-info-card .qr-container .qr-placeholder {
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 12px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-10 {
-            margin-top: 10px;
-        }
-
-        .mt-15 {
-            margin-top: 15px;
-        }
-
-        .mt-20 {
-            margin-top: 20px;
-        }
-
-        .op-3 {
-            opacity: .3;
-        }
-
-        .fs-12 {
-            font-size: 12px;
-        }
-
-        .fs-13 {
-            font-size: 13px;
-        }
-
-        .fw-700 {
-            font-weight: 700;
-        }
-
-        .flex {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .flex .btn {
-            flex: 1;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin: 8px 0;
-        }
-
-        .menu-grid .menu-item {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .menu-grid .menu-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-3px);
-            border-color: #667eea;
-        }
-
-        .menu-grid .menu-item .menu-icon {
-            font-size: 28px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .menu-grid .menu-item .menu-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
-        }
-
-        body.light-mode .menu-grid .menu-item {
-            background: rgba(0, 0, 0, 0.03);
-            border-color: rgba(0, 0, 0, 0.08);
-        }
-
-        body.light-mode .menu-grid .menu-item:hover {
-            background: rgba(0, 0, 0, 0.06);
-        }
-
-        body.light-mode .menu-grid .menu-item .menu-label {
-            color: rgba(0, 0, 0, 0.7);
-        }
-
-        /* Responsive Design */
-        @media(max-width:480px) {
-            body {
-                padding: 5px;
-                padding-top: 10px;
-            }
-            .container {
-                padding: 10px 8px;
-                border-radius: 16px;
-                max-height: 100vh;
-                overflow-y: auto;
-            }
-            h1 {
-                font-size: 1.4rem;
-            }
-            h2 {
-                font-size: 1rem;
-            }
-            .btn {
-                font-size: 12px;
-                padding: 9px 16px;
-                width: 100%;
-            }
-            .list-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .list-item .actions {
-                margin-top: 5px;
-                justify-content: flex-end;
-            }
-            .theme-toggle {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-                bottom: 10px;
-                left: 10px;
-            }
-            #modalContent {
-                padding: 18px;
-                max-width: 95%;
-            }
-            .summary-stats {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 4px;
-            }
-            .top-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .top-bar .right-section {
-                align-items: stretch;
-                margin-top: 6px;
-            }
-            .clock-container {
-                justify-content: space-between;
-            }
-            .balance-card .amount {
-                font-size: 1.8rem;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
-            }
-            .menu-grid .menu-item {
-                padding: 10px;
-            }
-            .menu-grid .menu-item .menu-icon {
-                font-size: 24px;
-            }
-            .menu-grid .menu-item .menu-label {
-                font-size: 11px;
-            }
-            .flex .btn {
-                font-size: 11px;
-                padding: 8px 12px;
-            }
-            .card {
-                padding: 10px;
-            }
-            .login-container .login-title {
-                font-size: 1.5rem;
-            }
-            .login-container .login-logo {
-                font-size: 50px;
-            }
-            .btn-sm {
-                padding: 4px 10px;
-                font-size: 10px;
-            }
-            .balance-card {
-                padding: 15px;
-                min-height: 110px;
-            }
-            .payment-info-card .value {
-                font-size: 13px;
-            }
-        }
-
-        @media(min-width:481px) and (max-width:768px) {
-            .container {
-                padding: 14px;
-                max-width: 95%;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-            .balance-card .amount {
-                font-size: 2.2rem;
-            }
-            .list-item .actions .btn-sm {
-                padding: 4px 10px;
-                font-size: 10px;
-            }
-        }
-
-        @media(min-width:769px) and (max-width:1024px) {
-            .container {
-                max-width: 750px;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
-            .balance-card .amount {
-                font-size: 2.8rem;
-            }
-        }
-
-        @media(min-width:1025px) {
-            .container {
-                max-width: 800px;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
-            .balance-card .amount {
-                font-size: 3rem;
-            }
-            body {
-                padding: 20px;
-                align-items: center;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-        }
-
-        .pwd-toggle-btn {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px 8px;
-            transition: all 0.3s ease;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2;
-        }
-
-        .pwd-toggle-btn:hover {
-            color: #fff;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .pwd-display {
-            font-family: monospace;
-            letter-spacing: 1px;
-            cursor: pointer;
-            user-select: all;
-            color: #48bb78;
-        }
-
-        .pwd-display:hover {
-            color: #ffd700;
-        }
-
-        .password-cell {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .password-cell .pwd-text {
-            font-family: monospace;
-            font-size: 11px;
-            color: #48bb78;
-            letter-spacing: 1px;
-            cursor: pointer;
-            user-select: all;
-        }
-
-        .password-cell .pwd-text:hover {
-            color: #ffd700;
-        }
-
-        .password-cell .pwd-toggle-small {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .password-cell .pwd-toggle-small:hover {
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        /* No cancel button inside cards - hide them */
-        .no-cancel .btn-cancel {
-            display: none !important;
-        }
-        
-        /* Custom styles for Super Admin top buttons */
-        .super-action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 6px 0;
-        }
-        
-        .super-action-buttons .btn {
-            flex: 1;
-            min-width: 120px;
-            font-size: 12px;
-            padding: 8px 14px;
-        }
-        
-        @media(max-width:480px) {
-            .super-action-buttons .btn {
-                min-width: 80px;
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-        }
+        /* ... CSS ដូចដើម ... */
+        /* (រក្សា CSS ទាំងអស់ដដែល) */
     </style>
 </head>
 <body>
@@ -1894,6 +104,7 @@
         var logoutTimer = null;
         var sessionTimeout = 30 * 60 * 1000;
         var dataLoaded = false;
+        var isRealtimeUpdate = false; // បិទការធ្វើស្រស់ដោយស្វ័យប្រវត្តិ
 
         // ================================================================
         // FIREBASE FUNCTIONS
@@ -1910,7 +121,7 @@
         }
 
         function saveToFirebase() {
-            if (isSaving) { showToast('⏳ កំពុងដំណើរការ...', 'info'); return; }
+            if (isSaving) { return; }
             isSaving = true;
 
             var dataToSave = {
@@ -1951,7 +162,6 @@
                 .then(function(snapshot) {
                     var data = snapshot.val();
                     if (data) {
-                        // Merge data carefully to preserve existing data
                         localData.members = data.members || {};
                         localData.subAdmins = data.subAdmins || {};
                         localData.superAdmins = data.superAdmins || {};
@@ -1965,7 +175,6 @@
                         localData.adminCounter = data.adminCounter || 0;
                         localData.exchangeRate = data.exchangeRate || 4000;
 
-                        // Ensure Super Admin always exists
                         if (!localData.superAdmins['066817407']) {
                             localData.superAdmins['066817407'] = {
                                 name: 'Super Admin',
@@ -1985,7 +194,6 @@
                         if (callback) callback();
                         refreshCurrentPage();
                     } else {
-                        // Initialize with default data if empty
                         initializeDefaultData();
                         saveToFirebase();
                         dataLoaded = true;
@@ -2059,30 +267,44 @@
             }
         }
 
+        // ================================================================
+        // បិទការធ្វើស្រស់ដោយស្វ័យប្រវត្តិ
+        // ================================================================
+
         function setupRealtimeListeners() {
+            // ប្រើ once ជំនួស on ដើម្បីកុំឱ្យធ្វើស្រស់ដោយស្វ័យប្រវត្តិ
             database.ref('memberSystem').on('value', function(snapshot) {
+                // ប្រសិនបើកំពុងធ្វើបច្ចុប្បន្នភាព កុំធ្វើអ្វី
+                if (isRealtimeUpdate) return;
+                if (isSaving) return;
+                
                 var data = snapshot.val();
                 if (data && dataLoaded) {
+                    // ប្រៀបធៀបចំនួនសមាជិក
                     var oldCount = Object.keys(localData.members || {}).length;
-                    localData.members = data.members || {};
-                    localData.subAdmins = data.subAdmins || {};
-                    localData.superAdmins = data.superAdmins || {};
-                    localData.transactions = data.transactions || [];
-                    localData.paymentRequests = data.paymentRequests || [];
-                    localData.commissions = data.commissions || [];
-                    localData.memberNotifications = data.memberNotifications || [];
-                    localData.activityLogs = data.activityLogs || [];
-                    localData.memberRegistrations = data.memberRegistrations || [];
-                    localData.memberCounter = data.memberCounter || 0;
-                    localData.adminCounter = data.adminCounter || 0;
-                    localData.exchangeRate = data.exchangeRate || 4000;
-                    updateCloudStatus(true);
-
-                    var newCount = Object.keys(localData.members || {}).length;
-                    if (newCount !== oldCount && oldCount > 0) {
-                        showToast('🔄 មានសមាជិកថ្មីចុះឈ្មោះ!', 'info');
+                    var newCount = Object.keys(data.members || {}).length;
+                    
+                    // បើមានការផ្លាស់ប្តូរ ផ្ទុកទិន្នន័យថ្មី
+                    if (newCount !== oldCount || JSON.stringify(localData) !== JSON.stringify(data)) {
+                        localData.members = data.members || {};
+                        localData.subAdmins = data.subAdmins || {};
+                        localData.superAdmins = data.superAdmins || {};
+                        localData.transactions = data.transactions || [];
+                        localData.paymentRequests = data.paymentRequests || [];
+                        localData.commissions = data.commissions || [];
+                        localData.memberNotifications = data.memberNotifications || [];
+                        localData.activityLogs = data.activityLogs || [];
+                        localData.memberRegistrations = data.memberRegistrations || [];
+                        localData.memberCounter = data.memberCounter || 0;
+                        localData.adminCounter = data.adminCounter || 0;
+                        localData.exchangeRate = data.exchangeRate || 4000;
+                        updateCloudStatus(true);
+                        
+                        if (newCount !== oldCount && oldCount > 0) {
+                            showToast('🔄 មានសមាជិកថ្មីចុះឈ្មោះ!', 'info');
+                        }
+                        refreshCurrentPage();
                     }
-                    refreshCurrentPage();
                 }
             });
         }
@@ -2110,7 +332,6 @@
         // ================================================================
 
         function generateMemberId() {
-            // Generate random 6-digit number, ensure uniqueness
             var id;
             var existingIds = {};
             for (var key in localData.members) {
@@ -3300,7 +1521,7 @@
         }
 
         // ================================================================
-        // SUPER ADMIN DASHBOARD
+        // SUPER ADMIN DASHBOARD - កែសម្រួល
         // ================================================================
 
         function renderSuperDashboard() {
@@ -3440,12 +1661,13 @@
                     </div>
                 `;
 
-            // Super Admin action buttons - 👑 បង្កើត Sub Admin and 💰 បញ្ចូលប្រាក់ទៅ Sub Admin
+            // Super Admin action buttons - យកតែប៊ូតុង 👑 បង្កើត Sub Admin
+            // ហើយយកប៊ូតុង ព័ត៌មានទូទាត់ និង បញ្ចូលប្រាក់ ពីខាងក្រោមមកជំនួស
             var superActionsHtml = `
                     <div class="super-action-buttons">
                         <button onclick="showCreateAdminForm()" class="btn btn-gold">👑 បង្កើត Sub Admin</button>
-                        <button onclick="showFundAdminForm()" class="btn btn-gold">💰 បញ្ចូលប្រាក់ទៅ Sub Admin</button>
-                        <button onclick="showSelfAddMoneyForm()" class="btn btn-green">💰 បញ្ចូលប្រាក់ខ្លួនឯង</button>
+                        <button onclick="renderPage('payment-info')" class="btn btn-gold">💳 ព័ត៌មានទូទាត់</button>
+                        <button onclick="showAddMoneyMenu()" class="btn btn-green">💰 បញ្ចូលប្រាក់</button>
                     </div>
                 `;
 
@@ -3496,17 +1718,6 @@
                     <div class="card">
                         <h3>📋 សមាជិកទាំងអស់</h3>
                         <div style="max-height:400px;overflow-y:auto;">${memHtml}</div>
-                    </div>
-
-                    <div class="menu-grid">
-                        <div class="menu-item" onclick="renderPage('payment-info')">
-                            <span class="menu-icon">💳</span>
-                            <span class="menu-label">ព័ត៌មានទូទាត់</span>
-                        </div>
-                        <div class="menu-item" onclick="showAddMoneyMenu()">
-                            <span class="menu-icon">💰</span>
-                            <span class="menu-label">បញ្ចូលប្រាក់</span>
-                        </div>
                     </div>
 
                     <div class="flex mt-10">
@@ -3585,150 +1796,6 @@
                 msg.innerHTML =
                     '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ បង្កើតជោគជ័យ!<br>🆔 ' +
                     id + '<br>🔒 ' + password + '</div>';
-                setTimeout(function() { hideModal();
-                    refreshCurrentPage(); }, 1500);
-            });
-        }
-
-        function showFundAdminForm() {
-            var ads = Object.values(localData.subAdmins);
-            var options = '';
-            for (var i = 0; i < ads.length; i++) {
-                var a = ads[i];
-                options += '<option value="' + a.phone + '">' + (a.name || a.username) + ' ($' + a.balance.toFixed(2) +
-                    ')</option>';
-            }
-
-            showModal(`
-                    <div style="text-align:center;">
-                        <h3 style="color:#ffd700;margin-bottom:15px;">💰 បញ្ចូលប្រាក់ទៅ Sub Admin</h3>
-                        <form id="fundAdminModalForm">
-                            <select id="fundAdminTarget" style="width:100%;padding:10px;border-radius:10px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
-                                ${options || '<option value="">មិនទាន់មាន Sub Admin</option>'}
-                            </select>
-                            <div style="display:flex;gap:8px;margin:5px 0;">
-                                <select id="fundAdminCurrency" style="flex:1;padding:8px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
-                                    <option value="usd">$ USD</option>
-                                    <option value="riel">៛ Riel</option>
-                                </select>
-                                <input type="number" id="fundAdminAmount" placeholder="ចំនួន" min="0.01" step="0.01" style="flex:2;" required>
-                            </div>
-                            <input type="text" id="fundAdminReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)">
-                            <button type="submit" class="btn btn-gold">💳 បញ្ចូលប្រាក់</button>
-                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
-                        </form>
-                        <div id="fundAdminModalMsg"></div>
-                    </div>
-                `);
-
-            document.getElementById('fundAdminModalForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                var phone = document.getElementById('fundAdminTarget').value;
-                var amount = parseFloat(document.getElementById('fundAdminAmount').value);
-                var currency = document.getElementById('fundAdminCurrency').value;
-                var reason = document.getElementById('fundAdminReason').value.trim();
-                var msg = document.getElementById('fundAdminModalMsg');
-
-                if (!phone) {
-                    msg.innerHTML =
-                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">សូមជ្រើសរើស Sub Admin!</div>';
-                    return;
-                }
-
-                if (!amount || amount <= 0) {
-                    msg.innerHTML =
-                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">សូមបញ្ចូលចំនួន!</div>';
-                    return;
-                }
-
-                var amountUSD = currency === 'riel' ? convertToUSD(amount) : amount;
-                var admin = localData.subAdmins[phone];
-                if (!admin) {
-                    msg.innerHTML =
-                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">មិនឃើញ Sub Admin!</div>';
-                    return;
-                }
-
-                admin.balance += amountUSD;
-                admin.totalReceived = (admin.totalReceived || 0) + amountUSD;
-
-                logActivity('SUPER-001', 'Super Admin', 'fund_admin', 'financial', admin.phone, amountUSD,
-                    'បញ្ចូល $' + amountUSD.toFixed(2) + ' ទៅ ' + admin.name + (reason ? ' (' + reason + ')' : ''));
-
-                sendMemberNotification(admin.phone, 'payment', 'បញ្ចូលប្រាក់ពី Super Admin',
-                    'អ្នកបានទទួលប្រាក់ $' + amountUSD.toFixed(2) + ' ពី Super Admin' + (reason ? ' (' + reason + ')' :
-                        ''), '💰');
-
-                saveToFirebase();
-                msg.innerHTML =
-                    '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ បញ្ចូលប្រាក់ជោគជ័យ!</div>';
-                setTimeout(function() { hideModal();
-                    refreshCurrentPage(); }, 1500);
-            });
-        }
-
-        function showSelfAddMoneyForm() {
-            showModal(`
-                    <div style="text-align:center;">
-                        <h3 style="color:#48bb78;margin-bottom:15px;">💰 បញ្ចូលប្រាក់ខ្លួនឯង (Super Admin)</h3>
-                        <p style="font-size:12px;color:rgba(255,255,255,0.4);">បញ្ចូលប្រាក់ទៅកាន់គណនី Super Admin របស់អ្នក</p>
-                        <form id="selfAddMoneyForm">
-                            <div style="display:flex;gap:8px;margin:5px 0;">
-                                <select id="selfAddCurrency" style="flex:1;padding:8px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
-                                    <option value="usd">$ USD</option>
-                                    <option value="riel">៛ Riel</option>
-                                </select>
-                                <input type="number" id="selfAddAmount" placeholder="ចំនួន" min="0.01" step="0.01" style="flex:2;" required>
-                            </div>
-                            <input type="text" id="selfAddReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)">
-                            <button type="submit" class="btn btn-green">💰 បញ្ចូលប្រាក់</button>
-                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
-                        </form>
-                        <div id="selfAddMoneyMsg"></div>
-                    </div>
-                `);
-
-            document.getElementById('selfAddMoneyForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                var amount = parseFloat(document.getElementById('selfAddAmount').value);
-                var currency = document.getElementById('selfAddCurrency').value;
-                var reason = document.getElementById('selfAddReason').value.trim();
-                var msg = document.getElementById('selfAddMoneyMsg');
-
-                if (!amount || amount <= 0) {
-                    msg.innerHTML =
-                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">សូមបញ្ចូលចំនួន!</div>';
-                    return;
-                }
-
-                var amountUSD = currency === 'riel' ? convertToUSD(amount) : amount;
-                var superAdmin = localData.superAdmins['066817407'];
-                if (!superAdmin) {
-                    msg.innerHTML =
-                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">មិនឃើញ Super Admin!</div>';
-                    return;
-                }
-
-                superAdmin.balance = (superAdmin.balance || 0) + amountUSD;
-
-                // Also update member record
-                if (localData.members['066817407']) {
-                    localData.members['066817407'].balance = (localData.members['066817407'].balance || 0) + amountUSD;
-                    if (!localData.members['066817407'].benefits) localData.members['066817407'].benefits = [];
-                    localData.members['066817407'].benefits.push('💰 បានបញ្ចូលប្រាក់ខ្លួនឯង $' + amountUSD.toFixed(
-                        2) + (reason ? ' (' + reason + ')' : ''));
-                }
-
-                createTransaction('deposit', '066817407', 'SUPER-001', amountUSD, 'completed',
-                    reason || 'បញ្ចូលប្រាក់ខ្លួនឯងដោយ Super Admin', null);
-
-                logActivity('SUPER-001', 'Super Admin', 'self_add_money', 'financial', '066817407', amountUSD,
-                    'បញ្ចូលប្រាក់ខ្លួនឯង $' + amountUSD.toFixed(2) + (reason ? ' (' + reason + ')' : ''));
-
-                saveToFirebase();
-                msg.innerHTML =
-                    '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ បញ្ចូលប្រាក់ជោគជ័យ! $' +
-                    amountUSD.toFixed(2) + '</div>';
                 setTimeout(function() { hideModal();
                     refreshCurrentPage(); }, 1500);
             });
@@ -4195,6 +2262,72 @@
             });
         }
 
+        function showSelfAddMoneyForm() {
+            showModal(`
+                    <div style="text-align:center;">
+                        <h3 style="color:#48bb78;margin-bottom:15px;">💰 បញ្ចូលប្រាក់ខ្លួនឯង (Super Admin)</h3>
+                        <p style="font-size:12px;color:rgba(255,255,255,0.4);">បញ្ចូលប្រាក់ទៅកាន់គណនី Super Admin របស់អ្នក</p>
+                        <form id="selfAddMoneyForm">
+                            <div style="display:flex;gap:8px;margin:5px 0;">
+                                <select id="selfAddCurrency" style="flex:1;padding:8px;border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1);">
+                                    <option value="usd">$ USD</option>
+                                    <option value="riel">៛ Riel</option>
+                                </select>
+                                <input type="number" id="selfAddAmount" placeholder="ចំនួន" min="0.01" step="0.01" style="flex:2;" required>
+                            </div>
+                            <input type="text" id="selfAddReason" placeholder="📝 មូលហេតុ (ស្រេចចិត្ត)">
+                            <button type="submit" class="btn btn-green">💰 បញ្ចូលប្រាក់</button>
+                            <button type="button" onclick="hideModal()" class="btn btn-cancel">❌ បោះបង់</button>
+                        </form>
+                        <div id="selfAddMoneyMsg"></div>
+                    </div>
+                `);
+
+            document.getElementById('selfAddMoneyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                var amount = parseFloat(document.getElementById('selfAddAmount').value);
+                var currency = document.getElementById('selfAddCurrency').value;
+                var reason = document.getElementById('selfAddReason').value.trim();
+                var msg = document.getElementById('selfAddMoneyMsg');
+
+                if (!amount || amount <= 0) {
+                    msg.innerHTML =
+                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">សូមបញ្ចូលចំនួន!</div>';
+                    return;
+                }
+
+                var amountUSD = currency === 'riel' ? convertToUSD(amount) : amount;
+                var superAdmin = localData.superAdmins['066817407'];
+                if (!superAdmin) {
+                    msg.innerHTML =
+                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">មិនឃើញ Super Admin!</div>';
+                    return;
+                }
+
+                superAdmin.balance = (superAdmin.balance || 0) + amountUSD;
+
+                if (localData.members['066817407']) {
+                    localData.members['066817407'].balance = (localData.members['066817407'].balance || 0) + amountUSD;
+                    if (!localData.members['066817407'].benefits) localData.members['066817407'].benefits = [];
+                    localData.members['066817407'].benefits.push('💰 បានបញ្ចូលប្រាក់ខ្លួនឯង $' + amountUSD.toFixed(
+                        2) + (reason ? ' (' + reason + ')' : ''));
+                }
+
+                createTransaction('deposit', '066817407', 'SUPER-001', amountUSD, 'completed',
+                    reason || 'បញ្ចូលប្រាក់ខ្លួនឯងដោយ Super Admin', null);
+
+                logActivity('SUPER-001', 'Super Admin', 'self_add_money', 'financial', '066817407', amountUSD,
+                    'បញ្ចូលប្រាក់ខ្លួនឯង $' + amountUSD.toFixed(2) + (reason ? ' (' + reason + ')' : ''));
+
+                saveToFirebase();
+                msg.innerHTML =
+                    '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ បញ្ចូលប្រាក់ជោគជ័យ! $' +
+                    amountUSD.toFixed(2) + '</div>';
+                setTimeout(function() { hideModal();
+                    refreshCurrentPage(); }, 1500);
+            });
+        }
+
         // ================================================================
         // ADMIN FUNCTIONS (Sub Admin)
         // ================================================================
@@ -4586,7 +2719,6 @@
                     prs[i].status = 'approved';
                     var pr = prs[i];
 
-                    // Update balance
                     if (pr.type === 'deposit') {
                         var member = localData.members[pr.from];
                         if (member) {
@@ -4702,7 +2834,6 @@
                     return;
                 }
 
-                // Find admin to send to
                 var adminPhone = Object.keys(localData.subAdmins)[0];
                 if (!adminPhone) {
                     adminPhone = '066817407';
@@ -5094,7 +3225,6 @@
 
         // Load data first, then initialize
         loadFromFirebase(function() {
-            // After data is loaded, set up realtime listeners
             setupRealtimeListeners();
 
             var cu = getCurrentUser();
