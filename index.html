@@ -3,725 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v6.1</title>
+    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v6.2</title>
     
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <style>
-        /* ===== RESET & BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Khmer OS', system-ui, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            transition: background 0.5s ease;
-        }
-
-        body.light-mode {
-            background: #f0f2f5;
-        }
-
-        body.light-mode .container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: none;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-
-        body.light-mode h2,
-        body.light-mode .card h3,
-        body.light-mode .list-item .info .name {
-            color: #1a1a2e;
-        }
-
-        body.light-mode p {
-            color: rgba(0,0,0,0.6);
-        }
-
-        body.light-mode .card {
-            background: rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.08);
-        }
-
-        body.light-mode input, 
-        body.light-mode select, 
-        body.light-mode textarea {
-            background: rgba(0,0,0,0.05);
-            color: #1a1a2e;
-            border-color: rgba(0,0,0,0.1);
-        }
-
-        body.light-mode .list-item {
-            background: rgba(0,0,0,0.04);
-            border-left-color: #667eea;
-        }
-
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 560px;
-            max-height: 98vh;
-            overflow-y: auto;
-            animation: fadeInUp 0.6s ease-out;
-            transition: all 0.3s ease;
-        }
-
-        .container::-webkit-scrollbar { width: 4px; }
-        .container::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
-        .container::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.2); }
-            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
-        }
-
-        .animate-float { animation: float 3s ease-in-out infinite; }
-        .animate-glow { animation: glow 2s ease-in-out infinite; }
-
-        /* ===== TYPOGRAPHY ===== */
-        h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-
-        h2 { color: #ffffff; font-weight: 700; font-size: 1.3rem; margin-bottom: 8px; }
-        p { color: rgba(255,255,255,0.7); margin-bottom: 12px; line-height: 1.6; font-size: 14px; }
-
-        /* ===== FORM ELEMENTS ===== */
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 16px;
-            margin: 5px 0;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-
-        input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.4); }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #667eea;
-            background: rgba(255,255,255,0.1);
-            box-shadow: 0 0 20px rgba(102,126,234,0.15);
-            transform: scale(1.01);
-        }
-
-        select option { background: #1a1a2e; color: #fff; }
-        textarea { resize: vertical; min-height: 50px; }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            display: inline-block;
-            padding: 12px 28px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 3px;
-            box-shadow: 0 8px 25px rgba(102,126,234,0.3);
-            width: 100%;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 35px rgba(102,126,234,0.5); }
-        .btn:active { transform: scale(0.98); }
-
-        .btn-gold { background: linear-gradient(135deg, #ffd700, #f59e0b); box-shadow: 0 8px 25px rgba(255,215,0,0.3); color: #1a1a2e; }
-        .btn-gold:hover { box-shadow: 0 12px 35px rgba(255,215,0,0.5); }
-
-        .btn-green { background: linear-gradient(135deg, #48bb78, #38a169); box-shadow: 0 8px 25px rgba(72,187,120,0.3); color: #fff; }
-        .btn-green:hover { box-shadow: 0 12px 35px rgba(72,187,120,0.5); }
-
-        .btn-red { background: linear-gradient(135deg, #fc8181, #e53e3e); box-shadow: 0 8px 25px rgba(252,129,129,0.3); color: #fff; }
-        .btn-red:hover { box-shadow: 0 12px 35px rgba(252,129,129,0.5); }
-
-        .btn-warning { background: linear-gradient(135deg, #f6ad55, #ed8936); box-shadow: 0 8px 25px rgba(246,173,85,0.3); color: #fff; }
-        .btn-warning:hover { box-shadow: 0 12px 35px rgba(246,173,85,0.5); }
-
-        .btn-sm { padding: 6px 14px; font-size: 12px; width: auto; }
-        .btn-purple { background: linear-gradient(135deg, #9f7aea, #805ad5); box-shadow: 0 8px 25px rgba(159,122,234,0.3); color: #fff; }
-        .btn-purple:hover { box-shadow: 0 12px 35px rgba(159,122,234,0.5); }
-
-        .btn-cloud { background: linear-gradient(135deg, #00d2ff, #3a7bd5); box-shadow: 0 8px 25px rgba(0,210,255,0.3); color: #fff; }
-        .btn-cloud:hover { box-shadow: 0 12px 35px rgba(0,210,255,0.5); }
-
-        .btn-commission { background: linear-gradient(135deg, #f093fb, #f5576c); box-shadow: 0 8px 25px rgba(245,87,108,0.3); color: #fff; }
-        .btn-commission:hover { box-shadow: 0 12px 35px rgba(245,87,108,0.5); }
-
-        .btn-payment { background: linear-gradient(135deg, #fa709a, #fee140); box-shadow: 0 8px 25px rgba(250,112,154,0.3); color: #1a1a2e; }
-        .btn-payment:hover { box-shadow: 0 12px 35px rgba(250,112,154,0.5); }
-
-        /* ===== CARDS ===== */
-        .card {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.08);
-            padding: 15px;
-            border-radius: 16px;
-            margin: 10px 0;
-            text-align: left;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: slideInRight 0.5s ease-out;
-        }
-
-        .card:hover {
-            background: rgba(255,255,255,0.08);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102,126,234,0.15);
-        }
-
-        .card h3 {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 5px;
-        }
-
-        /* ===== BADGES ===== */
-        .badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 16px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .badge-gold { background: linear-gradient(135deg, #ffd700, #f59e0b); color: #1a1a2e; }
-        .badge-purple { background: #9f7aea; color: #fff; }
-        .badge-green { background: #48bb78; color: #fff; }
-        .badge-red { background: #fc8181; color: #fff; }
-
-        .admin-panel {
-            border: 1px solid rgba(255,215,0,0.2);
-            background: rgba(255,215,0,0.05);
-        }
-
-        .admin-panel h3 { color: #ffd700; }
-
-        /* ===== TOP BAR ===== */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .top-bar .left-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            flex: 1;
-        }
-
-        .top-bar .right-section {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-
-        .top-bar h2 { margin: 0; font-size: 1.2rem; }
-
-        .back-link {
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.6);
-            cursor: pointer;
-            background: rgba(255,255,255,0.06);
-            padding: 4px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover { background: rgba(255,255,255,0.12); color: #fff; transform: translateX(-3px); }
-
-        /* ===== CLOCK ===== */
-        .clock-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .clock-display {
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.7);
-            background: rgba(255,255,255,0.06);
-            padding: 3px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.08);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .clock-display .date-part { color: rgba(255,255,255,0.4); font-weight: 400; font-size: 10px; }
-        .clock-display .time-part { color: #ffd700; font-weight: 700; font-size: 14px; }
-        .clock-display .seconds { color: rgba(255,215,0,0.4); font-size: 11px; }
-
-        .btn-logout {
-            background: rgba(252,129,129,0.15);
-            border: 1px solid rgba(252,129,129,0.2);
-            color: #fc8181;
-            padding: 3px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-logout:hover { background: rgba(252,129,129,0.25); transform: scale(1.05); border-color: #fc8181; }
-
-        /* ===== LOGIN PAGE ===== */
-        .login-container {
-            padding: 10px 0;
-        }
-
-        .login-container .login-logo {
-            font-size: 60px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .login-container .login-title {
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffd700, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 5px;
-        }
-
-        .login-container .login-subtitle {
-            text-align: center;
-            color: rgba(255,255,255,0.4);
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
-
-        .login-container .login-option {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 16px;
-            margin: 8px 0;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            text-align: center;
-        }
-
-        .login-container .login-option:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-5px) scale(1.02);
-            border-color: #667eea;
-            box-shadow: 0 10px 30px rgba(102,126,234,0.2);
-        }
-
-        .login-container .login-option .icon { font-size: 32px; display: block; margin-bottom: 4px; }
-        .login-container .login-option .title { color: #fff; font-weight: 600; font-size: 16px; }
-        .login-container .login-option .desc { color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 2px; }
-
-        .login-container .login-option.admin-option { border-color: rgba(255,215,0,0.2); }
-        .login-container .login-option.admin-option:hover { border-color: #ffd700; background: rgba(255,215,0,0.08); }
-
-        .login-container .login-option.super-option { border-color: rgba(255,215,0,0.1); background: rgba(255,215,0,0.03); }
-        .login-container .login-option.super-option:hover { border-color: #ffd700; background: rgba(255,215,0,0.1); }
-
-        /* ===== FILE UPLOAD ===== */
-        .file-upload {
-            position: relative;
-            padding: 15px;
-            border: 2px dashed rgba(255,255,255,0.15);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255,255,255,0.03);
-            margin: 5px 0;
-        }
-
-        .file-upload:hover { border-color: #667eea; background: rgba(255,255,255,0.05); transform: scale(1.01); }
-
-        .file-upload input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-upload .upload-icon { font-size: 24px; display: block; margin-bottom: 4px; }
-        .file-upload .upload-text { color: rgba(255,255,255,0.4); font-size: 12px; }
-        .file-upload .file-name { color: #48bb78; font-size: 12px; margin-top: 4px; }
-
-        /* ===== IMAGE VIEWER ===== */
-        .image-viewer-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .image-viewer-overlay.show { display: flex; }
-
-        .image-viewer-overlay img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .image-viewer-overlay .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: #fff;
-            font-size: 40px;
-            cursor: pointer;
-            transition: 0.3s;
-            z-index: 1;
-        }
-
-        .image-viewer-overlay .close-btn:hover { transform: scale(1.2); color: #ffd700; }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 100px;
-            border-radius: 8px;
-            margin-top: 5px;
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .preview-image:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-
-        /* ===== LIST ITEMS ===== */
-        .list-item {
-            background: rgba(255,255,255,0.04);
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 10px;
-            border-left: 3px solid #667eea;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 5px;
-            font-size: 13px;
-            transition: all 0.3s ease;
-        }
-
-        .list-item:hover { background: rgba(255,255,255,0.08); transform: translateX(5px); }
-
-        .list-item .info { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 100px; }
-        .list-item .info .name { color: #fff; font-weight: 600; }
-        .list-item .info .sub { font-size: 11px; color: rgba(255,255,255,0.4); }
-        .list-item .info .id { font-size: 10px; color: rgba(255,215,0,0.5); }
-        .list-item .info .pwd { font-size: 11px; color: #48bb78; }
-        .list-item .balance { color: #48bb78; font-weight: 600; font-size: 14px; }
-        .list-item .actions { display: flex; gap: 4px; flex-wrap: wrap; }
-
-        /* ===== TRANSACTIONS ===== */
-        .transaction-list { max-height: 200px; overflow-y: auto; margin-top: 6px; }
-        .transaction-list::-webkit-scrollbar { width: 4px; }
-        .transaction-list::-webkit-scrollbar-thumb { background: #667eea; border-radius: 10px; }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 12px;
-            flex-wrap: wrap;
-            gap: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .transaction-item:hover { background: rgba(255,255,255,0.03); padding-left: 10px; }
-
-        /* ===== PAYMENT ITEMS ===== */
-        .payment-item {
-            background: rgba(255,255,255,0.04);
-            padding: 10px 12px;
-            border-radius: 10px;
-            margin: 6px 0;
-            border-left: 3px solid #fa709a;
-            transition: all 0.3s ease;
-        }
-
-        .payment-item:hover { background: rgba(255,255,255,0.08); transform: translateX(5px); }
-
-        .payment-item .amount { color: #ffd700; font-weight: 600; font-size: 14px; }
-        .payment-item .status-pending { color: #f6ad55; font-size: 11px; }
-        .payment-item .status-approved { color: #48bb78; font-size: 11px; }
-        .payment-item .status-rejected { color: #fc8181; font-size: 11px; }
-
-        /* ===== SUMMARY ===== */
-        .summary-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 6px;
-            margin: 6px 0;
-        }
-
-        .summary-stats .summary-box {
-            background: rgba(255,255,255,0.04);
-            padding: 6px;
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .summary-stats .summary-box:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); }
-        .summary-stats .summary-box .number { font-size: 16px; font-weight: 700; color: #fff; }
-        .summary-stats .summary-box .label { font-size: 9px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; }
-        .summary-stats .summary-box .number.green { color: #48bb78; }
-        .summary-stats .summary-box .number.red { color: #fc8181; }
-        .summary-stats .summary-box .number.gold { color: #ffd700; }
-
-        /* ===== TOAST ===== */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 10000;
-            animation: slideInRight 0.5s ease-out;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 300px;
-        }
-
-        .toast-success { background: linear-gradient(135deg, #48bb78, #38a169); }
-        .toast-error { background: linear-gradient(135deg, #fc8181, #e53e3e); }
-        .toast-info { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .toast-warning { background: linear-gradient(135deg, #f6ad55, #ed8936); }
-
-        /* ===== MODAL ===== */
-        #modalOverlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-
-        #modalContent {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 420px;
-            width: 90%;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        #modalContent.show { transform: scale(1); }
-        #modalContent::-webkit-scrollbar { width: 4px; }
-        #modalContent::-webkit-scrollbar-thumb { background: #667eea; border-radius: 10px; }
-
-        /* ===== THEME TOGGLE ===== */
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 999;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #fff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .theme-toggle:hover { transform: rotate(30deg) scale(1.1); background: rgba(255,255,255,0.2); }
-
-        body.light-mode .theme-toggle { background: rgba(0,0,0,0.1); color: #1a1a2e; }
-        body.light-mode .theme-toggle:hover { background: rgba(0,0,0,0.2); }
-
-        /* ===== UTILITY ===== */
-        .text-center { text-align: center; }
-        .mt-10 { margin-top: 10px; }
-        .mt-15 { margin-top: 15px; }
-        .mt-20 { margin-top: 20px; }
-        .op-3 { opacity: 0.3; }
-        .fs-12 { font-size: 12px; }
-        .fs-13 { font-size: 13px; }
-        .fw-700 { font-weight: 700; }
-        .flex { display: flex; gap: 8px; flex-wrap: wrap; }
-        .flex .btn { flex: 1; }
-
-        .cloud-status {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 9px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .cloud-status.connected {
-            background: rgba(72,187,120,0.2);
-            color: #48bb78;
-            border: 1px solid rgba(72,187,120,0.3);
-        }
-
-        .cloud-status.disconnected {
-            background: rgba(252,129,129,0.2);
-            color: #fc8181;
-            border: 1px solid rgba(252,129,129,0.3);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 480px) {
-            .container { padding: 12px 10px; border-radius: 16px; max-height: 100vh; overflow-y: auto; }
-            h1 { font-size: 1.6rem; }
-            h2 { font-size: 1.1rem; }
-            .btn { font-size: 13px; padding: 10px 20px; width: 100%; }
-            .list-item { flex-direction: column; align-items: stretch; }
-            .list-item .actions { margin-top: 5px; justify-content: flex-end; }
-            .theme-toggle { width: 36px; height: 36px; font-size: 16px; bottom: 10px; left: 10px; }
-            #modalContent { padding: 20px; max-width: 95%; }
-            .summary-stats { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
-            .top-bar { flex-direction: column; align-items: stretch; }
-            .top-bar .right-section { align-items: stretch; margin-top: 8px; }
-            .clock-container { justify-content: space-between; }
-        }
-
-        @media (min-width: 481px) and (max-width: 768px) {
-            .container { padding: 16px; }
-        }
-
-        @media (min-width: 769px) {
-            .container { max-width: 600px; }
-        }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(135deg, #764ba2, #667eea); }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI','Khmer OS',system-ui,sans-serif}
+        body{background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:10px}
+        body.light-mode{background:#f0f2f5}
+        body.light-mode .container{background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.1)}
+        body.light-mode h2,body.light-mode .card h3,body.light-mode .list-item .info .name{color:#1a1a2e}
+        body.light-mode p{color:rgba(0,0,0,0.6)}
+        body.light-mode .card{background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.08)}
+        body.light-mode input,body.light-mode select,body.light-mode textarea{background:rgba(0,0,0,0.05);color:#1a1a2e;border-color:rgba(0,0,0,0.1)}
+        body.light-mode .list-item{background:rgba(0,0,0,0.04);border-left-color:#667eea}
+        .container{background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);padding:20px;border-radius:20px;width:100%;max-width:560px;max-height:98vh;overflow-y:auto;animation:fadeInUp .6s ease-out}
+        .container::-webkit-scrollbar{width:4px}
+        .container::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);border-radius:10px}
+        .container::-webkit-scrollbar-thumb{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:10px}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideInRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes glow{0%,100%{box-shadow:0 0 20px rgba(102,126,234,0.2)}50%{box-shadow:0 0 40px rgba(102,126,234,0.6)}}
+        .animate-float{animation:float 3s ease-in-out infinite}
+        .animate-glow{animation:glow 2s ease-in-out infinite}
+        h1{font-size:2rem;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:5px}
+        h2{color:#fff;font-weight:700;font-size:1.3rem;margin-bottom:8px}
+        p{color:rgba(255,255,255,0.7);margin-bottom:12px;line-height:1.6;font-size:14px}
+        input,select,textarea{width:100%;padding:12px 16px;margin:5px 0;border:2px solid rgba(255,255,255,0.1);border-radius:12px;background:rgba(255,255,255,0.06);color:#fff;font-size:14px;transition:all .3s ease;outline:none}
+        input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.4)}
+        input:focus,select:focus,textarea:focus{border-color:#667eea;background:rgba(255,255,255,0.1);box-shadow:0 0 20px rgba(102,126,234,0.15)}
+        select option{background:#1a1a2e;color:#fff}
+        textarea{resize:vertical;min-height:50px}
+        .btn{display:inline-block;padding:12px 28px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:0;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;transition:all .3s ease;margin:3px;box-shadow:0 8px 25px rgba(102,126,234,0.3);width:100%;text-align:center}
+        .btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 35px rgba(102,126,234,0.5)}
+        .btn-gold{background:linear-gradient(135deg,#ffd700,#f59e0b);box-shadow:0 8px 25px rgba(255,215,0,0.3);color:#1a1a2e}
+        .btn-gold:hover{box-shadow:0 12px 35px rgba(255,215,0,0.5)}
+        .btn-green{background:linear-gradient(135deg,#48bb78,#38a169);box-shadow:0 8px 25px rgba(72,187,120,0.3);color:#fff}
+        .btn-green:hover{box-shadow:0 12px 35px rgba(72,187,120,0.5)}
+        .btn-red{background:linear-gradient(135deg,#fc8181,#e53e3e);box-shadow:0 8px 25px rgba(252,129,129,0.3);color:#fff}
+        .btn-red:hover{box-shadow:0 12px 35px rgba(252,129,129,0.5)}
+        .btn-warning{background:linear-gradient(135deg,#f6ad55,#ed8936);box-shadow:0 8px 25px rgba(246,173,85,0.3);color:#fff}
+        .btn-warning:hover{box-shadow:0 12px 35px rgba(246,173,85,0.5)}
+        .btn-sm{padding:6px 14px;font-size:12px;width:auto}
+        .btn-purple{background:linear-gradient(135deg,#9f7aea,#805ad5);box-shadow:0 8px 25px rgba(159,122,234,0.3);color:#fff}
+        .btn-purple:hover{box-shadow:0 12px 35px rgba(159,122,234,0.5)}
+        .btn-cloud{background:linear-gradient(135deg,#00d2ff,#3a7bd5);box-shadow:0 8px 25px rgba(0,210,255,0.3);color:#fff}
+        .btn-cloud:hover{box-shadow:0 12px 35px rgba(0,210,255,0.5)}
+        .btn-commission{background:linear-gradient(135deg,#f093fb,#f5576c);box-shadow:0 8px 25px rgba(245,87,108,0.3);color:#fff}
+        .btn-commission:hover{box-shadow:0 12px 35px rgba(245,87,108,0.5)}
+        .btn-payment{background:linear-gradient(135deg,#fa709a,#fee140);box-shadow:0 8px 25px rgba(250,112,154,0.3);color:#1a1a2e}
+        .btn-payment:hover{box-shadow:0 12px 35px rgba(250,112,154,0.5)}
+        .card{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);padding:15px;border-radius:16px;margin:10px 0;transition:all .4s cubic-bezier(.34,1.56,.64,1);animation:slideInRight .5s ease-out}
+        .card:hover{background:rgba(255,255,255,0.08);transform:translateY(-5px);box-shadow:0 10px 30px rgba(102,126,234,0.15)}
+        .card h3{font-size:.75rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.5);margin-bottom:5px}
+        .badge{display:inline-block;padding:2px 10px;border-radius:16px;font-size:10px;font-weight:600;text-transform:uppercase}
+        .badge-gold{background:linear-gradient(135deg,#ffd700,#f59e0b);color:#1a1a2e}
+        .badge-purple{background:#9f7aea;color:#fff}
+        .badge-green{background:#48bb78;color:#fff}
+        .badge-red{background:#fc8181;color:#fff}
+        .admin-panel{border:1px solid rgba(255,215,0,0.2);background:rgba(255,215,0,0.05)}
+        .admin-panel h3{color:#ffd700}
+        .top-bar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;flex-wrap:wrap;gap:8px}
+        .top-bar .left-section{display:flex;flex-direction:column;gap:2px;flex:1}
+        .top-bar .right-section{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+        .top-bar h2{margin:0;font-size:1.2rem}
+        .back-link{font-size:14px;font-weight:600;color:rgba(255,255,255,0.6);cursor:pointer;background:rgba(255,255,255,0.06);padding:4px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);transition:all .3s ease}
+        .back-link:hover{background:rgba(255,255,255,0.12);color:#fff;transform:translateX(-3px)}
+        .clock-container{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+        .clock-display{font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.06);padding:3px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+        .clock-display .date-part{color:rgba(255,255,255,0.4);font-weight:400;font-size:10px}
+        .clock-display .time-part{color:#ffd700;font-weight:700;font-size:14px}
+        .clock-display .seconds{color:rgba(255,215,0,0.4);font-size:11px}
+        .btn-logout{background:rgba(252,129,129,0.15);border:1px solid rgba(252,129,129,0.2);color:#fc8181;padding:3px 12px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;transition:all .3s ease}
+        .btn-logout:hover{background:rgba(252,129,129,0.25);transform:scale(1.05);border-color:#fc8181}
+        .login-container{padding:10px 0}
+        .login-container .login-logo{font-size:60px;text-align:center;margin-bottom:10px}
+        .login-container .login-title{text-align:center;font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,#ffd700,#f59e0b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:5px}
+        .login-container .login-subtitle{text-align:center;color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:20px}
+        .login-container .login-option{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin:8px 0;cursor:pointer;transition:all .4s cubic-bezier(.34,1.56,.64,1);text-align:center}
+        .login-container .login-option:hover{background:rgba(255,255,255,0.1);transform:translateY(-5px) scale(1.02);border-color:#667eea;box-shadow:0 10px 30px rgba(102,126,234,0.2)}
+        .login-container .login-option .icon{font-size:32px;display:block;margin-bottom:4px}
+        .login-container .login-option .title{color:#fff;font-weight:600;font-size:16px}
+        .login-container .login-option .desc{color:rgba(255,255,255,0.4);font-size:12px;margin-top:2px}
+        .login-container .login-option.admin-option{border-color:rgba(255,215,0,0.2)}
+        .login-container .login-option.admin-option:hover{border-color:#ffd700;background:rgba(255,215,0,0.08)}
+        .login-container .login-option.super-option{border-color:rgba(255,215,0,0.1);background:rgba(255,215,0,0.03)}
+        .login-container .login-option.super-option:hover{border-color:#ffd700;background:rgba(255,215,0,0.1)}
+        .file-upload{position:relative;padding:15px;border:2px dashed rgba(255,255,255,0.15);border-radius:12px;text-align:center;cursor:pointer;transition:all .3s ease;background:rgba(255,255,255,0.03);margin:5px 0}
+        .file-upload:hover{border-color:#667eea;background:rgba(255,255,255,0.05);transform:scale(1.01)}
+        .file-upload input[type=file]{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
+        .file-upload .upload-icon{font-size:24px;display:block;margin-bottom:4px}
+        .file-upload .upload-text{color:rgba(255,255,255,0.4);font-size:12px}
+        .file-upload .file-name{color:#48bb78;font-size:12px;margin-top:4px}
+        .image-viewer-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:99999;justify-content:center;align-items:center;cursor:pointer;animation:fadeIn .3s ease}
+        .image-viewer-overlay.show{display:flex}
+        .image-viewer-overlay img{max-width:90%;max-height:90%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.8);animation:fadeIn .3s ease}
+        .image-viewer-overlay .close-btn{position:absolute;top:20px;right:30px;color:#fff;font-size:40px;cursor:pointer;transition:.3s;z-index:1}
+        .image-viewer-overlay .close-btn:hover{transform:scale(1.2);color:#ffd700}
+        .preview-image{max-width:100%;max-height:100px;border-radius:8px;margin-top:5px;border:1px solid rgba(255,255,255,0.1);transition:all .3s ease;cursor:pointer}
+        .preview-image:hover{transform:scale(1.05);box-shadow:0 5px 15px rgba(0,0,0,0.3)}
+        .list-item{background:rgba(255,255,255,0.04);padding:8px 12px;margin:4px 0;border-radius:10px;border-left:3px solid #667eea;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;font-size:13px;transition:all .3s ease}
+        .list-item:hover{background:rgba(255,255,255,0.08);transform:translateX(5px)}
+        .list-item .info{display:flex;flex-direction:column;gap:1px;flex:1;min-width:100px}
+        .list-item .info .name{color:#fff;font-weight:600}
+        .list-item .info .sub{font-size:11px;color:rgba(255,255,255,0.4)}
+        .list-item .info .id{font-size:10px;color:rgba(255,215,0,0.5)}
+        .list-item .info .pwd{font-size:11px;color:#48bb78}
+        .list-item .balance{color:#48bb78;font-weight:600;font-size:14px}
+        .list-item .actions{display:flex;gap:4px;flex-wrap:wrap}
+        .transaction-list{max-height:200px;overflow-y:auto;margin-top:6px}
+        .transaction-list::-webkit-scrollbar{width:4px}
+        .transaction-list::-webkit-scrollbar-thumb{background:#667eea;border-radius:10px}
+        .transaction-item{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;flex-wrap:wrap;gap:4px;transition:all .3s ease}
+        .transaction-item:hover{background:rgba(255,255,255,0.03);padding-left:10px}
+        .payment-item{background:rgba(255,255,255,0.04);padding:10px 12px;border-radius:10px;margin:6px 0;border-left:3px solid #fa709a;transition:all .3s ease}
+        .payment-item:hover{background:rgba(255,255,255,0.08);transform:translateX(5px)}
+        .payment-item .amount{color:#ffd700;font-weight:600;font-size:14px}
+        .payment-item .status-pending{color:#f6ad55;font-size:11px}
+        .payment-item .status-approved{color:#48bb78;font-size:11px}
+        .payment-item .status-rejected{color:#fc8181;font-size:11px}
+        .summary-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:6px 0}
+        .summary-stats .summary-box{background:rgba(255,255,255,0.04);padding:6px;border-radius:8px;text-align:center;transition:all .3s ease}
+        .summary-stats .summary-box:hover{transform:translateY(-3px);background:rgba(255,255,255,0.08)}
+        .summary-stats .summary-box .number{font-size:16px;font-weight:700;color:#fff}
+        .summary-stats .summary-box .label{font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.5px}
+        .summary-stats .summary-box .number.green{color:#48bb78}
+        .summary-stats .summary-box .number.red{color:#fc8181}
+        .summary-stats .summary-box .number.gold{color:#ffd700}
+        .toast{position:fixed;bottom:20px;right:20px;padding:12px 20px;border-radius:12px;color:#fff;font-size:14px;font-weight:600;z-index:10000;animation:slideInRight .5s ease-out;box-shadow:0 10px 30px rgba(0,0,0,0.3);max-width:300px}
+        .toast-success{background:linear-gradient(135deg,#48bb78,#38a169)}
+        .toast-error{background:linear-gradient(135deg,#fc8181,#e53e3e)}
+        .toast-info{background:linear-gradient(135deg,#667eea,#764ba2)}
+        .toast-warning{background:linear-gradient(135deg,#f6ad55,#ed8936)}
+        #modalOverlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;justify-content:center;align-items:center;animation:fadeIn .3s ease;backdrop-filter:blur(5px)}
+        #modalContent{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:20px;padding:30px;max-width:420px;width:90%;border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 60px rgba(0,0,0,0.8);transform:scale(.9);transition:transform .3s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto}
+        #modalContent.show{transform:scale(1)}
+        #modalContent::-webkit-scrollbar{width:4px}
+        #modalContent::-webkit-scrollbar-thumb{background:#667eea;border-radius:10px}
+        .theme-toggle{position:fixed;bottom:20px;left:20px;z-index:999;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;transition:all .3s ease;color:#fff;box-shadow:0 5px 15px rgba(0,0,0,0.3)}
+        .theme-toggle:hover{transform:rotate(30deg) scale(1.1);background:rgba(255,255,255,0.2)}
+        body.light-mode .theme-toggle{background:rgba(0,0,0,0.1);color:#1a1a2e}
+        body.light-mode .theme-toggle:hover{background:rgba(0,0,0,0.2)}
+        .cloud-status{display:inline-block;padding:2px 8px;border-radius:12px;font-size:9px;font-weight:600;text-transform:uppercase}
+        .cloud-status.connected{background:rgba(72,187,120,0.2);color:#48bb78;border:1px solid rgba(72,187,120,0.3)}
+        .cloud-status.disconnected{background:rgba(252,129,129,0.2);color:#fc8181;border:1px solid rgba(252,129,129,0.3)}
+        .text-center{text-align:center}
+        .mt-10{margin-top:10px}
+        .mt-15{margin-top:15px}
+        .mt-20{margin-top:20px}
+        .op-3{opacity:.3}
+        .fs-12{font-size:12px}
+        .fs-13{font-size:13px}
+        .fw-700{font-weight:700}
+        .flex{display:flex;gap:8px;flex-wrap:wrap}
+        .flex .btn{flex:1}
+        @media(max-width:480px){.container{padding:12px 10px;border-radius:16px;max-height:100vh;overflow-y:auto}h1{font-size:1.6rem}h2{font-size:1.1rem}.btn{font-size:13px;padding:10px 20px;width:100%}.list-item{flex-direction:column;align-items:stretch}.list-item .actions{margin-top:5px;justify-content:flex-end}.theme-toggle{width:36px;height:36px;font-size:16px;bottom:10px;left:10px}#modalContent{padding:20px;max-width:95%}.summary-stats{grid-template-columns:1fr 1fr 1fr;gap:4px}.top-bar{flex-direction:column;align-items:stretch}.top-bar .right-section{align-items:stretch;margin-top:8px}.clock-container{justify-content:space-between}}
+        @media(min-width:481px) and (max-width:768px){.container{padding:16px}}
+        @media(min-width:769px){.container{max-width:600px}}
+        ::-webkit-scrollbar{width:6px;height:6px}
+        ::-webkit-scrollbar-track{background:rgba(255,255,255,0.05);border-radius:10px}
+        ::-webkit-scrollbar-thumb{background:linear-gradient(135deg,#667eea,#764ba2);border-radius:10px}
+        ::-webkit-scrollbar-thumb:hover{background:linear-gradient(135deg,#764ba2,#667eea)}
     </style>
 </head>
 <body>
 
-    <!-- ===== IMAGE VIEWER ===== -->
     <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
         <span class="close-btn" onclick="closeImageViewer()">×</span>
         <img id="viewerImage" src="" alt="View Image">
     </div>
 
-    <!-- ===== THEME TOGGLE ===== -->
-    <button class="theme-toggle" onclick="toggleTheme()" title="ប្តូរពណ៌">🌓</button>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
 
-    <!-- ===== MODAL ===== -->
     <div id="modalOverlay">
         <div id="modalContent">
             <div id="modalBody"></div>
         </div>
     </div>
 
-    <!-- ===== MAIN APP ===== -->
     <div class="container" id="app">
         <div id="pageContent"></div>
         <div class="text-center mt-10" style="font-size:10px;color:rgba(255,255,255,0.2);">
-            🔥 Firebase Realtime Database
+            🔥 Firebase Cloud
             <span style="margin-left:8px;" id="cloudStatus">
                 <span class="cloud-status disconnected">☁️ Connecting...</span>
             </span>
@@ -730,28 +196,28 @@
 
     <script>
         // ================================================================
-        // ===== FIREBASE CONFIGURATION =====
+        // FIREBASE CONFIG - បញ្ចូល Config របស់អ្នកនៅទីនេះ!
         // ================================================================
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDY6EzS_tUgma7z5z8LpK4Te5WcF3msqx4",
-            authDomain: "access-and-management-system.firebaseapp.com",
-            databaseURL: "https://access-and-management-system-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "access-and-management-system",
-            storageBucket: "access-and-management-system.firebasestorage.app",
-            messagingSenderId: "183584626258",
-            appId: "1:183584626258:web:c87cc50820672aea12318b"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT",
+            storageBucket: "YOUR_PROJECT.firebasestorage.app",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         // ================================================================
-        // ===== INIT FIREBASE =====
+        // INIT FIREBASE
         // ================================================================
 
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        var database = firebase.database();
 
         // ================================================================
-        // ===== DATA LAYER =====
+        // DATA LAYER
         // ================================================================
 
         var localData = {
@@ -762,10 +228,11 @@
             paymentRequests: [],
             commissions: [],
             activityLogs: [],
+            notifications: [],
             memberCounter: 0,
             adminCounter: 0,
             exchangeRate: 4000,
-            version: '6.1'
+            version: '6.2'
         };
 
         var isConnected = false;
@@ -774,27 +241,21 @@
         var currentUser = null;
 
         // ================================================================
-        // ===== FIREBASE FUNCTIONS =====
+        // FIREBASE FUNCTIONS
         // ================================================================
 
         function updateCloudStatus(connected) {
             isConnected = connected;
             var statusEl = document.getElementById('cloudStatus');
             if (statusEl) {
-                if (connected) {
-                    statusEl.innerHTML = '<span class="cloud-status connected">☁️ Connected</span>';
-                } else {
-                    statusEl.innerHTML = '<span class="cloud-status disconnected">☁️ Disconnected</span>';
-                }
+                statusEl.innerHTML = connected ? 
+                    '<span class="cloud-status connected">☁️ Connected</span>' : 
+                    '<span class="cloud-status disconnected">☁️ Disconnected</span>';
             }
         }
 
         function saveToFirebase() {
-            if (isSaving) {
-                showToast('⏳ កំពុងដំណើរការ...', 'info');
-                return;
-            }
-
+            if (isSaving) { showToast('⏳ កំពុងដំណើរការ...', 'info'); return; }
             isSaving = true;
             showToast('⏳ កំពុងរក្សាទុកលើ Cloud...', 'info');
 
@@ -806,6 +267,7 @@
                 paymentRequests: localData.paymentRequests,
                 commissions: localData.commissions,
                 activityLogs: localData.activityLogs,
+                notifications: localData.notifications,
                 memberCounter: localData.memberCounter,
                 adminCounter: localData.adminCounter,
                 exchangeRate: localData.exchangeRate,
@@ -827,11 +289,7 @@
         }
 
         function loadFromFirebase() {
-            if (isLoading) {
-                showToast('⏳ កំពុងដំណើរការ...', 'info');
-                return;
-            }
-
+            if (isLoading) { showToast('⏳ កំពុងដំណើរការ...', 'info'); return; }
             isLoading = true;
             showToast('⏳ កំពុងទាញយកពី Cloud...', 'info');
 
@@ -846,22 +304,15 @@
                         localData.paymentRequests = data.paymentRequests || [];
                         localData.commissions = data.commissions || [];
                         localData.activityLogs = data.activityLogs || [];
+                        localData.notifications = data.notifications || [];
                         localData.memberCounter = data.memberCounter || 0;
                         localData.adminCounter = data.adminCounter || 0;
                         localData.exchangeRate = data.exchangeRate || 4000;
-                        localData.version = data.version || '6.1';
+                        localData.version = data.version || '6.2';
 
                         updateCloudStatus(true);
                         showToast('📥 បានទាញយកពី Cloud ជោគជ័យ!', 'success');
-                        
-                        var user = getCurrentUser();
-                        if (user) {
-                            if (user.role === 'super_admin') renderPage('super-dashboard');
-                            else if (user.role === 'sub_admin') renderPage('admin-dashboard');
-                            else renderPage('dashboard');
-                        } else {
-                            renderPage('login');
-                        }
+                        refreshCurrentPage();
                     } else {
                         showToast('ℹ️ មិនទាន់មានទិន្នន័យក្នុង Cloud', 'info');
                         updateCloudStatus(false);
@@ -879,8 +330,7 @@
             database.ref('memberSystem').on('value', function(snapshot) {
                 var data = snapshot.val();
                 if (data) {
-                    var oldMembersCount = Object.keys(localData.members).length;
-                    
+                    var oldCount = Object.keys(localData.members).length;
                     localData.members = data.members || {};
                     localData.subAdmins = data.subAdmins || {};
                     localData.superAdmins = data.superAdmins || {};
@@ -888,41 +338,35 @@
                     localData.paymentRequests = data.paymentRequests || [];
                     localData.commissions = data.commissions || [];
                     localData.activityLogs = data.activityLogs || [];
+                    localData.notifications = data.notifications || [];
                     localData.memberCounter = data.memberCounter || 0;
                     localData.adminCounter = data.adminCounter || 0;
                     localData.exchangeRate = data.exchangeRate || 4000;
-                    localData.version = data.version || '6.1';
-
+                    localData.version = data.version || '6.2';
                     updateCloudStatus(true);
 
-                    var newMembersCount = Object.keys(localData.members).length;
-                    if (newMembersCount !== oldMembersCount && oldMembersCount > 0) {
+                    var newCount = Object.keys(localData.members).length;
+                    if (newCount !== oldCount && oldCount > 0) {
                         showToast('🔄 ទិន្នន័យត្រូវបានធ្វើបច្ចុប្បន្នភាព!', 'info');
                     }
-
-                    var user = getCurrentUser();
-                    if (user) {
-                        var currentPage = getCurrentPage();
-                        if (currentPage === 'dashboard' || currentPage === 'admin-dashboard' || currentPage === 'super-dashboard') {
-                            renderPage(currentPage);
-                        }
-                    }
+                    refreshCurrentPage();
                 }
             });
         }
 
-        function getCurrentPage() {
-            var container = document.getElementById('pageContent');
-            if (!container) return 'login';
-            var content = container.innerHTML;
-            if (content.indexOf('SUPER ADMIN') !== -1) return 'super-dashboard';
-            if (content.indexOf('Sub Admin') !== -1 && content.indexOf('សមាជិក') !== -1) return 'admin-dashboard';
-            if (content.indexOf('សមតុល្យ') !== -1 || content.indexOf('ដាក់ប្រាក់') !== -1) return 'dashboard';
-            return 'login';
+        function refreshCurrentPage() {
+            var user = getCurrentUser();
+            if (user) {
+                if (user.role === 'super_admin') renderPage('super-dashboard');
+                else if (user.role === 'sub_admin') renderPage('admin-dashboard');
+                else renderPage('dashboard');
+            } else {
+                renderPage('login');
+            }
         }
 
         // ================================================================
-        // ===== BASIC FUNCTIONS =====
+        // BASIC FUNCTIONS
         // ================================================================
 
         function generateMemberId() {
@@ -943,10 +387,7 @@
 
         function getCurrentUser() {
             var user = localStorage.getItem('firebaseCurrentUser');
-            if (user) {
-                return JSON.parse(user);
-            }
-            return null;
+            return user ? JSON.parse(user) : null;
         }
 
         function setCurrentUser(user) {
@@ -978,19 +419,12 @@
             var content = document.getElementById('modalContent');
             body.innerHTML = html;
             overlay.style.display = 'flex';
-            setTimeout(function() {
-                content.classList.add('show');
-            }, 10);
+            setTimeout(function() { content.classList.add('show'); }, 10);
             if (options && options.closeOnOverlay !== false) {
-                overlay.onclick = function(e) {
-                    if (e.target === overlay) hideModal();
-                };
+                overlay.onclick = function(e) { if (e.target === overlay) hideModal(); };
             }
             document.addEventListener('keydown', function handler(e) {
-                if (e.key === 'Escape') {
-                    hideModal();
-                    document.removeEventListener('keydown', handler);
-                }
+                if (e.key === 'Escape') { hideModal(); document.removeEventListener('keydown', handler); }
             });
         }
 
@@ -998,9 +432,7 @@
             var overlay = document.getElementById('modalOverlay');
             var content = document.getElementById('modalContent');
             content.classList.remove('show');
-            setTimeout(function() {
-                overlay.style.display = 'none';
-            }, 300);
+            setTimeout(function() { overlay.style.display = 'none'; }, 300);
         }
 
         function toggleTheme() {
@@ -1121,7 +553,7 @@
         }
 
         // ================================================================
-        // ===== RENDER ENGINE =====
+        // RENDER ENGINE
         // ================================================================
 
         function renderPage(page) {
@@ -1136,6 +568,7 @@
                 case 'super-dashboard': html = renderSuperDashboard(); break;
                 case 'payment-requests': html = renderPaymentRequests(); break;
                 case 'activity-log': html = renderActivityLog(); break;
+                case 'report': html = renderReport(); break;
                 default: html = renderLogin();
             }
 
@@ -1144,7 +577,7 @@
         }
 
         // ================================================================
-        // ===== PAGE BUILDERS =====
+        // PAGE BUILDERS
         // ================================================================
 
         function renderLogin() {
@@ -1186,7 +619,7 @@
                             <input type="hidden" id="loginRole">
                             <input type="tel" id="loginPhone" placeholder="📱 លេខទូរសព្ទ" required>
                             <input type="password" id="loginPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
-                            <button type="submit" class="btn btn-primary">🔑 ចូលប្រើ</button>
+                            <button type="submit" class="btn">🔑 ចូលប្រើ</button>
                         </form>
                         <div id="loginMsg"></div>
                     </div>
@@ -1198,21 +631,13 @@
             var container = document.getElementById('loginFormContainer');
             var title = document.getElementById('loginFormTitle');
             var roleInput = document.getElementById('loginRole');
-            
             if (!container || !title || !roleInput) return;
-            
-            var roleNames = {
-                'member': 'សមាជិក',
-                'sub_admin': 'Sub Admin',
-                'super_admin': 'Super Admin'
-            };
-            
+
+            var roleNames = { 'member': 'សមាជិក', 'sub_admin': 'Sub Admin', 'super_admin': 'Super Admin' };
             title.textContent = '🔑 ចូលប្រើជា ' + (roleNames[role] || role);
             roleInput.value = role;
             container.style.display = 'block';
             container.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Clear previous messages
             document.getElementById('loginMsg').innerHTML = '';
         }
 
@@ -1241,7 +666,7 @@
         }
 
         // ================================================================
-        // ===== DASHBOARD (MEMBER) =====
+        // DASHBOARD (MEMBER)
         // ================================================================
 
         function renderDashboard() {
@@ -1367,6 +792,7 @@
                 </div>
 
                 <div class="flex mt-10">
+                    <button onclick="renderPage('payment-requests')" class="btn btn-sm btn-payment" style="flex:1;">💳 សំណើ</button>
                     <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple" style="flex:1;">📋 កំណត់ត្រា</button>
                     <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">☁️ Sync</button>
                 </div>
@@ -1374,7 +800,7 @@
         }
 
         // ================================================================
-        // ===== ADMIN DASHBOARD =====
+        // ADMIN DASHBOARD
         // ================================================================
 
         function renderAdminDashboard() {
@@ -1416,7 +842,7 @@
                 }
             }
 
-            // Payment Requests from members
+            // Payment Requests
             var prs = [];
             for (var j = 0; j < mk.length; j++) {
                 var prList = getPaymentRequestsByUser(mk[j]);
@@ -1495,7 +921,7 @@
         }
 
         // ================================================================
-        // ===== SUPER ADMIN DASHBOARD =====
+        // SUPER ADMIN DASHBOARD
         // ================================================================
 
         function renderSuperDashboard() {
@@ -1603,14 +1029,15 @@
                 <div class="flex mt-10">
                     <button onclick="renderPage('payment-requests')" class="btn btn-sm btn-payment" style="flex:1;">💳 សំណើ</button>
                     <button onclick="renderPage('activity-log')" class="btn btn-sm btn-purple" style="flex:1;">📋 កំណត់ត្រា</button>
+                    <button onclick="renderPage('report')" class="btn btn-sm btn-gold" style="flex:1;">📊 របាយការណ៍</button>
                     <button onclick="saveToFirebase()" class="btn btn-sm btn-cloud" style="flex:1;">☁️ Sync</button>
-                    <button onclick="loadFromFirebase()" class="btn btn-sm btn-primary" style="flex:1;">☁️ Load</button>
+                    <button onclick="loadFromFirebase()" class="btn btn-sm" style="flex:1;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">☁️ Load</button>
                 </div>
             `;
         }
 
         // ================================================================
-        // ===== PAYMENT REQUESTS PAGE =====
+        // PAYMENT REQUESTS PAGE
         // ================================================================
 
         function renderPaymentRequests() {
@@ -1671,7 +1098,7 @@
         }
 
         // ================================================================
-        // ===== ACTIVITY LOG =====
+        // ACTIVITY LOG
         // ================================================================
 
         function renderActivityLog() {
@@ -1715,7 +1142,94 @@
         }
 
         // ================================================================
-        // ===== FUNCTIONS =====
+        // REPORT
+        // ================================================================
+
+        function renderReport() {
+            var user = getCurrentUser();
+            if (!user) {
+                renderPage('login');
+                return '';
+            }
+
+            var html = `
+                <div class="top-bar">
+                    <h2>📊 របាយការណ៍</h2>
+                    <span class="back-link" onclick="goBack()">← ត្រឡប់</span>
+                </div>
+                <div style="display:flex;gap:6px;margin:10px 0;flex-wrap:wrap;">
+                    <button onclick="generateReport('daily')" class="btn btn-sm btn-gold">📅 ប្រចាំថ្ងៃ</button>
+                    <button onclick="generateReport('weekly')" class="btn btn-sm btn-purple">📅 ប្រចាំសប្តាហ៍</button>
+                    <button onclick="generateReport('monthly')" class="btn btn-sm btn-green">📅 ប្រចាំខែ</button>
+                </div>
+                <div id="reportContent"></div>
+            `;
+
+            return html;
+        }
+
+        function generateReport(period) {
+            var container = document.getElementById('reportContent');
+            if (!container) return;
+
+            var now = new Date();
+            var start = new Date();
+
+            if (period === 'daily') {
+                start.setHours(0, 0, 0, 0);
+            } else if (period === 'weekly') {
+                start.setDate(now.getDate() - 7);
+            } else if (period === 'monthly') {
+                start.setMonth(now.getMonth() - 1);
+            }
+
+            var filtered = [];
+            for (var i = 0; i < localData.transactions.length; i++) {
+                var t = localData.transactions[i];
+                if (new Date(t.timestamp) >= start && new Date(t.timestamp) <= now && t.status === 'completed') {
+                    filtered.push(t);
+                }
+            }
+
+            var totals = { totalDeposits: 0, totalWithdraws: 0 };
+            for (var j = 0; j < filtered.length; j++) {
+                if (filtered[j].type === 'deposit') totals.totalDeposits += filtered[j].amount;
+                else if (filtered[j].type === 'withdraw') totals.totalWithdraws += filtered[j].amount;
+            }
+
+            var tc = 0;
+            for (var k = 0; k < localData.commissions.length; k++) {
+                tc += localData.commissions[k].commission;
+            }
+
+            var html = `
+                <div class="card">
+                    <h3>📊 របាយការណ៍ ${period === 'daily' ? 'ប្រចាំថ្ងៃ' : period === 'weekly' ? 'ប្រចាំសប្តាហ៍' : 'ប្រចាំខែ'}</h3>
+                    <div style="font-size:12px;color:rgba(255,255,255,0.3);">
+                        ពី ${start.toLocaleDateString('km-KH')} ដល់ ${now.toLocaleDateString('km-KH')}
+                    </div>
+                    <div class="summary-stats" style="margin-top:10px;">
+                        <div class="summary-box"><div class="number green">$${totals.totalDeposits.toFixed(2)}</div><div class="label">ដាក់</div></div>
+                        <div class="summary-box"><div class="number red">$${totals.totalWithdraws.toFixed(2)}</div><div class="label">ដក</div></div>
+                        <div class="summary-box"><div class="number gold">$${(totals.totalDeposits - totals.totalWithdraws).toFixed(2)}</div><div class="label">សល់</div></div>
+                        <div class="summary-box"><div class="number gold">${Object.keys(localData.members).length}</div><div class="label">សមាជិក</div></div>
+                        <div class="summary-box"><div class="number gold">${filtered.length}</div><div class="label">ប្រតិបត្តិការ</div></div>
+                        <div class="summary-box"><div class="number gold">$${tc.toFixed(2)}</div><div class="label">កម្រៃ</div></div>
+                    </div>
+                    <div style="max-height:150px;overflow-y:auto;margin-top:8px;">
+                        ${filtered.slice(0, 10).map(function(tx) {
+                            return '<div class="transaction-item"><div>' + tx.type + ' - ' + (tx.description || '') + '</div><div style="color:' + (tx.type === 'deposit' ? '#48bb78' : '#fc8181') + ';">' + (tx.type === 'deposit' ? '+' : '-') + '$' + tx.amount.toFixed(2) + '</div></div>';
+                        }).join('')}
+                        ${filtered.length > 10 ? '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);padding-top:4px;">បង្ហាញ ១០ ចុងក្រោយ</p>' : ''}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // ================================================================
+        // FUNCTIONS
         // ================================================================
 
         function handleDepositFile(input) {
@@ -1765,7 +1279,6 @@
             var member = localData.members[user.phone];
             if (!member) { showToast('មិនឃើញព័ត៌មាន!', 'error'); return; }
 
-            // Find admin
             var admin = Object.values(localData.subAdmins)[0];
             if (!admin) {
                 var firstMember = Object.values(localData.members)[0];
@@ -1944,6 +1457,10 @@
                     target.balance -= amountUSD;
                     if (!target.benefits) target.benefits = [];
                     target.benefits.push('🏦 បានដកប្រាក់ ' + formatCurrency(amountUSD, target.currency || 'usd') + ' (សំណើ: ' + pr.id + ')');
+                }
+                var source = localData.subAdmins[pr.to];
+                if (source) {
+                    source.balance += amountUSD;
                 }
             }
 
@@ -2255,7 +1772,7 @@
         }
 
         // ================================================================
-        // ===== EVENT ATTACHMENT =====
+        // EVENT ATTACHMENT
         // ================================================================
 
         function attachEvents(page) {
@@ -2366,7 +1883,7 @@
                         }
                     }
 
-                    msg.innerHTML = '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">❌ មិនត្រឹមត្រូវ!<br><span style="font-size:12px;opacity:0.6;">សូមពិនិត្យលេខទូរសព្ទ និងពាក្យសម្ងាត់</span></div>';
+                    msg.innerHTML = '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">❌ មិនត្រឹមត្រូវ!</div>';
                 };
             }
 
@@ -2412,10 +1929,10 @@
         }
 
         // ================================================================
-        // ===== INIT =====
+        // INIT
         // ================================================================
 
-        // Initialize Super Admin if not exists
+        // Initialize Super Admin
         if (Object.keys(localData.superAdmins).length === 0) {
             localData.superAdmins['066817407'] = {
                 name: 'Super Admin',
@@ -2427,7 +1944,7 @@
             };
         }
 
-        // Check if there's any member, if not create default
+        // Initialize default member
         if (Object.keys(localData.members).length === 0) {
             var defaultId = generateMemberId();
             localData.members['066817407'] = {
@@ -2442,7 +1959,7 @@
             };
         }
 
-        // Check if there's any sub admin, if not create from first member
+        // Initialize sub admin from first member
         if (Object.keys(localData.subAdmins).length === 0) {
             var firstMember = Object.values(localData.members)[0];
             if (firstMember) {
@@ -2460,7 +1977,6 @@
             }
         }
 
-        // Save initial data
         saveToFirebase();
 
         var cu = getCurrentUser();
@@ -2473,20 +1989,17 @@
             renderPage('login');
         }
 
-        // Setup Firebase connection listener
+        // Firebase connection
         database.ref('.info/connected').on('value', function(snap) {
             updateCloudStatus(snap.val());
             if (snap.val()) {
-                setTimeout(function() {
-                    loadFromFirebase();
-                }, 1000);
+                setTimeout(function() { loadFromFirebase(); }, 1000);
             }
         });
 
-        // Setup real-time listeners
         setupRealtimeListeners();
 
-        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v6.1 (Firebase) បានដំណើរការ!');
+        console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v6.2 បានដំណើរការ!');
         console.log('📊 ទិន្នន័យបច្ចុប្បន្ន:', localData);
         console.log('👤 អ្នកប្រើបច្ចុប្បន្ន:', cu);
     </script>
