@@ -3,46 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>ប្រព័ន្ធគ្រប់គ្រងសមាជិក v8.1</title>
+    <title>🎯 ប្រព័ន្ធទស្សន៍ទាយលេខ</title>
 
     <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js">
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <style>
-        /* ===== CSS Styles (ដូចដើម) ===== */
-        @font-face {
-            font-family: 'Khmer OS Battambang';
-            src: local('Khmer OS Battambang'), local('KhmerOSBattambang');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Khmer OS Battambang';
-            src: local('Khmer OS Battambang Bold'), local('KhmerOSBattambang-Bold');
-            font-weight: bold;
-            font-style: normal;
-            font-display: swap;
-        }
+        /* ===== CSS Styles ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Khmer&display=swap');
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Khmer OS Battambang', 'Khmer OS', 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Khmer', 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
             padding: 10px;
-            transition: background 0.5s ease;
             padding-top: 15px;
         }
 
@@ -55,13 +36,11 @@
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
-        body.light-mode h2,
-        body.light-mode .card h3,
-        body.light-mode .list-item .info .name {
+        body.light-mode h1, body.light-mode h2, body.light-mode h3 {
             color: #1a1a2e;
         }
 
-        body.light-mode p {
+        body.light-mode p, body.light-mode .label {
             color: rgba(0, 0, 0, 0.6);
         }
 
@@ -70,138 +49,107 @@
             border: 1px solid rgba(0, 0, 0, 0.08);
         }
 
-        body.light-mode input,
-        body.light-mode select,
-        body.light-mode textarea {
+        body.light-mode input, body.light-mode select {
             background: rgba(0, 0, 0, 0.05);
             color: #1a1a2e;
             border-color: rgba(0, 0, 0, 0.1);
         }
 
-        body.light-mode .list-item {
-            background: rgba(0, 0, 0, 0.04);
-            border-left-color: #667eea;
+        body.light-mode .prediction-card {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            border-color: rgba(102, 126, 234, 0.3);
         }
 
-        body.light-mode .notification-item {
-            background: rgba(0, 0, 0, 0.04);
-        }
-
-        body.light-mode .payment-info-card {
-            background: rgba(0, 0, 0, 0.03);
+        body.light-mode .result-card {
+            background: linear-gradient(135deg, #f093fb15, #f5576c15);
         }
 
         .container {
+            max-width: 480px;
+            margin: 0 auto;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px;
+            padding: 16px;
             border-radius: 20px;
-            width: 100%;
-            max-width: 800px;
-            max-height: 98vh;
-            overflow-y: auto;
+            min-height: 95vh;
             animation: fadeInUp 0.6s ease-out;
         }
 
-        .container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        .container::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-        }
-
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         @keyframes glow {
-            0%,
-            100% {
-                box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
-            }
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.6); }
         }
 
-        @keyframes notificationPulse {
-            0%,
-            100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-glow {
-            animation: glow 2s ease-in-out infinite;
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
         }
 
         h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 1.6rem;
+            text-align: center;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         h2 {
             color: #fff;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 6px;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        h3 {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
         }
 
         p {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
             line-height: 1.6;
-            font-size: 14px;
         }
 
-        input,
-        select,
-        textarea {
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 14px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-2px);
+        }
+
+        input, select {
             width: 100%;
             padding: 10px 14px;
             margin: 4px 0;
@@ -214,14 +162,11 @@
             outline: none;
         }
 
-        input::placeholder,
-        textarea::placeholder {
-            color: rgba(255, 255, 255, 0.4);
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
         }
 
-        input:focus,
-        select:focus,
-        textarea:focus {
+        input:focus, select:focus {
             border-color: #667eea;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 20px rgba(102, 126, 234, 0.15);
@@ -232,52 +177,16 @@
             color: #fff;
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 50px;
-        }
-
-        .input-group {
-            position: relative;
-        }
-
-        .input-group input {
-            padding-right: 45px;
-        }
-
-        .input-group .toggle-pwd {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px;
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-
-        .input-group .toggle-pwd:hover {
-            color: #fff;
-            transform: translateY(-50%) scale(1.1);
-        }
-
         .btn {
             display: inline-block;
             padding: 10px 22px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
             border: 0;
             border-radius: 12px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin: 3px;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            margin: 3px 0;
             width: 100%;
             text-align: center;
             position: relative;
@@ -285,191 +194,146 @@
         }
 
         .btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+            transform: translateY(-2px);
         }
 
         .btn:active {
             transform: scale(0.98);
         }
 
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.6s ease;
-            opacity: 0;
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .btn:hover::after {
-            opacity: 1;
-            transform: rotate(45deg) translateX(100%);
+        .btn-primary:hover {
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 12px 35px rgba(72, 187, 120, 0.5);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #fc8181, #e53e3e);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(252, 129, 129, 0.3);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 12px 35px rgba(252, 129, 129, 0.5);
         }
 
         .btn-gold {
             background: linear-gradient(135deg, #ffd700, #f59e0b);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
             color: #1a1a2e;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
         }
 
         .btn-gold:hover {
             box-shadow: 0 12px 35px rgba(255, 215, 0, 0.5);
         }
 
-        .btn-green {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
-            color: #fff;
-        }
-
-        .btn-green:hover {
-            box-shadow: 0 12px 35px rgba(72, 187, 120, 0.5);
-        }
-
-        .btn-red {
-            background: linear-gradient(135deg, #fc8181, #e53e3e);
-            box-shadow: 0 8px 25px rgba(252, 129, 129, 0.3);
-            color: #fff;
-        }
-
-        .btn-red:hover {
-            box-shadow: 0 12px 35px rgba(252, 129, 129, 0.5);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #f6ad55, #ed8936);
-            box-shadow: 0 8px 25px rgba(246, 173, 85, 0.3);
-            color: #fff;
-        }
-
-        .btn-warning:hover {
-            box-shadow: 0 12px 35px rgba(246, 173, 85, 0.5);
-        }
-
-        .btn-sm {
-            padding: 5px 12px;
-            font-size: 11px;
-            width: auto;
-        }
-
         .btn-purple {
             background: linear-gradient(135deg, #9f7aea, #805ad5);
-            box-shadow: 0 8px 25px rgba(159, 122, 234, 0.3);
             color: #fff;
+            box-shadow: 0 8px 25px rgba(159, 122, 234, 0.3);
         }
 
         .btn-purple:hover {
             box-shadow: 0 12px 35px rgba(159, 122, 234, 0.5);
         }
 
-        .btn-cloud {
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            box-shadow: 0 8px 25px rgba(0, 210, 255, 0.3);
-            color: #fff;
-        }
-
-        .btn-cloud:hover {
-            box-shadow: 0 12px 35px rgba(0, 210, 255, 0.5);
-        }
-
-        .btn-commission {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.3);
-            color: #fff;
-        }
-
-        .btn-commission:hover {
-            box-shadow: 0 12px 35px rgba(245, 87, 108, 0.5);
-        }
-
-        .btn-payment {
-            background: linear-gradient(135deg, #fa709a, #fee140);
-            box-shadow: 0 8px 25px rgba(250, 112, 154, 0.3);
-            color: #1a1a2e;
-        }
-
-        .btn-payment:hover {
-            box-shadow: 0 12px 35px rgba(250, 112, 154, 0.5);
-        }
-
-        .btn-notification {
-            background: linear-gradient(135deg, #a8edea, #fed6e3);
-            box-shadow: 0 8px 25px rgba(168, 237, 234, 0.3);
-            color: #1a1a2e;
-        }
-
-        .btn-notification:hover {
-            box-shadow: 0 12px 35px rgba(168, 237, 234, 0.5);
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 11px;
+            width: auto;
         }
 
         .btn-cancel {
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: none;
             color: rgba(255, 255, 255, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none;
         }
 
         .btn-cancel:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
-            box-shadow: none;
+        }
+
+        .btn-logout {
+            background: rgba(252, 129, 129, 0.15);
+            border: 1px solid rgba(252, 129, 129, 0.2);
+            color: #fc8181;
+            padding: 4px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(252, 129, 129, 0.25);
+            transform: scale(1.05);
         }
 
         .btn-back {
             background: rgba(255, 255, 255, 0.06);
-            box-shadow: none;
             color: rgba(255, 255, 255, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            width: auto;
-            padding: 5px 12px;
+            padding: 4px 12px;
             font-size: 12px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            border-radius: 8px;
+            width: auto;
         }
 
         .btn-back:hover {
             background: rgba(255, 255, 255, 0.12);
-            transform: translateX(-3px);
-            box-shadow: none;
             color: #fff;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 14px;
-            border-radius: 16px;
-            margin: 8px 0;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: slideInRight 0.5s ease-out;
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
-        .card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+        .top-bar .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
-        .card h3 {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 5px;
+        .top-bar .user-info .name {
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .top-bar .user-info .role {
+            font-size: 10px;
+            color: rgba(255, 215, 0, 0.6);
         }
 
         .badge {
             display: inline-block;
             padding: 2px 10px;
             border-radius: 16px;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -489,549 +353,245 @@
             color: #fff;
         }
 
-        .badge-red {
-            background: #fc8181;
-            color: #fff;
-        }
-
-        .admin-panel {
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            background: rgba(255, 215, 0, 0.05);
-        }
-
-        .admin-panel h3 {
-            color: #ffd700;
-        }
-
-        .super-panel {
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            background: rgba(255, 215, 0, 0.08);
-        }
-
-        .super-panel h3 {
-            color: #ffd700;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
+        /* Prediction Grid */
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 8px;
+            margin: 8px 0;
         }
 
-        .top-bar .left-section {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            flex: 1;
-        }
-
-        .top-bar .right-section {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 4px;
-        }
-
-        .top-bar h2 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-
-        .btn-logout {
-            background: rgba(252, 129, 129, 0.15);
-            border: 1px solid rgba(252, 129, 129, 0.2);
-            color: #fc8181;
-            padding: 3px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-logout:hover {
-            background: rgba(252, 129, 129, 0.25);
-            transform: scale(1.05);
-            border-color: #fc8181;
-        }
-
-        .login-container {
-            padding: 10px 0;
-        }
-
-        .login-container .login-logo {
-            font-size: 60px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .login-container .login-title {
-            text-align: center;
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffd700, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 5px;
-        }
-
-        .login-container .login-subtitle {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 13px;
-            margin-bottom: 20px;
-        }
-
-        .login-container .login-option {
-            background: rgba(255, 255, 255, 0.05);
+        .prediction-card {
+            background: rgba(255, 255, 255, 0.04);
             border: 2px solid rgba(255, 255, 255, 0.08);
             border-radius: 14px;
-            padding: 16px;
-            margin: 8px 0;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            padding: 14px;
             text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .login-container .login-option:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-5px) scale(1.02);
+        .prediction-card:hover {
+            transform: translateY(-3px);
             border-color: #667eea;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        .login-container .login-option .icon {
-            font-size: 32px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .login-container .login-option .title {
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .login-container .login-option .desc {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-            margin-top: 2px;
-        }
-
-        .login-container .login-option.admin-option {
-            border-color: rgba(255, 215, 0, 0.2);
-        }
-
-        .login-container .login-option.admin-option:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.08);
-        }
-
-        .login-container .login-option.super-option {
-            border-color: rgba(255, 215, 0, 0.1);
-            background: rgba(255, 215, 0, 0.03);
-        }
-
-        .login-container .login-option.super-option:hover {
+        .prediction-card.selected {
             border-color: #ffd700;
             background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15);
         }
 
-        .file-upload {
-            position: relative;
-            padding: 15px;
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.03);
-            margin: 5px 0;
-        }
-
-        .file-upload:hover {
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.05);
-            transform: scale(1.01);
-        }
-
-        .file-upload input[type="file"] {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-upload .upload-icon {
-            font-size: 24px;
+        .prediction-card .letter {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
             display: block;
-            margin-bottom: 4px;
         }
 
-        .file-upload .upload-text {
+        .prediction-card .label {
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
         }
 
-        .file-upload .file-name {
-            color: #48bb78;
-            font-size: 12px;
+        .prediction-card .result {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffd700;
             margin-top: 4px;
-        }
-
-        .image-viewer-overlay {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 99999;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            animation: fadeIn 0.3s ease;
         }
 
-        .image-viewer-overlay.show {
-            display: flex;
+        .prediction-card .result.show {
+            display: block;
+            animation: pulse 1s ease-in-out infinite;
         }
 
-        .image-viewer-overlay img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            animation: fadeIn 0.3s ease;
+        .prediction-card.winner {
+            border-color: #48bb78;
+            background: rgba(72, 187, 120, 0.15);
+            animation: glow 1.5s ease-in-out infinite;
         }
 
-        .image-viewer-overlay .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: #fff;
-            font-size: 40px;
-            cursor: pointer;
-            transition: .3s;
-            z-index: 1;
-        }
-
-        .image-viewer-overlay .close-btn:hover {
-            transform: scale(1.2);
-            color: #ffd700;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 100px;
-            border-radius: 8px;
-            margin-top: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .preview-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .list-item {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 10px;
-            border-left: 3px solid #667eea;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 5px;
-            font-size: 13px;
-            transition: all 0.3s ease;
-        }
-
-        .list-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-        }
-
-        .list-item .info {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            flex: 1;
-            min-width: 100px;
-        }
-
-        .list-item .info .name {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .list-item .info .sub {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .list-item .info .id {
-            font-size: 10px;
-            color: rgba(255, 215, 0, 0.5);
-        }
-
-        .list-item .info .pwd {
-            font-size: 11px;
+        .prediction-card.winner .result {
             color: #48bb78;
-            font-family: monospace;
-            letter-spacing: 1px;
-            cursor: pointer;
-            user-select: all;
         }
 
-        .list-item .info .pwd:hover {
-            color: #ffd700;
+        .prediction-card.loser {
+            border-color: #fc8181;
+            background: rgba(252, 129, 129, 0.1);
         }
 
-        .list-item .balance {
-            color: #48bb78;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .list-item .actions {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-        }
-
-        .transaction-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 6px;
-        }
-
-        .transaction-list::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .transaction-list::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
-
-        .transaction-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 12px;
-            flex-wrap: wrap;
-            gap: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .transaction-item:hover {
-            background: rgba(255, 255, 255, 0.03);
-            padding-left: 10px;
-        }
-
-        .payment-item {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 10px 12px;
-            border-radius: 10px;
-            margin: 6px 0;
-            border-left: 3px solid #fa709a;
-            transition: all 0.3s ease;
-        }
-
-        .payment-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-        }
-
-        .payment-item .amount {
-            color: #ffd700;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .payment-item .status-pending {
-            color: #f6ad55;
-            font-size: 11px;
-        }
-
-        .payment-item .status-approved {
-            color: #48bb78;
-            font-size: 11px;
-        }
-
-        .payment-item .status-rejected {
+        .prediction-card.loser .result {
             color: #fc8181;
-            font-size: 11px;
         }
 
-        .summary-stats {
+        /* Number Input */
+        .number-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin: 8px 0;
+        }
+
+        .number-input-group input {
+            flex: 1;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 12px;
+        }
+
+        .number-input-group .prefix {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffd700;
+            padding: 8px;
+        }
+
+        /* Stats */
+        .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 6px;
             margin: 6px 0;
         }
 
-        .summary-stats .summary-box {
+        .stats-box {
             background: rgba(255, 255, 255, 0.04);
-            padding: 6px;
-            border-radius: 8px;
+            padding: 8px;
+            border-radius: 10px;
             text-align: center;
-            transition: all 0.3s ease;
         }
 
-        .summary-stats .summary-box:hover {
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .summary-stats .summary-box .number {
-            font-size: 16px;
+        .stats-box .number {
+            font-size: 18px;
             font-weight: 700;
             color: #fff;
         }
 
-        .summary-stats .summary-box .label {
+        .stats-box .number.gold {
+            color: #ffd700;
+        }
+
+        .stats-box .number.green {
+            color: #48bb78;
+        }
+
+        .stats-box .number.red {
+            color: #fc8181;
+        }
+
+        .stats-box .label {
             font-size: 9px;
             color: rgba(255, 255, 255, 0.3);
             text-transform: uppercase;
-            letter-spacing: .5px;
+            letter-spacing: 0.5px;
         }
 
-        .summary-stats .summary-box .number.green {
-            color: #48bb78;
-        }
-
-        .summary-stats .summary-box .number.red {
-            color: #fc8181;
-        }
-
-        .summary-stats .summary-box .number.gold {
-            color: #ffd700;
-        }
-
-        .notification-item {
-            background: rgba(255, 215, 0, 0.08);
-            border-left: 4px solid #ffd700;
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin: 5px 0;
-            font-size: 13px;
-            transition: all 0.3s ease;
-            animation: slideInRight 0.5s ease-out;
-        }
-
-        .notification-item:hover {
-            background: rgba(255, 215, 0, 0.12);
-            transform: translateX(5px);
-        }
-
-        .notification-item .time {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .notification-item .noti-icon {
-            font-size: 18px;
-            margin-right: 8px;
-        }
-
-        .notification-item .noti-type {
-            font-size: 10px;
-            padding: 1px 8px;
+        /* Prediction History */
+        .history-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 12px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .notification-item .noti-type.system {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.15);
-        }
-
-        .notification-item .noti-type.commission {
-            color: #f5576c;
-            background: rgba(245, 87, 108, 0.15);
-        }
-
-        .notification-item .noti-type.payment {
-            color: #ffd700;
-            background: rgba(255, 215, 0, 0.15);
-        }
-
-        .notification-item .noti-type.alert {
-            color: #fc8181;
-            background: rgba(252, 129, 129, 0.15);
-        }
-
-        .notification-item .noti-type.new-member {
-            color: #48bb78;
-            background: rgba(72, 187, 120, 0.15);
-        }
-
-        .commission-item {
-            background: rgba(245, 87, 108, 0.06);
-            border-left: 4px solid #f5576c;
-            padding: 10px 14px;
-            border-radius: 8px;
-            margin: 5px 0;
-            font-size: 13px;
+            margin: 4px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #667eea;
+            font-size: 12px;
             transition: all 0.3s ease;
-            animation: slideInRight 0.5s ease-out;
         }
 
-        .commission-item:hover {
-            background: rgba(245, 87, 108, 0.12);
-            transform: translateX(5px);
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateX(3px);
         }
 
-        .commission-item .amount {
-            color: #f5576c;
-            font-weight: 700;
-            font-size: 14px;
+        .history-item .prediction-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
         }
 
-        .commission-item .time {
-            font-size: 10px;
+        .history-item .prediction-info .main {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .history-item .prediction-info .sub {
             color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
         }
 
-        .commission-total {
-            background: linear-gradient(135deg, rgba(245, 87, 108, 0.15), rgba(240, 147, 251, 0.15));
-            border: 1px solid rgba(245, 87, 108, 0.2);
-            padding: 12px;
+        .history-item .status {
+            font-size: 10px;
+            padding: 2px 10px;
             border-radius: 12px;
-            margin: 8px 0;
-            text-align: center;
         }
 
-        .commission-total .amount {
-            font-size: 24px;
+        .history-item .status.win {
+            background: rgba(72, 187, 120, 0.2);
+            color: #48bb78;
+        }
+
+        .history-item .status.lose {
+            background: rgba(252, 129, 129, 0.2);
+            color: #fc8181;
+        }
+
+        .history-item .status.pending {
+            background: rgba(255, 215, 0, 0.15);
+            color: #ffd700;
+        }
+
+        /* Result Display */
+        .result-display {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(102, 126, 234, 0.08));
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin: 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-display .big-number {
+            font-size: 48px;
             font-weight: 800;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            line-height: 1.2;
         }
 
-        .commission-total .label {
-            font-size: 11px;
+        .result-display .big-letter {
+            font-size: 36px;
+            font-weight: 800;
+            color: #ffd700;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .result-display .result-label {
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
+        .result-display .confetti {
+            position: absolute;
+            font-size: 24px;
+            animation: confetti 1.5s ease-out forwards;
+        }
+
+        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -1039,30 +599,20 @@
             padding: 12px 20px;
             border-radius: 12px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             z-index: 10000;
-            animation: slideInRight 0.5s ease-out;
+            animation: slideIn 0.5s ease-out;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             max-width: 300px;
         }
 
-        .toast-success {
-            background: linear-gradient(135deg, #48bb78, #38a169);
-        }
+        .toast-success { background: linear-gradient(135deg, #48bb78, #38a169); }
+        .toast-error { background: linear-gradient(135deg, #fc8181, #e53e3e); }
+        .toast-info { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .toast-warning { background: linear-gradient(135deg, #f6ad55, #ed8936); }
 
-        .toast-error {
-            background: linear-gradient(135deg, #fc8181, #e53e3e);
-        }
-
-        .toast-info {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        .toast-warning {
-            background: linear-gradient(135deg, #f6ad55, #ed8936);
-        }
-
+        /* Modal */
         #modalOverlay {
             display: none;
             position: fixed;
@@ -1074,37 +624,28 @@
             z-index: 9999;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s ease;
             backdrop-filter: blur(5px);
         }
 
         #modalContent {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 20px;
-            padding: 25px;
-            max-width: 420px;
+            padding: 24px;
+            max-width: 400px;
             width: 90%;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            transform: scale(.9);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             max-height: 90vh;
             overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         #modalContent.show {
             transform: scale(1);
         }
 
-        #modalContent::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        #modalContent::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
-
+        /* Theme Toggle */
         .theme-toggle {
             position: fixed;
             bottom: 20px;
@@ -1142,7 +683,6 @@
             border-radius: 12px;
             font-size: 9px;
             font-weight: 600;
-            text-transform: uppercase;
         }
 
         .cloud-status.connected {
@@ -1157,598 +697,34 @@
             border: 1px solid rgba(252, 129, 129, 0.3);
         }
 
-        .search-box {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 14px;
-            outline: 0;
-            transition: .3s;
-        }
-
-        .search-box:focus {
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .search-box::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
-        .balance-card {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(102, 126, 234, 0.08));
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            padding: 20px;
-            border-radius: 16px;
-            margin: 10px 0;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .balance-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.15);
-        }
-
-        .balance-card .bg-icons {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .balance-card .bg-icons .icon {
-            position: absolute;
-            font-size: 40px;
-            opacity: 0.12;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .balance-card .bg-icons .icon:nth-child(1) {
-            top: 10%;
-            left: 5%;
-            animation-delay: 0;
-            font-size: 50px;
-        }
-        .balance-card .bg-icons .icon:nth-child(2) {
-            top: 60%;
-            right: 8%;
-            animation-delay: 1.5s;
-            font-size: 35px;
-        }
-        .balance-card .bg-icons .icon:nth-child(3) {
-            bottom: 15%;
-            left: 20%;
-            animation-delay: 3s;
-            font-size: 45px;
-        }
-        .balance-card .bg-icons .icon:nth-child(4) {
-            top: 30%;
-            right: 20%;
-            animation-delay: .8s;
-            font-size: 30px;
-        }
-        .balance-card .bg-icons .icon:nth-child(5) {
-            bottom: 40%;
-            right: 40%;
-            animation-delay: 2.2s;
-            font-size: 55px;
-        }
-        .balance-card .bg-icons .icon:nth-child(6) {
-            top: 5%;
-            right: 45%;
-            animation-delay: 4s;
-            font-size: 25px;
-        }
-        .balance-card .bg-icons .icon:nth-child(7) {
-            bottom: 5%;
-            left: 45%;
-            animation-delay: 1s;
-            font-size: 28px;
-        }
-
-        .balance-card .content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .balance-card .label {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 5px;
-        }
-
-        .balance-card .amount {
-            font-size: 2.4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #ffd700, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-
-        .balance-card .sub-info {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-top: 4px;
-        }
-
-        .notification-badge {
-            display: inline-block;
-            background: #fc8181;
-            color: #fff;
-            border-radius: 50%;
-            padding: 1px 6px;
-            font-size: 9px;
-            font-weight: 700;
-            margin-left: 4px;
-            animation: notificationPulse 2s ease-in-out infinite;
-        }
-
-        .member-register-item {
-            background: rgba(72, 187, 120, 0.05);
-            border-left: 3px solid #48bb78;
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .member-register-item:hover {
-            background: rgba(72, 187, 120, 0.1);
-            transform: translateX(3px);
-        }
-
-        .member-register-item .reg-name {
-            color: #48bb78;
-            font-weight: 600;
-        }
-
-        .member-register-item .reg-info {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 11px;
-        }
-
-        .member-register-item .reg-time {
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 10px;
-        }
-
-        .payment-info-card {
-            background: rgba(255, 215, 0, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 8px 0;
-        }
-
-        .payment-info-card .label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .payment-info-card .value {
-            font-size: 15px;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .payment-info-card .qr-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            margin: 8px 0;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            border: 2px dashed rgba(255, 215, 0, 0.15);
-            min-height: 80px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .payment-info-card .qr-container:hover {
-            border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.05);
-        }
-
-        .payment-info-card .qr-container img {
-            max-width: 120px;
-            max-height: 120px;
-            border-radius: 8px;
-        }
-
-        .payment-info-card .qr-container .qr-placeholder {
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 12px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        .mt-10 {
-            margin-top: 10px;
-        }
-
-        .mt-15 {
-            margin-top: 15px;
-        }
-
-        .mt-20 {
-            margin-top: 20px;
-        }
-
-        .op-3 {
-            opacity: .3;
-        }
-
-        .fs-12 {
-            font-size: 12px;
-        }
-
-        .fs-13 {
-            font-size: 13px;
-        }
-
-        .fw-700 {
-            font-weight: 700;
-        }
-
-        .flex {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .flex .btn {
-            flex: 1;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin: 8px 0;
-        }
-
-        .menu-grid .menu-item {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .menu-grid .menu-item:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-3px);
-            border-color: #667eea;
-        }
-
-        .menu-grid .menu-item .menu-icon {
-            font-size: 28px;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .menu-grid .menu-item .menu-label {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 600;
-        }
-
-        body.light-mode .menu-grid .menu-item {
-            background: rgba(0, 0, 0, 0.03);
-            border-color: rgba(0, 0, 0, 0.08);
-        }
-
-        body.light-mode .menu-grid .menu-item:hover {
-            background: rgba(0, 0, 0, 0.06);
-        }
-
-        body.light-mode .menu-grid .menu-item .menu-label {
-            color: rgba(0, 0, 0, 0.7);
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media(max-width:480px) {
-            body {
-                padding: 5px;
-                padding-top: 10px;
-            }
-            .container {
-                padding: 10px 8px;
-                border-radius: 16px;
-                max-height: 100vh;
-                overflow-y: auto;
-            }
-            h1 {
-                font-size: 1.4rem;
-            }
-            h2 {
-                font-size: 1rem;
-            }
-            .btn {
-                font-size: 12px;
-                padding: 9px 16px;
-                width: 100%;
-            }
-            .list-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .list-item .actions {
-                margin-top: 5px;
-                justify-content: flex-end;
-            }
-            .theme-toggle {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-                bottom: 10px;
-                left: 10px;
-            }
-            #modalContent {
-                padding: 18px;
-                max-width: 95%;
-            }
-            .summary-stats {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 4px;
-            }
-            .top-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .top-bar .right-section {
-                align-items: stretch;
-                margin-top: 6px;
-            }
-            .balance-card .amount {
-                font-size: 1.8rem;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
-            }
-            .menu-grid .menu-item {
-                padding: 10px;
-            }
-            .menu-grid .menu-item .menu-icon {
-                font-size: 24px;
-            }
-            .menu-grid .menu-item .menu-label {
-                font-size: 11px;
-            }
-            .flex .btn {
-                font-size: 11px;
-                padding: 8px 12px;
-            }
-            .card {
-                padding: 10px;
-            }
-            .login-container .login-title {
-                font-size: 1.5rem;
-            }
-            .login-container .login-logo {
-                font-size: 50px;
-            }
-            .btn-sm {
-                padding: 4px 10px;
-                font-size: 10px;
-            }
-            .balance-card {
-                padding: 15px;
-                min-height: 110px;
-            }
-            .payment-info-card .value {
-                font-size: 13px;
-            }
+            .container { padding: 12px; }
+            h1 { font-size: 1.3rem; }
+            .prediction-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+            .prediction-card .letter { font-size: 22px; }
+            .result-display .big-number { font-size: 36px; }
+            .stats-grid { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+            .theme-toggle { width: 36px; height: 36px; font-size: 16px; bottom: 10px; left: 10px; }
+            #modalContent { padding: 18px; }
+            .number-input-group input { font-size: 16px; padding: 10px; }
         }
 
         @media(min-width:481px) and (max-width:768px) {
-            .container {
-                padding: 14px;
-                max-width: 95%;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-            .balance-card .amount {
-                font-size: 2.2rem;
-            }
-            .list-item .actions .btn-sm {
-                padding: 4px 10px;
-                font-size: 10px;
-            }
+            .container { max-width: 90%; }
         }
 
-        @media(min-width:769px) and (max-width:1024px) {
-            .container {
-                max-width: 750px;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
-            .balance-card .amount {
-                font-size: 2.8rem;
-            }
+        @media(min-width:769px) {
+            .container { max-width: 480px; }
         }
 
-        @media(min-width:1025px) {
-            .container {
-                max-width: 800px;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
-            .balance-card .amount {
-                font-size: 3rem;
-            }
-            body {
-                padding: 20px;
-                align-items: center;
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-        }
-
-        .pwd-toggle-btn {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.4);
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px 8px;
-            transition: all 0.3s ease;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2;
-        }
-
-        .pwd-toggle-btn:hover {
-            color: #fff;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .pwd-display {
-            font-family: monospace;
-            letter-spacing: 1px;
-            cursor: pointer;
-            user-select: all;
-            color: #48bb78;
-        }
-
-        .pwd-display:hover {
-            color: #ffd700;
-        }
-
-        .password-cell {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .password-cell .pwd-text {
-            font-family: monospace;
-            font-size: 11px;
-            color: #48bb78;
-            letter-spacing: 1px;
-            cursor: pointer;
-            user-select: all;
-        }
-
-        .password-cell .pwd-text:hover {
-            color: #ffd700;
-        }
-
-        .password-cell .pwd-toggle-small {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 2px;
-            transition: all 0.3s ease;
-        }
-
-        .password-cell .pwd-toggle-small:hover {
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        .super-action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 6px 0;
-        }
-
-        .super-action-buttons .btn {
-            flex: 1;
-            min-width: 120px;
-            font-size: 12px;
-            padding: 8px 14px;
-        }
-
-        @media(max-width:480px) {
-            .super-action-buttons .btn {
-                min-width: 80px;
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-        }
-
-        /* ===== DATA MANAGEMENT BUTTONS ===== */
-        .data-management {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            margin: 8px 0;
-        }
-
-        .data-management .btn {
-            font-size: 11px;
-            padding: 8px 12px;
-        }
-
-        @media(max-width:480px) {
-            .data-management {
-                grid-template-columns: 1fr;
-            }
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; }
     </style>
 </head>
 <body>
-
-    <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
-        <span class="close-btn" onclick="closeImageViewer()">×</span>
-        <img id="viewerImage" src="" alt="View Image">
-    </div>
 
     <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
 
@@ -1760,11 +736,9 @@
 
     <div class="container" id="app">
         <div id="pageContent"></div>
-        <div class="text-center mt-10" style="font-size:10px;color:rgba(255,255,255,0.2);">
-            <span id="cloudStatus">
-                <span class="cloud-status disconnected">⏳ កំពុងភ្ជាប់...</span>
-            </span>
-            <span style="margin-left:8px;opacity:0.5;">v8.1</span>
+        <div class="text-center mt-10" style="font-size:9px;color:rgba(255,255,255,0.15);">
+            <span id="cloudStatus"><span class="cloud-status disconnected">⏳ កំពុងភ្ជាប់...</span></span>
+            <span style="margin-left:6px;opacity:0.5;">v1.0</span>
         </div>
     </div>
 
@@ -1784,36 +758,33 @@
         };
 
         firebase.initializeApp(firebaseConfig);
-        var database = firebase.database();
+        const database = firebase.database();
 
         // ================================================================
         // DATA LAYER
         // ================================================================
 
-        var localData = {
-            members: {},
-            subAdmins: {},
-            superAdmins: {},
-            transactions: [],
-            paymentRequests: [],
-            commissions: [],
-            memberNotifications: [],
-            activityLogs: [],
-            memberRegistrations: [],
-            memberCounter: 0,
-            adminCounter: 0,
-            exchangeRate: 4000,
-            version: '8.1',
-            lastUpdated: null
+        let appData = {
+            members: {},          // phone -> { name, password, balance, predictions, wins, totalPredictions }
+            predictions: [],      // { id, memberPhone, letter, number, timestamp, result, win }
+            results: [],          // { id, letter, number, timestamp, round }
+            rounds: [],           // { id, date, letter, number, status }
+            config: {
+                maxPredictionsPerDay: 2,
+                letters: ['A', 'B', 'C', 'D'],
+                numberDigits: [2, 3],
+                roundStart: '08:00',
+                roundEnd: '20:00'
+            },
+            currentRound: null,
+            roundCounter: 0
         };
 
-        var isConnected = false;
-        var isLoading = false;
-        var isSaving = false;
-        var currentUser = null;
-        var logoutTimer = null;
-        var sessionTimeout = 30 * 60 * 1000;
-        var dataLoaded = false;
+        let currentUser = null;
+        let isConnected = false;
+        let isLoading = false;
+        let isSaving = false;
+        let dataLoaded = false;
 
         // ================================================================
         // FIREBASE FUNCTIONS
@@ -1821,90 +792,64 @@
 
         function updateCloudStatus(connected) {
             isConnected = connected;
-            var statusEl = document.getElementById('cloudStatus');
-            if (statusEl) {
-                statusEl.innerHTML = connected ?
+            const el = document.getElementById('cloudStatus');
+            if (el) {
+                el.innerHTML = connected ?
                     '<span class="cloud-status connected">✅ ដំណើរការ</span>' :
                     '<span class="cloud-status disconnected">⏳ កំពុងភ្ជាប់...</span>';
             }
         }
 
         function saveToFirebase() {
-            if (isSaving) { return; }
+            if (isSaving) return;
             isSaving = true;
 
-            var dataToSave = {
-                members: localData.members || {},
-                subAdmins: localData.subAdmins || {},
-                superAdmins: localData.superAdmins || {},
-                transactions: localData.transactions || [],
-                paymentRequests: localData.paymentRequests || [],
-                commissions: localData.commissions || [],
-                memberNotifications: localData.memberNotifications || [],
-                activityLogs: localData.activityLogs || [],
-                memberRegistrations: localData.memberRegistrations || [],
-                memberCounter: localData.memberCounter || 0,
-                adminCounter: localData.adminCounter || 0,
-                exchangeRate: localData.exchangeRate || 4000,
-                version: '8.1',
+            const dataToSave = {
+                members: appData.members || {},
+                predictions: appData.predictions || [],
+                results: appData.results || [],
+                rounds: appData.rounds || [],
+                config: appData.config || {},
+                currentRound: appData.currentRound || null,
+                roundCounter: appData.roundCounter || 0,
                 lastUpdated: new Date().toISOString()
             };
 
-            database.ref('memberSystem').set(dataToSave)
-                .then(function() {
+            database.ref('predictionSystem').set(dataToSave)
+                .then(() => {
                     updateCloudStatus(true);
                     dataLoaded = true;
                     isSaving = false;
                     console.log('💾 រក្សាទុកជោគជ័យ');
                 })
-                .catch(function(error) {
-                    showToast('⚠️ កំហុស: ' + error.message, 'error');
+                .catch((error) => {
+                    showToast('⚠️ ' + error.message, 'error');
                     updateCloudStatus(false);
                     isSaving = false;
                 });
         }
 
         function loadFromFirebase(callback) {
-            if (isLoading) { return; }
+            if (isLoading) return;
             isLoading = true;
 
-            database.ref('memberSystem').once('value')
-                .then(function(snapshot) {
-                    var data = snapshot.val();
+            database.ref('predictionSystem').once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
                     if (data) {
-                        localData.members = data.members || {};
-                        localData.subAdmins = data.subAdmins || {};
-                        localData.superAdmins = data.superAdmins || {};
-                        localData.transactions = data.transactions || [];
-                        localData.paymentRequests = data.paymentRequests || [];
-                        localData.commissions = data.commissions || [];
-                        localData.memberNotifications = data.memberNotifications || [];
-                        localData.activityLogs = data.activityLogs || [];
-                        localData.memberRegistrations = data.memberRegistrations || [];
-                        localData.memberCounter = data.memberCounter || 0;
-                        localData.adminCounter = data.adminCounter || 0;
-                        localData.exchangeRate = data.exchangeRate || 4000;
-
-                        // ធានាថាមាន Super Admin
-                        if (!localData.superAdmins['066817407']) {
-                            localData.superAdmins['066817407'] = {
-                                name: 'Super Admin',
-                                phone: '066817407',
-                                password: 'super123',
-                                id: 'SUPER-001',
-                                balance: 10000,
-                                bankName: '',
-                                bankAccount: '',
-                                qrCode: null,
-                                createdAt: new Date().toISOString()
-                            };
-                            saveToFirebase();
-                        }
+                        appData.members = data.members || {};
+                        appData.predictions = data.predictions || [];
+                        appData.results = data.results || [];
+                        appData.rounds = data.rounds || [];
+                        appData.config = data.config || { maxPredictionsPerDay: 2, letters: ['A', 'B', 'C', 'D'],
+                            numberDigits: [2, 3] };
+                        appData.currentRound = data.currentRound || null;
+                        appData.roundCounter = data.roundCounter || 0;
 
                         updateCloudStatus(true);
                         dataLoaded = true;
                         if (callback) callback();
-                        refreshCurrentPage();
+                        refreshPage();
                     } else {
                         initializeDefaultData();
                         saveToFirebase();
@@ -1913,8 +858,8 @@
                     }
                     isLoading = false;
                 })
-                .catch(function(error) {
-                    showToast('⚠️ កំហុស: ' + error.message, 'error');
+                .catch((error) => {
+                    showToast('⚠️ ' + error.message, 'error');
                     updateCloudStatus(false);
                     isLoading = false;
                     if (callback) callback();
@@ -1922,290 +867,69 @@
         }
 
         function initializeDefaultData() {
-            if (Object.keys(localData.superAdmins).length === 0) {
-                localData.superAdmins['066817407'] = {
+            if (Object.keys(appData.members).length === 0) {
+                appData.members['066817407'] = {
                     name: 'Super Admin',
-                    phone: '066817407',
                     password: 'super123',
-                    id: 'SUPER-001',
-                    balance: 10000,
-                    bankName: '',
-                    bankAccount: '',
-                    qrCode: null,
+                    balance: 0,
+                    predictions: [],
+                    wins: 0,
+                    totalPredictions: 0,
+                    role: 'super_admin'
+                };
+            }
+
+            if (appData.rounds.length === 0) {
+                const roundId = 'R-' + String(appData.roundCounter + 1).padStart(4, '0');
+                appData.rounds.push({
+                    id: roundId,
+                    date: new Date().toISOString().slice(0, 10),
+                    letter: null,
+                    number: null,
+                    status: 'pending',
                     createdAt: new Date().toISOString()
-                };
-                addMemberRegistration('Super Admin', '066817407', 'SUPER-001', 'super_admin');
-            }
-
-            if (Object.keys(localData.members).length === 0) {
-                var defaultId = generateMemberId();
-                localData.members['066817407'] = {
-                    name: 'Super Admin',
-                    phone: '066817407',
-                    password: 'super123',
-                    id: defaultId,
-                    currency: 'usd',
-                    balance: 10000,
-                    commissionRate: 0.05,
-                    totalCommission: 0,
-                    benefits: ['⭐ Super Admin'],
-                    date: new Date().toISOString(),
-                    bankName: '',
-                    bankAccount: '',
-                    qrCode: null
-                };
-            }
-
-            if (Object.keys(localData.subAdmins).length === 0) {
-                var firstMember = Object.values(localData.members)[0];
-                if (firstMember) {
-                    var adminId = generateAdminId();
-                    localData.subAdmins[firstMember.phone] = {
-                        name: firstMember.name || firstMember.phone,
-                        phone: firstMember.phone,
-                        password: firstMember.password,
-                        id: adminId,
-                        balance: 0,
-                        totalReceived: 0,
-                        totalTransferred: 0,
-                        members: Object.keys(localData.members),
-                        bankName: '',
-                        bankAccount: '',
-                        qrCode: null
-                    };
-                    addMemberRegistration(firstMember.name || firstMember.phone, firstMember.phone, adminId,
-                        'sub_admin');
-                }
+                });
+                appData.roundCounter++;
             }
         }
 
         function setupRealtimeListeners() {
-            database.ref('memberSystem').on('value', function(snapshot) {
+            database.ref('predictionSystem').on('value', (snapshot) => {
                 if (isSaving) return;
-                var data = snapshot.val();
+                const data = snapshot.val();
                 if (data && dataLoaded) {
-                    var oldCount = Object.keys(localData.members || {}).length;
-                    var newCount = Object.keys(data.members || {}).length;
+                    const oldData = JSON.stringify(appData);
+                    appData.members = data.members || {};
+                    appData.predictions = data.predictions || [];
+                    appData.results = data.results || [];
+                    appData.rounds = data.rounds || [];
+                    appData.config = data.config || {};
+                    appData.currentRound = data.currentRound || null;
+                    appData.roundCounter = data.roundCounter || 0;
+                    updateCloudStatus(true);
 
-                    if (newCount !== oldCount || JSON.stringify(localData) !== JSON.stringify(data)) {
-                        localData.members = data.members || {};
-                        localData.subAdmins = data.subAdmins || {};
-                        localData.superAdmins = data.superAdmins || {};
-                        localData.transactions = data.transactions || [];
-                        localData.paymentRequests = data.paymentRequests || [];
-                        localData.commissions = data.commissions || [];
-                        localData.memberNotifications = data.memberNotifications || [];
-                        localData.activityLogs = data.activityLogs || [];
-                        localData.memberRegistrations = data.memberRegistrations || [];
-                        localData.memberCounter = data.memberCounter || 0;
-                        localData.adminCounter = data.adminCounter || 0;
-                        localData.exchangeRate = data.exchangeRate || 4000;
-                        updateCloudStatus(true);
-
-                        if (newCount !== oldCount && oldCount > 0) {
-                            showToast('🔄 មានសមាជិកថ្មីចុះឈ្មោះ!', 'info');
-                        }
-                        refreshCurrentPage();
+                    if (JSON.stringify(appData) !== oldData) {
+                        refreshPage();
                     }
                 }
             });
         }
 
         // ================================================================
-        // LOCAL STORAGE FUNCTIONS (BACKUP)
-        // ================================================================
-
-        function saveToLocalStorage() {
-            try {
-                localStorage.setItem('memberSystemData', JSON.stringify(localData));
-                showToast('💾 រក្សាទុកក្នុង Local Storage ជោគជ័យ!', 'success');
-                return true;
-            } catch (e) {
-                showToast('⚠️ មិនអាចរក្សាទុក Local Storage: ' + e.message, 'error');
-                return false;
-            }
-        }
-
-        function loadFromLocalStorage() {
-            try {
-                var data = localStorage.getItem('memberSystemData');
-                if (data) {
-                    var parsed = JSON.parse(data);
-                    Object.assign(localData, parsed);
-                    showToast('📥 ទាញយកពី Local Storage ជោគជ័យ!', 'success');
-                    refreshCurrentPage();
-                    return true;
-                } else {
-                    showToast('⚠️ មិនមានទិន្នន័យក្នុង Local Storage', 'warning');
-                    return false;
-                }
-            } catch (e) {
-                showToast('⚠️ កំហុស: ' + e.message, 'error');
-                return false;
-            }
-        }
-
-        // ================================================================
-        // EXPORT/IMPORT JSON FUNCTIONS
-        // ================================================================
-
-        function exportDataAsJSON() {
-            var dataStr = JSON.stringify(localData, null, 2);
-            var blob = new Blob([dataStr], { type: 'application/json' });
-            var url = URL.createObjectURL(blob);
-            var link = document.createElement('a');
-            link.href = url;
-            link.download = 'member_system_backup_' + new Date().toISOString().slice(0, 10) + '.json';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            showToast('📤 នាំចេញទិន្នន័យជោគជ័យ!', 'success');
-        }
-
-        function importDataFromJSON() {
-            var input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = function(e) {
-                var file = e.target.files[0];
-                if (!file) return;
-                var reader = new FileReader();
-                reader.onload = function(ev) {
-                    try {
-                        var data = JSON.parse(ev.target.result);
-                        // ពិនិត្យថាជាទិន្នន័យត្រឹមត្រូវ
-                        if (data.members && data.subAdmins && data.superAdmins) {
-                            Object.assign(localData, data);
-                            saveToFirebase();
-                            showToast('📥 នាំចូលទិន្នន័យជោគជ័យ!', 'success');
-                            refreshCurrentPage();
-                        } else {
-                            showToast('⚠️ ទិន្នន័យមិនត្រឹមត្រូវ!', 'error');
-                        }
-                    } catch (err) {
-                        showToast('⚠️ កំហុស: ' + err.message, 'error');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        // ================================================================
-        // SYNC FUNCTIONS
-        // ================================================================
-
-        function syncData() {
-            if (isSaving) {
-                showToast('⏳ កំពុងរក្សាទុក...', 'info');
-                return;
-            }
-            showToast('🔄 កំពុងធ្វើសមកាលកម្ម...', 'info');
-            saveToFirebase();
-            setTimeout(function() {
-                loadFromFirebase(function() {
-                    showToast('✅ ធ្វើសមកាលកម្មជោគជ័យ!', 'success');
-                });
-            }, 500);
-        }
-
-        // ================================================================
-        // SESSION MANAGEMENT
-        // ================================================================
-
-        function resetSessionTimer() {
-            if (logoutTimer) {
-                clearTimeout(logoutTimer);
-                logoutTimer = null;
-            }
-            var user = getCurrentUser();
-            if (user) {
-                logoutTimer = setTimeout(function() {
-                    showToast('⏰ សេវាកម្មផុតកំណត់ សូមចូលប្រើឡើងវិញ', 'warning');
-                    logoutUser();
-                }, sessionTimeout);
-            }
-        }
-
-        // ================================================================
         // BASIC FUNCTIONS
         // ================================================================
 
-        function generateMemberId() {
-            var id;
-            var existingIds = {};
-            for (var key in localData.members) {
-                if (localData.members[key] && localData.members[key].id) {
-                    existingIds[localData.members[key].id] = true;
-                }
-            }
-            for (var key2 in localData.subAdmins) {
-                if (localData.subAdmins[key2] && localData.subAdmins[key2].id) {
-                    existingIds[localData.subAdmins[key2].id] = true;
-                }
-            }
-            for (var key3 in localData.superAdmins) {
-                if (localData.superAdmins[key3] && localData.superAdmins[key3].id) {
-                    existingIds[localData.superAdmins[key3].id] = true;
-                }
-            }
-
-            var attempts = 0;
-            do {
-                var num = Math.floor(100000 + Math.random() * 900000);
-                id = 'M-' + num;
-                attempts++;
-            } while (existingIds[id] && attempts < 100);
-
-            return id;
-        }
-
-        function generateAdminId() {
-            var id;
-            var existingIds = {};
-            for (var key in localData.members) {
-                if (localData.members[key] && localData.members[key].id) {
-                    existingIds[localData.members[key].id] = true;
-                }
-            }
-            for (var key2 in localData.subAdmins) {
-                if (localData.subAdmins[key2] && localData.subAdmins[key2].id) {
-                    existingIds[localData.subAdmins[key2].id] = true;
-                }
-            }
-            for (var key3 in localData.superAdmins) {
-                if (localData.superAdmins[key3] && localData.superAdmins[key3].id) {
-                    existingIds[localData.superAdmins[key3].id] = true;
-                }
-            }
-
-            var attempts = 0;
-            do {
-                var num = Math.floor(100000 + Math.random() * 900000);
-                id = 'A-' + num;
-                attempts++;
-            } while (existingIds[id] && attempts < 100);
-
-            return id;
-        }
-
         function getCurrentUser() {
-            var user = localStorage.getItem('firebaseCurrentUser');
+            const user = localStorage.getItem('predictionCurrentUser');
             return user ? JSON.parse(user) : null;
         }
 
         function setCurrentUser(user) {
             currentUser = user;
             if (user) {
-                localStorage.setItem('firebaseCurrentUser', JSON.stringify(user));
-                resetSessionTimer();
+                localStorage.setItem('predictionCurrentUser', JSON.stringify(user));
             } else {
-                localStorage.removeItem('firebaseCurrentUser');
-                if (logoutTimer) {
-                    clearTimeout(logoutTimer);
-                    logoutTimer = null;
-                }
+                localStorage.removeItem('predictionCurrentUser');
             }
         }
 
@@ -2216,396 +940,79 @@
         }
 
         function showToast(message, type) {
-            var old = document.querySelector('.toast');
+            const old = document.querySelector('.toast');
             if (old) old.remove();
-            var t = document.createElement('div');
+            const t = document.createElement('div');
             t.className = 'toast toast-' + (type || 'info');
             t.textContent = message;
             document.body.appendChild(t);
-            setTimeout(function() {
+            setTimeout(() => {
                 t.style.opacity = '0';
                 t.style.transform = 'translateX(100px)';
-                setTimeout(function() { t.remove(); }, 500);
+                setTimeout(() => t.remove(), 500);
             }, 4000);
         }
 
-        function showModal(html, options) {
-            var overlay = document.getElementById('modalOverlay');
-            var body = document.getElementById('modalBody');
-            var content = document.getElementById('modalContent');
+        function showModal(html) {
+            const overlay = document.getElementById('modalOverlay');
+            const body = document.getElementById('modalBody');
+            const content = document.getElementById('modalContent');
             body.innerHTML = html;
             overlay.style.display = 'flex';
-            setTimeout(function() { content.classList.add('show'); }, 10);
-            if (options && options.closeOnOverlay !== false) {
-                overlay.onclick = function(e) { if (e.target === overlay) hideModal(); };
-            }
-            document.addEventListener('keydown', function handler(e) {
-                if (e.key === 'Escape') { hideModal();
-                    document.removeEventListener('keydown', handler); }
-            });
+            setTimeout(() => content.classList.add('show'), 10);
+            overlay.onclick = (e) => { if (e.target === overlay) hideModal(); };
         }
 
         function hideModal() {
-            var overlay = document.getElementById('modalOverlay');
-            var content = document.getElementById('modalContent');
+            const overlay = document.getElementById('modalOverlay');
+            const content = document.getElementById('modalContent');
             content.classList.remove('show');
-            setTimeout(function() { overlay.style.display = 'none'; }, 300);
+            setTimeout(() => overlay.style.display = 'none', 300);
         }
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
-            var isLight = document.body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
         }
 
         if (localStorage.getItem('theme') === 'light') {
             document.body.classList.add('light-mode');
         }
 
-        function openImageViewer(src) {
-            if (!src || src === 'null' || src === 'undefined' || src === '') {
-                showToast('គ្មានរូបភាព', 'warning');
-                return;
+        function getToday() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        function getCurrentRound() {
+            const today = getToday();
+            let round = appData.rounds.find(r => r.date === today && r.status === 'pending');
+            if (!round) {
+                const roundId = 'R-' + String(appData.roundCounter + 1).padStart(4, '0');
+                round = {
+                    id: roundId,
+                    date: today,
+                    letter: null,
+                    number: null,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+                appData.rounds.push(round);
+                appData.roundCounter++;
+                saveToFirebase();
             }
-            var viewer = document.getElementById('imageViewer');
-            var img = document.getElementById('viewerImage');
-            img.src = src;
-            viewer.classList.add('show');
-            document.body.style.overflow = 'hidden';
+            return round;
         }
 
-        function closeImageViewer() {
-            document.getElementById('imageViewer').classList.remove('show');
-            document.body.style.overflow = '';
+        function getTodayPredictions(phone) {
+            const today = getToday();
+            return appData.predictions.filter(p =>
+                p.memberPhone === phone &&
+                p.timestamp.startsWith(today)
+            );
         }
 
-        function formatCurrency(amount, currency) {
-            if (currency === 'riel') {
-                var r = Math.round(amount * (localData.exchangeRate || 4000));
-                return r.toLocaleString('km-KH') + ' ៛';
-            }
-            return '$' + amount.toFixed(2);
-        }
-
-        function convertToUSD(riel) {
-            return riel / (localData.exchangeRate || 4000);
-        }
-
-        function convertToRiel(usd) {
-            return usd * (localData.exchangeRate || 4000);
-        }
-
-        function logActivity(adminId, adminName, action, actionType, target, amount, details) {
-            if (!localData.activityLogs) localData.activityLogs = [];
-            var log = {
-                id: 'LOG-' + String(localData.activityLogs.length + 1).padStart(4, '0'),
-                adminId: adminId || 'unknown',
-                adminName: adminName || 'Unknown',
-                action: action || 'unknown',
-                actionType: actionType || 'general',
-                target: target || null,
-                amount: amount || null,
-                timestamp: new Date().toISOString(),
-                status: 'success',
-                details: details || ''
-            };
-            localData.activityLogs.unshift(log);
-            if (localData.activityLogs.length > 500) localData.activityLogs = localData.activityLogs.slice(0, 500);
-            saveToFirebase();
-            return log;
-        }
-
-        function createPaymentRequest(type, from, to, amount, currency, description, screenshot, status) {
-            if (!localData.paymentRequests) localData.paymentRequests = [];
-            var pr = {
-                id: 'PR-' + String(localData.paymentRequests.length + 1).padStart(6, '0'),
-                type: type,
-                from: from,
-                to: to,
-                amount: amount || 0,
-                currency: currency || 'usd',
-                description: description || '',
-                screenshot: screenshot || null,
-                status: status || 'pending',
-                timestamp: new Date().toISOString()
-            };
-            localData.paymentRequests.unshift(pr);
-            saveToFirebase();
-            return pr;
-        }
-
-        function getPaymentRequestsByUser(phone) {
-            if (!localData.paymentRequests) return [];
-            var result = [];
-            for (var i = 0; i < localData.paymentRequests.length; i++) {
-                var pr = localData.paymentRequests[i];
-                if (pr.from === phone || pr.to === phone) {
-                    result.push(pr);
-                }
-            }
-            return result;
-        }
-
-        function createTransaction(type, memberPhone, adminId, amount, status, description, screenshot) {
-            if (!localData.transactions) localData.transactions = [];
-            var tx = {
-                id: 'TX-' + String(localData.transactions.length + 1).padStart(6, '0'),
-                type: type,
-                memberPhone: memberPhone,
-                adminId: adminId || null,
-                amount: amount || 0,
-                status: status || 'pending',
-                description: description || '',
-                screenshot: screenshot || null,
-                timestamp: new Date().toISOString()
-            };
-            localData.transactions.unshift(tx);
-            saveToFirebase();
-            return tx;
-        }
-
-        function getMemberTransactions(phone) {
-            if (!localData.transactions) return [];
-            var result = [];
-            for (var i = 0; i < localData.transactions.length; i++) {
-                if (localData.transactions[i].memberPhone === phone) {
-                    result.push(localData.transactions[i]);
-                }
-            }
-            return result;
-        }
-
-        function addCommission(memberPhone, transactionId, amount, reason) {
-            if (!localData.commissions) localData.commissions = [];
-            var member = localData.members[memberPhone];
-            if (!member) return null;
-            var rate = member.commissionRate || 0.05;
-            var commission = amount * rate;
-            if (commission <= 0) return null;
-            member.totalCommission = (member.totalCommission || 0) + commission;
-            var rec = {
-                id: 'C-' + String(localData.commissions.length + 1).padStart(4, '0'),
-                memberPhone: memberPhone,
-                transactionId: transactionId,
-                amount: amount,
-                commission: commission,
-                rate: rate,
-                timestamp: new Date().toISOString(),
-                status: 'approved',
-                reason: reason || 'កម្រៃពីប្រតិបត្តិការ'
-            };
-            localData.commissions.push(rec);
-            saveToFirebase();
-            return rec;
-        }
-
-        function addToCommissionHistory(memberPhone, amount, reason, relatedId) {
-            if (!localData.commissions) localData.commissions = [];
-            var rec = {
-                id: 'CH-' + String(localData.commissions.length + 1).padStart(4, '0'),
-                memberPhone: memberPhone,
-                amount: amount,
-                reason: reason || 'បញ្ចូលកម្រៃ',
-                relatedId: relatedId || null,
-                timestamp: new Date().toISOString(),
-                status: 'approved'
-            };
-            localData.commissions.push(rec);
-            saveToFirebase();
-            return rec;
-        }
-
-        function getCommissionHistory(phone) {
-            if (!localData.commissions) return [];
-            var result = [];
-            for (var i = 0; i < localData.commissions.length; i++) {
-                if (localData.commissions[i].memberPhone === phone) {
-                    result.push(localData.commissions[i]);
-                }
-            }
-            return result;
-        }
-
-        function getTotalCommission(phone) {
-            var history = getCommissionHistory(phone);
-            var total = 0;
-            for (var i = 0; i < history.length; i++) {
-                total += history[i].amount || 0;
-            }
-            return total;
-        }
-
-        function sendMemberNotification(phone, type, title, message, icon) {
-            if (!localData.memberNotifications) localData.memberNotifications = [];
-            localData.memberNotifications.push({
-                id: 'MN-' + String(localData.memberNotifications.length + 1).padStart(4, '0'),
-                memberPhone: phone,
-                type: type || 'general',
-                title: title || 'ការជូនដំណឹង',
-                message: message || '',
-                icon: icon || '📢',
-                read: false,
-                timestamp: new Date().toISOString()
-            });
-            if (localData.memberNotifications.length > 200) localData.memberNotifications = localData.memberNotifications.slice(-
-                200);
-            saveToFirebase();
-            return true;
-        }
-
-        function getMemberNotifications(phone) {
-            if (!localData.memberNotifications) return [];
-            var result = [];
-            for (var i = 0; i < localData.memberNotifications.length; i++) {
-                if (localData.memberNotifications[i].memberPhone === phone) {
-                    result.push(localData.memberNotifications[i]);
-                }
-            }
-            result.sort(function(a, b) { return new Date(b.timestamp) - new Date(a.timestamp); });
-            return result;
-        }
-
-        function markNotificationRead(notiId) {
-            for (var i = 0; i < localData.memberNotifications.length; i++) {
-                if (localData.memberNotifications[i].id === notiId) {
-                    localData.memberNotifications[i].read = true;
-                    saveToFirebase();
-                    break;
-                }
-            }
-        }
-
-        function getUnreadNotificationCount(phone) {
-            var notis = getMemberNotifications(phone);
-            var count = 0;
-            for (var i = 0; i < notis.length; i++) {
-                if (!notis[i].read) count++;
-            }
-            return count;
-        }
-
-        function calculateTotals(transactions) {
-            var totalDeposits = 0,
-                totalWithdraws = 0;
-            if (!transactions) return { totalDeposits: 0, totalWithdraws: 0, netBalance: 0 };
-            for (var i = 0; i < transactions.length; i++) {
-                var t = transactions[i];
-                if (t.status === 'completed' || t.status === 'approved') {
-                    if (t.type === 'deposit') totalDeposits += t.amount;
-                    else if (t.type === 'withdraw') totalWithdraws += t.amount;
-                }
-            }
-            return { totalDeposits: totalDeposits, totalWithdraws: totalWithdraws, netBalance: totalDeposits - totalWithdraws };
-        }
-
-        function addMemberRegistration(name, phone, id, role) {
-            if (!localData.memberRegistrations) localData.memberRegistrations = [];
-            var reg = {
-                id: 'REG-' + String(localData.memberRegistrations.length + 1).padStart(4, '0'),
-                name: name || phone,
-                phone: phone,
-                memberId: id,
-                role: role || 'member',
-                timestamp: new Date().toISOString()
-            };
-            localData.memberRegistrations.unshift(reg);
-            if (localData.memberRegistrations.length > 200) localData.memberRegistrations = localData.memberRegistrations.slice(0,
-                200);
-            saveToFirebase();
-
-            var adminPhones = Object.keys(localData.subAdmins);
-            for (var i = 0; i < adminPhones.length; i++) {
-                sendMemberNotification(adminPhones[i], 'new-member', 'សមាជិកថ្មីចុះឈ្មោះ',
-                    (name || phone) + ' បានចុះឈ្មោះជាសមាជិកថ្មី! 🎉', '👤');
-            }
-
-            var superPhones = Object.keys(localData.superAdmins);
-            for (var j = 0; j < superPhones.length; j++) {
-                sendMemberNotification(superPhones[j], 'new-member', 'សមាជិកថ្មីចុះឈ្មោះ',
-                    (name || phone) + ' បានចុះឈ្មោះជាសមាជិកថ្មី! 🎉', '👤');
-            }
-
-            return reg;
-        }
-
-        function getMemberRegistrations() {
-            return localData.memberRegistrations || [];
-        }
-
-        function getPaymentInfo(phone, role) {
-            if (role === 'super_admin') {
-                var sa = localData.superAdmins[phone];
-                return sa ? {
-                    bankName: sa.bankName || '',
-                    bankAccount: sa.bankAccount || '',
-                    qrCode: sa.qrCode || null
-                } : null;
-            } else if (role === 'sub_admin') {
-                var sa = localData.subAdmins[phone];
-                return sa ? {
-                    bankName: sa.bankName || '',
-                    bankAccount: sa.bankAccount || '',
-                    qrCode: sa.qrCode || null
-                } : null;
-            } else {
-                var member = localData.members[phone];
-                return member ? {
-                    bankName: member.bankName || '',
-                    bankAccount: member.bankAccount || '',
-                    qrCode: member.qrCode || null
-                } : null;
-            }
-        }
-
-        function updatePaymentInfo(phone, role, bankName, bankAccount, qrCode) {
-            if (role === 'super_admin') {
-                var sa = localData.superAdmins[phone];
-                if (sa) {
-                    sa.bankName = bankName;
-                    sa.bankAccount = bankAccount;
-                    sa.qrCode = qrCode;
-                }
-            } else if (role === 'sub_admin') {
-                var sa = localData.subAdmins[phone];
-                if (sa) {
-                    sa.bankName = bankName;
-                    sa.bankAccount = bankAccount;
-                    sa.qrCode = qrCode;
-                }
-            } else {
-                var member = localData.members[phone];
-                if (member) {
-                    member.bankName = bankName;
-                    member.bankAccount = bankAccount;
-                    member.qrCode = qrCode;
-                }
-            }
-            saveToFirebase();
-        }
-
-        function togglePasswordVisibility(inputId, btn) {
-            var input = document.getElementById(inputId);
-            if (!input) return;
-            if (input.type === 'password') {
-                input.type = 'text';
-                if (btn) btn.textContent = '🙈';
-            } else {
-                input.type = 'password';
-                if (btn) btn.textContent = '👁️';
-            }
-        }
-
-        function togglePasswordDisplay(element) {
-            var pwdSpan = element.parentElement.querySelector('.pwd-text');
-            if (!pwdSpan) return;
-            var currentText = pwdSpan.textContent;
-            var hiddenText = '••••••••••';
-            if (currentText === hiddenText) {
-                pwdSpan.textContent = pwdSpan.dataset.realPwd || '********';
-            } else {
-                pwdSpan.dataset.realPwd = currentText;
-                pwdSpan.textContent = hiddenText;
-            }
+        function generatePredictionId() {
+            return 'P-' + String(appData.predictions.length + 1).padStart(6, '0');
         }
 
         // ================================================================
@@ -2613,8 +1020,8 @@
         // ================================================================
 
         function renderPage(page) {
-            var container = document.getElementById('pageContent');
-            var html = '';
+            const container = document.getElementById('pageContent');
+            let html = '';
 
             switch (page) {
                 case 'login':
@@ -2626,23 +1033,14 @@
                 case 'dashboard':
                     html = renderDashboard();
                     break;
-                case 'admin-dashboard':
-                    html = renderAdminDashboard();
+                case 'admin':
+                    html = renderAdmin();
                     break;
-                case 'super-dashboard':
-                    html = renderSuperDashboard();
+                case 'history':
+                    html = renderHistory();
                     break;
-                case 'payment-requests':
-                    html = renderPaymentRequests();
-                    break;
-                case 'activity-log':
-                    html = renderActivityLog();
-                    break;
-                case 'report':
-                    html = renderReport();
-                    break;
-                case 'payment-info':
-                    html = renderPaymentInfo();
+                case 'results':
+                    html = renderResults();
                     break;
                 default:
                     html = renderLogin();
@@ -2650,15 +1048,16 @@
 
             container.innerHTML = html;
             attachEvents(page);
-            resetSessionTimer();
         }
 
-        function refreshCurrentPage() {
-            var user = getCurrentUser();
+        function refreshPage() {
+            const user = getCurrentUser();
             if (user) {
-                if (user.role === 'super_admin') renderPage('super-dashboard');
-                else if (user.role === 'sub_admin') renderPage('admin-dashboard');
-                else renderPage('dashboard');
+                if (user.role === 'super_admin' || user.role === 'admin') {
+                    renderPage('admin');
+                } else {
+                    renderPage('dashboard');
+                }
             } else {
                 renderPage('login');
             }
@@ -2670,233 +1069,606 @@
 
         function renderLogin() {
             return `
-                    <div class="login-container">
-                        <div class="login-logo animate-float">🏦</div>
-                        <div class="login-title">ប្រព័ន្ធគ្រប់គ្រងសមាជិក</div>
-                        <div class="login-subtitle">សូមជ្រើសរើសតួនាទីដើម្បីចូលប្រើ</div>
+                <div style="text-align:center;padding:20px 0;">
+                    <div style="font-size:60px;margin-bottom:10px;">🎯</div>
+                    <h1>ទស្សន៍ទាយលេខ</h1>
+                    <div class="subtitle">សូមចូលប្រើប្រាស់</div>
 
-                        <div class="login-option" onclick="showLoginForm('member')">
-                            <span class="icon">👤</span>
-                            <div class="title">ចូលប្រើជាសមាជិក</div>
-                            <div class="desc">សម្រាប់អ្នកប្រើប្រាស់ទូទៅ</div>
-                        </div>
-
-                        <div class="login-option admin-option" onclick="showLoginForm('sub_admin')">
-                            <span class="icon">👑</span>
-                            <div class="title">ចូលប្រើជា Sub Admin</div>
-                            <div class="desc">សម្រាប់អ្នកគ្រប់គ្រង</div>
-                        </div>
-
-                        <div class="login-option super-option" onclick="showLoginForm('super_admin')">
-                            <span class="icon">⭐</span>
-                            <div class="title">ចូលប្រើជា Super Admin</div>
-                            <div class="desc">សម្រាប់អ្នកគ្រប់គ្រងកំពូល</div>
-                        </div>
-
-                        <div style="margin-top:15px;text-align:center;">
-                            <span style="color:rgba(255,255,255,0.4);font-size:12px;">មិនទាន់មានគណនី?</span>
-                            <span onclick="renderPage('register')" style="color:#667eea;cursor:pointer;font-size:12px;font-weight:600;"> ចុះឈ្មោះ</span>
-                        </div>
-
-                        <div id="loginFormContainer" style="display:none;margin-top:15px;">
-                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                                <span id="loginFormTitle" style="color:#fff;font-weight:600;font-size:14px;"></span>
-                                <span class="btn-back" onclick="document.getElementById('loginFormContainer').style.display='none';">✕</span>
-                            </div>
-                            <form id="loginForm">
-                                <input type="hidden" id="loginRole">
-                                <input type="tel" id="loginPhone" placeholder="📱 លេខទូរសព្ទ" required>
-                                <div class="input-group">
-                                    <input type="password" id="loginPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
-                                    <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('loginPassword',this)">👁️</button>
-                                </div>
-                                <button type="submit" class="btn">🔑 ចូលប្រើ</button>
-                                <button type="button" onclick="document.getElementById('loginFormContainer').style.display='none';" class="btn btn-cancel">❌ បោះបង់</button>
-                            </form>
-                            <div id="loginMsg"></div>
-                        </div>
+                    <div class="card" style="cursor:pointer;" onclick="showLoginForm('member')">
+                        <div style="font-size:28px;">👤</div>
+                        <div style="color:#fff;font-weight:600;">ចូលប្រើជាសមាជិក</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.3);">សម្រាប់អ្នកប្រើប្រាស់ទូទៅ</div>
                     </div>
-                `;
+
+                    <div class="card" style="cursor:pointer;border-color:rgba(255,215,0,0.2);" onclick="showLoginForm('admin')">
+                        <div style="font-size:28px;">👑</div>
+                        <div style="color:#ffd700;font-weight:600;">ចូលប្រើជាអ្នកគ្រប់គ្រង</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.3);">សម្រាប់គ្រប់គ្រងប្រព័ន្ធ</div>
+                    </div>
+
+                    <div style="margin-top:12px;">
+                        <span style="color:rgba(255,255,255,0.3);font-size:12px;">មិនទាន់មានគណនី?</span>
+                        <span onclick="renderPage('register')" style="color:#667eea;cursor:pointer;font-size:12px;font-weight:600;"> ចុះឈ្មោះ</span>
+                    </div>
+
+                    <div id="loginFormContainer" style="display:none;margin-top:12px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <span id="loginFormTitle" style="color:#fff;font-weight:600;font-size:14px;"></span>
+                            <span class="btn-back" onclick="document.getElementById('loginFormContainer').style.display='none';">✕</span>
+                        </div>
+                        <form id="loginForm">
+                            <input type="hidden" id="loginRole">
+                            <input type="tel" id="loginPhone" placeholder="📱 លេខទូរសព្ទ" required>
+                            <input type="password" id="loginPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
+                            <button type="submit" class="btn btn-primary">🔑 ចូលប្រើ</button>
+                            <button type="button" onclick="document.getElementById('loginFormContainer').style.display='none';" class="btn btn-cancel">❌ បោះបង់</button>
+                        </form>
+                        <div id="loginMsg"></div>
+                    </div>
+                </div>
+            `;
         }
 
         function showLoginForm(role) {
-            var container = document.getElementById('loginFormContainer');
-            var title = document.getElementById('loginFormTitle');
-            var roleInput = document.getElementById('loginRole');
+            const container = document.getElementById('loginFormContainer');
+            const title = document.getElementById('loginFormTitle');
+            const roleInput = document.getElementById('loginRole');
             if (!container || !title || !roleInput) return;
 
-            var roleNames = { 'member': 'សមាជិក', 'sub_admin': 'Sub Admin', 'super_admin': 'Super Admin' };
+            const roleNames = { 'member': 'សមាជិក', 'admin': 'អ្នកគ្រប់គ្រង' };
             title.textContent = '🔑 ចូលប្រើជា ' + (roleNames[role] || role);
             roleInput.value = role;
             container.style.display = 'block';
-            container.scrollIntoView({ behavior: 'smooth', block: 'center' });
             document.getElementById('loginMsg').innerHTML = '';
         }
 
         function renderRegister() {
             return `
-                    <div class="top-bar">
-                        <h2>📝 ចុះឈ្មោះ</h2>
-                        <span class="btn-back" onclick="renderPage('login')">← ត្រឡប់</span>
-                    </div>
-                    <p>បង្កើតគណនីថ្មី</p>
+                <div class="top-bar">
+                    <h2>📝 ចុះឈ្មោះ</h2>
+                    <span class="btn-back" onclick="renderPage('login')">← ត្រឡប់</span>
+                </div>
+                <p>បង្កើតគណនីដើម្បីចាប់ផ្តើមទស្សន៍ទាយ</p>
 
-                    <form id="registerForm">
-                        <input type="text" id="regName" placeholder="👤 ឈ្មោះ">
-                        <input type="tel" id="regPhone" placeholder="📱 លេខទូរសព្ទ" required>
-                        <div class="input-group">
-                            <input type="password" id="regPassword" placeholder="🔒 ពាក្យសម្ងាត់" required>
-                            <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('regPassword',this)">👁️</button>
-                        </div>
-                        <div class="input-group">
-                            <input type="password" id="regConfirm" placeholder="🔑 បញ្ជាក់ពាក្យសម្ងាត់" required>
-                            <button type="button" class="toggle-pwd" onclick="togglePasswordVisibility('regConfirm',this)">👁️</button>
-                        </div>
-                        <select id="regCurrency">
-                            <option value="usd">$ USD</option>
-                            <option value="riel">៛ Riel</option>
-                        </select>
-                        <button type="submit" class="btn btn-green">📝 ចុះឈ្មោះ</button>
-                        <button type="button" onclick="renderPage('login')" class="btn btn-cancel">❌ បោះបង់</button>
-                    </form>
-                    <div id="regMsg"></div>
-                    <p class="text-center mt-10 fs-12 op-3">⚠️ សូមចំណាំលេខទូរសព្ទ និងពាក្យសម្ងាត់!</p>
-                `;
+                <form id="registerForm">
+                    <input type="text" id="regName" placeholder="👤 ឈ្មោះ" required>
+                    <input type="tel" id="regPhone" placeholder="📱 លេខទូរសព្ទ" required>
+                    <input type="password" id="regPassword" placeholder="🔒 ពាក្យសម្ងាត់ (យ៉ាងតិច ៤ តួ)" required>
+                    <input type="password" id="regConfirm" placeholder="🔑 បញ្ជាក់ពាក្យសម្ងាត់" required>
+                    <button type="submit" class="btn btn-success">📝 ចុះឈ្មោះ</button>
+                    <button type="button" onclick="renderPage('login')" class="btn btn-cancel">❌ បោះបង់</button>
+                </form>
+                <div id="regMsg"></div>
+            `;
         }
 
-        // ================================================================
-        // DASHBOARD (MEMBER) - កែប្រែខ្លីៗ
-        // ================================================================
-
         function renderDashboard() {
-            var user = getCurrentUser();
-            if (!user || user.role !== 'member') {
+            const user = getCurrentUser();
+            if (!user) {
                 renderPage('login');
                 return '';
             }
 
-            var member = localData.members[user.phone];
+            const member = appData.members[user.phone];
             if (!member) {
                 showToast('មិនឃើញព័ត៌មាន!', 'error');
                 renderPage('login');
                 return '';
             }
 
-            var curr = member.currency || 'usd';
-            var notis = getMemberNotifications(user.phone);
-            var unreadCount = getUnreadNotificationCount(user.phone);
-            var totalComm = getTotalCommission(user.phone);
-            var paymentInfo = getPaymentInfo(user.phone, 'member');
+            const todayPredictions = getTodayPredictions(user.phone);
+            const remaining = appData.config.maxPredictionsPerDay - todayPredictions.length;
+            const round = getCurrentRound();
+            const hasResult = round.letter && round.number;
 
-            // ... (បន្តដូចដើម ប៉ុន្តែបន្ថែម Data Management)
-            // ដោយសារកូដវែង ខ្ញុំនឹងបន្ថែមតែផ្នែក Data Management ប៉ុណ្ណោះ
+            let predictionsHtml = '';
+            const allPredictions = appData.predictions.filter(p => p.memberPhone === user.phone).slice(0, 10);
+            if (allPredictions.length === 0) {
+                predictionsHtml = '<p style="text-align:center;opacity:0.4;font-size:12px;">មិនទាន់មានការទស្សន៍ទាយ</p>';
+            } else {
+                allPredictions.forEach(p => {
+                    const status = p.win ? 'win' : p.win === false ? 'lose' : 'pending';
+                    const statusText = status === 'win' ? '✅ ឈ្នះ' : status === 'lose' ? '❌ ចាញ់' : '⏳ រង់ចាំ';
+                    const statusClass = status === 'win' ? 'win' : status === 'lose' ? 'lose' : 'pending';
+                    const d = new Date(p.timestamp);
+                    predictionsHtml += `
+                        <div class="history-item">
+                            <div class="prediction-info">
+                                <div class="main">${p.letter} - ${p.number}</div>
+                                <div class="sub">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                            </div>
+                            <span class="status ${statusClass}">${statusText}</span>
+                        </div>
+                    `;
+                });
+            }
 
-            var dataManagementHtml = `
-                    <div class="card">
-                        <h3>💾 ការគ្រប់គ្រងទិន្នន័យ</h3>
-                        <div class="data-management">
-                            <button onclick="saveToLocalStorage()" class="btn btn-sm btn-cloud">💾 រក្សាទុក Local</button>
-                            <button onclick="loadFromLocalStorage()" class="btn btn-sm btn-purple">📥 ទាញយក Local</button>
-                            <button onclick="exportDataAsJSON()" class="btn btn-sm btn-gold">📤 នាំចេញ JSON</button>
-                            <button onclick="importDataFromJSON()" class="btn btn-sm btn-green">📥 នាំចូល JSON</button>
-                            <button onclick="syncData()" class="btn btn-sm btn-cloud" style="grid-column:1/-1;">🔄 ធ្វើសមកាលកម្មជាមួយ Cloud</button>
+            return `
+                <div class="top-bar">
+                    <div class="user-info">
+                        <span class="name">${member.name || user.phone}</span>
+                        <span class="role">👤 សមាជិក</span>
+                    </div>
+                    <button onclick="logoutUser()" class="btn-logout">🚪 ចាកចេញ</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stats-box">
+                        <div class="number gold">${member.wins || 0}</div>
+                        <div class="label">ឈ្នះ</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="number">${member.totalPredictions || 0}</div>
+                        <div class="label">បានទស្សន៍ទាយ</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="number ${remaining > 0 ? 'green' : 'red'}">${remaining}</div>
+                        <div class="label">នៅសល់ថ្ងៃនេះ</div>
+                    </div>
+                </div>
+
+                ${hasResult ? `
+                    <div class="result-display">
+                        <div class="result-label">🎯 លទ្ធផលថ្ងៃនេះ</div>
+                        <span class="big-letter">${round.letter}</span>
+                        <div class="big-number">${round.number}</div>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.2);margin-top:4px;">ចុចដើម្បីទស្សន៍ទាយថ្ងៃស្អែក</div>
+                    </div>
+                ` : `
+                    <div class="result-display" style="border-color:rgba(102,126,234,0.2);">
+                        <div class="result-label">⏳ រង់ចាំលទ្ធផល</div>
+                        <div style="font-size:14px;color:rgba(255,255,255,0.3);">លទ្ធផលនឹងប្រកាសនៅពេលក្រោយ</div>
+                    </div>
+                `}
+
+                <div class="card">
+                    <h2>🎯 ទស្សន៍ទាយថ្ងៃនេះ</h2>
+                    <p style="font-size:11px;color:rgba(255,255,255,0.3);">ជ្រើសរើសអក្សរ A, B, C, ឬ D</p>
+                    <div class="prediction-grid" id="predictionGrid">
+                        ${appData.config.letters.map(l => `
+                            <div class="prediction-card" data-letter="${l}" onclick="selectLetter('${l}')">
+                                <span class="letter">${l}</span>
+                                <span class="label">ជ្រើសរើស</span>
+                                ${round.letter === l ? `<span class="result show">✅</span>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div style="margin:8px 0;">
+                        <label style="font-size:12px;color:rgba(255,255,255,0.4);">🔢 បញ្ចូលលេខ</label>
+                        <div class="number-input-group">
+                            <input type="text" id="predictionNumber" placeholder="លេខ 2-3 ខ្ទង់" maxlength="3" inputmode="numeric" pattern="[0-9]*">
                         </div>
                     </div>
-                `;
 
-            // បន្ថែម dataManagementHtml ទៅក្នុង return (មុនពេលបិទ)
-            // ... កូដផ្សេងទៀត ...
+                    <button id="submitPredictionBtn" class="btn btn-gold" onclick="submitPrediction()">
+                        🎯 ទស្សន៍ទាយ
+                    </button>
+                    <div id="predictionMsg" style="text-align:center;font-size:12px;margin-top:4px;"></div>
+                </div>
 
-            // សង្ខេប៖ យើងត្រូវបន្ថែម dataManagementHtml ក្នុងទំព័រ dashboard ទាំងអស់
-            // ដើម្បីសន្សំពេល ខ្ញុំនឹងធ្វើការបន្ថែមដោយស្វ័យប្រវត្តិតាមរយៈ renderPage()
-            // សូមមើលផ្នែកខាងក្រោម
-            return `
-                    <!-- ... កូដដើម ... -->
-                    ${dataManagementHtml}
-                `;
+                <div class="card">
+                    <h3>📜 ប្រវត្តិទស្សន៍ទាយ</h3>
+                    ${predictionsHtml}
+                    ${allPredictions.length > 10 ? '<p style="text-align:center;font-size:10px;color:rgba(255,255,255,0.2);">បង្ហាញ ១០ ចុងក្រោយ</p>' : ''}
+                    <button onclick="renderPage('history')" class="btn btn-sm btn-purple" style="margin-top:6px;">📜 មើលទាំងអស់</button>
+                </div>
+
+                <div style="display:flex;gap:6px;margin:8px 0;">
+                    <button onclick="renderPage('results')" class="btn btn-sm btn-primary" style="flex:1;">📊 លទ្ធផល</button>
+                    <button onclick="saveToFirebase()" class="btn btn-sm btn-success" style="flex:1;">💾 រក្សាទុក</button>
+                </div>
+            `;
         }
 
-        // ================================================================
-        // ADMIN DASHBOARD
-        // ================================================================
-
-        function renderAdminDashboard() {
-            var user = getCurrentUser();
-            if (!user || user.role !== 'sub_admin') {
+        function renderAdmin() {
+            const user = getCurrentUser();
+            if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
                 renderPage('login');
                 return '';
             }
 
-            var admin = localData.subAdmins[user.phone];
-            if (!admin) {
-                showToast('មិនឃើញព័ត៌មាន Admin!', 'error');
+            const allMembers = Object.values(appData.members);
+            const totalPredictions = appData.predictions.length;
+            const todayPredictions = appData.predictions.filter(p => p.timestamp.startsWith(getToday()));
+            const round = getCurrentRound();
+
+            let membersHtml = '';
+            allMembers.forEach(m => {
+                membersHtml += `
+                    <div class="history-item" style="border-left-color:#ffd700;">
+                        <div class="prediction-info">
+                            <div class="main">${m.name || m.phone}</div>
+                            <div class="sub">📱 ${m.phone} | 🎯 ${m.totalPredictions || 0} | 🏆 ${m.wins || 0}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            let predictionsHtml = '';
+            const recentPredictions = appData.predictions.slice(0, 10);
+            recentPredictions.forEach(p => {
+                const member = appData.members[p.memberPhone];
+                const status = p.win ? 'win' : p.win === false ? 'lose' : 'pending';
+                const statusText = status === 'win' ? '✅ ឈ្នះ' : status === 'lose' ? '❌ ចាញ់' : '⏳';
+                const statusClass = status === 'win' ? 'win' : status === 'lose' ? 'lose' : 'pending';
+                const d = new Date(p.timestamp);
+                predictionsHtml += `
+                    <div class="history-item">
+                        <div class="prediction-info">
+                            <div class="main">${member ? member.name : p.memberPhone} - ${p.letter} ${p.number}</div>
+                            <div class="sub">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                        </div>
+                        <span class="status ${statusClass}">${statusText}</span>
+                    </div>
+                `;
+            });
+
+            return `
+                <div class="top-bar">
+                    <div class="user-info">
+                        <span class="name">👑 ${user.role === 'super_admin' ? 'Super ' : ''}Admin</span>
+                        <span class="role">⭐ អ្នកគ្រប់គ្រង</span>
+                    </div>
+                    <button onclick="logoutUser()" class="btn-logout">🚪 ចាកចេញ</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stats-box">
+                        <div class="number gold">${allMembers.length}</div>
+                        <div class="label">សមាជិក</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="number green">${totalPredictions}</div>
+                        <div class="label">ទស្សន៍ទាយសរុប</div>
+                    </div>
+                    <div class="stats-box">
+                        <div class="number">${todayPredictions.length}</div>
+                        <div class="label">ថ្ងៃនេះ</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🎯 ប្រកាសលទ្ធផល</h2>
+                    <p style="font-size:11px;color:rgba(255,255,255,0.3);">ជ្រើសរើសអក្សរ និងបញ្ចូលលេខដែលឈ្នះ</p>
+                    <div class="prediction-grid" id="adminPredictionGrid">
+                        ${appData.config.letters.map(l => `
+                            <div class="prediction-card ${round.letter === l ? 'selected' : ''}" data-letter="${l}" onclick="adminSelectLetter('${l}')">
+                                <span class="letter">${l}</span>
+                                <span class="label">${round.letter === l ? '✅ ឈ្នះ' : 'ជ្រើសរើស'}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="number-input-group">
+                        <input type="text" id="adminResultNumber" placeholder="លេខឈ្នះ (2-3 ខ្ទង់)" maxlength="3" inputmode="numeric" pattern="[0-9]*" value="${round.number || ''}">
+                    </div>
+                    <button class="btn btn-success" onclick="adminPublishResult()">📢 ប្រកាសលទ្ធផល</button>
+                    <div id="adminResultMsg" style="text-align:center;font-size:12px;margin-top:4px;"></div>
+                </div>
+
+                <div class="card">
+                    <h3>👥 សមាជិកទាំងអស់</h3>
+                    ${membersHtml || '<p style="opacity:0.4;">មិនទាន់មានសមាជិក</p>'}
+                </div>
+
+                <div class="card">
+                    <h3>📜 ការទស្សន៍ទាយចុងក្រោយ</h3>
+                    ${predictionsHtml || '<p style="opacity:0.4;">មិនទាន់មានការទស្សន៍ទាយ</p>'}
+                </div>
+
+                <div style="display:flex;gap:6px;margin:8px 0;">
+                    <button onclick="renderPage('results')" class="btn btn-sm btn-primary" style="flex:1;">📊 លទ្ធផល</button>
+                    <button onclick="saveToFirebase()" class="btn btn-sm btn-success" style="flex:1;">💾 រក្សាទុក</button>
+                </div>
+            `;
+        }
+
+        function renderHistory() {
+            const user = getCurrentUser();
+            if (!user) {
                 renderPage('login');
                 return '';
             }
 
-            // ... (កូដដើម) ...
+            const predictions = appData.predictions
+                .filter(p => p.memberPhone === user.phone)
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-            var dataManagementHtml = `
-                    <div class="card admin-panel">
-                        <h3>💾 ការគ្រប់គ្រងទិន្នន័យ</h3>
-                        <div class="data-management">
-                            <button onclick="saveToLocalStorage()" class="btn btn-sm btn-cloud">💾 រក្សាទុក Local</button>
-                            <button onclick="loadFromLocalStorage()" class="btn btn-sm btn-purple">📥 ទាញយក Local</button>
-                            <button onclick="exportDataAsJSON()" class="btn btn-sm btn-gold">📤 នាំចេញ JSON</button>
-                            <button onclick="importDataFromJSON()" class="btn btn-sm btn-green">📥 នាំចូល JSON</button>
-                            <button onclick="syncData()" class="btn btn-sm btn-cloud" style="grid-column:1/-1;">🔄 ធ្វើសមកាលកម្មជាមួយ Cloud</button>
+            let html = `
+                <div class="top-bar">
+                    <h2>📜 ប្រវត្តិទស្សន៍ទាយ</h2>
+                    <span class="btn-back" onclick="goBack()">← ត្រឡប់</span>
+                </div>
+                <p style="font-size:12px;color:rgba(255,255,255,0.3);">សរុប ${predictions.length} ការទស្សន៍ទាយ</p>
+            `;
+
+            if (predictions.length === 0) {
+                html += '<p style="opacity:0.4;text-align:center;padding:20px 0;">មិនទាន់មានការទស្សន៍ទាយ</p>';
+            } else {
+                predictions.forEach(p => {
+                    const status = p.win ? 'win' : p.win === false ? 'lose' : 'pending';
+                    const statusText = status === 'win' ? '✅ ឈ្នះ' : status === 'lose' ? '❌ ចាញ់' : '⏳ រង់ចាំ';
+                    const statusClass = status === 'win' ? 'win' : status === 'lose' ? 'lose' : 'pending';
+                    const d = new Date(p.timestamp);
+                    html += `
+                        <div class="history-item">
+                            <div class="prediction-info">
+                                <div class="main">${p.letter} - ${p.number}</div>
+                                <div class="sub">${d.toLocaleDateString('km-KH')} ${d.toLocaleTimeString('km-KH')}</div>
+                            </div>
+                            <span class="status ${statusClass}">${statusText}</span>
                         </div>
-                    </div>
-                `;
+                    `;
+                });
+            }
 
-            // បន្ថែម dataManagementHtml ទៅក្នុង return
-            // ... កូដផ្សេងទៀត ...
-
-            return `
-                    <!-- ... កូដដើម ... -->
-                    ${dataManagementHtml}
-                `;
+            return html;
         }
 
-        // ================================================================
-        // SUPER ADMIN DASHBOARD
-        // ================================================================
-
-        function renderSuperDashboard() {
-            var user = getCurrentUser();
-            if (!user || user.role !== 'super_admin') {
+        function renderResults() {
+            const user = getCurrentUser();
+            if (!user) {
                 renderPage('login');
                 return '';
             }
 
-            // ... (កូដដើម) ...
+            const results = appData.results.slice(0, 20);
 
-            var dataManagementHtml = `
-                    <div class="card super-panel">
-                        <h3>💾 ការគ្រប់គ្រងទិន្នន័យ</h3>
-                        <div class="data-management">
-                            <button onclick="saveToLocalStorage()" class="btn btn-sm btn-cloud">💾 រក្សាទុក Local</button>
-                            <button onclick="loadFromLocalStorage()" class="btn btn-sm btn-purple">📥 ទាញយក Local</button>
-                            <button onclick="exportDataAsJSON()" class="btn btn-sm btn-gold">📤 នាំចេញ JSON</button>
-                            <button onclick="importDataFromJSON()" class="btn btn-sm btn-green">📥 នាំចូល JSON</button>
-                            <button onclick="syncData()" class="btn btn-sm btn-cloud" style="grid-column:1/-1;">🔄 ធ្វើសមកាលកម្មជាមួយ Cloud</button>
+            let html = `
+                <div class="top-bar">
+                    <h2>📊 លទ្ធផលថ្ងៃមុនៗ</h2>
+                    <span class="btn-back" onclick="goBack()">← ត្រឡប់</span>
+                </div>
+            `;
+
+            if (results.length === 0) {
+                html += '<p style="opacity:0.4;text-align:center;padding:20px 0;">មិនទាន់មានលទ្ធផល</p>';
+            } else {
+                results.forEach(r => {
+                    const d = new Date(r.timestamp);
+                    html += `
+                        <div class="result-display" style="margin:8px 0;padding:12px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <div>
+                                    <span class="big-letter" style="font-size:24px;">${r.letter}</span>
+                                    <span class="big-number" style="font-size:24px;">${r.number}</span>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-size:11px;color:rgba(255,255,255,0.3);">វគ្គ ${r.round}</div>
+                                    <div style="font-size:10px;color:rgba(255,255,255,0.2);">${d.toLocaleDateString('km-KH')}</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                });
+            }
 
-            return `
-                    <!-- ... កូដដើម ... -->
-                    ${dataManagementHtml}
-                `;
+            return html;
+        }
+
+        function goBack() {
+            const user = getCurrentUser();
+            if (user) {
+                if (user.role === 'super_admin' || user.role === 'admin') {
+                    renderPage('admin');
+                } else {
+                    renderPage('dashboard');
+                }
+            } else {
+                renderPage('login');
+            }
         }
 
         // ================================================================
-        // PAYMENT REQUESTS, ACTIVITY LOG, REPORT, PAYMENT INFO
+        // PREDICTION FUNCTIONS
         // ================================================================
 
-        // (មុខងារទាំងនេះដូចដើម ដោយគ្រាន់តែកែកំហុសដែលបានរៀបរាប់)
+        let selectedLetter = null;
 
-        // ... (បន្តកូដដើម) ...
+        function selectLetter(letter) {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('សូមចូលប្រើជាមុន!', 'error');
+                return;
+            }
+
+            const todayPredictions = getTodayPredictions(user.phone);
+            const remaining = appData.config.maxPredictionsPerDay - todayPredictions.length;
+
+            if (remaining <= 0) {
+                showToast('⚠️ អ្នកបានទស្សន៍ទាយអស់ហើយថ្ងៃនេះ!', 'warning');
+                return;
+            }
+
+            const round = getCurrentRound();
+            if (round.letter && round.number) {
+                showToast('⏳ លទ្ធផលថ្ងៃនេះត្រូវបានប្រកាសហើយ!', 'warning');
+                return;
+            }
+
+            selectedLetter = letter;
+
+            // Update UI
+            document.querySelectorAll('.prediction-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+            const selectedEl = document.querySelector(`.prediction-card[data-letter="${letter}"]`);
+            if (selectedEl) selectedEl.classList.add('selected');
+
+            document.getElementById('predictionMsg').innerHTML = `✅ បានជ្រើសរើស ${letter}`;
+        }
+
+        function submitPrediction() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('សូមចូលប្រើជាមុន!', 'error');
+                return;
+            }
+
+            const member = appData.members[user.phone];
+            if (!member) {
+                showToast('មិនឃើញព័ត៌មាន!', 'error');
+                return;
+            }
+
+            if (!selectedLetter) {
+                showToast('សូមជ្រើសរើសអក្សរ A-D!', 'warning');
+                return;
+            }
+
+            const numberInput = document.getElementById('predictionNumber');
+            let number = numberInput.value.trim();
+
+            if (!number || number.length < 2 || number.length > 3 || !/^\d+$/.test(number)) {
+                showToast('សូមបញ្ចូលលេខ 2-3 ខ្ទង់!', 'warning');
+                return;
+            }
+
+            const todayPredictions = getTodayPredictions(user.phone);
+            const remaining = appData.config.maxPredictionsPerDay - todayPredictions.length;
+
+            if (remaining <= 0) {
+                showToast('⚠️ អ្នកបានទស្សន៍ទាយអស់ហើយថ្ងៃនេះ!', 'warning');
+                return;
+            }
+
+            const round = getCurrentRound();
+            if (round.letter && round.number) {
+                showToast('⏳ លទ្ធផលថ្ងៃនេះត្រូវបានប្រកាសហើយ!', 'warning');
+                return;
+            }
+
+            // Save prediction
+            const prediction = {
+                id: generatePredictionId(),
+                memberPhone: user.phone,
+                letter: selectedLetter,
+                number: number,
+                timestamp: new Date().toISOString(),
+                round: round.id,
+                win: null
+            };
+
+            appData.predictions.push(prediction);
+            member.totalPredictions = (member.totalPredictions || 0) + 1;
+
+            // Add to member's predictions list
+            if (!member.predictions) member.predictions = [];
+            member.predictions.push(prediction.id);
+
+            saveToFirebase();
+
+            // Show success
+            const msgEl = document.getElementById('predictionMsg');
+            msgEl.innerHTML = `<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">
+                ✅ ទស្សន៍ទាយជោគជ័យ!<br>
+                ${selectedLetter} - ${number} (នៅសល់ ${remaining - 1} ដង)
+            </div>`;
+
+            // Reset selection
+            selectedLetter = null;
+            document.querySelectorAll('.prediction-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+            numberInput.value = '';
+
+            setTimeout(() => { refreshPage(); }, 1500);
+        }
+
+        // ================================================================
+        // ADMIN FUNCTIONS
+        // ================================================================
+
+        let adminSelectedLetter = null;
+
+        function adminSelectLetter(letter) {
+            adminSelectedLetter = letter;
+            document.querySelectorAll('#adminPredictionGrid .prediction-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+            const el = document.querySelector(`#adminPredictionGrid .prediction-card[data-letter="${letter}"]`);
+            if (el) el.classList.add('selected');
+            document.getElementById('adminResultMsg').innerHTML = `✅ បានជ្រើសរើស ${letter}`;
+        }
+
+        function adminPublishResult() {
+            const user = getCurrentUser();
+            if (!user || (user.role !== 'super_admin' && user.role !== 'admin')) {
+                showToast('អ្នកមិនមានសិទ្ធិ!', 'error');
+                return;
+            }
+
+            const numberInput = document.getElementById('adminResultNumber');
+            let number = numberInput.value.trim();
+
+            if (!adminSelectedLetter) {
+                showToast('សូមជ្រើសរើសអក្សរឈ្នះ!', 'warning');
+                return;
+            }
+
+            if (!number || number.length < 2 || number.length > 3 || !/^\d+$/.test(number)) {
+                showToast('សូមបញ្ចូលលេខឈ្នះ 2-3 ខ្ទង់!', 'warning');
+                return;
+            }
+
+            const round = getCurrentRound();
+            if (round.letter && round.number) {
+                showToast('លទ្ធផលថ្ងៃនេះត្រូវបានប្រកាសរួចហើយ!', 'warning');
+                return;
+            }
+
+            // Update round
+            round.letter = adminSelectedLetter;
+            round.number = number;
+            round.status = 'completed';
+
+            // Save result
+            appData.results.push({
+                id: 'RES-' + String(appData.results.length + 1).padStart(4, '0'),
+                letter: adminSelectedLetter,
+                number: number,
+                round: round.id,
+                timestamp: new Date().toISOString()
+            });
+
+            // Check predictions
+            const todayPredictions = appData.predictions.filter(p =>
+                p.timestamp.startsWith(getToday()) &&
+                p.round === round.id
+            );
+
+            let winners = 0;
+            todayPredictions.forEach(p => {
+                if (p.letter === adminSelectedLetter && p.number === number) {
+                    p.win = true;
+                    winners++;
+                    const member = appData.members[p.memberPhone];
+                    if (member) {
+                        member.wins = (member.wins || 0) + 1;
+                    }
+                } else {
+                    p.win = false;
+                }
+            });
+
+            saveToFirebase();
+
+            document.getElementById('adminResultMsg').innerHTML = `
+                <div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">
+                    ✅ ប្រកាសលទ្ធផលជោគជ័យ!<br>
+                    ${adminSelectedLetter} - ${number} | 🏆 ${winners} នាក់ឈ្នះ
+                </div>
+            `;
+
+            // Reset selection
+            adminSelectedLetter = null;
+            document.querySelectorAll('#adminPredictionGrid .prediction-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+
+            showToast(`🎯 លទ្ធផល ${adminSelectedLetter} - ${number} ប្រកាសរួចរាល់!`, 'success');
+            setTimeout(() => refreshPage(), 2000);
+        }
 
         // ================================================================
         // EVENT ATTACHMENT
@@ -2904,18 +1676,17 @@
 
         function attachEvents(page) {
             // Register
-            var registerForm = document.getElementById('registerForm');
+            const registerForm = document.getElementById('registerForm');
             if (registerForm) {
-                registerForm.onsubmit = function(e) {
+                registerForm.onsubmit = (e) => {
                     e.preventDefault();
-                    var name = document.getElementById('regName').value.trim();
-                    var phone = document.getElementById('regPhone').value.trim();
-                    var password = document.getElementById('regPassword').value.trim();
-                    var confirm = document.getElementById('regConfirm').value.trim();
-                    var currency = document.getElementById('regCurrency').value;
-                    var msg = document.getElementById('regMsg');
+                    const name = document.getElementById('regName').value.trim();
+                    const phone = document.getElementById('regPhone').value.trim();
+                    const password = document.getElementById('regPassword').value.trim();
+                    const confirm = document.getElementById('regConfirm').value.trim();
+                    const msg = document.getElementById('regMsg');
 
-                    if (!phone || !password || !confirm) {
+                    if (!name || !phone || !password || !confirm) {
                         msg.innerHTML =
                             '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">សូមបំពេញព័ត៌មាន!</div>';
                         return;
@@ -2925,69 +1696,44 @@
                             '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">ពាក្យសម្ងាត់មិនដូចគ្នា!</div>';
                         return;
                     }
-                    if (localData.members[phone]) {
+                    if (password.length < 4) {
+                        msg.innerHTML =
+                            '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៤ តួ!</div>';
+                        return;
+                    }
+                    if (appData.members[phone]) {
                         msg.innerHTML =
                             '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">លេខទូរសព្ទមានរួចហើយ!</div>';
                         return;
                     }
 
-                    var id = generateMemberId();
-                    localData.members[phone] = {
-                        name: name || phone,
-                        phone: phone,
+                    appData.members[phone] = {
+                        name: name,
                         password: password,
-                        id: id,
-                        currency: currency,
                         balance: 0,
-                        commissionRate: 0.05,
-                        totalCommission: 0,
-                        benefits: ['✨ សមាជិកថ្មី'],
-                        date: new Date().toISOString(),
-                        bankName: '',
-                        bankAccount: '',
-                        qrCode: null
+                        predictions: [],
+                        wins: 0,
+                        totalPredictions: 0,
+                        role: 'member'
                     };
 
-                    addMemberRegistration(name || phone, phone, id, 'member');
-
-                    if (Object.keys(localData.subAdmins).length === 0) {
-                        var adminId = generateAdminId();
-                        localData.subAdmins[phone] = {
-                            name: name || phone,
-                            phone: phone,
-                            password: password,
-                            id: adminId,
-                            balance: 0,
-                            totalReceived: 0,
-                            totalTransferred: 0,
-                            members: [phone],
-                            bankName: '',
-                            bankAccount: '',
-                            qrCode: null
-                        };
-                        addMemberRegistration(name || phone, phone, adminId, 'sub_admin');
-                    }
-
-                    logActivity('system', 'System', 'register', 'authentication', phone, null, 'សមាជិកថ្មី ' + phone);
                     saveToFirebase();
-
-                    setCurrentUser({ phone: phone, role: 'member', name: name || phone });
+                    setCurrentUser({ phone: phone, name: name, role: 'member' });
                     msg.innerHTML =
-                        '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ ចុះឈ្មោះជោគជ័យ!<br>🆔 ' +
-                        id + '<br>📱 ' + phone + '</div>';
-                    setTimeout(function() { renderPage('dashboard'); }, 1500);
+                        `<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ ចុះឈ្មោះជោគជ័យ!<br>📱 ${phone}</div>`;
+                    setTimeout(() => renderPage('dashboard'), 1500);
                 };
             }
 
             // Login
-            var loginForm = document.getElementById('loginForm');
+            const loginForm = document.getElementById('loginForm');
             if (loginForm) {
-                loginForm.onsubmit = function(e) {
+                loginForm.onsubmit = (e) => {
                     e.preventDefault();
-                    var role = document.getElementById('loginRole').value;
-                    var phone = document.getElementById('loginPhone').value.trim();
-                    var password = document.getElementById('loginPassword').value.trim();
-                    var msg = document.getElementById('loginMsg');
+                    const role = document.getElementById('loginRole').value;
+                    const phone = document.getElementById('loginPhone').value.trim();
+                    const password = document.getElementById('loginPassword').value.trim();
+                    const msg = document.getElementById('loginMsg');
 
                     if (!phone || !password) {
                         msg.innerHTML =
@@ -2995,192 +1741,27 @@
                         return;
                     }
 
-                    if (role === 'super_admin') {
-                        if (localData.superAdmins[phone] && localData.superAdmins[phone].password === password) {
-                            setCurrentUser({ phone: phone, role: 'super_admin', name: 'Super Admin' });
-                            logActivity('SUPER-001', 'Super Admin', 'login', 'authentication', null, null,
-                                'ចូលប្រើ Super Admin');
-                            renderPage('super-dashboard');
-                            return;
-                        }
-                    }
-
-                    if (role === 'sub_admin') {
-                        if (localData.subAdmins[phone] && localData.subAdmins[phone].password === password) {
-                            setCurrentUser({ phone: phone, role: 'sub_admin', name: localData.subAdmins[phone]
-                                    .name || localData.subAdmins[phone].username });
-                            logActivity(localData.subAdmins[phone].id, localData.subAdmins[phone].name ||
-                                localData.subAdmins[phone].username, 'login', 'authentication', null, null,
-                                'ចូលប្រើ Sub Admin');
-                            renderPage('admin-dashboard');
-                            return;
-                        }
-                    }
-
-                    if (role === 'member') {
-                        if (localData.members[phone] && localData.members[phone].password === password) {
-                            setCurrentUser({ phone: phone, role: 'member', name: localData.members[phone].name ||
-                                    phone });
-                            logActivity(localData.members[phone].id, localData.members[phone].name || phone,
-                                'login', 'authentication', null, null, 'ចូលប្រើជាសមាជិក');
-                            renderPage('dashboard');
-                            return;
-                        }
-                    }
-
-                    msg.innerHTML =
-                        '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">❌ មិនត្រឹមត្រូវ!</div>';
-                };
-            }
-
-            // Payment Info
-            var paymentInfoForm = document.getElementById('paymentInfoForm');
-            if (paymentInfoForm) {
-                paymentInfoForm.onsubmit = function(e) {
-                    e.preventDefault();
-                    var user = getCurrentUser();
-                    if (!user) { showToast('សូមចូលប្រើជាមុន!', 'error'); return; }
-
-                    var bankName = document.getElementById('piBankName').value.trim();
-                    var bankAccount = document.getElementById('piBankAccount').value.trim();
-                    var fileInput = document.getElementById('piFile');
-                    var qrData = fileInput.dataset.imageData || null;
-                    var msg = document.getElementById('piMsg');
-
-                    updatePaymentInfo(user.phone, user.role, bankName, bankAccount, qrData);
-
-                    logActivity(user.phone, user.name || user.phone, 'update_payment_info', 'administration', null,
-                        null,
-                        'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានទូទាត់');
-
-                    msg.innerHTML =
-                        '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ រក្សាទុកជោគជ័យ!</div>';
-                    setTimeout(function() { goBack(); }, 1500);
-                };
-            }
-
-            // Bank Info (Admin)
-            var bankInfoForm = document.getElementById('bankInfoForm');
-            if (bankInfoForm) {
-                bankInfoForm.onsubmit = function(e) {
-                    e.preventDefault();
-                    var user = getCurrentUser();
-                    if (!user || user.role !== 'sub_admin') {
-                        showToast('សូមចូលប្រើជា Sub Admin!', 'error');
+                    const member = appData.members[phone];
+                    if (!member || member.password !== password) {
+                        msg.innerHTML =
+                            '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">❌ មិនត្រឹមត្រូវ!</div>';
                         return;
                     }
 
-                    var admin = localData.subAdmins[user.phone];
-                    if (!admin) { showToast('មិនឃើញព័ត៌មាន Admin!', 'error'); return; }
-
-                    var bankName = document.getElementById('bankName').value.trim();
-                    var bankAccount = document.getElementById('bankAccount').value.trim();
-                    var qrInput = document.getElementById('qrAdminInput');
-                    var qrData = qrInput ? qrInput.dataset.imageData : null;
-
-                    updatePaymentInfo(user.phone, 'sub_admin', bankName, bankAccount, qrData);
-
-                    logActivity(admin.id, admin.name || admin.username, 'update_bank_info', 'administration', null,
-                        null, 'ធ្វើបច្ចុប្បន្នភាពព័ត៌មានទូទាត់');
-
-                    var msg = document.getElementById('bankInfoMsg');
-                    msg.innerHTML =
-                        '<div style="color:#48bb78;padding:8px;background:rgba(72,187,120,0.1);border-radius:8px;">✅ រក្សាទុកជោគជ័យ!</div>';
-                    setTimeout(function() { msg.innerHTML = ''; }, 3000);
-                };
-            }
-        }
-
-        // ================================================================
-        // DATA MANAGEMENT FUNCTIONS (ដាក់បន្ថែម)
-        // ================================================================
-
-        // saveToLocalStorage(), loadFromLocalStorage(), exportDataAsJSON(), importDataFromJSON(), syncData()
-        // បានកំណត់រួចហើយខាងលើ
-
-        // ================================================================
-        // PAYMENT REQUEST FUNCTIONS (កែប្រែ)
-        // ================================================================
-
-        function approvePaymentRequest(prId) {
-            var prs = localData.paymentRequests || [];
-            for (var i = 0; i < prs.length; i++) {
-                if (prs[i].id === prId) {
-                    prs[i].status = 'approved';
-                    var pr = prs[i];
-
-                    if (pr.type === 'deposit') {
-                        var member = localData.members[pr.from];
-                        if (member) {
-                            member.balance = (member.balance || 0) + pr.amount;
-                            if (!member.benefits) member.benefits = [];
-                            member.benefits.push('💰 ដាក់ប្រាក់ ' + formatCurrency(pr.amount, pr.currency) +
-                                ' ត្រូវបានអនុម័ត');
-                        }
-                    } else if (pr.type === 'withdraw') {
-                        var member = localData.members[pr.from];
-                        if (member) {
-                            member.balance = (member.balance || 0) - pr.amount;
-                            if (!member.benefits) member.benefits = [];
-                            member.benefits.push('🏦 ដកប្រាក់ ' + formatCurrency(pr.amount, pr.currency) +
-                                ' ត្រូវបានអនុម័ត');
-                        }
+                    if (role === 'admin' && member.role !== 'super_admin' && member.role !== 'admin') {
+                        msg.innerHTML =
+                            '<div style="color:#fc8181;padding:8px;background:rgba(252,129,129,0.1);border-radius:8px;">❌ អ្នកមិនមែនជាអ្នកគ្រប់គ្រង!</div>';
+                        return;
                     }
 
-                    createTransaction(pr.type, pr.from, 'system', pr.amount, 'completed',
-                        pr.description || 'ប្រតិបត្តិការត្រូវបានអនុម័ត', pr.screenshot);
+                    if (role === 'member' && (member.role === 'super_admin' || member.role === 'admin')) {
+                        // Allow admin to login as member too
+                    }
 
-                    sendMemberNotification(pr.from, 'payment', 'សំណើទូទាត់ត្រូវបានអនុម័ត',
-                        'សំណើ ' + (pr.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់') + ' ' + formatCurrency(pr
-                            .amount, pr.currency) + ' ត្រូវបានអនុម័ត! ✅', '✅');
-
-                    logActivity('system', 'System', 'approve_payment', 'financial', pr.from, pr.amount,
-                        'អនុម័តសំណើទូទាត់ ' + pr.id);
-
-                    saveToFirebase();
-                    showToast('✅ អនុម័តជោគជ័យ!', 'success');
-                    refreshCurrentPage();
-                    return;
-                }
-            }
-            showToast('⚠️ មិនឃើញសំណើ!', 'error');
-        }
-
-        function rejectPaymentRequest(prId) {
-            var prs = localData.paymentRequests || [];
-            for (var i = 0; i < prs.length; i++) {
-                if (prs[i].id === prId) {
-                    prs[i].status = 'rejected';
-                    var pr = prs[i];
-
-                    sendMemberNotification(pr.from, 'payment', 'សំណើទូទាត់ត្រូវបានបដិសេធ',
-                        'សំណើ ' + (pr.type === 'deposit' ? 'ដាក់ប្រាក់' : 'ដកប្រាក់') + ' ' + formatCurrency(pr
-                            .amount, pr.currency) + ' ត្រូវបានបដិសេធ ❌', '❌');
-
-                    logActivity('system', 'System', 'reject_payment', 'financial', pr.from, pr.amount,
-                        'បដិសេធសំណើទូទាត់ ' + pr.id);
-
-                    saveToFirebase();
-                    showToast('❌ បដិសេធជោគជ័យ!', 'info');
-                    refreshCurrentPage();
-                    return;
-                }
-            }
-            showToast('⚠️ មិនឃើញសំណើ!', 'error');
-        }
-
-        // ================================================================
-        // GO BACK FUNCTION
-        // ================================================================
-
-        function goBack() {
-            var user = getCurrentUser();
-            if (user) {
-                if (user.role === 'super_admin') renderPage('super-dashboard');
-                else if (user.role === 'sub_admin') renderPage('admin-dashboard');
-                else renderPage('dashboard');
-            } else {
-                renderPage('login');
+                    setCurrentUser({ phone: phone, name: member.name, role: member.role || 'member' });
+                    renderPage(member.role === 'super_admin' || member.role === 'admin' ? 'admin' : 'dashboard');
+                    showToast('👋 ស្វាគមន៍!', 'success');
+                };
             }
         }
 
@@ -3188,40 +1769,34 @@
         // INIT
         // ================================================================
 
-        loadFromFirebase(function() {
+        loadFromFirebase(() => {
             setupRealtimeListeners();
 
-            var cu = getCurrentUser();
-            if (cu) {
-                if (cu.role === 'super_admin') renderPage('super-dashboard');
-                else if (cu.role === 'sub_admin' && localData.subAdmins[cu.phone]) renderPage('admin-dashboard');
-                else if (cu.role === 'member' && localData.members[cu.phone]) renderPage('dashboard');
-                else { setCurrentUser(null);
-                    renderPage('login'); }
+            const user = getCurrentUser();
+            if (user) {
+                const member = appData.members[user.phone];
+                if (member) {
+                    renderPage(member.role === 'super_admin' || member.role === 'admin' ? 'admin' : 'dashboard');
+                } else {
+                    setCurrentUser(null);
+                    renderPage('login');
+                }
             } else {
                 renderPage('login');
             }
 
-            database.ref('.info/connected').on('value', function(snap) {
+            database.ref('.info/connected').on('value', (snap) => {
                 updateCloudStatus(snap.val());
-                if (snap.val()) {
-                    loadFromFirebase();
-                }
+                if (snap.val()) loadFromFirebase();
             });
 
-            document.addEventListener('click', resetSessionTimer);
-            document.addEventListener('keydown', resetSessionTimer);
-            document.addEventListener('touchstart', resetSessionTimer);
-
-            console.log('🚀 ប្រព័ន្ធគ្រប់គ្រងសមាជិក v8.1 បានដំណើរការ!');
-            console.log('📊 ទិន្នន័យបច្ចុប្បន្ន:', localData);
-            console.log('👤 អ្នកប្រើបច្ចុប្បន្ន:', cu);
+            console.log('🎯 ប្រព័ន្ធទស្សន៍ទាយលេខ v1.0 បានដំណើរការ!');
+            console.log('📊 ទិន្នន័យ:', appData);
         });
 
-        setInterval(function() {
-            if (dataLoaded) {
-                saveToFirebase();
-            }
+        // Auto save every 30 seconds
+        setInterval(() => {
+            if (dataLoaded) saveToFirebase();
         }, 30000);
     </script>
 </body>
