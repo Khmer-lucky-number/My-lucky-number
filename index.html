@@ -7,12 +7,62 @@
   <style>
     body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
     header { background:#0078D7; color:white; padding:20px; text-align:center; }
-    section { padding:20px; }
+    section { padding:20px; max-width:1200px; margin:0 auto; }
     .lottery-box { background:white; padding:20px; margin:20px 0; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
     .time-box { font-weight:bold; color:#0078D7; }
-    .numbers { display:flex; gap:20px; margin-top:10px; }
-    .numbers div { background:#eee; padding:15px; border-radius:5px; text-align:center; flex:1; }
+    .numbers { display:flex; gap:20px; margin-top:10px; flex-wrap:wrap; }
+    .numbers div { background:#eee; padding:15px; border-radius:5px; text-align:center; flex:1; min-width:80px; transition: all 0.5s ease; }
+    .numbers div.pop { animation: pop 0.6s ease; }
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity:0; }
+      50% { transform: scale(1.2); background:#ffd700; }
+      100% { transform: scale(1); opacity:1; }
+    }
     footer { background:#333; color:white; text-align:center; padding:15px; margin-top:20px; }
+    
+    .btn { background:#0078D7; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px; margin:5px; }
+    .btn:hover { background:#005fa3; }
+    .btn-success { background:#28a745; }
+    .btn-success:hover { background:#218838; }
+    .btn-danger { background:#dc3545; }
+    .btn-danger:hover { background:#c82333; }
+    
+    .countdown { font-size:24px; font-weight:bold; color:#ff6b00; text-align:center; padding:10px; background:#fff3e0; border-radius:5px; margin:10px 0; }
+    
+    .history-table { width:100%; border-collapse:collapse; margin-top:10px; }
+    .history-table th, .history-table td { border:1px solid #ddd; padding:8px; text-align:center; }
+    .history-table th { background:#0078D7; color:white; }
+    .history-table tr:nth-child(even) { background:#f2f2f2; }
+    
+    .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); }
+    .modal-content { background:white; margin:5% auto; padding:20px; border-radius:10px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; }
+    .modal-content h2 { margin-top:0; color:#0078D7; }
+    .modal-content label { display:block; margin:10px 0 5px; font-weight:bold; }
+    .modal-content input, .modal-content select, .modal-content textarea { width:100%; padding:8px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box; }
+    .modal-content textarea { height:60px; }
+    .modal-content .optional { font-weight:normal; color:#666; font-size:14px; }
+    .modal-content .currency-group { display:flex; gap:10px; align-items:center; }
+    .modal-content .currency-group input { flex:1; }
+    .modal-content .currency-group select { width:120px; flex-shrink:0; }
+    .modal-content .number-hint { color:#666; font-size:13px; display:block; margin-top:2px; }
+    .modal-content .number-hint.important { color:#dc3545; font-weight:bold; }
+    .close { float:right; font-size:28px; font-weight:bold; cursor:pointer; color:#aaa; }
+    .close:hover { color:#333; }
+    
+    .qr-container { text-align:center; margin:10px 0; }
+    .qr-container img { max-width:200px; border:1px solid #ddd; border-radius:5px; }
+    
+    .member-info { background:#e8f4fd; padding:15px; border-radius:5px; margin:10px 0; border-left:4px solid #0078D7; }
+    .member-info h4 { margin:0 0 10px; color:#0078D7; }
+    .member-info-item { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #ddd; }
+    
+    @media (max-width:768px) {
+      .numbers { gap:10px; }
+      .numbers div { min-width:60px; padding:10px; }
+      .modal-content { margin:10% auto; width:95%; }
+      .modal-content .currency-group { flex-direction:column; }
+      .modal-content .currency-group select { width:100%; }
+    }
   </style>
 </head>
 <body>
@@ -22,14 +72,18 @@
   </header>
 
   <section>
+    <div class="countdown" id="countdown">រង់ចាំពេលចេញលេខបន្ទាប់...</div>
+
     <div class="lottery-box">
-      <div class="time-box">លទ្ធផលម៉ោង 12:00 (លេខពីខ្ទង់)</div>
+      <div class="time-box">លទ្ធផលម៉ោង 12:00 (លេខពីរខ្ទង់)</div>
       <div class="numbers" id="twoDigit">
         <div>A: --</div>
         <div>B: --</div>
         <div>C: --</div>
         <div>D: --</div>
+        <div>E: --</div>
       </div>
+      <small style="color:#666; display:block; margin-top:10px;">📌 ចាក់បានពី ១ ដល់ ១០ លេខ (អាចជ្រើសរើសមួយណាក៏បាន)</small>
     </div>
 
     <div class="lottery-box">
@@ -39,6 +93,37 @@
         <div>B: ---</div>
         <div>C: ---</div>
         <div>D: ---</div>
+        <div>E: ---</div>
+      </div>
+      <small style="color:#666; display:block; margin-top:10px;">📌 ចាក់បានពី ១ ដល់ ១០ លេខ (អាចជ្រើសរើសមួយណាក៏បាន)</small>
+    </div>
+
+    <div class="lottery-box">
+      <div class="time-box">📊 ប្រវត្តិលេខឆ្នោត</div>
+      <div style="max-height:300px; overflow-y:auto;">
+        <table class="history-table" id="historyTable">
+          <thead>
+            <tr><th>ថ្ងៃ/ម៉ោង</th><th>ពេលវេលា</th><th>លេខ ២ខ្ទង់</th><th>លេខ ៣ខ្ទង់</th></tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr><td colspan="4" style="text-align:center; color:#999;">មិនទាន់មានប្រវត្តិទេ</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="lottery-box">
+      <div class="time-box">💰 ប្រព័ន្ធដាក់ប្រាក់ ទស្សន៍ទាយ និងដកប្រាក់</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+        <button class="btn btn-success" onclick="openDepositPredictModal()">💳 ដាក់ប្រាក់ទស្សន៍ទាយ</button>
+        <button class="btn btn-danger" onclick="openWithdrawModal()">🏦 ដកប្រាក់</button>
+      </div>
+    </div>
+
+    <div class="lottery-box" id="memberInfoBox">
+      <div class="time-box">👥 ព័ត៌មានសមាជិក</div>
+      <div id="memberInfoList">
+        <p style="color:#999;">មិនទាន់មានសមាជិកទេ</p>
       </div>
     </div>
   </section>
@@ -47,8 +132,105 @@
     <p>© 2026 Khmer Lottery N98 | ព័ត៌មានសម្រាប់សមាជិក</p>
   </footer>
 
+  <!-- Deposit & Predict Modal -->
+  <div class="modal" id="depositPredictModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('depositPredictModal')">&times;</span>
+      <h2>💳 ដាក់ប្រាក់ទស្សន៍ទាយ</h2>
+      <form id="depositPredictForm">
+        <label>លេខឆ្នោតពីរខ្ទង់ (ចាក់បានពី ១ ដល់ ១០ លេខ)</label>
+        <input type="text" id="predictNumbers" placeholder="ឧ. A:12, B:23, C:34, D:45, E:56">
+        <span class="number-hint important">⚠️ តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:12, B:23)</span>
+        <span class="number-hint">បំបែកដោយសញ្ញា comma (,) ចន្លោះពី ១-១០ លេខ (ស្រេចចិត្ត)</span>
+        
+        <label style="margin-top:15px;">លេខឆ្នោតបីខ្ទង់ (ចាក់បានពី ១ ដល់ ១០ លេខ)</label>
+        <input type="text" id="predictExtraThreeDigit" placeholder="ឧ. A:123, B:456, C:789, D:012, E:345">
+        <span class="number-hint important">⚠️ តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:123, B:456)</span>
+        <span class="number-hint">បំបែកដោយសញ្ញា comma (,) ចន្លោះពី ១-១០ លេខ (ស្រេចចិត្ត)</span>
+        
+        <label>លេខទូរសព្ទ *</label>
+        <input type="tel" id="depositPhone" required placeholder="09x xxx xxx">
+        
+        <label>ធនាគារ *</label>
+        <select id="depositBank" required>
+          <option value="">ជ្រើសរើសធនាគារ</option>
+          <option value="ABA">ABA Bank</option>
+          <option value="ACLEDA">ACLEDA Bank</option>
+          <option value="WING">WING</option>
+          <option value="TrueMoney">TrueMoney</option>
+          <option value="Other">ផ្សេងទៀត</option>
+        </select>
+        
+        <label>ឈ្មោះគណនីធនាគារ *</label>
+        <input type="text" id="depositAccountName" required placeholder="ឈ្មោះគណនី">
+        
+        <label>សរសេរបញ្ជាក់ពីចំនួនទឹកប្រាក់ដែលបានផ្ញើ *</label>
+        <div class="currency-group">
+          <input type="number" id="depositAmount" required placeholder="ឧ. 100$ ឬ 10,000.00៛" min="1" step="0.01">
+          <select id="depositCurrency">
+            <option value="USD">ដុល្លារ ($)</option>
+            <option value="KHR">រៀល (៛)</option>
+          </select>
+        </div>
+        
+        <label>បញ្ជាក់ចំនួនទឹកប្រាក់ដែលអ្នកទស្សន៍ទាយ *</label>
+        <div class="currency-group">
+          <input type="number" id="predictAmount" required placeholder="ឧ. 100$ ឬ 10,000.00៛" min="1" step="0.01">
+          <select id="predictCurrency">
+            <option value="USD">ដុល្លារ ($)</option>
+            <option value="KHR">រៀល (៛)</option>
+          </select>
+        </div>
+        
+        <label>QR Code សម្រាប់ទូទាត់</label>
+        <div class="qr-container">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=N98%20Lottery%20Payment" alt="QR Code">
+        </div>
+        
+        <label>រូបភាពថតអេក្រង់ (បន្ទាប់ពីផ្ញើប្រាក់) *</label>
+        <input type="file" id="depositScreenshot" accept="image/*" required>
+        
+        <button type="submit" class="btn btn-success" style="width:100%; margin-top:10px;">បញ្ជាក់ការដាក់ប្រាក់ និងទស្សន៍ទាយ</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Withdraw Modal -->
+  <div class="modal" id="withdrawModal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('withdrawModal')">&times;</span>
+      <h2>🏦 ដកប្រាក់</h2>
+      <form id="withdrawForm">
+        <label>លេខទូរសព្ទ *</label>
+        <input type="tel" id="withdrawPhone" required placeholder="09x xxx xxx">
+        
+        <label>លេខដែលអ្នកបានទស្សន៍ទាយត្រូវ (ពីរខ្ទង់ឬបីខ្ទង់) *</label>
+        <input type="text" id="withdrawPredictNumber" required placeholder="ឧ. A:12, B:34, C:56 ឬ A:123, B:456">
+        <span class="number-hint important">⚠️ តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:12, B:34)</span>
+        <span class="number-hint">បំបែកដោយសញ្ញា comma (,) បើមានច្រើនលេខ</span>
+        
+        <label>បញ្ជាក់ចំនួនទឹកប្រាក់ដែលអ្នកបានទស្សន៍ទាយ *</label>
+        <div class="currency-group">
+          <input type="number" id="withdrawAmount" required placeholder="ឧ. 100$ ឬ 10,000.00៛" min="1" step="0.01">
+          <select id="withdrawCurrency">
+            <option value="USD">ដុល្លារ ($)</option>
+            <option value="KHR">រៀល (៛)</option>
+          </select>
+        </div>
+        
+        <label>រូបភាពថតអេក្រង់អំពីព័ត៌មានការទស្សន៍ទាយ <span class="optional">(បំពេញក៏បានមិនបំពេញក៏បាន)</span></label>
+        <input type="file" id="withdrawScreenshot" accept="image/*">
+        
+        <label>បញ្ចូលរូបភាពQR Code ទូទាត់របស់អ្នក *</label>
+        <input type="file" id="withdrawQrCode" accept="image/*" required>
+        
+        <button type="submit" class="btn btn-danger" style="width:100%; margin-top:10px;">បញ្ជាក់ការដកប្រាក់</button>
+      </form>
+    </div>
+  </div>
+
   <script>
-    // បង្ហាញកាលបរិច្ឆេទម៉ោងបច្ចុប្បន្ន
+    // ====== បង្ហាញកាលបរិច្ឆេទម៉ោង ======
     function updateDateTime() {
       const now = new Date();
       document.getElementById("datetime").innerText = 
@@ -57,11 +239,15 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-    // Function បង្កើតលេខដោយប្រើ seed ពីកាលបរិច្ឆេទ + ម៉ោង
+    // ====== ប្រព័ន្ធបង្កើតលេខ ======
     function seededRandom(seed) {
       let x = Math.sin(seed) * 10000;
       return x - Math.floor(x);
     }
+
+    let currentTwoDigit = [];
+    let currentThreeDigit = [];
+    let historyData = JSON.parse(localStorage.getItem('lotteryHistory')) || [];
 
     function generateNumbers(type) {
       const today = new Date();
@@ -71,22 +257,115 @@
 
       if (type === "twoDigit") {
         const twoDigitBox = document.getElementById("twoDigit").children;
-        for (let i=0; i<4; i++) {
-          let num = Math.floor(seededRandom(seedBase + i + 1200) * 90) + 10;
+        currentTwoDigit = [];
+        for (let i=0; i<5; i++) {
+          let num = Math.floor(seededRandom(seedBase + i + 1200 + Math.floor(Date.now()/1000) % 100) * 90) + 10;
+          currentTwoDigit.push(num);
           twoDigitBox[i].innerText = String.fromCharCode(65+i) + ": " + num;
+          twoDigitBox[i].classList.remove('pop');
+          void twoDigitBox[i].offsetWidth;
+          twoDigitBox[i].classList.add('pop');
         }
       }
 
       if (type === "threeDigit") {
         const threeDigitBox = document.getElementById("threeDigit").children;
-        for (let i=0; i<4; i++) {
-          let num = Math.floor(seededRandom(seedBase + i + 1800) * 900) + 100;
+        currentThreeDigit = [];
+        for (let i=0; i<5; i++) {
+          let num = Math.floor(seededRandom(seedBase + i + 1800 + Math.floor(Date.now()/1000) % 100) * 900) + 100;
+          currentThreeDigit.push(num);
           threeDigitBox[i].innerText = String.fromCharCode(65+i) + ": " + num;
+          threeDigitBox[i].classList.remove('pop');
+          void threeDigitBox[i].offsetWidth;
+          threeDigitBox[i].classList.add('pop');
         }
+      }
+
+      saveHistory();
+    }
+
+    function saveHistory() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('km-KH');
+      const timeStr = now.toLocaleTimeString('km-KH', { hour: '2-digit', minute: '2-digit' });
+      
+      if (currentTwoDigit.length > 0 && currentThreeDigit.length > 0) {
+        const entry = {
+          date: dateStr,
+          time: timeStr,
+          twoDigit: currentTwoDigit.join(', '),
+          threeDigit: currentThreeDigit.join(', '),
+          timestamp: Date.now()
+        };
+        historyData.unshift(entry);
+        if (historyData.length > 50) historyData.pop();
+        localStorage.setItem('lotteryHistory', JSON.stringify(historyData));
+        displayHistory();
       }
     }
 
-    // កំណត់ពេលស្វ័យប្រវត្តិ
+    function displayHistory() {
+      const body = document.getElementById('historyBody');
+      if (historyData.length === 0) {
+        body.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">មិនទាន់មានប្រវត្តិទេ</td></tr>';
+        return;
+      }
+      body.innerHTML = historyData.map(item => `
+        <tr>
+          <td>${item.date}</td>
+          <td>${item.time}</td>
+          <td>${item.twoDigit}</td>
+          <td>${item.threeDigit}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ====== Countdown ======
+    function updateCountdown() {
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      
+      let targetHour = 12;
+      let targetMinute = 0;
+      
+      if (hour >= 18 || (hour === 12 && minute >= 0)) {
+        targetHour = 18;
+        if (hour >= 18) {
+          const tomorrow = new Date(now);
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(12, 0, 0, 0);
+          const diff = tomorrow - now;
+          displayCountdown(diff);
+          return;
+        }
+      }
+      
+      const target = new Date(now);
+      target.setHours(targetHour, targetMinute, 0, 0);
+      if (target < now) {
+        target.setHours(targetHour + 6, targetMinute, 0, 0);
+      }
+      const diff = target - now;
+      displayCountdown(diff);
+    }
+
+    function displayCountdown(diff) {
+      if (diff <= 0) {
+        document.getElementById('countdown').innerHTML = '⏰ កំពុងចេញលេខ...';
+        return;
+      }
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      document.getElementById('countdown').innerHTML = 
+        `⏳ ពេលវេលាដែលនៅសល់: <span style="font-size:28px;">${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}</span>`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // ====== ប្រព័ន្ធស្វ័យប្រវត្តិ ======
     function checkTime() {
       const now = new Date();
       const hour = now.getHours();
@@ -94,13 +373,237 @@
 
       if (hour === 12 && minute === 0) {
         generateNumbers("twoDigit");
+        generateNumbers("threeDigit");
       }
       if (hour === 18 && minute === 0) {
+        generateNumbers("twoDigit");
         generateNumbers("threeDigit");
       }
     }
 
-    setInterval(checkTime, 60000); // ពិនិត្យរៀងរាល់ 1 នាទី
+    setInterval(checkTime, 10000);
+    
+    setTimeout(() => {
+      generateNumbers("twoDigit");
+      generateNumbers("threeDigit");
+      displayHistory();
+    }, 500);
+
+    // ====== Modal Functions ======
+    function openDepositPredictModal() {
+      document.getElementById('depositPredictModal').style.display = 'block';
+    }
+
+    function openWithdrawModal() {
+      document.getElementById('withdrawModal').style.display = 'block';
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
+
+    // ====== Member Management ======
+    let members = JSON.parse(localStorage.getItem('members')) || [];
+
+    function addMember(data) {
+      const id = Date.now();
+      members.push({ id, ...data, timestamp: new Date().toLocaleString('km-KH') });
+      localStorage.setItem('members', JSON.stringify(members));
+      displayMembers();
+    }
+
+    function displayMembers() {
+      const container = document.getElementById('memberInfoList');
+      if (members.length === 0) {
+        container.innerHTML = '<p style="color:#999;">មិនទាន់មានសមាជិកទេ</p>';
+        return;
+      }
+      container.innerHTML = members.slice(-10).reverse().map(m => `
+        <div class="member-info">
+          <h4>${m.type || 'សមាជិក'}</h4>
+          <div class="member-info-item"><span>📱 ទូរសព្ទ:</span><span>${m.phone || 'N/A'}</span></div>
+          ${m.bank ? `<div class="member-info-item"><span>🏦 ធនាគារ:</span><span>${m.bank}</span></div>` : ''}
+          ${m.accountName ? `<div class="member-info-item"><span>👤 ឈ្មោះគណនី:</span><span>${m.accountName}</span></div>` : ''}
+          ${m.depositAmount ? `<div class="member-info-item"><span>💰 ប្រាក់ដាក់:</span><span>${m.depositAmount} ${m.depositCurrency || 'USD'}</span></div>` : ''}
+          ${m.predictAmount ? `<div class="member-info-item"><span>🎯 ប្រាក់ទស្សន៍ទាយ:</span><span>${m.predictAmount} ${m.predictCurrency || 'USD'}</span></div>` : ''}
+          ${m.numbers ? `<div class="member-info-item"><span>🔢 លេខពីរខ្ទង់:</span><span>${m.numbers}</span></div>` : ''}
+          ${m.extraThreeDigit ? `<div class="member-info-item"><span>🔢 លេខបីខ្ទង់:</span><span>${m.extraThreeDigit}</span></div>` : ''}
+          ${m.withdrawAmount ? `<div class="member-info-item"><span>🏦 ប្រាក់ដក:</span><span>${m.withdrawAmount} ${m.withdrawCurrency || 'USD'}</span></div>` : ''}
+          ${m.predictNumber ? `<div class="member-info-item"><span>🔢 លេខដក:</span><span>${m.predictNumber}</span></div>` : ''}
+          ${m.qrCode ? `<div class="member-info-item"><span>📱 QR Code:</span><span>បានបញ្ចូល</span></div>` : ''}
+          <div class="member-info-item"><span>⏰ ពេលវេលា:</span><span>${m.timestamp}</span></div>
+        </div>
+      `).join('');
+    }
+
+    // ====== អនុគមន៍សម្រាប់ដកលេខ និងអក្សរចេញពីទម្រង់ "A:12, B:23" ======
+    function extractNumbersWithLetters(input) {
+      if (!input || !input.trim()) return [];
+      
+      // បំបែកដោយ comma
+      let parts = input.split(',').map(s => s.trim()).filter(s => s !== '');
+      let results = [];
+      let validLetters = ['A', 'B', 'C', 'D', 'E'];
+      
+      for (let part of parts) {
+        // ពិនិត្យទម្រង់ "A:12" ឬ "A: 12" ឬ "A12"
+        let match = part.match(/^([A-Ea-e])\s*[:：]?\s*(\d+)$/);
+        if (match) {
+          let letter = match[1].toUpperCase();
+          let number = match[2];
+          if (validLetters.includes(letter)) {
+            results.push({ letter: letter, number: number });
+          }
+        } else {
+          // បើមិនត្រឹមត្រូវ សូមរំលង
+          continue;
+        }
+      }
+      return results;
+    }
+
+    // ====== Deposit & Predict Form ======
+    document.getElementById('depositPredictForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const numbersInput = document.getElementById('predictNumbers').value;
+      const extraThreeDigitInput = document.getElementById('predictExtraThreeDigit').value;
+      
+      // ដកលេខ និងអក្សរចេញ
+      const twoDigitResults = extractNumbersWithLetters(numbersInput);
+      const threeDigitResults = extractNumbersWithLetters(extraThreeDigitInput);
+      
+      // ពិនិត្យថាតើមានការបញ្ចូលយ៉ាងហោចណាស់មួយប្រភេទ
+      if (twoDigitResults.length === 0 && threeDigitResults.length === 0) {
+        alert('⚠️ សូមបញ្ចូលយ៉ាងហោចណាស់មួយប្រភេទគឺ លេខពីរខ្ទង់ ឬ លេខបីខ្ទង់! ហើយត្រូវមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:12, B:23)');
+        return;
+      }
+      
+      // ពិនិត្យលេខពីរខ្ទង់
+      if (twoDigitResults.length > 0) {
+        if (twoDigitResults.length < 1 || twoDigitResults.length > 10) {
+          alert('⚠️ លេខពីរខ្ទង់ត្រូវចាក់ពី ១ ដល់ ១០ លេខ!');
+          return;
+        }
+        // ពិនិត្យអក្សរមិនឱ្យដូចគ្នា
+        let letters = twoDigitResults.map(r => r.letter);
+        let uniqueLetters = new Set(letters);
+        if (uniqueLetters.size !== letters.length) {
+          alert('⚠️ អក្សរ A,B,C,D,E មិនអាចដូចគ្នាបានទេ! ឧ. A:12, B:23');
+          return;
+        }
+        for (let r of twoDigitResults) {
+          if (r.number.length !== 2 || isNaN(r.number) || parseInt(r.number) < 10 || parseInt(r.number) > 99) {
+            alert(`⚠️ លេខ ${r.letter}:${r.number} មិនត្រឹមត្រូវ! លេខពីរខ្ទង់ត្រូវតែជាលេខ ២ខ្ទង់ (ឧ. 12)`);
+            return;
+          }
+        }
+      }
+      
+      // ពិនិត្យលេខបីខ្ទង់
+      if (threeDigitResults.length > 0) {
+        if (threeDigitResults.length < 1 || threeDigitResults.length > 10) {
+          alert('⚠️ លេខបីខ្ទង់ត្រូវចាក់ពី ១ ដល់ ១០ លេខ!');
+          return;
+        }
+        // ពិនិត្យអក្សរមិនឱ្យដូចគ្នា
+        let letters = threeDigitResults.map(r => r.letter);
+        let uniqueLetters = new Set(letters);
+        if (uniqueLetters.size !== letters.length) {
+          alert('⚠️ អក្សរ A,B,C,D,E មិនអាចដូចគ្នាបានទេ! ឧ. A:123, B:456');
+          return;
+        }
+        for (let r of threeDigitResults) {
+          if (r.number.length !== 3 || isNaN(r.number) || parseInt(r.number) < 0 || parseInt(r.number) > 999) {
+            alert(`⚠️ លេខ ${r.letter}:${r.number} មិនត្រឹមត្រូវ! លេខបីខ្ទង់ត្រូវតែជាលេខ ៣ខ្ទង់ (ឧ. 123)`);
+            return;
+          }
+        }
+      }
+      
+      // បង្កើតទិន្នន័យសម្រាប់រក្សាទុក
+      const twoDigitFormatted = twoDigitResults.map(r => `${r.letter}:${r.number}`).join(', ');
+      const threeDigitFormatted = threeDigitResults.map(r => `${r.letter}:${r.number}`).join(', ');
+      
+      const data = {
+        type: '💳 ដាក់ប្រាក់ទស្សន៍ទាយ',
+        phone: document.getElementById('depositPhone').value,
+        bank: document.getElementById('depositBank').value,
+        accountName: document.getElementById('depositAccountName').value,
+        depositAmount: document.getElementById('depositAmount').value,
+        depositCurrency: document.getElementById('depositCurrency').value,
+        predictAmount: document.getElementById('predictAmount').value,
+        predictCurrency: document.getElementById('predictCurrency').value,
+        numbers: twoDigitResults.length > 0 ? twoDigitFormatted : 'មិនមាន',
+        extraThreeDigit: threeDigitResults.length > 0 ? threeDigitFormatted : 'មិនមាន',
+        screenshot: document.getElementById('depositScreenshot').files[0] ? document.getElementById('depositScreenshot').files[0].name : 'N/A'
+      };
+      
+      addMember(data);
+      alert('✅ ការដាក់ប្រាក់ និងទស្សន៍ទាយត្រូវបានបញ្ជូន! សូមរង់ចាំការផ្ទៀងផ្ទាត់។');
+      closeModal('depositPredictModal');
+      this.reset();
+    });
+
+    // ====== Withdraw Form ======
+    document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const predictNumberInput = document.getElementById('withdrawPredictNumber').value;
+      const results = extractNumbersWithLetters(predictNumberInput);
+      
+      if (results.length === 0) {
+        alert('⚠️ សូមបញ្ចូលលេខដែលអ្នកបានទស្សន៍ទាយត្រូវ! តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:12, B:34)');
+        return;
+      }
+      
+      // ពិនិត្យអក្សរមិនឱ្យដូចគ្នា
+      let letters = results.map(r => r.letter);
+      let uniqueLetters = new Set(letters);
+      if (uniqueLetters.size !== letters.length) {
+        alert('⚠️ អក្សរ A,B,C,D,E មិនអាចដូចគ្នាបានទេ!');
+        return;
+      }
+      
+      const formatted = results.map(r => `${r.letter}:${r.number}`).join(', ');
+      
+      const data = {
+        type: '🏦 ដកប្រាក់',
+        phone: document.getElementById('withdrawPhone').value,
+        predictNumber: formatted,
+        withdrawAmount: document.getElementById('withdrawAmount').value,
+        withdrawCurrency: document.getElementById('withdrawCurrency').value,
+        screenshot: document.getElementById('withdrawScreenshot').files[0] ? document.getElementById('withdrawScreenshot').files[0].name : 'មិនបានបំពេញ',
+        qrCode: document.getElementById('withdrawQrCode').files[0] ? document.getElementById('withdrawQrCode').files[0].name : 'N/A'
+      };
+      
+      addMember(data);
+      alert('✅ ការស្នើសុំដកប្រាក់ត្រូវបានបញ្ជូន! សូមរង់ចាំការផ្ទៀងផ្ទាត់។');
+      closeModal('withdrawModal');
+      this.reset();
+    });
+
+    // ====== បង្ហាញសមាជិក ======
+    displayMembers();
+
+    // ====== Auto-generate numbers ======
+    setInterval(() => {
+      const now = new Date();
+      if (now.getMinutes() === 0 && now.getSeconds() < 10) {
+        generateNumbers("twoDigit");
+        generateNumbers("threeDigit");
+      }
+    }, 10000);
+
+    console.log('✅ N98 Lottery System Loaded!');
+    console.log('📊 History:', historyData.length, 'records');
+    console.log('👥 Members:', members.length, 'members');
   </script>
 </body>
 </html>
