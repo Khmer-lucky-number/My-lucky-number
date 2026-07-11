@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>លេខឆ្នោតខ្មែរ N98</title>
   <!-- បន្ថែម Google Fonts សម្រាប់អក្សរខ្មែរ -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     /* ប្តូរ font ទាំងអស់ទៅជា Noto Sans Khmer */
     * {
@@ -14,12 +14,19 @@
     
     body { font-family: 'Noto Sans Khmer', 'Khmer OS', 'Khmer', 'Arial', sans-serif; margin:0; padding:0; background:#f9f9f9; }
     header { background:#0078D7; color:white; padding:20px; text-align:center; }
-    header h1 { font-weight:700; }
+    header h1 { 
+      font-size:42px; 
+      font-weight:900; 
+      margin:10px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      letter-spacing:2px;
+    }
+    header p { font-size:18px; font-weight:400; }
     section { padding:20px; max-width:1200px; margin:0 auto; }
     .lottery-box { background:white; padding:20px; margin:20px 0; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-    .time-box { font-weight:bold; color:#0078D7; }
+    .time-box { font-weight:bold; color:#0078D7; font-size:18px; }
     .numbers { display:flex; gap:20px; margin-top:10px; flex-wrap:wrap; }
-    .numbers div { background:#eee; padding:15px; border-radius:5px; text-align:center; flex:1; min-width:80px; transition: all 0.5s ease; font-weight:500; }
+    .numbers div { background:#eee; padding:18px 10px; border-radius:5px; text-align:center; flex:1; min-width:80px; transition: all 0.5s ease; font-weight:600; font-size:18px; }
     .numbers div.pop { animation: pop 0.6s ease; }
     @keyframes pop {
       0% { transform: scale(0.5); opacity:0; }
@@ -29,8 +36,8 @@
     footer { background:#333; color:white; text-align:center; padding:15px; margin-top:20px; }
     
     /* ប៊ូតុង */
-    .btn { color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px; margin:5px; font-weight:500; }
-    .btn:hover { opacity:0.85; }
+    .btn { color:white; border:none; padding:12px 24px; border-radius:5px; cursor:pointer; font-size:17px; margin:5px; font-weight:600; }
+    .btn:hover { opacity:0.85; transform:scale(1.02); }
     .btn-success { background:#28a745; }
     .btn-success:hover { background:#218838; }
     .btn-withdraw { background:#6f42c1; }
@@ -42,46 +49,54 @@
       font-weight:bold; 
       color:#ff6b00; 
       text-align:center; 
-      padding:15px; 
+      padding:20px; 
       background:#fff3e0; 
       border-radius:8px; 
       margin:10px 0;
-      border:2px solid #ff6b00;
+      border:3px solid #ff6b00;
       animation: pulse 2s infinite;
     }
     .countdown .time-display {
-      font-size:36px;
+      font-size:48px;
       color:#d63000;
       background:white;
-      padding:5px 25px;
-      border-radius:8px;
+      padding:10px 30px;
+      border-radius:10px;
       display:inline-block;
-      margin-top:8px;
-      font-weight:700;
-      letter-spacing:3px;
+      margin-top:10px;
+      font-weight:800;
+      letter-spacing:5px;
+      min-width:180px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.1);
     }
     .countdown .next-time {
-      font-size:16px;
+      font-size:18px;
       color:#e67e22;
-      margin-top:5px;
-      font-weight:500;
+      margin-top:10px;
+      font-weight:600;
+    }
+    .countdown .countdown-label {
+      font-size:20px;
+      color:#e67e22;
+      font-weight:600;
     }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0.4); }
-      70% { box-shadow: 0 0 0 10px rgba(255, 107, 0, 0); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 107, 0, 0); }
       100% { box-shadow: 0 0 0 0 rgba(255, 107, 0, 0); }
     }
     
     .history-table { width:100%; border-collapse:collapse; margin-top:10px; }
-    .history-table th, .history-table td { border:1px solid #ddd; padding:8px; text-align:center; }
-    .history-table th { background:#0078D7; color:white; font-weight:600; }
+    .history-table th, .history-table td { border:1px solid #ddd; padding:10px; text-align:center; }
+    .history-table th { background:#0078D7; color:white; font-weight:600; font-size:16px; }
+    .history-table td { font-size:15px; }
     .history-table tr:nth-child(even) { background:#f2f2f2; }
     
     .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); }
-    .modal-content { background:white; margin:5% auto; padding:20px; border-radius:10px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; }
-    .modal-content h2 { margin-top:0; color:#0078D7; font-weight:600; }
-    .modal-content label { display:block; margin:10px 0 5px; font-weight:600; }
-    .modal-content input, .modal-content select, .modal-content textarea { width:100%; padding:8px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box; font-family:inherit; }
+    .modal-content { background:white; margin:5% auto; padding:25px; border-radius:10px; max-width:500px; width:90%; max-height:80vh; overflow-y:auto; }
+    .modal-content h2 { margin-top:0; color:#0078D7; font-weight:700; font-size:26px; }
+    .modal-content label { display:block; margin:10px 0 5px; font-weight:600; font-size:15px; }
+    .modal-content input, .modal-content select, .modal-content textarea { width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; box-sizing:border-box; font-family:inherit; font-size:15px; }
     .modal-content textarea { height:60px; }
     .modal-content .optional { font-weight:normal; color:#666; font-size:14px; }
     .modal-content .currency-group { display:flex; gap:10px; align-items:center; }
@@ -89,26 +104,30 @@
     .modal-content .currency-group select { width:120px; flex-shrink:0; }
     .modal-content .number-hint { color:#666; font-size:13px; display:block; margin-top:2px; }
     .modal-content .number-hint.important { color:#dc3545; font-weight:bold; }
-    .close { float:right; font-size:28px; font-weight:bold; cursor:pointer; color:#aaa; }
+    .close { float:right; font-size:32px; font-weight:bold; cursor:pointer; color:#aaa; }
     .close:hover { color:#333; }
     
     .qr-container { text-align:center; margin:10px 0; }
     .qr-container img { max-width:200px; border:1px solid #ddd; border-radius:5px; }
     
     .member-info { background:#e8f4fd; padding:15px; border-radius:5px; margin:10px 0; border-left:4px solid #0078D7; }
-    .member-info h4 { margin:0 0 10px; color:#0078D7; font-weight:600; }
-    .member-info-item { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #ddd; }
+    .member-info h4 { margin:0 0 10px; color:#0078D7; font-weight:600; font-size:17px; }
+    .member-info-item { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #ddd; font-size:15px; }
     
-    small, .small-text { font-family:inherit; }
+    small, .small-text { font-family:inherit; font-size:14px; }
     
     @media (max-width:768px) {
       .numbers { gap:10px; }
-      .numbers div { min-width:60px; padding:10px; }
+      .numbers div { min-width:60px; padding:12px 8px; font-size:15px; }
       .modal-content { margin:10% auto; width:95%; }
       .modal-content .currency-group { flex-direction:column; }
       .modal-content .currency-group select { width:100%; }
-      .countdown { font-size:18px; }
-      .countdown .time-display { font-size:28px; padding:5px 15px; }
+      .countdown { font-size:18px; padding:15px; }
+      .countdown .time-display { font-size:32px; padding:8px 15px; min-width:120px; letter-spacing:3px; }
+      header h1 { font-size:28px; }
+      header p { font-size:15px; }
+      .btn { padding:10px 16px; font-size:15px; }
+      .history-table th, .history-table td { padding:6px; font-size:13px; }
     }
   </style>
 </head>
@@ -121,9 +140,9 @@
   <section>
     <!-- Countdown -->
     <div class="countdown" id="countdown">
-      <div id="countdownLabel">⏳ រង់ចាំពេលចេញលេខបន្ទាប់</div>
+      <div class="countdown-label" id="countdownLabel">⏳ រង់ចាំពេលចេញលេខបន្ទាប់</div>
       <div class="time-display" id="countdownDisplay">--:--:--</div>
-      <div class="next-time" id="nextTimeLabel">ពេលវេលាគោលដៅ: --:--</div>
+      <div class="next-time" id="nextTimeLabel">🎯 ពេលវេលាគោលដៅ: កំពុងគណនា...</div>
     </div>
 
     <div class="lottery-box">
@@ -349,7 +368,6 @@
         month: 'long', 
         day: 'numeric' 
       });
-      // ពេលវេលាជា 24-hour
       const timeStr = now.toLocaleTimeString('km-KH', { 
         hour: '2-digit', 
         minute: '2-digit', 
@@ -406,18 +424,15 @@
       let targetHour, targetMinute = 0, targetSecond = 0;
       let targetLabel = '';
       
-      // កំណត់គោលដៅបន្ទាប់
-      // ម៉ោងគោលដៅ: 12:00:00 និង 18:00:00
+      // កំណត់គោលដៅបន្ទាប់: 12:00:00 និង 18:00:00
       if (hour < 12) {
-        // បច្ចុប្បន្នមុនម៉ោង 12:00 -> គោលដៅគឺ 12:00 ថ្ងៃនេះ
         targetHour = 12;
         targetLabel = '12:00:00 (លេខពីរខ្ទង់)';
       } else if (hour < 18) {
-        // បច្ចុប្បន្នចន្លោះ 12:00 - 18:00 -> គោលដៅគឺ 18:00 ថ្ងៃនេះ
         targetHour = 18;
         targetLabel = '18:00:00 (លេខបីខ្ទង់)';
       } else {
-        // បច្ចុប្បន្នក្រោយម៉ោង 18:00 -> គោលដៅគឺ 12:00 ថ្ងៃស្អែក
+        // ក្រោយម៉ោង 18:00 -> គោលដៅគឺ 12:00 ថ្ងៃស្អែក
         targetHour = 12;
         targetLabel = '12:00:00 ថ្ងៃស្អែក (លេខពីរខ្ទង់)';
         const tomorrow = new Date(now);
@@ -463,8 +478,9 @@
       nextLabel.innerHTML = `🎯 ពេលវេលាគោលដៅ: ${targetLabel}`;
     }
 
-    setInterval(updateCountdown, 1000);
+    // ហៅភ្លាមៗ និងកំណត់ពេលរៀងរាល់ 1 វិនាទី
     updateCountdown();
+    setInterval(updateCountdown, 1000);
 
     // ====== ប្រព័ន្ធស្វ័យប្រវត្តិ ======
     function checkTime() {
