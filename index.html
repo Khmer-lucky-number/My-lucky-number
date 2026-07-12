@@ -13,6 +13,13 @@
     header h1 { font-size:38px; font-weight:900; margin:10px 0; text-shadow:2px 2px 4px rgba(0,0,0,0.3); letter-spacing:2px; }
     header p { font-size:16px; font-weight:400; opacity:0.9; }
     
+    /* Navigation Bar */
+    .nav-bar { background:white; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; box-shadow:0 2px 5px rgba(0,0,0,0.1); position:sticky; top:0; z-index:100; }
+    .nav-bar .nav-links { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .nav-bar .nav-links a { color:#333; text-decoration:none; font-weight:600; padding:6px 14px; border-radius:6px; transition:all 0.3s; font-size:14px; cursor:pointer; }
+    .nav-bar .nav-links a:hover { background:#0078D7; color:white; }
+    .nav-bar .nav-links a.active { background:#0078D7; color:white; }
+    
     section { padding:15px; max-width:1100px; margin:0 auto; }
     
     .lottery-box { background:white; padding:18px; margin:15px 0; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08); border:1px solid #e9ecef; }
@@ -93,6 +100,11 @@
     .selected-count { display:flex; align-items:center; font-size:13px; color:#6c757d; }
     .selected-count strong { color:#0078D7; margin:0 5px; font-size:16px; }
     
+    .history-table { width:100%; border-collapse:collapse; margin-top:8px; border-radius:8px; overflow:hidden; }
+    .history-table th { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:8px; font-size:14px; text-align:center; }
+    .history-table td { padding:6px 8px; font-size:13px; text-align:center; border-bottom:1px solid #dee2e6; }
+    .history-table tr:nth-child(even) { background:#f8f9fa; }
+    
     .rules-section { background:linear-gradient(135deg, #f8f9fa, #e9ecef); padding:15px 20px; border-radius:12px; margin-top:15px; border-left:5px solid #0078D7; }
     .rules-section h3 { color:#0078D7; font-size:20px; margin-top:0; }
     .rules-section ul { padding-left:18px; margin:8px 0; }
@@ -101,11 +113,13 @@
     
     small, .small-text { font-family:inherit; font-size:13px; color:#6c757d; }
     
-    /* Responsive */
     @media (max-width:768px) {
       header h1 { font-size:26px; }
       header p { font-size:14px; }
       section { padding:10px; }
+      .nav-bar { flex-direction:column; gap:8px; padding:10px; }
+      .nav-bar .nav-links { justify-content:center; gap:6px; }
+      .nav-bar .nav-links a { font-size:13px; padding:5px 10px; }
       .numbers { gap:8px; }
       .numbers div { min-width:50px; padding:10px 5px; font-size:14px; }
       .numbers div .number { font-size:15px; }
@@ -122,8 +136,6 @@
       .quick-bet h3 { font-size:18px; }
       .lottery-box { padding:14px; }
       .time-box { font-size:15px; }
-      .rules-section { padding:12px 15px; }
-      .rules-section ul li { font-size:13px; }
     }
     
     @media (max-width:480px) {
@@ -136,9 +148,7 @@
       .modal-content { padding:14px; }
       .btn { font-size:12px; padding:6px 10px; }
       .amount-buttons .btn-amount { font-size:10px; padding:3px 6px; min-width:40px; }
-      .selected-number-tag { font-size:11px; padding:3px 8px; }
-      .lottery-box { padding:10px; }
-      .quick-bet { padding:10px; }
+      .nav-bar .nav-links a { font-size:11px; padding:4px 8px; }
     }
   </style>
 </head>
@@ -148,6 +158,15 @@
     <p id="datetime"></p>
   </header>
 
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <div class="nav-links">
+      <a href="#" class="active" onclick="showSection('home')">🏠 ទំព័រដើម</a>
+      <a href="#" onclick="showSection('history')">📊 ប្រវត្តិ</a>
+      <a href="#" onclick="showSection('rules')">📋 ច្បាប់</a>
+    </div>
+  </nav>
+
   <section>
     <!-- Countdown -->
     <div class="countdown" id="countdown">
@@ -156,163 +175,165 @@
       <div class="next-time" id="nextTimeLabel">🎯 ពេលវេលាគោលដៅ: កំពុងគណនា...</div>
     </div>
 
-    <!-- Lottery Results -->
-    <div class="lottery-box">
-      <div class="time-box">🕛 លទ្ធផលម៉ោង 12:00 <span class="badge">លេខពីរខ្ទង់</span></div>
-      <div class="numbers" id="twoDigit">
-        <div><span class="letter">A:</span> <span class="number">--</span></div>
-        <div><span class="letter">B:</span> <span class="number">--</span></div>
-        <div><span class="letter">C:</span> <span class="number">--</span></div>
-        <div><span class="letter">D:</span> <span class="number">--</span></div>
-        <div><span class="letter">E:</span> <span class="number">--</span></div>
+    <!-- Home Section -->
+    <div id="homeSection">
+      <!-- Lottery Results -->
+      <div class="lottery-box">
+        <div class="time-box">🕛 លទ្ធផលម៉ោង 12:00 <span class="badge">លេខពីរខ្ទង់</span></div>
+        <div class="numbers" id="twoDigit">
+          <div><span class="letter">A:</span> <span class="number">--</span></div>
+          <div><span class="letter">B:</span> <span class="number">--</span></div>
+          <div><span class="letter">C:</span> <span class="number">--</span></div>
+          <div><span class="letter">D:</span> <span class="number">--</span></div>
+          <div><span class="letter">E:</span> <span class="number">--</span></div>
+        </div>
+        <small>📌 ចាក់បានពី ១ ដល់ ១០ លេខ (អាចជ្រើសរើសមួយណាក៏បាន)</small>
       </div>
-      <small>📌 ចាក់បានពី ១ ដល់ ១០ លេខ (អាចជ្រើសរើសមួយណាក៏បាន)</small>
-    </div>
 
-    <div class="lottery-box">
-      <div class="time-box">🕕 លទ្ធផលម៉ោង 18:00 <span class="badge">លេខបីខ្ទង់</span></div>
-      <div class="numbers" id="threeDigit">
-        <div><span class="letter">A:</span> <span class="number">---</span></div>
-        <div><span class="letter">B:</span> <span class="number">---</span></div>
-        <div><span class="letter">C:</span> <span class="number">---</span></div>
-        <div><span class="letter">D:</span> <span class="number">---</span></div>
-        <div><span class="letter">E:</span> <span class="number">---</span></div>
+      <div class="lottery-box">
+        <div class="time-box">🕕 លទ្ធផលម៉ោង 18:00 <span class="badge">លេខបីខ្ទង់</span></div>
+        <div class="numbers" id="threeDigit">
+          <div><span class="letter">A:</span> <span class="number">---</span></div>
+          <div><span class="letter">B:</span> <span class="number">---</span></div>
+          <div><span class="letter">C:</span> <span class="number">---</span></div>
+          <div><span class="letter">D:</span> <span class="number">---</span></div>
+          <div><span class="letter">E:</span> <span class="number">---</span></div>
+        </div>
+        <small>📌 ចាក់បានពី ១ ដល់ ១០ លេខ (អាចជ្រើសរើសមួយណាក៏បាន)</small>
       </div>
-      <small>📌 ចាក់បានពី ១ ដល់ ១០ លេខ (អាចជ្រើសរើសមួយណាក៏បាន)</small>
-    </div>
 
-    <!-- Quick Bet Section -->
-    <div class="quick-bet">
-      <h3>🎯 ចាក់លេខឆ្នោតលឿន</h3>
-      <p style="color:#6c757d; font-size:14px; margin:5px 0 10px;">ជ្រើសរើសលេខដែលអ្នកចង់ចាក់ និងទឹកប្រាក់ រួចចុច "ដាក់ប្រាក់ទស្សន៍ទាយ"</p>
-      
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:10px 0;">
-        <!-- Two Digit Selection -->
-        <div>
-          <label style="font-weight:600; color:#0078D7; font-size:15px;">លេខពីរខ្ទង់ (A-E)</label>
-          <div class="bet-grid" id="twoDigitBet">
-            <button type="button" class="btn btn-number" data-letter="A" data-type="two">A</button>
-            <button type="button" class="btn btn-number" data-letter="B" data-type="two">B</button>
-            <button type="button" class="btn btn-number" data-letter="C" data-type="two">C</button>
-            <button type="button" class="btn btn-number" data-letter="D" data-type="two">D</button>
-            <button type="button" class="btn btn-number" data-letter="E" data-type="two">E</button>
-          </div>
-          <div style="margin-top:6px;">
-            <label style="font-size:13px; color:#6c757d;">បញ្ចូលលេខ (2ខ្ទង់):</label>
-            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-              <input type="number" id="twoDigitValue" placeholder="12" min="10" max="99" style="flex:1; min-width:70px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;">
-              <button type="button" class="btn btn-primary" onclick="addTwoDigit()" style="padding:6px 14px; font-size:13px;">បន្ថែម</button>
+      <!-- Quick Bet Section -->
+      <div class="quick-bet">
+        <h3>🎯 ចាក់លេខឆ្នោតលឿន</h3>
+        <p style="color:#6c757d; font-size:14px; margin:5px 0 10px;">ជ្រើសរើសលេខដែលអ្នកចង់ចាក់ និងទឹកប្រាក់ រួចចុច "ដាក់ប្រាក់ទស្សន៍ទាយ"</p>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:10px 0;">
+          <!-- Two Digit Selection -->
+          <div>
+            <label style="font-weight:600; color:#0078D7; font-size:15px;">លេខពីរខ្ទង់ (A-E)</label>
+            <div class="bet-grid" id="twoDigitBet">
+              <button type="button" class="btn btn-number" data-letter="A" data-type="two">A</button>
+              <button type="button" class="btn btn-number" data-letter="B" data-type="two">B</button>
+              <button type="button" class="btn btn-number" data-letter="C" data-type="two">C</button>
+              <button type="button" class="btn btn-number" data-letter="D" data-type="two">D</button>
+              <button type="button" class="btn btn-number" data-letter="E" data-type="two">E</button>
             </div>
+            <div style="margin-top:6px;">
+              <label style="font-size:13px; color:#6c757d;">បញ្ចូលលេខ (2ខ្ទង់):</label>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                <input type="number" id="twoDigitValue" placeholder="12" min="10" max="99" style="flex:1; min-width:70px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;">
+                <button type="button" class="btn btn-primary" onclick="addTwoDigit()" style="padding:6px 14px; font-size:13px;">បន្ថែម</button>
+              </div>
+            </div>
+            <div class="selected-numbers-display" id="twoDigitSelected"></div>
           </div>
-          <div class="selected-numbers-display" id="twoDigitSelected"></div>
+          
+          <!-- Three Digit Selection -->
+          <div>
+            <label style="font-weight:600; color:#0078D7; font-size:15px;">លេខបីខ្ទង់ (A-E)</label>
+            <div class="bet-grid" id="threeDigitBet">
+              <button type="button" class="btn btn-number" data-letter="A" data-type="three">A</button>
+              <button type="button" class="btn btn-number" data-letter="B" data-type="three">B</button>
+              <button type="button" class="btn btn-number" data-letter="C" data-type="three">C</button>
+              <button type="button" class="btn btn-number" data-letter="D" data-type="three">D</button>
+              <button type="button" class="btn btn-number" data-letter="E" data-type="three">E</button>
+            </div>
+            <div style="margin-top:6px;">
+              <label style="font-size:13px; color:#6c757d;">បញ្ចូលលេខ (3ខ្ទង់):</label>
+              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+                <input type="number" id="threeDigitValue" placeholder="123" min="0" max="999" style="flex:1; min-width:70px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;">
+                <button type="button" class="btn btn-primary" onclick="addThreeDigit()" style="padding:6px 14px; font-size:13px;">បន្ថែម</button>
+              </div>
+            </div>
+            <div class="selected-numbers-display" id="threeDigitSelected"></div>
+          </div>
         </div>
         
-        <!-- Three Digit Selection -->
-        <div>
-          <label style="font-weight:600; color:#0078D7; font-size:15px;">លេខបីខ្ទង់ (A-E)</label>
-          <div class="bet-grid" id="threeDigitBet">
-            <button type="button" class="btn btn-number" data-letter="A" data-type="three">A</button>
-            <button type="button" class="btn btn-number" data-letter="B" data-type="three">B</button>
-            <button type="button" class="btn btn-number" data-letter="C" data-type="three">C</button>
-            <button type="button" class="btn btn-number" data-letter="D" data-type="three">D</button>
-            <button type="button" class="btn btn-number" data-letter="E" data-type="three">E</button>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button type="button" class="btn btn-danger" onclick="clearAllBets()" style="padding:6px 16px; font-size:13px;">🗑️ លុបទាំងអស់</button>
+          <button type="button" class="btn btn-primary" onclick="copySelectedNumbers()" style="padding:6px 16px; font-size:13px;">📋 ចម្លងលេខ</button>
+          <span class="selected-count">📊 ចំនួនលេខ: <strong id="selectedCount">0</strong> / 10</span>
+        </div>
+        
+        <!-- Amount Selection -->
+        <div style="margin:10px 0;">
+          <label style="font-weight:600; color:#0078D7; font-size:15px;">ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
+          <div class="amount-buttons">
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1000, '៛')">1000៛</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(2000, '៛')">2000៛</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5000, '៛')">5000៛</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10000, '៛')">10000៛</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(20000, '៛')">20000៛</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1, '$')">1$</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(2, '$')">2$</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5, '$')">5$</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10, '$')">10$</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(15, '$')">15$</button>
           </div>
-          <div style="margin-top:6px;">
-            <label style="font-size:13px; color:#6c757d;">បញ្ចូលលេខ (3ខ្ទង់):</label>
-            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-              <input type="number" id="threeDigitValue" placeholder="123" min="0" max="999" style="flex:1; min-width:70px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;">
-              <button type="button" class="btn btn-primary" onclick="addThreeDigit()" style="padding:6px 14px; font-size:13px;">បន្ថែម</button>
-            </div>
+          <div style="display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">
+            <label style="font-weight:600; font-size:14px;">ឬបញ្ចូលដោយដៃ:</label>
+            <input type="number" id="quickAmountInput" placeholder="បញ្ចូលចំនួន" min="1" step="0.01" style="flex:1; min-width:100px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;" oninput="updateQuickAmountDisplay()">
+            <select id="quickCurrency" style="padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;" onchange="updateQuickAmountDisplay()">
+              <option value="USD">ដុល្លារ ($)</option>
+              <option value="KHR">រៀល (៛)</option>
+            </select>
           </div>
-          <div class="selected-numbers-display" id="threeDigitSelected"></div>
+          <div class="amount-display" id="quickAmountDisplay">
+            💰 ទឹកប្រាក់ក្នុងមួយលេខ: <span id="displayQuickAmount">0</span>
+          </div>
         </div>
-      </div>
-      
-      <!-- Quick Actions -->
-      <div class="quick-actions">
-        <button type="button" class="btn btn-danger" onclick="clearAllBets()" style="padding:6px 16px; font-size:13px;">🗑️ លុបទាំងអស់</button>
-        <button type="button" class="btn btn-primary" onclick="copySelectedNumbers()" style="padding:6px 16px; font-size:13px;">📋 ចម្លងលេខ</button>
-        <span class="selected-count">📊 ចំនួនលេខ: <strong id="selectedCount">0</strong> / 10</span>
-      </div>
-      
-      <!-- Amount Selection -->
-      <div style="margin:10px 0;">
-        <label style="font-weight:600; color:#0078D7; font-size:15px;">ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
-        <div class="amount-buttons">
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1000, '៛')">1000៛</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(2000, '៛')">2000៛</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5000, '៛')">5000៛</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10000, '៛')">10000៛</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(20000, '៛')">20000៛</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1, '$')">1$</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(2, '$')">2$</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5, '$')">5$</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10, '$')">10$</button>
-          <button type="button" class="btn btn-amount" onclick="selectQuickAmount(15, '$')">15$</button>
+        
+        <!-- Summary -->
+        <div class="bet-summary" id="betSummary">
+          <div class="bet-summary-item"><span>📊 ចំនួនលេខដែលបានជ្រើសរើស:</span><span id="totalSelected">0</span></div>
+          <div class="bet-summary-item"><span>💰 ទឹកប្រាក់ក្នុងមួយលេខ:</span><span id="perNumberAmount">0</span></div>
+          <div class="bet-summary-item total"><span>💵 សរុបទឹកប្រាក់ទស្សន៍ទាយ:</span><span id="totalAmount">0</span></div>
         </div>
-        <div style="display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap;">
-          <label style="font-weight:600; font-size:14px;">ឬបញ្ចូលដោយដៃ:</label>
-          <input type="number" id="quickAmountInput" placeholder="បញ្ចូលចំនួន" min="1" step="0.01" style="flex:1; min-width:100px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;" oninput="updateQuickAmountDisplay()">
-          <select id="quickCurrency" style="padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;" onchange="updateQuickAmountDisplay()">
-            <option value="USD">ដុល្លារ ($)</option>
-            <option value="KHR">រៀល (៛)</option>
-          </select>
-        </div>
-        <div class="amount-display" id="quickAmountDisplay">
-          💰 ទឹកប្រាក់ក្នុងមួយលេខ: <span id="displayQuickAmount">0</span>
-        </div>
+        
+        <button class="btn btn-success" onclick="submitQuickBet()" style="width:100%; padding:12px; font-size:18px;">
+          💳 ដាក់ប្រាក់ទស្សន៍ទាយ
+        </button>
       </div>
-      
-      <!-- Summary -->
-      <div class="bet-summary" id="betSummary">
-        <div class="bet-summary-item"><span>📊 ចំនួនលេខដែលបានជ្រើសរើស:</span><span id="totalSelected">0</span></div>
-        <div class="bet-summary-item"><span>💰 ទឹកប្រាក់ក្នុងមួយលេខ:</span><span id="perNumberAmount">0</span></div>
-        <div class="bet-summary-item total"><span>💵 សរុបទឹកប្រាក់ទស្សន៍ទាយ:</span><span id="totalAmount">0</span></div>
-      </div>
-      
-      <button class="btn btn-success" onclick="submitQuickBet()" style="width:100%; padding:12px; font-size:18px;">
-        💳 ដាក់ប្រាក់ទស្សន៍ទាយ
-      </button>
-    </div>
 
-    <!-- Withdraw Section -->
-    <div class="lottery-box">
-      <div class="time-box">🏦 ប្រព័ន្ធដកប្រាក់</div>
-      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-        <button class="btn btn-withdraw" onclick="openWithdrawModal()">🏦 ដកប្រាក់</button>
+      <!-- Withdraw Section -->
+      <div class="lottery-box">
+        <div class="time-box">🏦 ប្រព័ន្ធដកប្រាក់</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+          <button class="btn btn-withdraw" onclick="openWithdrawModal()">🏦 ដកប្រាក់</button>
+        </div>
       </div>
     </div>
 
-    <!-- History -->
-    <div class="lottery-box">
-      <div class="time-box">📊 ប្រវត្តិលេខឆ្នោត</div>
-      <div style="max-height:300px; overflow-y:auto;">
-        <table class="history-table" style="width:100%; border-collapse:collapse; margin-top:8px; border-radius:8px; overflow:hidden;">
-          <thead>
-            <tr style="background:linear-gradient(135deg, #0078D7, #005fa3); color:white;">
-              <th style="padding:8px; font-size:14px;">កាលបរិច្ឆេទ</th>
-              <th style="padding:8px; font-size:14px;">ពេលវេលា</th>
-              <th style="padding:8px; font-size:14px;">លេខ ២ខ្ទង់</th>
-              <th style="padding:8px; font-size:14px;">លេខ ៣ខ្ទង់</th>
-            </tr>
-          </thead>
-          <tbody id="historyBody">
-            <tr><td colspan="4" style="text-align:center; color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិទេ</td></tr>
-          </tbody>
-        </table>
+    <!-- History Section -->
+    <div id="historySection" style="display:none;">
+      <div class="lottery-box">
+        <div class="time-box">📊 ប្រវត្តិលេខឆ្នោត</div>
+        <div style="max-height:400px; overflow-y:auto;">
+          <table class="history-table">
+            <thead>
+              <tr><th>កាលបរិច្ឆេទ</th><th>ពេលវេលា</th><th>លេខ ២ខ្ទង់</th><th>លេខ ៣ខ្ទង់</th></tr>
+            </thead>
+            <tbody id="historyBody">
+              <tr><td colspan="4" style="text-align:center; color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិទេ</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
     <!-- Rules Section -->
-    <div class="rules-section">
-      <h3>📋 ច្បាប់និងរបៀបប្រើប្រាស់</h3>
-      <ul>
-        <li>📌 <strong>ការទស្សន៍ទាយ</strong> អាចចាក់បានពី ១ ដល់ ១០ លេខ សម្រាប់ទាំងលេខពីរខ្ទង់ និងលេខបីខ្ទង់</li>
-        <li>💰 <strong>ទឹកប្រាក់អប្បបរមា</strong> សម្រាប់ទស្សន៍ទាយគឺ <span class="highlight">1$ ឬ 1000៛</span></li>
-        <li>📊 <strong>តម្លៃក្នុងមួយលេខ</strong> ទស្សន៍ទាយបានចាប់ពី <span class="highlight">500៛ ក្នុងមួយលេខ</span></li>
-        <li>🕐 <strong>ពេលវេលាចេញលេខ</strong> ម៉ោង 12:00 (លេខពីរខ្ទង់) និង ម៉ោង 18:00 (លេខបីខ្ទង់)</li>
-        <li>🔢 <strong>ការបញ្ចូលលេខ</strong> តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:12, B:23, C:34)</li>
-      </ul>
+    <div id="rulesSection" style="display:none;">
+      <div class="rules-section">
+        <h3>📋 ច្បាប់និងរបៀបប្រើប្រាស់</h3>
+        <ul>
+          <li>📌 <strong>ការទស្សន៍ទាយ</strong> អាចចាក់បានពី ១ ដល់ ១០ លេខ សម្រាប់ទាំងលេខពីរខ្ទង់ និងលេខបីខ្ទង់</li>
+          <li>💰 <strong>ទឹកប្រាក់អប្បបរមា</strong> សម្រាប់ទស្សន៍ទាយគឺ <span class="highlight">1$ ឬ 1000៛</span></li>
+          <li>📊 <strong>តម្លៃក្នុងមួយលេខ</strong> ទស្សន៍ទាយបានចាប់ពី <span class="highlight">500៛ ក្នុងមួយលេខ</span></li>
+          <li>🕐 <strong>ពេលវេលាចេញលេខ</strong> ម៉ោង 12:00 (លេខពីរខ្ទង់) និង ម៉ោង 18:00 (លេខបីខ្ទង់)</li>
+          <li>🔢 <strong>ការបញ្ចូលលេខ</strong> តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:12, B:23, C:34)</li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -427,6 +448,23 @@
           console.error('Telegram send error:', error);
         });
       });
+    }
+
+    // ====== Navigation ======
+    function showSection(section) {
+      document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
+      document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
+      document.getElementById('rulesSection').style.display = section === 'rules' ? 'block' : 'none';
+      
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      const links = document.querySelectorAll('.nav-links a');
+      const sections = ['home', 'history', 'rules'];
+      const index = sections.indexOf(section);
+      if (index !== -1 && links[index]) {
+        links[index].classList.add('active');
+      }
+      
+      if (section === 'history') displayHistory();
     }
 
     // ====== Countdown ======
@@ -586,10 +624,10 @@
       }
       body.innerHTML = historyData.map(item => `
         <tr>
-          <td style="padding:6px 8px; font-size:13px;">${item.date}</td>
-          <td style="padding:6px 8px; font-size:13px;">${item.time}</td>
-          <td style="padding:6px 8px; font-size:13px;">${item.twoDigit}</td>
-          <td style="padding:6px 8px; font-size:13px;">${item.threeDigit}</td>
+          <td>${item.date}</td>
+          <td>${item.time}</td>
+          <td>${item.twoDigit}</td>
+          <td>${item.threeDigit}</td>
         </tr>
       `).join('');
     }
@@ -627,7 +665,6 @@
     let selectedTwoLetters = [];
     let selectedThreeLetters = [];
 
-    // Toggle letter selection for two digit
     function toggleTwoDigit(letter) {
       const idx = selectedTwoLetters.indexOf(letter);
       if (idx > -1) {
@@ -638,13 +675,11 @@
           alert('⚠️ អ្នកអាចជ្រើសរើសបានតែ ១០ លេខប៉ុណ្ណោះ!');
           return;
         }
-        // Find if this letter already has a number
         const existing = selectedTwoDigits.find(item => item.letter === letter);
         if (existing) {
           alert(`⚠️ អក្សរ ${letter} ត្រូវបានប្រើរួចហើយ!`);
           return;
         }
-        // Prompt for number
         const num = prompt(`សូមបញ្ចូលលេខសម្រាប់ ${letter}:`, "12");
         if (num === null) return;
         const val = parseInt(num);
@@ -659,7 +694,6 @@
       updateSummary();
     }
 
-    // Toggle letter selection for three digit
     function toggleThreeDigit(letter) {
       const idx = selectedThreeLetters.indexOf(letter);
       if (idx > -1) {
@@ -912,7 +946,7 @@
       }
     }
 
-    // ====== Deposit Form (Payment) ======
+    // ====== Deposit Form ======
     document.getElementById('depositForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -927,7 +961,6 @@
       const accountName = document.getElementById('depositAccountName').value;
       const screenshot = document.getElementById('depositScreenshot').files[0] ? document.getElementById('depositScreenshot').files[0].name : 'N/A';
       
-      // Build message for Telegram
       const message = `📝 **ការដាក់ប្រាក់ និងទស្សន៍ទាយថ្មី**
       
 👤 **ឈ្មោះគណនី:** ${accountName || 'មិនមាន'}
@@ -938,41 +971,15 @@
 🔢 **លេខបីខ្ទង់:** ${betData.threeDigits}
 💰 **ទឹកប្រាក់ក្នុងមួយលេខ:** ${betData.perNumber} ${betData.currency === 'KHR' ? '៛' : '$'}
 💵 **សរុបទឹកប្រាក់:** ${(betData.amount * betData.total).toLocaleString()} ${betData.currency === 'KHR' ? '៛' : '$'}
-📎 **រូបភាព:** ${screenshot}
-🕐 **ពេលវេលា:** ${new Date().toLocaleString('km-KH')}`;
+📎 **រូបភាព:** ${screenshot}`;
 
-      // Send to Telegram
       sendToTelegram(message);
       
-      // Save to localStorage
-      const data = {
-        type: '💳 ដាក់ប្រាក់ទស្សន៍ទាយ',
-        phone: phone,
-        bank: bank,
-        accountName: accountName,
-        depositAmount: betData.amount,
-        depositCurrency: betData.currency === 'KHR' ? 'KHR' : 'USD',
-        predictAmount: betData.amount * betData.total,
-        predictCurrency: betData.currency === 'KHR' ? 'KHR' : 'USD',
-        numbers: betData.twoDigits,
-        extraThreeDigit: betData.threeDigits,
-        totalNumbers: betData.total,
-        minPerNumber: betData.currency === 'KHR' ? '500៛' : '1$',
-        screenshot: screenshot,
-        timestamp: new Date().toLocaleString('km-KH')
-      };
-      
-      // Save to history
-      let members = JSON.parse(localStorage.getItem('members')) || [];
-      members.push({ id: Date.now(), ...data });
-      localStorage.setItem('members', JSON.stringify(members));
-      
-      alert(`✅ ការដាក់ប្រាក់ និងទស្សន៍ទាយត្រូវបានបញ្ជូន!\n📊 ចំនួនលេខ: ${betData.total} លេខ\n💵 សរុប: ${(betData.amount * betData.total).toLocaleString()} ${betData.currency === 'KHR' ? '៛' : '$'}\n📨 ទិន្នន័យត្រូវបានផ្ញើទៅ Telegram`);
+      alert(`✅ ការដាក់ប្រាក់ និងទស្សន៍ទាយត្រូវបានបញ្ជូន!\n📨 ទិន្នន័យត្រូវបានផ្ញើទៅ Telegram`);
       
       closeModal('depositModal');
       this.reset();
       
-      // Clear bet selections
       selectedTwoDigits = [];
       selectedThreeDigits = [];
       selectedTwoLetters = [];
@@ -996,34 +1003,15 @@
       const screenshot = document.getElementById('withdrawScreenshot').files[0] ? document.getElementById('withdrawScreenshot').files[0].name : 'មិនបានបំពេញ';
       const qrCode = document.getElementById('withdrawQrCode').files[0] ? document.getElementById('withdrawQrCode').files[0].name : 'N/A';
       
-      // Build message for Telegram
       const message = `🏦 **ការស្នើសុំដកប្រាក់**
       
 📱 **ទូរសព្ទ:** ${phone}
 🔢 **លេខដែលទស្សន៍ទាយត្រូវ:** ${predictNumber}
 💰 **ចំនួនទឹកប្រាក់:** ${amount} ${currency === 'KHR' ? '៛' : '$'}
 📎 **រូបភាពថតអេក្រង់:** ${screenshot}
-📱 **QR Code:** ${qrCode}
-🕐 **ពេលវេលា:** ${new Date().toLocaleString('km-KH')}`;
+📱 **QR Code:** ${qrCode}`;
 
-      // Send to Telegram
       sendToTelegram(message);
-      
-      // Save to localStorage
-      const data = {
-        type: '🏦 ដកប្រាក់',
-        phone: phone,
-        predictNumber: predictNumber,
-        withdrawAmount: amount,
-        withdrawCurrency: currency,
-        screenshot: screenshot,
-        qrCode: qrCode,
-        timestamp: new Date().toLocaleString('km-KH')
-      };
-      
-      let members = JSON.parse(localStorage.getItem('members')) || [];
-      members.push({ id: Date.now(), ...data });
-      localStorage.setItem('members', JSON.stringify(members));
       
       alert('✅ ការស្នើសុំដកប្រាក់ត្រូវបានបញ្ជូន!\n📨 ទិន្នន័យត្រូវបានផ្ញើទៅ Telegram');
       closeModal('withdrawModal');
