@@ -4,33 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>លេខឆ្នោតខ្មែរ N98</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Noto Sans Khmer', 'Khmer OS', 'Khmer', 'Arial', sans-serif; box-sizing:border-box; }
+    /* ប្រើប្រាស់ Font ស្តង់ដារខ្មែរដើម មិនផ្លាស់ប្តូរទ្រង់ទ្រាយ */
+    * { 
+      font-family: 'Khmer OS Battambang', 'Khmer OS', 'Battambang', sans-serif; 
+      box-sizing: border-box; 
+    }
     body { margin:0; padding:0; background:#f0f4f8; }
     
     header { background:linear-gradient(135deg, #0078D7 0%, #005fa3 100%); color:white; padding:20px; text-align:center; box-shadow:0 4px 15px rgba(0,120,215,0.3); }
-    header h1 { font-size:38px; font-weight:900; margin:10px 0; text-shadow:2px 2px 4px rgba(0,0,0,0.3); letter-spacing:2px; }
-    header p { font-size:16px; font-weight:400; opacity:0.9; }
+    header h1 { font-size:38px; font-weight:bold; margin:10px 0; text-shadow:2px 2px 4px rgba(0,0,0,0.3); letter-spacing:2px; }
+    header p { font-size:16px; opacity:0.9; }
     
     .nav-bar { background:white; padding:12px 20px; display:flex; justify-content:center; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); position:sticky; top:0; z-index:100; }
     .nav-bar .nav-links { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:center; }
-    .nav-bar .nav-links a { color:#333; text-decoration:none; font-weight:600; padding:8px 16px; border-radius:8px; transition:all 0.3s; font-size:14px; cursor:pointer; }
+    .nav-bar .nav-links a { color:#333; text-decoration:none; font-weight:bold; padding:8px 16px; border-radius:8px; transition:all 0.3s; font-size:14px; cursor:pointer; }
     .nav-bar .nav-links a:hover { background:#0078D7; color:white; }
     .nav-bar .nav-links a.active { background:#0078D7; color:white; box-shadow: 0 4px 8px rgba(0,120,215,0.2); }
     
     section { padding:15px; max-width:1100px; margin:0 auto; }
 
-    /* Moving Background Animation សម្រាប់ប្រអប់ម៉ោង */
+    /* Moving Background Animation */
     @keyframes moveBg {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* Digital Clock Styling ជាមួយ Background រមៀលឆ្វេងស្តាំ */
+    /* គំនូរជីវចលព្រិចៗនៃដួងតារានិងផ្កាយ */
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Digital Clock Styling ជាមួយ Background រមៀល និងផ្កាយព្រិចៗ */
     .digital-clock-container {
-      background: linear-gradient(45deg, #1e293b, #0f172a, #1e1b4b, #0f172a);
+      background: linear-gradient(45deg, #090d16, #111827, #1e1b4b, #0f172a);
       background-size: 400% 400%;
       animation: moveBg 12s ease infinite;
       border-radius: 16px;
@@ -45,61 +54,73 @@
       overflow: hidden;
     }
     
-    /* បន្ថែមស្រទាប់រូបភាពពន្លឺផ្កាយតូចៗរត់ពីក្រោយ */
-    .digital-clock-container::before {
-      content: '';
+    /* បង្កើតដួងតារាបញ្ចេញពន្លឺព្រិចៗនៅ Background នៃប្រអប់ម៉ោង */
+    .stars-bg {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-      opacity: 0.3;
+      top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none;
+      z-index: 0;
     }
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite ease-in-out;
+      box-shadow: 0 0 4px #fff, 0 0 8px #38bdf8;
+    }
+    /* កំណត់ទីតាំងផ្កាយផ្សេងៗគ្នា */
+    .star-1 { width: 3px; height: 3px; top: 20%; left: 15%; animation-delay: 0.2s; }
+    .star-2 { width: 4px; height: 4px; top: 65%; left: 25%; animation-delay: 0.8s; }
+    .star-3 { width: 2px; height: 2px; top: 40%; left: 45%; animation-delay: 1.5s; }
+    .star-4 { width: 5px; height: 5px; top: 15%; left: 75%; animation-delay: 0.5s; }
+    .star-5 { width: 3px; height: 3px; top: 75%; left: 85%; animation-delay: 2s; }
 
-    .clock-title { color: #94a3b8; font-size: 15px; font-weight: 600; z-index: 1; }
+    .clock-title { color: #94a3b8; font-size: 15px; font-weight: bold; z-index: 1; position: relative; }
     .clock-time {
       color: #38bdf8;
       font-size: 32px;
-      font-weight: 800;
+      font-weight: bold;
       font-family: 'Courier New', monospace;
       text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
       z-index: 1;
+      position: relative;
     }
-    .clock-date { color: #f8fafc; font-size: 14px; font-weight: 600; text-align: right; z-index: 1; }
+    .clock-date { color: #f8fafc; font-size: 14px; font-weight: bold; text-align: right; z-index: 1; position: relative; }
     
     .lottery-box { background:white; padding:18px; margin:15px 0; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08); border:1px solid #e9ecef; }
     .time-box { font-weight:bold; color:#0078D7; font-size:17px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
     .time-box .badge { background:#0078D7; color:white; font-size:11px; padding:2px 12px; border-radius:12px; }
     
     .numbers { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
-    .numbers div { background:#f8f9fa; padding:14px 8px; border-radius:8px; text-align:center; flex:1; min-width:70px; transition:all 0.5s ease; font-weight:600; font-size:16px; border:2px solid #e9ecef; }
-    .numbers div .letter { color:#0078D7; font-weight:700; }
-    .numbers div .number { color:#333; font-weight:700; font-size:18px; }
-    .numbers div .pending-label { color:#dc3545; font-size:12px; font-weight:700; animation: blinker 1.5s linear infinite; }
+    .numbers div { background:#f8f9fa; padding:14px 8px; border-radius:8px; text-align:center; flex:1; min-width:70px; transition:all 0.5s ease; font-weight:bold; font-size:16px; border:2px solid #e9ecef; }
+    .numbers div .letter { color:#0078D7; font-weight:bold; }
+    .numbers div .number { color:#333; font-weight:bold; font-size:18px; }
+    .numbers div .pending-label { color:#dc3545; font-size:12px; font-weight:bold; animation: blinker 1.5s linear infinite; }
     
     @keyframes blinker { 50% { opacity: 0; } }
     
     .bet-box-container { background: white; border-radius: 16px; padding: 24px; margin: 20px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #0078D7; }
     .bet-box-header { border-bottom: 2px solid #f0f4f8; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-    .bet-box-header h2 { margin: 0; color: #0078D7; font-size: 22px; font-weight: 800; }
+    .bet-box-header h2 { margin: 0; color: #0078D7; font-size: 22px; font-weight: bold; }
     
     .reward-info-table { width:100%; border-collapse:collapse; margin-bottom:15px; border:1px solid #dee2e6; border-radius:8px; overflow:hidden; }
     .reward-info-table th { background:#e8f4fd; color:#0078D7; padding:8px; font-size:13px; }
-    .reward-info-table td { padding:8px; font-size:13px; text-align:center; font-weight:600; border:1px solid #dee2e6; }
+    .reward-info-table td { padding:8px; font-size:13px; text-align:center; font-weight:bold; border:1px solid #dee2e6; }
     .text-respond { color:#d63000; font-weight:bold; }
 
     .letter-selector { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
-    .letter-circle { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #dee2e6; background: #f8f9fa; color: #333; font-size: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
+    .letter-circle { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #dee2e6; background: #f8f9fa; color: #333; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
     .letter-circle:hover { border-color: #0078D7; background: #e8f4fd; transform: scale(1.1); }
     .letter-circle.active { background: linear-gradient(135deg, #0078D7, #005fa3); color: white; border-color: #0078D7; box-shadow: 0 4px 10px rgba(0,120,215,0.3); transform: scale(1.1); }
     
     .input-row { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; background: #f8f9fa; padding: 15px; border-radius: 12px; border: 1px dashed #0078D7; }
-    .input-row select { padding: 10px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 15px; font-weight: 600; background: white; }
-    .input-row input { flex: 1; padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 15px; font-weight: 600; }
+    .input-row select { padding: 10px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 15px; font-weight: bold; background: white; }
+    .input-row input { flex: 1; padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 15px; font-weight: bold; }
     .input-row input:focus { border-color: #0078D7; outline: none; }
     
-    /* Countdown Box ជាមួយ Background រមៀលឆ្វេងស្តាំបែប Sci-fi */
+    /* Countdown Box ជាមួយ Background រមៀល និងផ្កាយព្រិចៗ */
     .countdown { 
-      background: linear-gradient(135deg, #0b1329, #1c2541, #3a506b, #0b1329); 
+      background: linear-gradient(135deg, #0a1128, #101f42, #1f3a60, #0a1128); 
       background-size: 300% 300%;
       animation: moveBg 10s ease infinite, pulseGlow 3s ease-in-out infinite alternate;
       padding: 25px; 
@@ -110,16 +131,6 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0, 120, 215, 0.4);
-    }
-
-    /* ស្រទាប់រូបភាព Pattern ឆូតៗពីក្រោយ */
-    .countdown::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-      opacity: 0.15;
-      pointer-events: none;
     }
 
     @keyframes pulseGlow {
@@ -135,7 +146,7 @@
       border-radius: 12px; 
       display: inline-block; 
       margin-top: 10px; 
-      font-weight: 800; 
+      font-weight: bold; 
       letter-spacing: 4px; 
       min-width: 190px; 
       box-shadow: inset 0 0 15px rgba(0, 255, 204, 0.2), 0 4px 10px rgba(0,0,0,0.5); 
@@ -145,15 +156,15 @@
       position: relative;
       z-index: 1;
     }
-    .countdown .next-time { font-size:15px; color:#a1b0cb; margin-top:10px; font-weight:600; position: relative; z-index: 1; }
+    .countdown .next-time { font-size:15px; color:#a1b0cb; margin-top:10px; font-weight:bold; position: relative; z-index: 1; }
     .countdown div:first-child { position: relative; z-index: 1; }
     
     .bet-summary { background:linear-gradient(135deg, #f8f9fa, #e9ecef); padding:12px 15px; border-radius:8px; margin:12px 0; border:2px solid #0078D7; }
     .bet-summary-item { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #dee2e6; font-size:15px; }
     .bet-summary-item:last-child { border-bottom:none; }
-    .bet-summary .total { font-weight:700; color:#d63000; font-size:18px; }
+    .bet-summary .total { font-weight:bold; color:#d63000; font-size:18px; }
     
-    .btn { color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:15px; margin:4px; font-weight:600; transition:all 0.3s; }
+    .btn { color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-size:15px; margin:4px; font-weight:bold; transition:all 0.3s; }
     .btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 4px 15px rgba(0,0,0,0.2); }
     .btn:disabled { background: #ced4da !important; color: #6c757d !important; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
     .btn-success { background:linear-gradient(135deg, #28a745, #1e7e34); }
@@ -163,7 +174,7 @@
     .btn-amount { background:#17a2b8; padding:6px 14px; font-size:13px; border-radius:6px; }
     
     .selected-numbers-display { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; min-height:44px; padding:12px; background:#f8f9fa; border-radius:8px; border:2px dashed #dee2e6; align-items:center; }
-    .selected-number-tag { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:6px 16px; border-radius:20px; font-size:15px; display:inline-flex; align-items:center; gap:10px; font-weight:600; box-shadow:0 2px 8px rgba(0,120,215,0.2); }
+    .selected-number-tag { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:6px 16px; border-radius:20px; font-size:15px; display:inline-flex; align-items:center; gap:10px; font-weight:bold; box-shadow:0 2px 8px rgba(0,120,215,0.2); }
     .selected-number-tag .remove { cursor:pointer; font-weight:bold; color:#ff6b6b; margin-left:5px; font-size:18px; background:rgba(255,255,255,0.2); border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
     
     /* Status Badges */
@@ -176,7 +187,7 @@
     /* Modals */
     .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); backdrop-filter:blur(5px); }
     .modal-content { background:white; margin:3% auto; padding:25px; border-radius:16px; max-width:500px; width:92%; max-height:85vh; overflow-y:auto; box-shadow:0 10px 40px rgba(0,0,0,0.2); }
-    .modal-content label { display:block; margin:12px 0 4px; font-weight:600; font-size:14px; color:#333; }
+    .modal-content label { display:block; margin:12px 0 4px; font-weight:bold; font-size:14px; color:#333; }
     .modal-content input, .modal-content select { width:100%; padding:10px 12px; border:2px solid #dee2e6; border-radius:8px; box-sizing:border-box; font-size:14px; }
     .close { float:right; font-size:28px; font-weight:bold; cursor:pointer; color:#adb5bd; }
     .qr-container { text-align:center; margin:8px 0; }
@@ -190,7 +201,7 @@
       border-radius: 20px;
     }
     .alert-icon { font-size: 50px; margin-bottom: 15px; display: block; }
-    .alert-title { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+    .alert-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; }
     .alert-message { font-size: 15px; color: #4a5568; margin-bottom: 20px; line-height: 1.5; }
     
     .history-table { width:100%; border-collapse:collapse; margin-top:8px; border-radius:8px; overflow:hidden; }
@@ -199,12 +210,12 @@
     .history-table tr:nth-child(even) { background:#f8f9fa; }
     
     .rules-section { background:white; padding:25px; border-radius:12px; margin-top:15px; border:1px solid #dee2e6; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
-    .rules-section h3 { color:#0078D7; font-size:20px; font-weight:700; border-bottom:2px solid #f0f4f8; padding-bottom:8px; margin-top:0; }
-    .rules-section h4 { color:#333; margin-top:15px; margin-bottom:8px; font-size:16px; font-weight:600; }
+    .rules-section h3 { color:#0078D7; font-size:20px; font-weight:bold; border-bottom:2px solid #f0f4f8; padding-bottom:8px; margin-top:0; }
+    .rules-section h4 { color:#333; margin-top:15px; margin-bottom:8px; font-size:16px; font-weight:bold; }
     .rules-section ul, .rules-section ol { padding-left:20px; margin:5px 0; }
     .rules-section li { margin-bottom:8px; font-size:14px; color:#4a5568; line-height:1.6; }
 
-    .warning-text { color:#dc3545; font-size:13px; font-weight:600; display:block; margin-top:4px; }
+    .warning-text { color:#dc3545; font-size:13px; font-weight:bold; display:block; margin-top:4px; }
     footer { background:#1a2634; color:#adb5bd; text-align:center; padding:15px; margin-top:20px; border-top:3px solid #0078D7; }
     
     @media (max-width:768px) {
@@ -231,21 +242,35 @@
   </nav>
 
   <section>
-    <!-- ប្រអប់ម៉ោងបច្ចុប្បន្ន (ប្តូរចំណងជើងជា៖ 🕒 ម៉ោងបច្ចុប្បន្ន) -->
+    <!-- ប្រអប់ម៉ោងបច្ចុប្បន្ន ជាមួយផ្កាយព្រិចៗ (Twinkling Stars) -->
     <div class="digital-clock-container" id="digitalClockWidget">
-      <div>
+      <div class="stars-bg">
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+      </div>
+      <div style="position: relative; z-index: 1;">
         <div class="clock-title">🕒 ម៉ោងបច្ចុប្បន្ន</div>
         <div class="clock-time" id="widgetTime">00:00:00</div>
       </div>
-      <div>
+      <div style="position: relative; z-index: 1;">
         <div class="clock-date" id="widgetDate">កំពុងរៀបចំ...</div>
-        <div style="font-size: 11px; color: #38bdf8; font-weight: 700; margin-top: 3px; animation: blinker 2s infinite;">● ពេលវេលាជាក់ស្តែង (Real-time)</div>
+        <div style="font-size: 11px; color: #38bdf8; font-weight: bold; margin-top: 3px; animation: blinker 2s infinite;">● ពេលវេលាជាក់ស្តែង (Real-time)</div>
       </div>
     </div>
 
-    <!-- ប្រអប់រាប់ម៉ោងថយក្រោយ -->
+    <!-- ប្រអប់រាប់ម៉ោងថយក្រោយ ជាមួយផ្កាយព្រិចៗ (Twinkling Stars) -->
     <div class="countdown" id="countdown">
-      <div style="font-size:18px; color:#00ffcc; font-weight:600; text-transform:uppercase; letter-spacing:1px;">⏳ ពេលវេលារង់ចាំលទ្ធផលបន្ទាប់</div>
+      <div class="stars-bg">
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+      </div>
+      <div style="font-size:18px; color:#00ffcc; font-weight:bold; text-transform:uppercase; letter-spacing:1px; position: relative; z-index: 1;">⏳ ពេលវេលារង់ចាំលទ្ធផលបន្ទាប់</div>
       <div class="time-display" id="countdownDisplay">--:--:--</div>
       <div class="next-time" id="nextTimeLabel">🎯 កំពុងគណនា...</div>
     </div>
@@ -292,7 +317,7 @@
         </table>
         
         <div style="background:#fff5f5; border:1px solid #ffb3b3; padding:10px; border-radius:8px; margin-bottom:15px; text-align:center;">
-          <span style="color:#d63000; font-weight:700; font-size:14px;">⚠️ ដែនកំណត់សុវត្ថិភាព៖ ចាក់បានយ៉ាងច្រើនបំផុត 10$ ឬ 40,000៛ ក្នុងមួយលេខ និងចាក់បានម្តងយ៉ាងច្រើន 10 លេខ។</span>
+          <span style="color:#d63000; font-weight:bold; font-size:14px;">⚠️ ដែនកំណត់សុវត្ថិភាព៖ ចាក់បានយ៉ាងច្រើនបំផុត 10$ ឬ 40,000៛ ក្នុងមួយលេខ និងចាក់បានម្តងយ៉ាងច្រើន 10 លេខ។</span>
         </div>
         
         <p style="color:#6c757d; font-size: 13px; margin: 0;">💡 ជំហានទី១៖ ជ្រើសរើសអក្សរ A, B, C, D, E ខាងក្រោម៖</p>
@@ -325,7 +350,7 @@
         </div>
 
         <div>
-          <label style="font-weight:600; color:#0078D7; font-size:14px; display:block; margin-bottom:6px;">💰 ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
+          <label style="font-weight:bold; color:#0078D7; font-size:14px; display:block; margin-bottom:6px;">💰 ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
           <div class="amount-buttons">
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1000, '៛')">1000៛</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5000, '៛')">5000៛</button>
@@ -398,13 +423,13 @@
         <ul>
           <li><strong>បន្ទប់ផ្សងសំណាងរហ័ស (A, B, C, D, E)</strong> គឺជាកម្មវិធីជ្រើសរើសលេខផ្សងសំណាងពិតប្រាកដដែលដំណើរការរៀងរាល់ថ្ងៃ។</li>
           <li>លទ្ធផលការផ្សាយឆ្នោតនឹងធ្វើឡើងជាពីរវេន៖ <strong>វេនទី១ (ម៉ោង ១២:០០ ថ្ងៃត្រង់)</strong> សម្រាប់ប្រភេទលេខ ២ខ្ទង់ និង <strong>វេនទី២ (ម៉ោង ១៦:០០ រសៀល)</strong> សម្រាប់ប្រភេទលេខ ៣ខ្ទង់។</li>
-          <li><strong>ច្បាប់ការចាក់៖</strong> គ្រប់គ្នាអាចចាក់នៅពេលណាក៏បាន (២៤ ម៉ោង) រហូតដល់ពេលចេញលទ្ធផលនៃវេននីមួយៗ (មុនម៉ោង ១២:០០ សម្រាប់លេខ ២ខ្ទង់ និងមុនម៉ោង ១៦:០០ សម្រាប់លេខ ៣ខ្ទង់)។</li>
+          <li><strong>ច្បាប់ការចាក់៖</strong> ឥឡូវនេះត្រូវបានបើកទូលាយ! គ្រប់គ្នាអាចចាក់បានគ្រប់ពេល ២៤ ម៉ោង ដើម្បីត្រៀមផ្សងសំណាងសម្រាប់វេនលទ្ធផលនីមួយៗ។</li>
           <li><strong>ការទូទាត់ប្រចាំថ្ងៃ៖</strong> ប្រព័ន្ធអនុញ្ញាតឱ្យទូទាត់ប្រាក់ចាក់ និងដកប្រាក់រង្វាន់ចាប់ពីពេលចេញលទ្ធផលរហូតដល់**ម៉ោង ១០:០០ យប់ (22:00)** ជាដាច់ខាត។ **រាល់ការស្នើសុំដកប្រាក់រង្វាន់ហួសពីម៉ោង ១០:០០ យប់ នឹងត្រូវចាត់ទុកជាមោឃៈសម្រាប់ថ្ងៃនោះ។**</li>
         </ul>
 
         <h4>២. អត្រាប្រាក់រង្វាន់ (Payout Rates)</h4>
         <ul>
-          <li><strong>លេខ ២ខ្ទង់ (ផ្សាយម៉ោង ១២:០០)៖</strong> រាល់ការចាក់ត្រូវ ១ ដុល្លារ ($1) នឹងទទួលបានប្រាក់រង្វាន់ត្រឡប់មកវិញ <strong>៧០ ដុល្លារ ($70)</strong>er;</li>
+          <li><strong>លេខ ២ខ្ទង់ (ផ្សាយម៉ោង ១២:០០)៖</strong> រាល់ការចាក់ត្រូវ ១ ដុល្លារ ($1) នឹងទទួលបានប្រាក់រង្វាន់ត្រឡប់មកវិញ <strong>៧០ ដុល្លារ ($70)</strong>។</li>
           <li><strong>លេខ ៣ខ្ទង់ (ផ្សាយម៉ោង ១៦:០០)៖</strong> រាល់ការចាក់ត្រូវ ១ ដុល្លារ ($1) នឹងទទួលបានប្រាក់រង្វាន់ត្រឡប់មកវិញ <strong>៥០០ ដុល្លារ ($500)</strong>។</li>
         </ul>
 
@@ -474,7 +499,7 @@
 
         <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #dee2e6; margin-bottom:15px;">
           <input type="checkbox" id="manualInputCheck" onchange="toggleManualWithdrawInput()" style="width:auto; display:inline-block; margin-right:6px;">
-          <label for="manualInputCheck" style="display:inline; font-size:13px; color:#d63000; font-weight: 700;">វាយបញ្ចូលលេខដោយដៃ (ផ្ទៀងផ្ទាត់ស្វ័យប្រវត្តិ)</label>
+          <label for="manualInputCheck" style="display:inline; font-size:13px; color:#d63000; font-weight: bold;">វាយបញ្ចូលលេខដោយដៃ (ផ្ទៀងផ្ទាត់ស្វ័យប្រវត្តិ)</label>
           
           <div id="manualWithdrawFields" style="display:none; margin-top:10px;">
             <div style="display: flex; gap: 8px; margin-bottom: 8px;">
@@ -512,7 +537,7 @@
         </div>
 
         <div style="background:#e8f4fd; border:2px dashed #0078D7; padding:12px; border-radius:8px; margin-bottom:15px; text-align:center;">
-          <span style="font-size:14px; color:#333; font-weight:600; display:block;">💵 ទឹកប្រាក់រង្វាន់ដែលត្រូវទទួលបានសរុប៖</span>
+          <span style="font-size:14px; color:#333; font-weight:bold; display:block;">💵 ទឹកប្រាក់រង្វាន់ដែលត្រូវទទួលបានសរុប៖</span>
           <span id="payoutRewardDisplay" style="font-size:24px; color:#28a745; font-weight:bold;">0.00</span>
         </div>
 
@@ -563,11 +588,9 @@
       { token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc', chatId: '-5338881653' }
     ];
 
-    // Global variables to store simulated winning numbers for the day
     let winning_two_digit = {};
     let winning_three_digit = {};
 
-    // Custom Alert Function (ជំនួស alert() ចាស់)
     function showCustomAlert(title, message, type = 'info') {
       const modal = document.getElementById('customAlertModal');
       const iconEl = document.getElementById('customAlertIcon');
@@ -731,25 +754,8 @@
       btnSubmit.disabled = !(total > 0 && quickAmount > 0);
     }
 
+    /* 🔓 បានដកចោលលក្ខខណ្ឌចាក់សោម៉ោងចាក់ទាំងអស់ចេញ ដើម្បីអោយអ្នកលេងអាចចាក់បានគ្រប់ពេល ២៤ម៉ោង */
     function submitQuickBet() {
-      const now = new Date();
-      const currentHour = now.getHours();
-
-      // រកមើលថាតើលេខដែលបានជ្រើសរើសមានលេខប្រភេទណាខ្លះ
-      const hasTwoDigit = betNumbers.some(item => item.type === 'two');
-      const hasThreeDigit = betNumbers.some(item => item.type === 'three');
-
-      // ច្បាប់ការលេង៖ បិទការចាក់លេខ ២ខ្ទង់បន្ទាប់ពីម៉ោង ១២:០០ និងលេខ ៣ខ្ទង់បន្ទាប់ពីម៉ោង ១៦:០០
-      if (hasTwoDigit && currentHour >= 12) {
-        showCustomAlert('ម៉ោងលេងត្រូវបានបិទ', '⚠️ ប្រភេទលេខ ២ខ្ទង់ បានចេញលទ្ធផលរួចហើយ (ម៉ោង ១២:០០)។ អ្នកមិនអាចចាក់លេខ ២ខ្ទង់បានទៀតទេសម្រាប់ថ្ងៃនេះ!', 'error');
-        return;
-      }
-
-      if (hasThreeDigit && currentHour >= 16) {
-        showCustomAlert('ម៉ោងលេងត្រូវបានបិទ', '⚠️ ប្រភេទលេខ ៣ខ្ទង់ បានចេញលទ្ធផលរួចហើយ (ម៉ោង ១៦:០០)។ អ្នកមិនអាចចាក់លេខ ៣ខ្ទង់បានទៀតទេសម្រាប់ថ្ងៃនេះ!', 'error');
-        return;
-      }
-
       if (betNumbers.length === 0 || quickAmount <= 0) { 
         showCustomAlert('ពិនិត្យទិន្នន័យ', '⚠️ សូមពិនិត្យលេខចាក់ និងចំនួនទឹកប្រាក់!', 'error'); 
         return; 
@@ -782,7 +788,7 @@
           type: item.type === 'two' ? 'two' : 'three',
           cost: `${amount} ${sym}`,
           win: `${reward.toLocaleString()} ${sym}`,
-          status: 'pending' // ស្ថានភាពដំបូងគឺ រង់ចាំលទ្ធផល
+          status: 'pending'
         });
       });
 
@@ -790,7 +796,6 @@
       checkWinLossStatuses();
     }
 
-    // មុខងារត្រួតពិនិត្យឈ្នះ/ចាញ់ស្វ័យប្រវត្តិ
     function checkWinLossStatuses() {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
       const now = new Date();
@@ -801,7 +806,6 @@
       history.forEach(bet => {
         if (bet.status === 'pending') {
           if (bet.type === 'two' && (hour >= 12 || now.getDate() !== new Date(bet.timestamp).getDate())) {
-            // ផ្ទៀងផ្ទាត់លេខ ២ខ្ទង់
             const winNum = winning_two_digit[bet.letter];
             if (winNum && String(winNum) === String(bet.number)) {
               bet.status = 'win';
@@ -810,7 +814,6 @@
             }
             updated = true;
           } else if (bet.type === 'three' && (hour >= 16 || now.getDate() !== new Date(bet.timestamp).getDate())) {
-            // ផ្ទៀងផ្ទាត់លេខ ៣ខ្ទង់
             const winNum = winning_three_digit[bet.letter];
             if (winNum && String(winNum) === String(bet.number)) {
               bet.status = 'win';
@@ -849,7 +852,7 @@
         return `
           <tr>
             <td>${item.time}</td>
-            <td style="color:#5a32a3; font-weight:600;">${item.phone || '-'}</td>
+            <td style="color:#5a32a3; font-weight:bold;">${item.phone || '-'}</td>
             <td style="color:#0078D7; font-weight:bold;">${item.num}</td>
             <td>${item.type === 'two' ? '២ខ្ទង់' : '៣ខ្ទង់'}</td>
             <td>${item.cost}</td>
@@ -864,7 +867,6 @@
       const now = new Date();
       const hour = now.getHours();
 
-      // រាល់ការដកប្រាក់រង្វាន់ត្រូវបានអនុញ្ញាតត្រឹមម៉ោង ១០:០០ យប់ (22:00) ប៉ុណ្ណោះ
       if (hour >= 22) {
         showCustomAlert('ប្រព័ន្ធទូទាត់បិទ', '⚠️ ប្រព័ន្ធទូទាត់ និងដកប្រាក់រង្វាន់ប្រចាំថ្ងៃត្រូវបានបិទនៅម៉ោង ១០:០០ យប់ហើយ! រាល់ការស្នើសុំដកប្រាក់ពេលនេះត្រូវបានចាត់ទុកជាមោឃៈសម្រាប់ថ្ងៃនោះ។', 'error');
         return;
@@ -889,8 +891,6 @@
         const option = document.createElement('option');
         option.value = ""; option.text = "⚠️ មិនទាន់មានប្រវត្តិលេខឈ្នះរង្វាន់ក្នុងប្រព័ន្ធឡើយ"; option.disabled = true;
         select.appendChild(option);
-        
-        // 🔒 បិទប៊ូតុងមិនឱ្យចុចផ្ញើជាដាច់ខាត បើគ្មានលទ្ធផលឈ្នះក្នុងបញ្ជីឡើយ
         btnSubmit.disabled = true;
       }
 
@@ -930,8 +930,6 @@
         select.disabled = true; 
         detailP.innerText = '';
         calculateManualWithdrawReward(); 
-        
-        // បើកឱ្យបញ្ចូលប្រាក់រង្វាន់សិន ប៉ុន្តែប្រព័ន្ធផ្ទៀងផ្ទាត់ម៉ត់ចត់ពេល Submit
         btnSubmit.disabled = false; 
       } else {
         manualFields.style.display = 'none'; 
@@ -977,7 +975,6 @@
       clearAllBets();
     });
 
-    // 🔒 លក្ខខណ្ឌស្កេន សុវត្ថិភាពខ្ពស់ ពេល Submit សំណើដកប្រាក់
     document.getElementById('withdrawForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const isManual = document.getElementById('manualInputCheck').checked;
@@ -998,7 +995,6 @@
 
         betNum = `${manualLetter}-${manualNumOnly}`;
 
-        // 🔒 ពិនិត្យលទ្ធផលពិតជាក់ស្តែងស្វ័យប្រវត្តិតាម ប៉ុស្តិ៍អក្សរ A,B,C,D,E
         let realWinningNum = '';
         if (manualType === 'two') {
           realWinningNum = winning_two_digit[manualLetter];
@@ -1006,7 +1002,6 @@
           realWinningNum = winning_three_digit[manualLetter];
         }
 
-        // ប្រសិនបើលេខដែលគាត់វាយបញ្ចូលមិនត្រូវនឹងលេខឆ្នោតដែលចេញថ្ងៃនេះទេ គឺមិនអនុញ្ញាតឡើយ
         if (String(manualNumOnly) !== String(realWinningNum)) {
           showCustomAlert('បដិសេធការដកប្រាក់', `⚠️ សោកស្តាយណាស់! លេខ ${betNum} របស់អ្នកមិនត្រូវនឹងលទ្ធផលឆ្នោតផ្សាយពិតប្រាកដក្នុងប្រព័ន្ធថ្ងៃនេះទេ។ មិនអាចផ្ញើសំណើបានទេ!`, 'error');
           return;
@@ -1040,7 +1035,6 @@
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function seededRandom(seed) { let x = Math.sin(seed) * 10000; return x - Math.floor(x); }
 
-    // ====== 🕒 ប្រព័ន្ធបង្ហាញលទ្ធផល និងស្ថានភាពរង់ចាំរវាង 12:00 និង 16:00 ======
     function generateTodayResults(hourState) {
       const today = new Date();
       const seed = parseInt(today.getFullYear().toString() + (today.getMonth()+1).toString() + today.getDate().toString());
@@ -1048,7 +1042,6 @@
       const containerTwo = document.getElementById('box_two_container');
       const containerThree = document.getElementById('box_three_container');
 
-      // គណនាគ្រាប់លេខឈ្នះទុកជាមុនសម្រាប់ការផ្ទៀងផ្ទាត់ (Simulate Live Win Numbers)
       letters.forEach((l, idx) => {
         winning_two_digit[l] = String(Math.floor(seededRandom(seed + idx + 12) * 90) + 10);
         winning_three_digit[l] = String(Math.floor(seededRandom(seed + idx + 16) * 900) + 100);
@@ -1090,7 +1083,7 @@
       const display = document.getElementById('countdownDisplay');
 
       generateTodayResults(state);
-      checkWinLossStatuses(); // ផ្ទៀងផ្ទាត់ស្វ័យប្រវត្តិរៀងរាល់វិនាទី
+      checkWinLossStatuses();
 
       if (diff <= 0) { display.innerHTML = '🎉 ចេញលទ្ធផល!'; return; }
 
@@ -1101,7 +1094,6 @@
       document.getElementById('nextTimeLabel').innerHTML = `🎯 គោលដៅបន្ទាប់៖ ${label}`;
     }
 
-    // មុខងារបង្ហាញម៉ោងបច្ចុប្បន្នបែប Digital (Widget) ដ៏ស្រស់ស្អាត
     function updateDigitalClockWidget() {
       const now = new Date();
       const h = String(now.getHours()).padStart(2, '0');
