@@ -92,8 +92,8 @@
     
     .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); backdrop-filter:blur(5px); }
     .modal-content { background:white; margin:3% auto; padding:25px; border-radius:16px; max-width:500px; width:92%; max-height:85vh; overflow-y:auto; box-shadow:0 10px 40px rgba(0,0,0,0.2); }
-    .modal-content label { display:block; margin:8px 0 4px; font-weight:600; font-size:14px; color:#333; }
-    .modal-content input, .modal-content select { width:100%; padding:8px 12px; border:2px solid #dee2e6; border-radius:8px; box-sizing:border-box; font-size:14px; }
+    .modal-content label { display:block; margin:12px 0 4px; font-weight:600; font-size:14px; color:#333; }
+    .modal-content input, .modal-content select { width:100%; padding:10px 12px; border:2px solid #dee2e6; border-radius:8px; box-sizing:border-box; font-size:14px; }
     .close { float:right; font-size:28px; font-weight:bold; cursor:pointer; color:#adb5bd; }
     .qr-container { text-align:center; margin:8px 0; }
     .qr-container img { max-width:180px; border:2px solid #dee2e6; border-radius:10px; padding:8px; background:white; }
@@ -311,7 +311,7 @@
           <li><strong>ជំហានទី១៖</strong> ចុចជ្រើសរើសអក្សរដែលចង់លេងចាប់ពី <strong>A, B, C, D ដល់ E</strong> នៅលើរង្វង់មូល។</li>
           <li><strong>ជំហានទី២៖</strong> ជ្រើសរើសប្រភេទឆ្នោត (លេខ ២ខ្ទង់ ឬ លេខ ៣ខ្ទង់) រួចបញ្ចូលលេខដែលអ្នកចង់ទស្សន៍ទាយទៅក្នុងប្រអប់ ហើយចុចប៊ូតុង <strong>«➕ បន្ថែមលេខ»</strong>។</li>
           <li><strong>ជំហានទី៣៖</strong> ជ្រើសរើស ឬវាយបញ្ចូលទឹកប្រាក់ដែលចង់ចាក់ក្នុងមួយលេខ (ត្រូវប្រាកដថាមិនលើសពីដែនកំណត់)។</li>
-          <li><strong>ជំហានទី四៖</strong> ពិនិត្យបញ្ជីលម្អិត និងទឹកប្រាក់សរុប រួចចុចប៊ូតុង <strong>«💳 ផ្ញើការទស្សន៍ទាយឥឡូវនេះ»</strong>។</li>
+          <li><strong>ជំហានទី៤៖</strong> ពិនិត្យបញ្ជីលម្អិត និងទឹកប្រាក់សរុប រួចចុចប៊ូតុង <strong>«💳 ផ្ញើការទស្សន៍ទាយឥឡូវនេះ»</strong>។</li>
           <li><strong>ជំហានទី៥៖</strong> បំពេញព័ត៌មានគណនីធនាគារ (ABA ឬ ACLEDA) រួចផ្ទេរប្រាក់ និងបង្ហោះរូបថត Screenshot វិក្កយបត្រដើម្បីបញ្ជាក់ការទូទាត់ទៅកាន់ភ្នាក់ងារ។</li>
         </ol>
 
@@ -355,21 +355,71 @@
     </div>
   </div>
 
-  <!-- Withdraw Modal -->
+  <!-- ====== 🏦 Withdraw Modal (កែលម្អថ្មី ងាយស្រួល និងច្បាស់លាស់) ====== -->
   <div class="modal" id="withdrawModal">
-    <div class="modal-content">
+    <div class="modal-content" style="max-width: 550px;">
       <span class="close" onclick="closeModal('withdrawModal')">&times;</span>
       <h2>🏦 ស្នើសុំដកប្រាក់រង្វាន់</h2>
+      <p style="font-size:13px; color:#6c757d; margin-top:-5px; margin-bottom:15px;">សូមបំពេញព័ត៌មានខាងក្រោមឱ្យបានត្រឹមត្រូវ ដើម្បីយើងងាយស្រួលទូទាត់ជូន។</p>
+      
       <form id="withdrawForm">
-        <label>លេខទូរសព្ទ *</label>
+        <label>១. ជ្រើសរើសលេខដែលអ្នកបានចាក់ត្រូវ *</label>
+        <select id="withdrawSelectBet" required onchange="onWithdrawBetSelected()">
+          <option value="">-- សូមជ្រើសរើសលេខពីប្រវត្តិលេងរបស់អ្នក --</option>
+        </select>
+        <p style="font-size:12px; color:#28a745; margin:3px 0 10px 0;" id="withdrawSelectedDetails"></p>
+
+        <!-- បន្ថែមជម្រើសវាយដៃ ករណីគ្មានប្រវត្តិក្នុង LocalStorage -->
+        <div style="background:#f8f9fa; padding:10px; border-radius:8px; border:1px solid #dee2e6; margin-bottom:15px;">
+          <input type="checkbox" id="manualInputCheck" onchange="toggleManualWithdrawInput()" style="width:auto; display:inline-block; margin-right:6px;">
+          <label for="manualInputCheck" style="display:inline; font-size:13px; color:#d63000;">វាយបញ្ចូលលេខដោយដៃ (ប្រសិនបើគ្មានក្នុងបញ្ជីខាងលើ)</label>
+          
+          <div id="manualWithdrawFields" style="display:none; margin-top:10px;">
+            <label>លេខ និងអក្សរដែលចាក់ត្រូវ</label>
+            <input type="text" id="withdrawPredictNumber" placeholder="ឧ. A-45 ឬ C-789" oninput="calculateManualWithdrawReward()">
+            
+            <label>ប្រភេទឆ្នោត</label>
+            <select id="withdrawBetType" onchange="calculateManualWithdrawReward()">
+              <option value="two">លេខ ២ខ្ទង់ (សង ៧០ដង)</option>
+              <option value="three">លេខ ៣ខ្ទង់ (សង ៥០០ដង)</option>
+            </select>
+            
+            <label>ទឹកប្រាក់ដែលបានចាក់កាលនោះ</label>
+            <div style="display:flex; gap:8px;">
+              <input type="number" id="withdrawManualCost" placeholder="ឧ. 1 ឬ 4000" oninput="calculateManualWithdrawReward()">
+              <select id="withdrawManualCurrency" style="width:100px;" onchange="calculateManualWithdrawReward()">
+                <option value="USD">USD ($)</option>
+                <option value="KHR">KHR (៛)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- បង្ហាញការគណនាប្រាក់រង្វាន់ស្វ័យប្រវត្ត -->
+        <div style="background:#e8f4fd; border:2px dashed #0078D7; padding:12px; border-radius:8px; margin-bottom:15px; text-align:center;">
+          <span style="font-size:14px; color:#333; font-weight:600; display:block;">💵 ទឹកប្រាក់រង្វាន់ដែលត្រូវទទួលបានសរុប៖</span>
+          <span id="payoutRewardDisplay" style="font-size:24px; color:#28a745; font-weight:bold;">0.00</span>
+        </div>
+
+        <label>២. លេខទូរសព្ទទំនាក់ទំនងរបស់អ្នក *</label>
         <input type="tel" id="withdrawPhone" required placeholder="09x xxx xxx">
-        <label>លេខនិងអក្សរដែលត្រូវ *</label>
-        <input type="text" id="withdrawPredictNumber" required placeholder="ឧ. A-45 ឬ C-789">
-        <label>ចំនួនទឹកប្រាក់ស្នើដក *</label>
-        <input type="number" id="withdrawAmount" required placeholder="ចំនួនទឹកប្រាក់">
-        <label>រូបថត QR Code ធនាគាររបស់អ្នកដើម្បីទទួលប្រាក់ *</label>
-        <input type="file" id="withdrawQrCode" accept="image/*" required>
-        <button type="submit" class="btn btn-withdraw" style="width:100%; margin-top:15px;">ផ្ញើការដកប្រាក់ទៅភ្នាក់ងារ</button>
+        
+        <label>៣. ធនាគារទទួលប្រាក់រង្វាន់ *</label>
+        <select id="withdrawBank" required>
+          <option value="ABA">ABA Bank</option>
+          <option value="ACLEDA">ACLEDA Bank</option>
+        </select>
+
+        <label>៤. លេខគណនីធនាគារទទួលប្រាក់ *</label>
+        <input type="text" id="withdrawAccNo" required placeholder="ឧ. 000 123 456">
+
+        <label>៥. ឈ្មោះគណនីធនាគារ (ជាអក្សរឡាតាំង) *</label>
+        <input type="text" id="withdrawAccName" required placeholder="ឧ. KONG SOVAN">
+
+        <label>៦. រូបថត QR Code គណនីធនាគាររបស់អ្នក (ដើម្បីទទួលប្រាក់) *</label>
+        <input type="file" id="withdrawQrCode" accept="image/*" required style="padding: 5px;">
+        
+        <button type="submit" class="btn btn-withdraw" style="width:100%; margin-top:15px; padding:12px; font-size:16px;">🚀 ផ្ញើសំណើដកប្រាក់រង្វាន់</button>
       </form>
     </div>
   </div>
@@ -495,7 +545,6 @@
       quickCurrency = document.getElementById('quickCurrency').value;
       const warning = document.getElementById('limitWarning');
 
-      // ឆែកដែនកំណត់: 10$ ឬ 40,000៛
       if (quickCurrency === 'USD' && amount > 10) {
         warning.style.display = 'block';
         quickAmount = 10;
@@ -526,7 +575,6 @@
         return; 
       }
       
-      // ត្រួតពិនិត្យដែនកំណត់ចុងក្រោយមុនផ្ញើ
       if (quickCurrency === 'USD' && quickAmount > 10) {
         alert('⚠️ ទឹកប្រាក់ចាក់ក្នុងមួយលេខ មិនអាចលើសពី 10$ ឡើយ!');
         return;
@@ -559,7 +607,11 @@
           num: `${item.letter}-${item.number}`,
           type: item.type === 'two' ? '២ខ្ទង់' : '៣ខ្ទង់',
           cost: `${amount} ${sym}`,
-          win: `${reward.toLocaleString()} ${sym}`
+          costValue: amount,
+          currency: currency,
+          rawType: item.type,
+          win: `${reward.toLocaleString()} ${sym}`,
+          winValue: reward
         });
       });
 
@@ -586,6 +638,87 @@
       `).join('');
     }
 
+    // ====== 🏦 មុខងារគ្រប់គ្រងប្រព័ន្ធដកប្រាក់ថ្មី ======
+    function openWithdrawModal() {
+      const select = document.getElementById('withdrawSelectBet');
+      select.innerHTML = '<option value="">-- សូមជ្រើសរើសលេខពីប្រវត្តិលេងរបស់អ្នក --</option>';
+      
+      let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
+      
+      if (history.length > 0) {
+        history.reverse().forEach((bet, idx) => {
+          const option = document.createElement('option');
+          option.value = JSON.stringify(bet);
+          option.text = `លេខ៖ ${bet.num} (${bet.type}) | ទឹកប្រាក់ចាក់៖ ${bet.cost} | ត្រូវសង៖ ${bet.win}`;
+          select.appendChild(option);
+        });
+      } else {
+        const option = document.createElement('option');
+        option.value = "";
+        option.text = "⚠️ គ្មានប្រវត្តិការចាក់នៅក្នុងកម្មវិធីឡើយ";
+        option.disabled = true;
+        select.appendChild(option);
+      }
+
+      // កំណត់ទិន្នន័យដកប្រាក់ឱ្យទៅសូន្យឡើងវិញ
+      document.getElementById('withdrawForm').reset();
+      document.getElementById('withdrawSelectedDetails').innerText = '';
+      document.getElementById('payoutRewardDisplay').innerText = '0.00';
+      document.getElementById('manualWithdrawFields').style.display = 'none';
+      
+      document.getElementById('withdrawModal').style.display = 'block';
+    }
+
+    function onWithdrawBetSelected() {
+      const select = document.getElementById('withdrawSelectBet');
+      const detailP = document.getElementById('withdrawSelectedDetails');
+      const payoutSpan = document.getElementById('payoutRewardDisplay');
+
+      if (!select.value) {
+        detailP.innerText = '';
+        payoutSpan.innerText = '0.00';
+        return;
+      }
+
+      const bet = JSON.parse(select.value);
+      detailP.innerText = `✅ បានជ្រើសរើស៖ លេខចាក់៖ ${bet.num} | ចាក់៖ ${bet.cost} | រង្វាន់៖ ${bet.win}`;
+      payoutSpan.innerText = bet.win;
+    }
+
+    function toggleManualWithdrawInput() {
+      const check = document.getElementById('manualInputCheck');
+      const manualFields = document.getElementById('manualWithdrawFields');
+      const select = document.getElementById('withdrawSelectBet');
+      const detailP = document.getElementById('withdrawSelectedDetails');
+      const payoutSpan = document.getElementById('payoutRewardDisplay');
+
+      if (check.checked) {
+        manualFields.style.display = 'block';
+        select.value = '';
+        select.disabled = true;
+        detailP.innerText = '';
+        calculateManualWithdrawReward();
+      } else {
+        manualFields.style.display = 'none';
+        select.disabled = false;
+        payoutSpan.innerText = '0.00';
+      }
+    }
+
+    function calculateManualWithdrawReward() {
+      const costInput = document.getElementById('withdrawManualCost').value;
+      const currency = document.getElementById('withdrawManualCurrency').value;
+      const type = document.getElementById('withdrawBetType').value;
+      const payoutSpan = document.getElementById('payoutRewardDisplay');
+
+      const cost = parseFloat(costInput) || 0;
+      const rate = type === 'two' ? 70 : 500;
+      const reward = cost * rate;
+      const sym = currency === 'KHR' ? ' ៛' : ' $';
+
+      payoutSpan.innerText = reward.toLocaleString() + sym;
+    }
+
     document.getElementById('depositForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const data = window._betData;
@@ -607,14 +740,47 @@
 
     document.getElementById('withdrawForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const msg = `📤 **ស្នើសុំដកប្រាក់រង្វាន់ (N98)**\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ: ${document.getElementById('withdrawPredictNumber').value}\n💰 ទឹកប្រាក់ស្នើសុំ: ${document.getElementById('withdrawAmount').value}`;
+      
+      const isManual = document.getElementById('manualInputCheck').checked;
+      let betNum = '';
+      let rewardText = '';
+
+      if (isManual) {
+        const manualNum = document.getElementById('withdrawPredictNumber').value;
+        const manualCost = document.getElementById('withdrawManualCost').value;
+        const manualCurr = document.getElementById('withdrawManualCurrency').value;
+        const manualType = document.getElementById('withdrawBetType').value;
+        
+        if (!manualNum || !manualCost) {
+          alert('⚠️ សូមបំពេញព័ត៌មាននៃការចាក់ដោយដៃឱ្យបានគ្រប់គ្រាន់!');
+          return;
+        }
+
+        const sym = manualCurr === 'KHR' ? '៛' : '$';
+        const rate = manualType === 'two' ? 70 : 500;
+        const reward = (parseFloat(manualCost) * rate).toLocaleString();
+        
+        betNum = manualNum;
+        rewardText = `${reward} ${sym} (គណនាតាម៖ ចាក់ ${manualCost} ${sym} - សង ${rate}ដង)`;
+      } else {
+        const select = document.getElementById('withdrawSelectBet');
+        if (!select.value) {
+          alert('⚠️ សូមជ្រើសរើសលេខដែលចាក់ត្រូវពីក្នុងបញ្ជី!');
+          return;
+        }
+        const bet = JSON.parse(select.value);
+        betNum = bet.num;
+        rewardText = bet.win;
+      }
+
+      const msg = `📤 **ស្នើសុំដកប្រាក់រង្វាន់ (N98)**\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${betNum}\n💰 ទឹកប្រាក់រង្វាន់ដែលត្រូវទទួល៖ ${rewardText}\n🏦 ធនាគារទទួល៖ ${document.getElementById('withdrawBank').value}\n💳 លេខគណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះគណនី៖ ${document.getElementById('withdrawAccName').value}`;
+      
       sendToTelegram(msg, 'withdrawQrCode');
-      alert('✅ បានផ្ញើសំណើដកប្រាក់រួចរាល់!');
+      alert('✅ បានផ្ញើសំណើដកប្រាក់រង្វាន់រួចរាល់! ភ្នាក់ងារនឹងពិនិត្យនិងវេរលុយជូនក្នុងពេលឆាប់ៗ។');
       closeModal('withdrawModal');
       this.reset();
     });
 
-    function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'block'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
     // Seeded generator for daily results
