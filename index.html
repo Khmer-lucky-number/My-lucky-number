@@ -30,7 +30,6 @@
     .numbers div .letter { color:#0078D7; font-weight:700; }
     .numbers div .number { color:#333; font-weight:700; font-size:18px; }
     
-    /* ====== NEW STYLISH BET BOX ====== */
     .bet-box-container {
       background: white;
       border-radius: 16px;
@@ -54,7 +53,6 @@
       font-weight: 800;
     }
     
-    /* Reward Table Styles */
     .reward-info-table { width:100%; border-collapse:collapse; margin-bottom:15px; border:1px solid #dee2e6; border-radius:8px; overflow:hidden; }
     .reward-info-table th { background:#e8f4fd; color:#0078D7; padding:8px; font-size:13px; }
     .reward-info-table td { padding:8px; font-size:13px; text-align:center; font-weight:600; border:1px solid #dee2e6; }
@@ -88,9 +86,6 @@
     .btn-amount { background:#17a2b8; padding:6px 14px; font-size:13px; border-radius:6px; }
     .btn-amount.selected { background:#0078D7; box-shadow:0 0 0 3px #ffd700; }
     
-    .amount-display { background:#e8f4fd; padding:10px 15px; border-radius:8px; margin:8px 0; text-align:center; font-size:16px; font-weight:600; color:#0078D7; border:2px dashed #0078D7; }
-    .amount-display span { color:#d63000; font-size:20px; }
-    
     .selected-numbers-display { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; min-height:44px; padding:12px; background:#f8f9fa; border-radius:8px; border:2px dashed #dee2e6; align-items:center; }
     .selected-number-tag { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:6px 16px; border-radius:20px; font-size:15px; display:inline-flex; align-items:center; gap:10px; font-weight:600; box-shadow:0 2px 8px rgba(0,120,215,0.2); }
     .selected-number-tag .remove { cursor:pointer; font-weight:bold; color:#ff6b6b; margin-left:5px; font-size:18px; background:rgba(255,255,255,0.2); border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
@@ -108,7 +103,14 @@
     .history-table td { padding:6px 8px; font-size:13px; text-align:center; border-bottom:1px solid #dee2e6; }
     .history-table tr:nth-child(even) { background:#f8f9fa; }
     
-    .rules-section { background:linear-gradient(135deg, #f8f9fa, #e9ecef); padding:15px 20px; border-radius:12px; margin-top:15px; border-left:5px solid #0078D7; }
+    .rules-section { background:white; padding:25px; border-radius:12px; margin-top:15px; border:1px solid #dee2e6; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+    .rules-section h3 { color:#0078D7; font-size:20px; font-weight:700; border-bottom:2px solid #f0f4f8; padding-bottom:8px; margin-top:0; }
+    .rules-section h4 { color:#333; margin-top:15px; margin-bottom:8px; font-size:16px; font-weight:600; }
+    .rules-section ul, .rules-section ol { padding-left:20px; margin:5px 0; }
+    .rules-section li { margin-bottom:8px; font-size:14px; color:#4a5568; line-height:1.6; }
+
+    .warning-text { color:#dc3545; font-size:13px; font-weight:600; display:block; margin-top:4px; }
+
     footer { background:#1a2634; color:#adb5bd; text-align:center; padding:15px; margin-top:20px; border-top:3px solid #0078D7; }
     
     @media (max-width:768px) {
@@ -126,9 +128,9 @@
 
   <nav class="nav-bar">
     <div class="nav-links">
-      <a href="#" class="active" onclick="showSection('home')">🏠 ទំព័រដើម</a>
-      <a href="#" onclick="showSection('history')">📊 ប្រវត្តិលទ្ធផល</a>
-      <a href="#" onclick="showSection('rules')">📋 ច្បាប់លេង</a>
+      <a href="#" class="active" id="link-home" onclick="showSection('home')">🏠 ទំព័រដើម</a>
+      <a href="#" id="link-history" onclick="showSection('history')">📊 ប្រវត្តិលទ្ធផល</a>
+      <a href="#" id="link-rules" onclick="showSection('rules')">📋 ច្បាប់និងរបៀបប្រើប្រាស់</a>
     </div>
   </nav>
 
@@ -164,13 +166,13 @@
         </div>
       </div>
 
-      <!-- ====== 💥 ប្តូរឈ្មោះថ្មី៖ បន្ទប់ផ្សងសំណាងរហ័ស 💥 ====== -->
+      <!-- ====== 🎯 បន្ទប់ផ្សងសំណាងរហ័ស 🎯 ====== -->
       <div class="bet-box-container">
         <div class="bet-box-header">
           <h2>🎯 បន្ទប់ផ្សងសំណាងរហ័ស (A, B, C, D, E)</h2>
         </div>
 
-        <!-- តារាងបង្ហាញការសងប្រាក់រង្វាន់ដែលមិនឱ្យម្ចាស់ខាត -->
+        <!-- Reward and Limit Info -->
         <table class="reward-info-table">
           <thead>
             <tr><th>ប្រភេទឆ្នោត</th><th>ម៉ោងចេញលទ្ធផល</th><th>អត្រាប្រាក់រង្វាន់</th></tr>
@@ -180,6 +182,10 @@
             <tr><td>លេខ ៣ខ្ទង់ (A,B,C,D,E)</td><td>🕕 18:00 ល្ងាច</td><td>ចាក់ 1$ សង <span class="text-respond">500$</span></td></tr>
           </tbody>
         </table>
+        
+        <div style="background:#fff5f5; border:1px solid #ffb3b3; padding:10px; border-radius:8px; margin-bottom:15px; text-align:center;">
+          <span style="color:#d63000; font-weight:700; font-size:14px;">⚠️ ដែនកំណត់សុវត្ថិភាព៖ ចាក់បានយ៉ាងច្រើនបំផុត 10$ ឬ 40,000៛ ក្នុងមួយលេខ និងចាក់បានម្តងយ៉ាងច្រើន 10 លេខ។</span>
+        </div>
         
         <p style="color:#6c757d; font-size: 13px; margin: 0;">💡 ជំហានទី១៖ ជ្រើសរើសអក្សរ A, B, C, D, E ខាងក្រោម៖</p>
         <div class="letter-selector">
@@ -200,7 +206,7 @@
           <button class="btn btn-primary" id="btnAddNumber" onclick="addBetNumber()" style="margin:0; padding:10px 20px;" disabled>➕ បន្ថែមលេខ</button>
         </div>
 
-        <p style="color:#6c757d; font-size: 13px; margin: 5px 0;">📊 បញ្ជីលេខដែលបានជ្រើសរើស៖</p>
+        <p style="color:#6c757d; font-size: 13px; margin: 5px 0;">📊 បញ្ជីលេខដែលបានជ្រើសរើស (ទិញបានអតិបរមា ១០លេខ):</p>
         <div class="selected-numbers-display" id="selectedNumbersDisplay">
           <span style="color:#6c757d; font-size:13px;">មិនទាន់មានការជ្រើសរើសលេខនៅឡើយទេ</span>
         </div>
@@ -210,16 +216,17 @@
           <span style="font-size:13px; color:#6c757d;">ចំនួនលេខសរុប: <strong id="selectedCount" style="color:#0078D7; font-size:16px;">0</strong> / 10</span>
         </div>
 
-        <!-- Quick Amount -->
+        <!-- Quick Amount Selection -->
         <div>
           <label style="font-weight:600; color:#0078D7; font-size:14px; display:block; margin-bottom:6px;">💰 ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
           <div class="amount-buttons">
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1000, '៛')">1000៛</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5000, '៛')">5000៛</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10000, '៛')">10000៛</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(40000, '៛')">40000៛ (ដែនកំណត់)</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1, '$')">1$</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5, '$')">5$</button>
-            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10, '$')">10$</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10, '$')">10$ (ដែនកំណត់)</button>
           </div>
           <div style="display:flex; gap:8px; margin-top:8px; align-items:center;">
             <input type="number" id="quickAmountInput" placeholder="ចំនួនទឹកប្រាក់ដោយដៃ" min="1" style="flex:1; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px;" oninput="updateQuickAmountDisplay()">
@@ -228,6 +235,7 @@
               <option value="KHR">រៀល (៛)</option>
             </select>
           </div>
+          <span class="warning-text" id="limitWarning" style="display:none;">⚠️ ទឹកប្រាក់មិនអាចលើសពី 10$ ឬ 40,000៛ ក្នុងមួយលេខបានទេ!</span>
         </div>
 
         <!-- Summary -->
@@ -241,9 +249,9 @@
         </button>
       </div>
 
-      <!-- ====== 🕒 ប្រអប់ប្រវត្តិការចាក់ក្នុងរយៈពេល ៤៨ ម៉ោង 🕒 ====== -->
+      <!-- ====== 🕒 ប្រអប់ប្រវត្តិការចាក់របស់អ្នក ====== -->
       <div class="lottery-box">
-        <div class="time-box" style="color: #6f42c1;">🕒 ប្រវត្តិការចាក់របស់អ្នក (ក្នុងរយៈពេល ៤៨ ម៉ោងចុងក្រោយ)</div>
+        <div class="time-box" style="color: #6f42c1;">🕒 ប្រវត្តិការចាក់របស់អ្នក</div>
         <div style="overflow-x:auto; margin-top: 10px;">
           <table class="history-table" style="background:#fff;">
             <thead>
@@ -252,7 +260,7 @@
               </tr>
             </thead>
             <tbody id="userBetHistoryBody">
-              <tr><td colspan="5" style="color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិការចាក់ក្នុងរយៈពេល ៤៨ ម៉ោងនេះទេ</td></tr>
+              <tr><td colspan="5" style="color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិការចាក់នៅឡើយទេ</td></tr>
             </tbody>
           </table>
         </div>
@@ -278,18 +286,46 @@
     <!-- Rules Section -->
     <div id="rulesSection" style="display:none;">
       <div class="rules-section">
-        <h3>📋 ច្បាប់និងលក្ខខណ្ឌនៃការលេង</h3>
+        <h3>📋 ច្បាប់ និងរបៀបប្រើប្រាស់គេហទំព័រ</h3>
+        
+        <h4>១. ព័ត៌មានទូទៅអំពីល្បែងផ្សងសំណាង</h4>
         <ul>
-          <li>📌 លេខ ២ខ្ទង់ (ចេញម៉ោង 12:00)៖ ចាក់ 1$ សង 70$</li>
-          <li>📌 លេខ ៣ខ្ទង់ (ចេញម៉ោង 18:00)៖ ចាក់ 1$ សង 500$</li>
-          <li>🕒 ប្រវត្តិការទិញលេខនៅលើទូរសព្ទរបស់អ្នក នឹងរក្សាទុកត្រឹមរយៈពេល ៤៨ ម៉ោងប៉ុណ្ណោះ។</li>
+          <li><strong>បន្ទប់ផ្សងសំណាងរហ័ស (A, B, C, D, E)</strong> គឺជាកម្មវិធីជ្រើសរើសលេខផ្សងសំណាងពិតប្រាកដដែលដំណើរការរៀងរាល់ថ្ងៃ។</li>
+          <li>លទ្ធផលការផ្សាយឆ្នោតនឹងធ្វើឡើងជាពីរវេន៖ <strong>វេនទី១ (ម៉ោង ១២:០០ ថ្ងៃត្រង់)</strong> សម្រាប់ប្រភេទលេខ ២ខ្ទង់ និង <strong>វេនទី២ (ម៉ោង ១៨:០០ ល្ងាច)</strong> សម្រាប់ប្រភេទលេខ ៣ខ្ទង់។</li>
+        </ul>
+
+        <h4>២. អត្រាប្រាក់រង្វាន់ (Payout Rates)</h4>
+        <ul>
+          <li><strong>លេខ ២ខ្ទង់ (ផ្សាយម៉ោង ១២:០០)៖</strong> រាល់ការចាក់ត្រូវ ១ ដុល្លារ ($1) នឹងទទួលបានប្រាក់រង្វាន់ត្រឡប់មកវិញ <strong>៧០ ដុល្លារ ($70)</strong> (ឬចាក់ ១ម៉ឺនរៀល សង ៧០ម៉ឺនរៀល)។</li>
+          <li><strong>លេខ ៣ខ្ទង់ (ផ្សាយម៉ោង ១៨:០០)៖</strong> រាល់ការចាក់ត្រូវ ១ ដុល្លារ ($1) នឹងទទួលបានប្រាក់រង្វាន់ត្រឡប់មកវិញ <strong>៥០០ ដុល្លារ ($500)</strong> (ឬចាក់ ១ម៉ឺនរៀល សង ៥លានរៀល)។</li>
+        </ul>
+
+        <h4>៣. ដែនកំណត់ និងសុវត្ថិភាពហិរញ្ញវត្ថុ (Bet Limits)</h4>
+        <ul>
+          <li><strong>ទឹកប្រាក់ចាក់អតិបរមា៖</strong> ដើម្បីការពារហានិភ័យ និងរក្សាស្ថិរភាពក្នុងការទូទាត់ ប្រព័ន្ធអនុញ្ញាតឱ្យចាក់ច្រើនបំផុតត្រឹមតែ <strong>10$ (ដប់ដុល្លារ)</strong> ឬ <strong>40,000៛ (បួនម៉ឺនរៀល)</strong> ប៉ុណ្ណោះក្នុងមួយលេខចាក់។</li>
+          <li><strong>ចំនួនលេខចាក់អតិបរមា៖</strong> អតិថិជនអាចជ្រើសរើសលេខផ្សេងៗគ្នាមកចាក់បានយ៉ាងច្រើនបំផុត <strong>១០ គ្រាប់ (១០ លេខ)</strong> ក្នុងទម្រង់ការផ្ញើតែមួយដង។</li>
+        </ul>
+
+        <h4>៤. របៀបលេងជំហានៗសម្រាប់អតិថិជន</h4>
+        <ol>
+          <li><strong>ជំហានទី១៖</strong> ចុចជ្រើសរើសអក្សរដែលចង់លេងចាប់ពី <strong>A, B, C, D ដល់ E</strong> នៅលើរង្វង់មូល។</li>
+          <li><strong>ជំហានទី២៖</strong> ជ្រើសរើសប្រភេទឆ្នោត (លេខ ២ខ្ទង់ ឬ លេខ ៣ខ្ទង់) រួចបញ្ចូលលេខដែលអ្នកចង់ទស្សន៍ទាយទៅក្នុងប្រអប់ ហើយចុចប៊ូតុង <strong>«➕ បន្ថែមលេខ»</strong>។</li>
+          <li><strong>ជំហានទី៣៖</strong> ជ្រើសរើស ឬវាយបញ្ចូលទឹកប្រាក់ដែលចង់ចាក់ក្នុងមួយលេខ (ត្រូវប្រាកដថាមិនលើសពីដែនកំណត់)។</li>
+          <li><strong>ជំហានទី四៖</strong> ពិនិត្យបញ្ជីលម្អិត និងទឹកប្រាក់សរុប រួចចុចប៊ូតុង <strong>«💳 ផ្ញើការទស្សន៍ទាយឥឡូវនេះ»</strong>។</li>
+          <li><strong>ជំហានទី៥៖</strong> បំពេញព័ត៌មានគណនីធនាគារ (ABA ឬ ACLEDA) រួចផ្ទេរប្រាក់ និងបង្ហោះរូបថត Screenshot វិក្កយបត្រដើម្បីបញ្ជាក់ការទូទាត់ទៅកាន់ភ្នាក់ងារ។</li>
+        </ol>
+
+        <h4>៥. ប្រព័ន្ធរក្សាប្រវត្តិការលេង និងការដកប្រាក់</h4>
+        <ul>
+          <li>រាល់ការចាក់លេខរបស់លោកអ្នកនឹងត្រូវបានកត់ត្រាទុកដោយស្វ័យប្រវត្តិនៅក្នុងតារាងប្រវត្តិការចាក់។</li>
+          <li>ករណីលោកអ្នកផ្សងសំណាងត្រូវលេខឆ្នោត សូមចុចលើប៊ូតុង <strong>«🏦 ស្នើសុំដកប្រាក់រង្វាន់»</strong> រួចបំពេញព័ត៌មានឱ្យបានត្រឹមត្រូវ រួមទាំងបង្ហោះ QR Code ធនាគាររបស់អ្នកដើម្បីឱ្យភ្នាក់ងារវេរប្រាក់រង្វាន់ជូនភ្លាមៗ។</li>
         </ul>
       </div>
     </div>
   </section>
 
   <footer>
-    <p>© 2026 Khmer Lottery N98 | ដំណើរការរាល់ថ្ងៃ ៣៦៥ថ្ងៃ</p>
+    <p>© 2026 Khmer Lottery N98 | ប្រព័ន្ធមានសុវត្ថិភាព និងទំនុកចិត្តខ្ពស់</p>
   </footer>
 
   <!-- Payment Modal -->
@@ -373,7 +409,9 @@
       document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
       document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
       document.getElementById('rulesSection').style.display = section === 'rules' ? 'block' : 'none';
+      
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById(`link-${section}`).classList.add('active');
     }
 
     function selectLetter(letter) {
@@ -396,6 +434,12 @@
 
     function addBetNumber() {
       if (!selectedLetter) return;
+      
+      if (betNumbers.length >= 10) {
+        alert('⚠️ ប្រព័ន្ធអនុញ្ញាតឱ្យចាក់បានត្រឹមតែ ១០ លេខប៉ុណ្ណោះក្នុងម្តង!');
+        return;
+      }
+
       const type = document.getElementById('betType').value;
       const input = document.getElementById('numberInput');
       const value = input.value.trim();
@@ -447,9 +491,24 @@
     }
 
     function updateQuickAmountDisplay() {
-      const amount = document.getElementById('quickAmountInput').value || 0;
+      const amount = parseFloat(document.getElementById('quickAmountInput').value) || 0;
       quickCurrency = document.getElementById('quickCurrency').value;
-      quickAmount = parseFloat(amount) || 0;
+      const warning = document.getElementById('limitWarning');
+
+      // ឆែកដែនកំណត់: 10$ ឬ 40,000៛
+      if (quickCurrency === 'USD' && amount > 10) {
+        warning.style.display = 'block';
+        quickAmount = 10;
+        document.getElementById('quickAmountInput').value = 10;
+      } else if (quickCurrency === 'KHR' && amount > 40000) {
+        warning.style.display = 'block';
+        quickAmount = 40000;
+        document.getElementById('quickAmountInput').value = 40000;
+      } else {
+        warning.style.display = 'none';
+        quickAmount = amount;
+      }
+
       updateSummary();
     }
 
@@ -462,7 +521,21 @@
     }
 
     function submitQuickBet() {
-      if (betNumbers.length === 0 || quickAmount <= 0) { alert('⚠️ សូមពិនិត្យលេខចាក់ និងចំនួនទឹកប្រាក់!'); return; }
+      if (betNumbers.length === 0 || quickAmount <= 0) { 
+        alert('⚠️ សូមពិនិត្យលេខចាក់ និងចំនួនទឹកប្រាក់!'); 
+        return; 
+      }
+      
+      // ត្រួតពិនិត្យដែនកំណត់ចុងក្រោយមុនផ្ញើ
+      if (quickCurrency === 'USD' && quickAmount > 10) {
+        alert('⚠️ ទឹកប្រាក់ចាក់ក្នុងមួយលេខ មិនអាចលើសពី 10$ ឡើយ!');
+        return;
+      }
+      if (quickCurrency === 'KHR' && quickAmount > 40000) {
+        alert('⚠️ ទឹកប្រាក់ចាក់ក្នុងមួយលេខ មិនអាចលើសពី 40,000៛ ឡើយ!');
+        return;
+      }
+
       const all = betNumbers.map(i => `${i.letter}-${i.number}`).join(', ');
       const sym = quickCurrency === 'KHR' ? '៛' : '$';
       
@@ -473,7 +546,6 @@
       document.getElementById('depositModal').style.display = 'block';
     }
 
-    // ====== 🕒 មុខងាររក្សាទុក និងបង្ហាញប្រវត្តិការចាក់ក្នុងរយៈពេល ៤៨ ម៉ោង 🕒 ======
     function saveBetToHistory(list, amount, currency) {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
       const nowTimestamp = new Date().getTime();
@@ -497,19 +569,13 @@
 
     function renderUserBetHistory() {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
-      const fortyEightHoursAgo = new Date().getTime() - (48 * 60 * 60 * 1000);
-      
-      // ច្រោះយកតែទិន្នន័យក្នុងរង្វង់ ៤៨ ម៉ោងចុងក្រោយ
-      history = history.filter(item => item.timestamp >= fortyEightHoursAgo);
-      localStorage.setItem('user_bet_history', JSON.stringify(history));
-
       const tbody = document.getElementById('userBetHistoryBody');
       if (history.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិការចាក់ក្នុងរយៈពេល ៤៨ ម៉ោងនេះទេ</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិការចាក់នៅឡើយទេ</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = history.reverse().map(item => `
+      tbody.innerHTML = history.slice().reverse().map(item => `
         <tr>
           <td>${item.time}</td>
           <td style="color:#0078D7; font-weight:bold;">${item.num}</td>
@@ -528,10 +594,10 @@
       const name = document.getElementById('depositAccountName').value;
       const sym = data.currency === 'KHR' ? '៛' : '$';
 
-      const msg = `📥 **ការចាក់ឆ្នោតថ្មី**\n👤 ឈ្មោះ: ${name}\n📱 ទូរសព្ទ: ${phone}\n🏦 ធនាគារ: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 សរុបទឹកប្រាក់: ${(data.amount * data.list.length).toLocaleString()} ${sym}`;
+      const msg = `📥 **ការចាក់ឆ្នោតថ្មី (N98)**\n👤 ឈ្មោះ: ${name}\n📱 ទូរសព្ទ: ${phone}\n🏦 ធនាគារ: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់ក្នុង១លេខ: ${data.amount} ${sym}\n💰 សរុបទឹកប្រាក់រួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}`;
 
       sendToTelegram(msg, 'depositScreenshot');
-      saveBetToHistory(data.list, data.amount, data.currency); // រក្សាទុកចូលប្រវត្តិអតិថិជន
+      saveBetToHistory(data.list, data.amount, data.currency);
       
       alert('✅ បញ្ជូនទិន្នន័យបានជោគជ័យ!');
       closeModal('depositModal');
@@ -541,7 +607,7 @@
 
     document.getElementById('withdrawForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const msg = `📤 **ស្នើសុំដកប្រាក់រង្វាន់**\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ: ${document.getElementById('withdrawPredictNumber').value}\n💰 ទឹកប្រាក់: ${document.getElementById('withdrawAmount').value}`;
+      const msg = `📤 **ស្នើសុំដកប្រាក់រង្វាន់ (N98)**\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ: ${document.getElementById('withdrawPredictNumber').value}\n💰 ទឹកប្រាក់ស្នើសុំ: ${document.getElementById('withdrawAmount').value}`;
       sendToTelegram(msg, 'withdrawQrCode');
       alert('✅ បានផ្ញើសំណើដកប្រាក់រួចរាល់!');
       closeModal('withdrawModal');
@@ -551,7 +617,7 @@
     function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'block'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // ====== Results Daily Generator Engine ======
+    // Seeded generator for daily results
     function seededRandom(seed) {
       let x = Math.sin(seed) * 10000;
       return x - Math.floor(x);
@@ -606,7 +672,7 @@
       document.getElementById("datetime").innerHTML = now.toLocaleString("km-KH", { dateStyle: "full", hour12: false });
     }
 
-    // Start App
+    // App init
     generateTodayResults();
     renderUserBetHistory();
     setInterval(updateCountdown, 1000);
