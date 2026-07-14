@@ -13,7 +13,6 @@
     header h1 { font-size:38px; font-weight:900; margin:10px 0; text-shadow:2px 2px 4px rgba(0,0,0,0.3); letter-spacing:2px; }
     header p { font-size:16px; font-weight:400; opacity:0.9; }
     
-    /* Navigation Bar */
     .nav-bar { background:white; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; box-shadow:0 2px 5px rgba(0,0,0,0.1); position:sticky; top:0; z-index:100; }
     .nav-bar .nav-links { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
     .nav-bar .nav-links a { color:#333; text-decoration:none; font-weight:600; padding:6px 14px; border-radius:6px; transition:all 0.3s; font-size:14px; cursor:pointer; }
@@ -49,9 +48,52 @@
     .btn-amount { background:#17a2b8; padding:6px 14px; font-size:13px; border-radius:6px; }
     .btn-amount:hover { background:#138496; transform:translateY(-2px); }
     .btn-amount.selected { background:#0078D7; box-shadow:0 0 0 3px #ffd700; }
-    .btn-number { background:#f1f3f5; color:#333; padding:10px 14px; font-size:14px; min-width:42px; border:2px solid #dee2e6; border-radius:6px; transition:all 0.3s; cursor:pointer; font-weight:600; }
-    .btn-number:hover { background:#dee2e6; border-color:#0078D7; transform:scale(1.05); }
-    .btn-number.selected { background:#0078D7; color:white; border-color:#0078D7; box-shadow:0 0 0 3px rgba(0,120,215,0.3); }
+    
+    /* ====== BIG LETTER BUTTONS ====== */
+    .btn-number { 
+      background:#f1f3f5; 
+      color:#333; 
+      padding:18px 10px; 
+      font-size:22px; 
+      font-weight:800;
+      min-width:60px; 
+      border:3px solid #dee2e6; 
+      border-radius:12px; 
+      transition:all 0.3s; 
+      cursor:pointer; 
+      text-align:center;
+      position:relative;
+    }
+    .btn-number:hover { 
+      background:#dee2e6; 
+      border-color:#0078D7; 
+      transform:scale(1.05);
+      box-shadow:0 4px 15px rgba(0,0,0,0.1);
+    }
+    .btn-number.selected { 
+      background:linear-gradient(135deg, #0078D7, #005fa3); 
+      color:white; 
+      border-color:#0078D7; 
+      box-shadow:0 0 0 4px rgba(0,120,215,0.3);
+      transform:scale(1.05);
+    }
+    .btn-number.selected::after {
+      content: '✓';
+      position:absolute;
+      top:-8px;
+      right:-8px;
+      background:#28a745;
+      color:white;
+      border-radius:50%;
+      width:24px;
+      height:24px;
+      font-size:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    }
+    .btn-number .letter-label { display:block; font-size:14px; font-weight:400; opacity:0.7; margin-top:2px; }
     
     .countdown { background:linear-gradient(135deg, #fff3e0, #ffe0b2); padding:15px; border-radius:12px; margin:10px 0; border:3px solid #ff6b00; text-align:center; }
     .countdown .time-display { font-size:44px; color:#d63000; background:white; padding:8px 25px; border-radius:10px; display:inline-block; margin-top:8px; font-weight:800; letter-spacing:4px; min-width:170px; box-shadow:0 4px 15px rgba(0,0,0,0.1); font-family:'Courier New',monospace; }
@@ -60,8 +102,19 @@
     
     .quick-bet { background:white; padding:20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.08); margin:15px 0; border:1px solid #e9ecef; }
     .quick-bet h3 { color:#0078D7; font-size:20px; margin-top:0; display:flex; align-items:center; gap:10px; }
-    .bet-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin:8px 0; max-width:350px; }
-    .bet-grid .btn-number { text-align:center; padding:8px 10px; font-size:13px; min-width:35px; }
+    
+    .bet-grid { 
+      display:grid; 
+      grid-template-columns:repeat(5,1fr); 
+      gap:12px; 
+      margin:12px 0; 
+      max-width:450px; 
+    }
+    .bet-grid .btn-number { 
+      padding:20px 12px; 
+      font-size:24px; 
+      min-width:55px;
+    }
     
     .bet-summary { background:linear-gradient(135deg, #f8f9fa, #e9ecef); padding:12px 15px; border-radius:8px; margin:12px 0; border:2px solid #0078D7; }
     .bet-summary-item { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #dee2e6; font-size:15px; }
@@ -91,14 +144,160 @@
     .qr-container { text-align:center; margin:8px 0; }
     .qr-container img { max-width:180px; border:2px solid #dee2e6; border-radius:10px; padding:8px; background:white; }
     
-    .selected-numbers-display { display:flex; flex-wrap:wrap; gap:5px; margin:8px 0; min-height:32px; }
-    .selected-number-tag { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:4px 12px; border-radius:20px; font-size:13px; display:inline-flex; align-items:center; gap:6px; font-weight:500; }
-    .selected-number-tag .remove { cursor:pointer; font-weight:bold; color:#ff6b6b; margin-left:5px; font-size:14px; transition:color 0.3s; }
-    .selected-number-tag .remove:hover { color:#ff0000; }
+    /* ====== SELECTED DISPLAY ====== */
+    .selected-numbers-display { 
+      display:flex; 
+      flex-wrap:wrap; 
+      gap:8px; 
+      margin:12px 0; 
+      min-height:44px; 
+      padding:12px; 
+      background:#f8f9fa; 
+      border-radius:8px; 
+      border:2px dashed #dee2e6;
+      align-items:center;
+    }
+    .selected-number-tag { 
+      background:linear-gradient(135deg, #0078D7, #005fa3); 
+      color:white; 
+      padding:6px 16px; 
+      border-radius:20px; 
+      font-size:15px; 
+      display:inline-flex; 
+      align-items:center; 
+      gap:10px; 
+      font-weight:600;
+      animation:fadeIn 0.3s ease;
+      box-shadow:0 2px 8px rgba(0,120,215,0.2);
+    }
+    .selected-number-tag .remove { 
+      cursor:pointer; 
+      font-weight:bold; 
+      color:#ff6b6b; 
+      margin-left:5px; 
+      font-size:18px; 
+      transition:color 0.3s;
+      background:rgba(255,255,255,0.2);
+      border-radius:50%;
+      width:22px;
+      height:22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .selected-number-tag .remove:hover { 
+      color:#ff0000;
+      background:rgba(255,255,255,0.4);
+    }
+    @keyframes fadeIn { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
+    
+    /* ====== INPUT GROUP - VISIBLE ALWAYS ====== */
+    .input-group {
+      display:flex;
+      gap:10px;
+      margin:12px 0;
+      padding:15px;
+      background:#e8f4fd;
+      border-radius:10px;
+      border:2px solid #0078D7;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .input-group .input-label {
+      font-weight:700;
+      color:#0078D7;
+      font-size:15px;
+      min-width:120px;
+    }
+    .input-group .letter-badge {
+      background:#0078D7;
+      color:white;
+      padding:6px 16px;
+      border-radius:20px;
+      font-weight:700;
+      font-size:20px;
+      min-width:50px;
+      text-align:center;
+    }
+    .input-group .letter-badge.empty {
+      background:#dee2e6;
+      color:#6c757d;
+      font-size:14px;
+    }
+    .input-group input {
+      flex:1;
+      min-width:120px;
+      padding:10px 16px;
+      border:2px solid #dee2e6;
+      border-radius:8px;
+      font-size:16px;
+      font-weight:600;
+      background:white;
+      transition:border-color 0.3s;
+    }
+    .input-group input:focus {
+      border-color:#0078D7;
+      outline:none;
+      box-shadow:0 0 0 4px rgba(0,120,215,0.15);
+    }
+    .input-group .btn-add {
+      background:#28a745;
+      color:white;
+      border:none;
+      padding:10px 24px;
+      border-radius:8px;
+      font-weight:700;
+      font-size:15px;
+      cursor:pointer;
+      transition:all 0.3s;
+    }
+    .input-group .btn-add:hover {
+      background:#218838;
+      transform:scale(1.05);
+    }
+    .input-group .btn-cancel {
+      background:#dc3545;
+      color:white;
+      border:none;
+      padding:10px 18px;
+      border-radius:8px;
+      font-weight:700;
+      font-size:15px;
+      cursor:pointer;
+      transition:all 0.3s;
+    }
+    .input-group .btn-cancel:hover {
+      background:#c82333;
+      transform:scale(1.05);
+    }
+    .input-group .hint {
+      font-size:13px;
+      color:#6c757d;
+      width:100%;
+      margin-top:4px;
+    }
+    
+    .letter-status { 
+      display:flex; 
+      gap:8px; 
+      flex-wrap:wrap; 
+      margin-top:6px;
+      font-size:13px;
+      color:#6c757d;
+    }
+    .letter-status span { 
+      padding:2px 10px; 
+      border-radius:10px; 
+      background:#e9ecef; 
+      font-weight:600;
+    }
+    .letter-status span.used { background:#f8d7da; color:#721c24; }
+    .letter-status span.available { background:#d4edda; color:#155724; }
+    .letter-status span.selected-letter { background:#cce5ff; color:#004085; }
     
     .quick-actions { display:flex; gap:10px; flex-wrap:wrap; margin:8px 0; align-items:center; }
-    .selected-count { display:flex; align-items:center; font-size:13px; color:#6c757d; }
-    .selected-count strong { color:#0078D7; margin:0 5px; font-size:16px; }
+    .selected-count { display:flex; align-items:center; font-size:14px; color:#6c757d; font-weight:600; }
+    .selected-count strong { color:#0078D7; margin:0 5px; font-size:18px; }
     
     .history-table { width:100%; border-collapse:collapse; margin-top:8px; border-radius:8px; overflow:hidden; }
     .history-table th { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:8px; font-size:14px; text-align:center; }
@@ -110,6 +309,8 @@
     .rules-section ul { padding-left:18px; margin:8px 0; }
     .rules-section ul li { margin:5px 0; font-size:14px; line-height:1.6; }
     .rules-section .highlight { color:#d63000; font-weight:600; }
+    
+    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:10px 0; }
     
     small, .small-text { font-family:inherit; font-size:13px; color:#6c757d; }
     
@@ -130,12 +331,20 @@
       .countdown .time-display { font-size:30px; padding:6px 12px; min-width:100px; letter-spacing:2px; }
       .btn { padding:8px 14px; font-size:13px; }
       .amount-buttons .btn-amount { font-size:11px; padding:4px 8px; min-width:50px; }
-      .bet-grid { gap:5px; max-width:100%; }
-      .bet-grid .btn-number { font-size:12px; padding:6px 6px; min-width:30px; }
+      .bet-grid { gap:8px; max-width:100%; }
+      .bet-grid .btn-number { 
+        font-size:20px; 
+        padding:16px 8px; 
+        min-width:45px;
+      }
       .quick-bet { padding:15px; }
       .quick-bet h3 { font-size:18px; }
       .lottery-box { padding:14px; }
       .time-box { font-size:15px; }
+      .two-col { grid-template-columns:1fr; gap:12px; }
+      .input-group { flex-direction:column; align-items:stretch; }
+      .input-group .input-label { min-width:auto; }
+      .input-group .letter-badge { align-self:center; }
     }
     
     @media (max-width:480px) {
@@ -143,12 +352,19 @@
       .countdown .time-display { font-size:24px; padding:4px 10px; min-width:70px; letter-spacing:1px; }
       .numbers div { min-width:40px; padding:8px 3px; font-size:12px; }
       .numbers div .number { font-size:13px; }
-      .bet-grid { gap:3px; }
-      .bet-grid .btn-number { font-size:10px; padding:4px 3px; min-width:25px; }
+      .bet-grid { gap:6px; }
+      .bet-grid .btn-number { 
+        font-size:18px; 
+        padding:14px 4px; 
+        min-width:35px;
+        border-radius:8px;
+      }
       .modal-content { padding:14px; }
       .btn { font-size:12px; padding:6px 10px; }
       .amount-buttons .btn-amount { font-size:10px; padding:3px 6px; min-width:40px; }
       .nav-bar .nav-links a { font-size:11px; padding:4px 8px; }
+      .two-col { grid-template-columns:1fr; gap:8px; }
+      .input-group input { min-width:80px; font-size:14px; padding:8px 12px; }
     }
   </style>
 </head>
@@ -158,7 +374,6 @@
     <p id="datetime"></p>
   </header>
 
-  <!-- Navigation Bar -->
   <nav class="nav-bar">
     <div class="nav-links">
       <a href="#" class="active" onclick="showSection('home')">🏠 ទំព័រដើម</a>
@@ -168,16 +383,13 @@
   </nav>
 
   <section>
-    <!-- Countdown -->
     <div class="countdown" id="countdown">
       <div class="countdown-label" id="countdownLabel">⏳ រង់ចាំពេលចេញលេខបន្ទាប់</div>
       <div class="time-display" id="countdownDisplay">--:--:--</div>
       <div class="next-time" id="nextTimeLabel">🎯 ពេលវេលាគោលដៅ: កំពុងគណនា...</div>
     </div>
 
-    <!-- Home Section -->
     <div id="homeSection">
-      <!-- Lottery Results -->
       <div class="lottery-box">
         <div class="time-box">🕛 លទ្ធផលម៉ោង 12:00 <span class="badge">លេខពីរខ្ទង់</span></div>
         <div class="numbers" id="twoDigit">
@@ -205,47 +417,115 @@
       <!-- Quick Bet Section -->
       <div class="quick-bet">
         <h3>🎯 ចាក់លេខឆ្នោតលឿន</h3>
-        <p style="color:#6c757d; font-size:14px; margin:5px 0 10px;">ជ្រើសរើសលេខដែលអ្នកចង់ចាក់ និងទឹកប្រាក់ រួចចុច "ដាក់ប្រាក់ទស្សន៍ទាយ"</p>
+        <p style="color:#6c757d; font-size:14px; margin:5px 0 10px;">
+          💡 <strong>ជ្រើសរើស A, B, C, D, E</strong> រួចបញ្ចូលលេខក្នុងប្រអប់ខាងក្រោម
+        </p>
         
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:10px 0;">
-          <!-- Two Digit Selection -->
+        <div class="two-col">
+          <!-- Two Digit -->
           <div>
-            <label style="font-weight:600; color:#0078D7; font-size:15px;">លេខពីរខ្ទង់ (A-E)</label>
+            <label style="font-weight:700; color:#0078D7; font-size:16px; display:block; margin-bottom:10px;">
+              📌 លេខពីរខ្ទង់
+            </label>
+            
             <div class="bet-grid" id="twoDigitBet">
-              <button type="button" class="btn btn-number" data-letter="A" data-type="two">A</button>
-              <button type="button" class="btn btn-number" data-letter="B" data-type="two">B</button>
-              <button type="button" class="btn btn-number" data-letter="C" data-type="two">C</button>
-              <button type="button" class="btn btn-number" data-letter="D" data-type="two">D</button>
-              <button type="button" class="btn btn-number" data-letter="E" data-type="two">E</button>
+              <button type="button" class="btn btn-number" data-letter="A" data-type="two" onclick="selectLetter('two', 'A')">
+                A
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="B" data-type="two" onclick="selectLetter('two', 'B')">
+                B
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="C" data-type="two" onclick="selectLetter('two', 'C')">
+                C
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="D" data-type="two" onclick="selectLetter('two', 'D')">
+                D
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="E" data-type="two" onclick="selectLetter('two', 'E')">
+                E
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
             </div>
-            <div style="margin-top:6px;">
-              <label style="font-size:13px; color:#6c757d;">បញ្ចូលលេខ (2ខ្ទង់):</label>
-              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-                <input type="number" id="twoDigitValue" placeholder="12" min="10" max="99" style="flex:1; min-width:70px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;">
-                <button type="button" class="btn btn-primary" onclick="addTwoDigit()" style="padding:6px 14px; font-size:13px;">បន្ថែម</button>
-              </div>
+            
+            <!-- Letter Status -->
+            <div class="letter-status" id="twoLetterStatus">
+              <span class="available">A: ទំនេរ</span>
+              <span class="available">B: ទំនេរ</span>
+              <span class="available">C: ទំនេរ</span>
+              <span class="available">D: ទំនេរ</span>
+              <span class="available">E: ទំនេរ</span>
             </div>
-            <div class="selected-numbers-display" id="twoDigitSelected"></div>
+            
+            <!-- ====== INPUT GROUP - ALWAYS VISIBLE ====== -->
+            <div class="input-group" id="twoInputGroup">
+              <span class="input-label">📝 បញ្ចូលលេខ:</span>
+              <span class="letter-badge empty" id="twoLetterBadge">?</span>
+              <input type="text" id="twoDigitInput" placeholder="បញ្ចូលលេខ 2ខ្ទង់" maxlength="2">
+              <button class="btn-add" onclick="addTwoDigit()">បន្ថែម</button>
+              <button class="btn-cancel" onclick="cancelSelection('two')">បោះបង់</button>
+              <span class="hint">⏎ ចុច Enter ដើម្បីបន្ថែម</span>
+            </div>
+            
+            <!-- Selected Numbers -->
+            <div class="selected-numbers-display" id="twoDigitSelected">
+              <span style="color:#6c757d; font-size:13px;">មិនទាន់បានជ្រើសរើសលេខពីរខ្ទង់ទេ</span>
+            </div>
           </div>
           
-          <!-- Three Digit Selection -->
+          <!-- Three Digit -->
           <div>
-            <label style="font-weight:600; color:#0078D7; font-size:15px;">លេខបីខ្ទង់ (A-E)</label>
+            <label style="font-weight:700; color:#0078D7; font-size:16px; display:block; margin-bottom:10px;">
+              📌 លេខបីខ្ទង់
+            </label>
+            
             <div class="bet-grid" id="threeDigitBet">
-              <button type="button" class="btn btn-number" data-letter="A" data-type="three">A</button>
-              <button type="button" class="btn btn-number" data-letter="B" data-type="three">B</button>
-              <button type="button" class="btn btn-number" data-letter="C" data-type="three">C</button>
-              <button type="button" class="btn btn-number" data-letter="D" data-type="three">D</button>
-              <button type="button" class="btn btn-number" data-letter="E" data-type="three">E</button>
+              <button type="button" class="btn btn-number" data-letter="A" data-type="three" onclick="selectLetter('three', 'A')">
+                A
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="B" data-type="three" onclick="selectLetter('three', 'B')">
+                B
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="C" data-type="three" onclick="selectLetter('three', 'C')">
+                C
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="D" data-type="three" onclick="selectLetter('three', 'D')">
+                D
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
+              <button type="button" class="btn btn-number" data-letter="E" data-type="three" onclick="selectLetter('three', 'E')">
+                E
+                <span class="letter-label">ជ្រើសរើស</span>
+              </button>
             </div>
-            <div style="margin-top:6px;">
-              <label style="font-size:13px; color:#6c757d;">បញ្ចូលលេខ (3ខ្ទង់):</label>
-              <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
-                <input type="number" id="threeDigitValue" placeholder="123" min="0" max="999" style="flex:1; min-width:70px; padding:6px 10px; border:2px solid #dee2e6; border-radius:6px; font-size:14px;">
-                <button type="button" class="btn btn-primary" onclick="addThreeDigit()" style="padding:6px 14px; font-size:13px;">បន្ថែម</button>
-              </div>
+            
+            <div class="letter-status" id="threeLetterStatus">
+              <span class="available">A: ទំនេរ</span>
+              <span class="available">B: ទំនេរ</span>
+              <span class="available">C: ទំនេរ</span>
+              <span class="available">D: ទំនេរ</span>
+              <span class="available">E: ទំនេរ</span>
             </div>
-            <div class="selected-numbers-display" id="threeDigitSelected"></div>
+            
+            <!-- ====== INPUT GROUP - ALWAYS VISIBLE ====== -->
+            <div class="input-group" id="threeInputGroup">
+              <span class="input-label">📝 បញ្ចូលលេខ:</span>
+              <span class="letter-badge empty" id="threeLetterBadge">?</span>
+              <input type="text" id="threeDigitInput" placeholder="បញ្ចូលលេខ 3ខ្ទង់" maxlength="3">
+              <button class="btn-add" onclick="addThreeDigit()">បន្ថែម</button>
+              <button class="btn-cancel" onclick="cancelSelection('three')">បោះបង់</button>
+              <span class="hint">⏎ ចុច Enter ដើម្បីបន្ថែម</span>
+            </div>
+            
+            <div class="selected-numbers-display" id="threeDigitSelected">
+              <span style="color:#6c757d; font-size:13px;">មិនទាន់បានជ្រើសរើសលេខបីខ្ទង់ទេ</span>
+            </div>
           </div>
         </div>
         
@@ -256,9 +536,9 @@
           <span class="selected-count">📊 ចំនួនលេខ: <strong id="selectedCount">0</strong> / 10</span>
         </div>
         
-        <!-- Amount Selection -->
+        <!-- Amount -->
         <div style="margin:10px 0;">
-          <label style="font-weight:600; color:#0078D7; font-size:15px;">ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
+          <label style="font-weight:600; color:#0078D7; font-size:15px; display:block; margin-bottom:6px;">💰 ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
           <div class="amount-buttons">
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1000, '៛')">1000៛</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(2000, '៛')">2000៛</button>
@@ -286,9 +566,9 @@
         
         <!-- Summary -->
         <div class="bet-summary" id="betSummary">
-          <div class="bet-summary-item"><span>📊 ចំនួនលេខដែលបានជ្រើសរើស:</span><span id="totalSelected">0</span></div>
-          <div class="bet-summary-item"><span>💰 ទឹកប្រាក់ក្នុងមួយលេខ:</span><span id="perNumberAmount">0</span></div>
-          <div class="bet-summary-item total"><span>💵 សរុបទឹកប្រាក់ទស្សន៍ទាយ:</span><span id="totalAmount">0</span></div>
+          <div class="bet-summary-item"><span>📊 ចំនួនលេខ:</span><span id="totalSelected">0</span></div>
+          <div class="bet-summary-item"><span>💰 ក្នុងមួយលេខ:</span><span id="perNumberAmount">0</span></div>
+          <div class="bet-summary-item total"><span>💵 សរុប:</span><span id="totalAmount">0</span></div>
         </div>
         
         <button class="btn btn-success" onclick="submitQuickBet()" style="width:100%; padding:12px; font-size:18px;">
@@ -296,7 +576,6 @@
         </button>
       </div>
 
-      <!-- Withdraw Section -->
       <div class="lottery-box">
         <div class="time-box">🏦 ប្រព័ន្ធដកប្រាក់</div>
         <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
@@ -305,15 +584,12 @@
       </div>
     </div>
 
-    <!-- History Section -->
     <div id="historySection" style="display:none;">
       <div class="lottery-box">
         <div class="time-box">📊 ប្រវត្តិលេខឆ្នោត</div>
         <div style="max-height:400px; overflow-y:auto;">
           <table class="history-table">
-            <thead>
-              <tr><th>កាលបរិច្ឆេទ</th><th>ពេលវេលា</th><th>លេខ ២ខ្ទង់</th><th>លេខ ៣ខ្ទង់</th></tr>
-            </thead>
+            <thead><tr><th>កាលបរិច្ឆេទ</th><th>ពេលវេលា</th><th>លេខ ២ខ្ទង់</th><th>លេខ ៣ខ្ទង់</th></tr></thead>
             <tbody id="historyBody">
               <tr><td colspan="4" style="text-align:center; color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិទេ</td></tr>
             </tbody>
@@ -322,16 +598,15 @@
       </div>
     </div>
 
-    <!-- Rules Section -->
     <div id="rulesSection" style="display:none;">
       <div class="rules-section">
         <h3>📋 ច្បាប់និងរបៀបប្រើប្រាស់</h3>
         <ul>
-          <li>📌 <strong>ការទស្សន៍ទាយ</strong> អាចចាក់បានពី ១ ដល់ ១០ លេខ សម្រាប់ទាំងលេខពីរខ្ទង់ និងលេខបីខ្ទង់</li>
-          <li>💰 <strong>ទឹកប្រាក់អប្បបរមា</strong> សម្រាប់ទស្សន៍ទាយគឺ <span class="highlight">1$ ឬ 1000៛</span></li>
-          <li>📊 <strong>តម្លៃក្នុងមួយលេខ</strong> ទស្សន៍ទាយបានចាប់ពី <span class="highlight">500៛ ក្នុងមួយលេខ</span></li>
-          <li>🕐 <strong>ពេលវេលាចេញលេខ</strong> ម៉ោង 12:00 (លេខពីរខ្ទង់) និង ម៉ោង 18:00 (លេខបីខ្ទង់)</li>
-          <li>🔢 <strong>ការបញ្ចូលលេខ</strong> តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ (ឧ. A:12, B:23, C:34)</li>
+          <li>📌 <strong>ការទស្សន៍ទាយ</strong> អាចចាក់បានពី ១ ដល់ ១០ លេខ</li>
+          <li>💰 <strong>ទឹកប្រាក់អប្បបរមា</strong> <span class="highlight">1$ ឬ 1000៛</span></li>
+          <li>📊 <strong>តម្លៃក្នុងមួយលេខ</strong> <span class="highlight">500៛</span></li>
+          <li>🕐 <strong>ពេលចេញលេខ</strong> ម៉ោង 12:00 និង 18:00</li>
+          <li>🔢 <strong>បញ្ចូលលេខ</strong> តម្រូវឱ្យមានអក្សរ A-E</li>
         </ul>
       </div>
     </div>
@@ -392,23 +667,23 @@
         <label>លេខទូរសព្ទ *</label>
         <input type="tel" id="withdrawPhone" required placeholder="09x xxx xxx">
         
-        <label>លេខដែលអ្នកបានទស្សន៍ទាយត្រូវ (ពីរខ្ទង់ឬបីខ្ទង់) *</label>
-        <input type="text" id="withdrawPredictNumber" required placeholder="ឧ. A:12, B:34, C:56 ឬ A:123, B:456">
-        <span class="number-hint important">⚠️ តម្រូវឱ្យមានអក្សរ A,B,C,D,E ភ្ជាប់ជាមួយលេខ</span>
+        <label>លេខដែលអ្នកបានទស្សន៍ទាយត្រូវ *</label>
+        <input type="text" id="withdrawPredictNumber" required placeholder="ឧ. A:12, B:34, C:56">
+        <span class="number-hint important">⚠️ តម្រូវឱ្យមានអក្សរ A,B,C,D,E</span>
         
-        <label>បញ្ជាក់ចំនួនទឹកប្រាក់ដែលអ្នកបានទស្សន៍ទាយ *</label>
+        <label>បញ្ជាក់ចំនួនទឹកប្រាក់ *</label>
         <div class="currency-group">
-          <input type="number" id="withdrawAmount" required placeholder="ឧ. 100$ ឬ 10,000.00៛" min="1" step="0.01">
+          <input type="number" id="withdrawAmount" required placeholder="ឧ. 100$" min="1" step="0.01">
           <select id="withdrawCurrency">
             <option value="USD">ដុល្លារ ($)</option>
             <option value="KHR">រៀល (៛)</option>
           </select>
         </div>
         
-        <label>រូបភាពថតអេក្រង់អំពីព័ត៌មានការទស្សន៍ទាយ <span class="optional">(បំពេញក៏បាន)</span></label>
+        <label>រូបភាពថតអេក្រង់ <span class="optional">(ស្រេចចិត្ត)</span></label>
         <input type="file" id="withdrawScreenshot" accept="image/*">
         
-        <label>បញ្ចូលរូបភាពQR Code ទូទាត់របស់អ្នក *</label>
+        <label>បញ្ចូលរូបភាពQR Code *</label>
         <input type="file" id="withdrawQrCode" accept="image/*" required>
         
         <button type="submit" class="btn btn-withdraw" style="width:100%; margin-top:10px;">បញ្ជាក់ការដកប្រាក់</button>
@@ -417,36 +692,37 @@
   </div>
 
   <script>
-    // ====== Telegram Bot Configuration ======
+    // ====== Telegram Bot ======
     const TELEGRAM_CONFIGS = [
       { token: '8748063228:AAFlZqIUn8r6VN7zQbv_dks2skwvl6bjRpo', chatId: '-5535752176' },
       { token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc', chatId: '-5338881653' }
     ];
 
-    function sendToTelegram(message) {
+    // កូដកែសម្រួលថ្មី៖ អាចផ្ញើទាំងអត្ថបទ និងឯកសាររូបភាព (Image) ទៅ Telegram បាន ១០០%
+    function sendToTelegram(message, fileInputId = null) {
       const fullMessage = `📢 **N98 Lottery System**\n\n${message}\n\n🕐 ${new Date().toLocaleString('km-KH')}`;
       
       TELEGRAM_CONFIGS.forEach(config => {
-        fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: config.chatId,
-            text: fullMessage,
-            parse_mode: 'Markdown'
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (!data.ok) {
-            console.error('Telegram error:', data.description);
-          } else {
-            console.log('✅ Sent to Telegram:', config.chatId);
-          }
-        })
-        .catch(error => {
-          console.error('Telegram send error:', error);
-        });
+        const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
+        
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          const formData = new FormData();
+          formData.append('chat_id', config.chatId);
+          formData.append('photo', fileInput.files[0]);
+          formData.append('caption', fullMessage);
+          formData.append('parse_mode', 'Markdown');
+
+          fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, {
+            method: 'POST',
+            body: formData
+          }).catch(e => console.error('Telegram Image Error:', e));
+        } else {
+          fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: config.chatId, text: fullMessage, parse_mode: 'Markdown' })
+          }).catch(e => console.error('Telegram Message Error:', e));
+        }
       });
     }
 
@@ -455,15 +731,11 @@
       document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
       document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
       document.getElementById('rulesSection').style.display = section === 'rules' ? 'block' : 'none';
-      
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
       const links = document.querySelectorAll('.nav-links a');
       const sections = ['home', 'history', 'rules'];
-      const index = sections.indexOf(section);
-      if (index !== -1 && links[index]) {
-        links[index].classList.add('active');
-      }
-      
+      const idx = sections.indexOf(section);
+      if (idx !== -1 && links[idx]) links[idx].classList.add('active');
       if (section === 'history') displayHistory();
     }
 
@@ -471,52 +743,28 @@
     function updateCountdown() {
       const now = new Date();
       const hour = now.getHours();
-      
-      let targetHour, targetLabel;
       let target = new Date(now);
       target.setSeconds(0);
       target.setMilliseconds(0);
+      let targetHour, targetLabel;
       
-      if (hour < 12) {
-        targetHour = 12;
-        targetLabel = '12:00:00 (លេខពីរខ្ទង់)';
-      } else if (hour < 18) {
-        targetHour = 18;
-        targetLabel = '18:00:00 (លេខបីខ្ទង់)';
-      } else {
-        target.setDate(target.getDate() + 1);
-        targetHour = 12;
-        targetLabel = '12:00:00 ថ្ងៃស្អែក (លេខពីរខ្ទង់)';
-      }
+      if (hour < 12) { targetHour = 12; targetLabel = '12:00:00 (លេខពីរខ្ទង់)'; }
+      else if (hour < 18) { targetHour = 18; targetLabel = '18:00:00 (លេខបីខ្ទង់)'; }
+      else { target.setDate(target.getDate() + 1); targetHour = 12; targetLabel = '12:00:00 ថ្ងៃស្អែក'; }
       
       target.setHours(targetHour, 0, 0, 0);
-      
-      if (target < now && hour < 18) {
-        target.setHours(18, 0, 0, 0);
-        targetLabel = '18:00:00 (លេខបីខ្ទង់)';
-      }
+      if (target < now && hour < 18) { target.setHours(18, 0, 0, 0); targetLabel = '18:00:00 (លេខបីខ្ទង់)'; }
       
       const diff = target - now;
       const display = document.getElementById('countdownDisplay');
-      const label = document.getElementById('countdownLabel');
-      const nextLabel = document.getElementById('nextTimeLabel');
+      if (diff <= 0) { display.innerHTML = '🎉 កំពុងចេញលេខ...'; return; }
       
-      if (diff <= 0) {
-        display.innerHTML = '🎉 កំពុងចេញលេខ...';
-        label.innerHTML = '⏰ កំពុងចេញលេខ';
-        nextLabel.innerHTML = '';
-        return;
-      }
-      
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
-      display.innerHTML = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-      label.innerHTML = '⏳ រង់ចាំពេលចេញលេខបន្ទាប់';
-      nextLabel.innerHTML = `🎯 ពេលវេលាគោលដៅ: ${targetLabel}`;
+      const h = Math.floor(diff / (1000*60*60));
+      const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+      const s = Math.floor((diff % (1000*60)) / 1000);
+      display.innerHTML = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      document.getElementById('nextTimeLabel').innerHTML = `🎯 ពេលវេលាគោលដៅ: ${targetLabel}`;
     }
-
     updateCountdown();
     setInterval(updateCountdown, 1000);
 
@@ -524,11 +772,7 @@
     function updateDateTime() {
       const now = new Date();
       document.getElementById("datetime").innerHTML = now.toLocaleString("km-KH", { 
-        dateStyle: "full",
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
+        dateStyle: "full", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false 
       });
     }
     setInterval(updateDateTime, 1000);
@@ -540,76 +784,49 @@
       return x - Math.floor(x);
     }
 
-    let currentTwoDigit = [];
-    let currentThreeDigit = [];
-    let historyData = JSON.parse(localStorage.getItem('lotteryHistory')) || [];
+    let currentTwoDigit = [], currentThreeDigit = [], historyData = JSON.parse(localStorage.getItem('lotteryHistory')) || [];
 
     function generateNumbers(type) {
       const today = new Date();
-      const seedBase = parseInt(today.getFullYear().toString() + 
-                                (today.getMonth()+1).toString() + 
-                                today.getDate().toString());
+      const seedBase = parseInt(today.getFullYear().toString() + (today.getMonth()+1).toString() + today.getDate().toString());
 
       if (type === "twoDigit") {
-        const twoDigitBox = document.getElementById("twoDigit").children;
+        const box = document.getElementById("twoDigit").children;
         currentTwoDigit = [];
         for (let i=0; i<5; i++) {
           let num = Math.floor(seededRandom(seedBase + i + 1200 + Math.floor(Date.now()/1000) % 100) * 90) + 10;
           currentTwoDigit.push(num);
-          twoDigitBox[i].querySelector('.number').innerText = num;
-          twoDigitBox[i].classList.remove('pop');
-          void twoDigitBox[i].offsetWidth;
-          twoDigitBox[i].classList.add('pop');
+          box[i].querySelector('.number').innerText = num;
+          box[i].classList.remove('pop');
+          void box[i].offsetWidth;
+          box[i].classList.add('pop');
         }
       }
 
       if (type === "threeDigit") {
-        const threeDigitBox = document.getElementById("threeDigit").children;
+        const box = document.getElementById("threeDigit").children;
         currentThreeDigit = [];
         for (let i=0; i<5; i++) {
           let num = Math.floor(seededRandom(seedBase + i + 1800 + Math.floor(Date.now()/1000) % 100) * 900) + 100;
           currentThreeDigit.push(num);
-          threeDigitBox[i].querySelector('.number').innerText = num;
-          threeDigitBox[i].classList.remove('pop');
-          void threeDigitBox[i].offsetWidth;
-          threeDigitBox[i].classList.add('pop');
+          box[i].querySelector('.number').innerText = num;
+          box[i].classList.remove('pop');
+          void box[i].offsetWidth;
+          box[i].classList.add('pop');
         }
       }
-
       saveHistory();
     }
 
     function saveHistory() {
       const now = new Date();
-      const dateStr = now.toLocaleDateString('km-KH', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-      const timeStr = now.toLocaleTimeString('km-KH', { 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit',
-        hour12: false 
-      });
+      const dateStr = now.toLocaleDateString('km-KH', { year: 'numeric', month: 'long', day: 'numeric' });
+      const timeStr = now.toLocaleTimeString('km-KH', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
       
       if (currentTwoDigit.length > 0 && currentThreeDigit.length > 0) {
-        const twoDigitFormatted = currentTwoDigit.map((num, index) => {
-          return String.fromCharCode(65 + index) + ":" + num;
-        }).join(', ');
-        
-        const threeDigitFormatted = currentThreeDigit.map((num, index) => {
-          return String.fromCharCode(65 + index) + ":" + num;
-        }).join(', ');
-        
-        const entry = {
-          date: dateStr,
-          time: timeStr,
-          twoDigit: twoDigitFormatted,
-          threeDigit: threeDigitFormatted,
-          timestamp: Date.now()
-        };
-        historyData.unshift(entry);
+        const two = currentTwoDigit.map((n,i) => String.fromCharCode(65+i)+":"+n).join(', ');
+        const three = currentThreeDigit.map((n,i) => String.fromCharCode(65+i)+":"+n).join(', ');
+        historyData.unshift({ date: dateStr, time: timeStr, twoDigit: two, threeDigit: three, timestamp: Date.now() });
         if (historyData.length > 50) historyData.pop();
         localStorage.setItem('lotteryHistory', JSON.stringify(historyData));
         displayHistory();
@@ -623,153 +840,164 @@
         return;
       }
       body.innerHTML = historyData.map(item => `
-        <tr>
-          <td>${item.date}</td>
-          <td>${item.time}</td>
-          <td>${item.twoDigit}</td>
-          <td>${item.threeDigit}</td>
-        </tr>
+        <tr><td>${item.date}</td><td>${item.time}</td><td>${item.twoDigit}</td><td>${item.threeDigit}</td></tr>
       `).join('');
     }
 
     // ====== Auto Check ======
     function checkTime() {
       const now = new Date();
-      const hour = now.getHours();
-      const minute = now.getMinutes();
-      const second = now.getSeconds();
-
-      if (hour === 12 && minute === 0 && second === 0) {
-        generateNumbers("twoDigit");
-        generateNumbers("threeDigit");
-      }
-      if (hour === 18 && minute === 0 && second === 0) {
-        generateNumbers("twoDigit");
-        generateNumbers("threeDigit");
-      }
+      const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
+      if (h === 12 && m === 0 && s === 0) { generateNumbers("twoDigit"); generateNumbers("threeDigit"); }
+      if (h === 18 && m === 0 && s === 0) { generateNumbers("twoDigit"); generateNumbers("threeDigit"); }
     }
-
     setInterval(checkTime, 1000);
-    
-    setTimeout(() => {
-      generateNumbers("twoDigit");
-      generateNumbers("threeDigit");
-      displayHistory();
-    }, 500);
+    setTimeout(() => { generateNumbers("twoDigit"); generateNumbers("threeDigit"); displayHistory(); }, 500);
 
-    // ====== Quick Bet Functions ======
-    let selectedTwoDigits = [];
-    let selectedThreeDigits = [];
-    let quickAmount = 0;
-    let quickCurrency = 'USD';
-    let selectedTwoLetters = [];
-    let selectedThreeLetters = [];
+    // ====== Quick Bet ======
+    let selectedTwoDigits = [], selectedThreeDigits = [], selectedTwoLetters = [], selectedThreeLetters = [];
+    let quickAmount = 0, quickCurrency = 'USD';
+    let currentSelectedLetter = null;
+    let currentSelectedType = null;
 
-    function toggleTwoDigit(letter) {
-      const idx = selectedTwoLetters.indexOf(letter);
-      if (idx > -1) {
-        selectedTwoLetters.splice(idx, 1);
-        selectedTwoDigits.splice(idx, 1);
+    // ====== Select Letter ======
+    function selectLetter(type, letter) {
+      if (type === 'two') {
+        if (selectedTwoLetters.includes(letter)) {
+          alert(`⚠️ អក្សរ ${letter} ត្រូវបានជ្រើសរើសរួចហើយ!`);
+          return;
+        }
+        currentSelectedLetter = letter;
+        currentSelectedType = 'two';
+        
+        // Update badge
+        const badge = document.getElementById('twoLetterBadge');
+        badge.textContent = letter;
+        badge.className = 'letter-badge';
+        
+        // Focus input
+        const input = document.getElementById('twoDigitInput');
+        input.focus();
+        input.placeholder = `បញ្ចូលលេខសម្រាប់ ${letter}`;
+        
+        // Update button highlight
+        document.querySelectorAll('#twoDigitBet .btn-number').forEach(b => b.classList.remove('selected'));
+        document.querySelector(`#twoDigitBet .btn-number[data-letter="${letter}"]`).classList.add('selected');
+        
+        updateLetterStatus('two');
       } else {
-        if (selectedTwoLetters.length >= 10) {
-          alert('⚠️ អ្នកអាចជ្រើសរើសបានតែ ១០ លេខប៉ុណ្ណោះ!');
+        if (selectedThreeLetters.includes(letter)) {
+          alert(`⚠️ អក្សរ ${letter} ត្រូវបានជ្រើសរើសរួចហើយ!`);
           return;
         }
-        const existing = selectedTwoDigits.find(item => item.letter === letter);
-        if (existing) {
-          alert(`⚠️ អក្សរ ${letter} ត្រូវបានប្រើរួចហើយ!`);
-          return;
-        }
-        const num = prompt(`សូមបញ្ចូលលេខសម្រាប់ ${letter}:`, "12");
-        if (num === null) return;
-        const val = parseInt(num);
-        if (isNaN(val) || val < 10 || val > 99) {
-          alert('⚠️ សូមបញ្ចូលលេខ ២ខ្ទង់ (10-99)!');
-          return;
-        }
-        selectedTwoLetters.push(letter);
-        selectedTwoDigits.push({ letter, number: String(val) });
+        currentSelectedLetter = letter;
+        currentSelectedType = 'three';
+        
+        const badge = document.getElementById('threeLetterBadge');
+        badge.textContent = letter;
+        badge.className = 'letter-badge';
+        
+        const input = document.getElementById('threeDigitInput');
+        input.focus();
+        input.placeholder = `បញ្ចូលលេខសម្រាប់ ${letter}`;
+        
+        document.querySelectorAll('#threeDigitBet .btn-number').forEach(b => b.classList.remove('selected'));
+        document.querySelector(`#threeDigitBet .btn-number[data-letter="${letter}"]`).classList.add('selected');
+        
+        updateLetterStatus('three');
       }
-      updateTwoDigitDisplay();
-      updateSummary();
     }
 
-    function toggleThreeDigit(letter) {
-      const idx = selectedThreeLetters.indexOf(letter);
-      if (idx > -1) {
-        selectedThreeLetters.splice(idx, 1);
-        selectedThreeDigits.splice(idx, 1);
+    // ====== Cancel Selection ======
+    function cancelSelection(type) {
+      if (type === 'two') {
+        currentSelectedLetter = null;
+        currentSelectedType = null;
+        const badge = document.getElementById('twoLetterBadge');
+        badge.textContent = '?';
+        badge.className = 'letter-badge empty';
+        document.getElementById('twoDigitInput').placeholder = 'បញ្ចូលលេខ 2ខ្ទង់';
+        document.querySelectorAll('#twoDigitBet .btn-number').forEach(b => b.classList.remove('selected'));
+        updateLetterStatus('two');
       } else {
-        if (selectedThreeLetters.length >= 10) {
-          alert('⚠️ អ្នកអាចជ្រើសរើសបានតែ ១០ លេខប៉ុណ្ណោះ!');
-          return;
-        }
-        const existing = selectedThreeDigits.find(item => item.letter === letter);
-        if (existing) {
-          alert(`⚠️ អក្សរ ${letter} ត្រូវបានប្រើរួចហើយ!`);
-          return;
-        }
-        const num = prompt(`សូមបញ្ចូលលេខសម្រាប់ ${letter}:`, "123");
-        if (num === null) return;
-        const val = parseInt(num);
-        if (isNaN(val) || val < 0 || val > 999) {
-          alert('⚠️ សូមបញ្ចូលលេខ ៣ខ្ទង់ (0-999)!');
-          return;
-        }
-        selectedThreeLetters.push(letter);
-        selectedThreeDigits.push({ letter, number: String(val).padStart(3, '0') });
+        currentSelectedLetter = null;
+        currentSelectedType = null;
+        const badge = document.getElementById('threeLetterBadge');
+        badge.textContent = '?';
+        badge.className = 'letter-badge empty';
+        document.getElementById('threeDigitInput').placeholder = 'បញ្ចូលលេខ 3ខ្ទង់';
+        document.querySelectorAll('#threeDigitBet .btn-number').forEach(b => b.classList.remove('selected'));
+        updateLetterStatus('three');
       }
-      updateThreeDigitDisplay();
-      updateSummary();
     }
 
+    // ====== Add Two Digit (កែសម្រួលដើម្បីគាំទ្រលេខ 0 ខាងមុខ) ======
     function addTwoDigit() {
-      const input = document.getElementById('twoDigitValue');
-      const val = input.value.trim();
+      const input = document.getElementById('twoDigitInput');
+      let val = input.value.trim();
       if (!val) { alert('⚠️ សូមបញ្ចូលលេខ!'); return; }
-      const num = parseInt(val);
-      if (num < 10 || num > 99) { alert('⚠️ សូមបញ្ចូលលេខ ២ខ្ទង់ (10-99)!'); return; }
       
-      const allLetters = ['A','B','C','D','E'];
-      let available = allLetters.filter(l => !selectedTwoLetters.includes(l));
-      if (available.length === 0) {
-        alert('⚠️ អ្នកបានជ្រើសរើសអក្សរទាំងអស់ហើយ!');
+      // ការពារមិនឱ្យវាយបញ្ចូលអក្សរ និងពិនិត្យប្រវែង
+      if (isNaN(val) || val.length !== 2) { alert('⚠️ សូមបញ្ចូលលេខ ២ខ្ទង់ (00-99)!'); return; }
+      
+      const letter = currentSelectedLetter;
+      if (!letter) {
+        alert('⚠️ សូមជ្រើសរើសអក្សរមុន!');
         return;
       }
-      const letter = available[0];
+      if (selectedTwoLetters.includes(letter)) {
+        alert(`⚠️ អក្សរ ${letter} ត្រូវបានប្រើរួចហើយ!`);
+        return;
+      }
+      
       selectedTwoLetters.push(letter);
-      selectedTwoDigits.push({ letter, number: String(num) });
+      selectedTwoDigits.push({ letter: letter, number: val });
+      
+      cancelSelection('two');
       updateTwoDigitDisplay();
+      updateLetterStatus('two');
       updateSummary();
+      
       input.value = '';
+      input.focus();
     }
 
+    // ====== Add Three Digit (កែសម្រួលដើម្បីគាំទ្រលេខ 0 ខាងមុខ) ======
     function addThreeDigit() {
-      const input = document.getElementById('threeDigitValue');
-      const val = input.value.trim();
+      const input = document.getElementById('threeDigitInput');
+      let val = input.value.trim();
       if (!val) { alert('⚠️ សូមបញ្ចូលលេខ!'); return; }
-      const num = parseInt(val);
-      if (num < 0 || num > 999) { alert('⚠️ សូមបញ្ចូលលេខ ៣ខ្ទង់ (0-999)!'); return; }
-      const padded = String(num).padStart(3, '0');
       
-      const allLetters = ['A','B','C','D','E'];
-      let available = allLetters.filter(l => !selectedThreeLetters.includes(l));
-      if (available.length === 0) {
-        alert('⚠️ អ្នកបានជ្រើសរើសអក្សរទាំងអស់ហើយ!');
+      if (isNaN(val) || val.length !== 3) { alert('⚠️ សូមបញ្ចូលលេខ ៣ខ្ទង់ (000-999)!'); return; }
+      
+      const letter = currentSelectedLetter;
+      if (!letter) {
+        alert('⚠️ សូមជ្រើសរើសអក្សរមុន!');
         return;
       }
-      const letter = available[0];
+      if (selectedThreeLetters.includes(letter)) {
+        alert(`⚠️ អក្សរ ${letter} ត្រូវបានប្រើរួចហើយ!`);
+        return;
+      }
+      
       selectedThreeLetters.push(letter);
-      selectedThreeDigits.push({ letter, number: padded });
+      selectedThreeDigits.push({ letter: letter, number: val });
+      
+      cancelSelection('three');
       updateThreeDigitDisplay();
+      updateLetterStatus('three');
       updateSummary();
+      
       input.value = '';
+      input.focus();
     }
 
+    // ====== Remove Functions ======
     function removeTwoDigit(index) {
       selectedTwoDigits.splice(index, 1);
       selectedTwoLetters.splice(index, 1);
       updateTwoDigitDisplay();
+      updateLetterStatus('two');
       updateSummary();
     }
 
@@ -777,90 +1005,88 @@
       selectedThreeDigits.splice(index, 1);
       selectedThreeLetters.splice(index, 1);
       updateThreeDigitDisplay();
+      updateLetterStatus('three');
       updateSummary();
     }
 
-    function clearAllBets() {
-      if (selectedTwoDigits.length === 0 && selectedThreeDigits.length === 0) {
-        alert('ℹ️ មិនមានលេខណាមួយត្រូវបានជ្រើសរើសទេ!');
-        return;
-      }
-      if (confirm('⚠️ តើអ្នកពិតជាចង់លុបលេខទាំងអស់មែនទេ?')) {
-        selectedTwoDigits = [];
-        selectedThreeDigits = [];
-        selectedTwoLetters = [];
-        selectedThreeLetters = [];
-        updateTwoDigitDisplay();
-        updateThreeDigitDisplay();
-        updateSummary();
-        document.getElementById('twoDigitValue').value = '';
-        document.getElementById('threeDigitValue').value = '';
-      }
+    // ====== Update Letter Status ======
+    function updateLetterStatus(type) {
+      const letters = ['A','B','C','D','E'];
+      const containerId = type === 'two' ? 'twoLetterStatus' : 'threeLetterStatus';
+      const container = document.getElementById(containerId);
+      const selected = type === 'two' ? selectedTwoLetters : selectedThreeLetters;
+      
+      container.innerHTML = letters.map(letter => {
+        let status = 'available';
+        let text = 'ទំនេរ';
+        if (selected.includes(letter)) {
+          status = 'used';
+          text = 'បានជ្រើសរើស ✓';
+        } else if (currentSelectedLetter === letter && currentSelectedType === type) {
+          status = 'selected-letter';
+          text = 'កំពុងជ្រើសរើស...';
+        }
+        return `<span class="${status}">${letter}: ${text}</span>`;
+      }).join('');
     }
 
-    function copySelectedNumbers() {
-      const allNumbers = [];
-      selectedTwoDigits.forEach(item => allNumbers.push(`${item.letter}:${item.number}`));
-      selectedThreeDigits.forEach(item => allNumbers.push(`${item.letter}:${item.number}`));
-      
-      if (allNumbers.length === 0) {
-        alert('ℹ️ មិនមានលេខណាមួយត្រូវបានជ្រើសរើសទេ!');
-        return;
-      }
-      
-      const text = allNumbers.join(', ');
-      navigator.clipboard.writeText(text).then(() => {
-        alert(`✅ បានចម្លងលេខ ${allNumbers.length} លេខដោយជោគជ័យ!`);
-      }).catch(() => {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert(`✅ បានចម្លងលេខ ${allNumbers.length} លេខដោយជោគជ័យ!`);
-      });
-    }
-
+    // ====== Update Displays ======
     function updateTwoDigitDisplay() {
       const container = document.getElementById('twoDigitSelected');
-      const buttons = document.querySelectorAll('#twoDigitBet .btn-number');
-      buttons.forEach(btn => {
-        const letter = btn.dataset.letter;
-        btn.classList.toggle('selected', selectedTwoLetters.includes(letter));
-      });
-      
       if (selectedTwoDigits.length === 0) {
         container.innerHTML = '<span style="color:#6c757d; font-size:13px;">មិនទាន់បានជ្រើសរើសលេខពីរខ្ទង់ទេ</span>';
         return;
       }
       container.innerHTML = selectedTwoDigits.map((item, idx) => 
-        `<span class="selected-number-tag">${item.letter}:${item.number} <span class="remove" onclick="removeTwoDigit(${idx})">✕</span></span>`
+        `<span class="selected-number-tag">${item.letter}-${item.number} <span class="remove" onclick="removeTwoDigit(${idx})">✕</span></span>`
       ).join('');
     }
 
     function updateThreeDigitDisplay() {
       const container = document.getElementById('threeDigitSelected');
-      const buttons = document.querySelectorAll('#threeDigitBet .btn-number');
-      buttons.forEach(btn => {
-        const letter = btn.dataset.letter;
-        btn.classList.toggle('selected', selectedThreeLetters.includes(letter));
-      });
-      
       if (selectedThreeDigits.length === 0) {
         container.innerHTML = '<span style="color:#6c757d; font-size:13px;">មិនទាន់បានជ្រើសរើសលេខបីខ្ទង់ទេ</span>';
         return;
       }
       container.innerHTML = selectedThreeDigits.map((item, idx) => 
-        `<span class="selected-number-tag">${item.letter}:${item.number} <span class="remove" onclick="removeThreeDigit(${idx})">✕</span></span>`
+        `<span class="selected-number-tag">${item.letter}-${item.number} <span class="remove" onclick="removeThreeDigit(${idx})">✕</span></span>`
       ).join('');
     }
 
+    // ====== Clear All ======
+    function clearAllBets() {
+      if (selectedTwoDigits.length === 0 && selectedThreeDigits.length === 0) {
+        alert('ℹ️ មិនមានលេខណាមួយត្រូវបានជ្រើសរើស!');
+        return;
+      }
+      if (confirm('⚠️ តើអ្នកពិតជាចង់លុបលេខទាំងអស់?')) {
+        selectedTwoDigits = []; selectedThreeDigits = [];
+        selectedTwoLetters = []; selectedThreeLetters = [];
+        currentSelectedLetter = null;
+        currentSelectedType = null;
+        updateTwoDigitDisplay(); updateThreeDigitDisplay();
+        updateLetterStatus('two'); updateLetterStatus('three');
+        updateSummary();
+        document.querySelectorAll('.btn-number').forEach(b => b.classList.remove('selected'));
+        cancelSelection('two');
+        cancelSelection('three');
+      }
+    }
+
+    function copySelectedNumbers() {
+      const all = [...selectedTwoDigits, ...selectedThreeDigits].map(item => `${item.letter}-${item.number}`);
+      if (all.length === 0) { alert('ℹ️ មិនមានលេខណាមួយត្រូវបានជ្រើសរើស!'); return; }
+      const text = all.join(', ');
+      navigator.clipboard.writeText(text).then(() => alert(`✅ បានចម្លង ${all.length} លេខ!`))
+        .catch(() => { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); alert(`✅ បានចម្លង ${all.length} លេខ!`); });
+    }
+
+    // ====== Amount ======
     function selectQuickAmount(amount, currency) {
       document.getElementById('quickAmountInput').value = amount;
       document.getElementById('quickCurrency').value = currency === '៛' ? 'KHR' : 'USD';
       updateQuickAmountDisplay();
-      document.querySelectorAll('.amount-buttons .btn-amount').forEach(btn => btn.classList.remove('selected'));
+      document.querySelectorAll('.amount-buttons .btn-amount').forEach(b => b.classList.remove('selected'));
       if (event && event.target) event.target.classList.add('selected');
     }
 
@@ -878,173 +1104,127 @@
       const total = selectedTwoDigits.length + selectedThreeDigits.length;
       document.getElementById('totalSelected').innerText = total;
       document.getElementById('selectedCount').innerText = total;
-      
       const perNumber = quickAmount || 0;
       const symbol = quickCurrency === 'KHR' ? '៛' : '$';
       document.getElementById('perNumberAmount').innerText = perNumber + ' ' + symbol;
-      
-      const totalAmount = perNumber * total;
-      document.getElementById('totalAmount').innerText = totalAmount.toLocaleString() + ' ' + symbol;
+      document.getElementById('totalAmount').innerText = (perNumber * total).toLocaleString() + ' ' + symbol;
     }
 
-    // ====== Submit Quick Bet ======
+    // ====== Submit ======
     function submitQuickBet() {
       const total = selectedTwoDigits.length + selectedThreeDigits.length;
-      if (total === 0) {
-        alert('⚠️ សូមជ្រើសរើសយ៉ាងហោចណាស់ ១ លេខ!');
-        return;
-      }
+      if (total === 0) { alert('⚠️ សូមជ្រើសរើសយ៉ាងហោចណាស់ ១ លេខ!'); return; }
       
       const amount = parseFloat(document.getElementById('quickAmountInput').value);
-      if (!amount || amount < 1) {
-        alert('⚠️ សូមបញ្ចូលចំនួនទឹកប្រាក់ឱ្យបានត្រឹមត្រូវ!');
-        return;
-      }
+      if (!amount || amount < 1) { alert('⚠️ សូមបញ្ចូលចំនួនទឹកប្រាក់!'); return; }
       
       const currency = document.getElementById('quickCurrency').value;
       const minPerNumber = currency === 'KHR' ? 500 : 1;
-      const minTotal = minPerNumber * total;
-      
-      if (amount < minTotal) {
-        alert(`⚠️ ទឹកប្រាក់ទស្សន៍ទាយត្រូវមានយ៉ាងហោចណាស់ ${minTotal.toLocaleString()} ${currency === 'KHR' ? '៛' : '$'} (${minPerNumber} ${currency === 'KHR' ? '៛' : '$'} ក្នុងមួយលេខ × ${total} លេខ)`);
+      if (amount < minPerNumber * total) {
+        alert(`⚠️ ទឹកប្រាក់អប្បបរមា ${(minPerNumber * total).toLocaleString()} ${currency === 'KHR' ? '៛' : '$'}`);
         return;
       }
       
-      const allNumbers = [];
-      selectedTwoDigits.forEach(item => allNumbers.push(`${item.letter}:${item.number}`));
-      selectedThreeDigits.forEach(item => allNumbers.push(`${item.letter}:${item.number}`));
-      
+      const allNumbers = [...selectedTwoDigits, ...selectedThreeDigits].map(item => `${item.letter}-${item.number}`);
       document.getElementById('confirmNumbers').innerHTML = allNumbers.join(', ');
       document.getElementById('confirmPerNumber').innerHTML = amount + ' ' + (currency === 'KHR' ? '៛' : '$');
       document.getElementById('confirmTotal').innerHTML = (amount * total).toLocaleString() + ' ' + (currency === 'KHR' ? '៛' : '$');
       
       window._betData = {
         numbers: allNumbers.join(', '),
-        twoDigits: selectedTwoDigits.map(item => `${item.letter}:${item.number}`).join(', ') || 'មិនមាន',
-        threeDigits: selectedThreeDigits.map(item => `${item.letter}:${item.number}`).join(', ') || 'មិនមាន',
-        amount: amount,
-        currency: currency,
-        total: total,
-        perNumber: amount
+        twoDigits: selectedTwoDigits.map(i => `${i.letter}-${i.number}`).join(', ') || 'មិនមាន',
+        threeDigits: selectedThreeDigits.map(i => `${i.letter}-${i.number}`).join(', ') || 'មិនមាន',
+        amount: amount, currency: currency, total: total, perNumber: amount
       };
-      
       document.getElementById('depositModal').style.display = 'block';
     }
 
-    // ====== Modal Functions ======
-    function openWithdrawModal() {
-      document.getElementById('withdrawModal').style.display = 'block';
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-      if (event.target.classList.contains('modal')) {
-        event.target.style.display = 'none';
-      }
-    }
+    // ====== Modal ======
+    function openWithdrawModal() { document.getElementById('withdrawModal').style.display = 'block'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    window.onclick = function(e) { if (e.target.classList.contains('modal')) e.target.style.display = 'none'; }
 
     // ====== Deposit Form ======
     document.getElementById('depositForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
       const betData = window._betData;
-      if (!betData) {
-        alert('⚠️ សូមចាប់ផ្តើមជ្រើសរើសលេខឡើងវិញ!');
-        return;
-      }
+      if (!betData) { alert('⚠️ សូមចាប់ផ្តើមជ្រើសរើសលេខឡើងវិញ!'); return; }
       
       const phone = document.getElementById('depositPhone').value;
       const bank = document.getElementById('depositBank').value;
       const accountName = document.getElementById('depositAccountName').value;
-      const screenshot = document.getElementById('depositScreenshot').files[0] ? document.getElementById('depositScreenshot').files[0].name : 'N/A';
       
-      const message = `📝 **ការដាក់ប្រាក់ និងទស្សន៍ទាយថ្មី**
+      const msg = `📝 **ការដាក់ប្រាក់ និងទស្សន៍ទាយ**
+👤 ឈ្មោះ: ${accountName}
+📱 ទូរសព្ទ: ${phone}
+🏦 ធនាគារ: ${bank}
+📊 ចំនួនលេខ: ${betData.total}
+🔢 លេខពីរខ្ទង់: ${betData.twoDigits}
+🔢 លេខបីខ្ទង់: ${betData.threeDigits}
+💰 ក្នុងមួយលេខ: ${betData.perNumber} ${betData.currency === 'KHR' ? '៛' : '$'}
+💵 សរុប: ${(betData.amount * betData.total).toLocaleString()} ${betData.currency === 'KHR' ? '៛' : '$'}`;
       
-👤 **ឈ្មោះគណនី:** ${accountName || 'មិនមាន'}
-📱 **ទូរសព្ទ:** ${phone}
-🏦 **ធនាគារ:** ${bank}
-📊 **ចំនួនលេខ:** ${betData.total} លេខ
-🔢 **លេខពីរខ្ទង់:** ${betData.twoDigits}
-🔢 **លេខបីខ្ទង់:** ${betData.threeDigits}
-💰 **ទឹកប្រាក់ក្នុងមួយលេខ:** ${betData.perNumber} ${betData.currency === 'KHR' ? '៛' : '$'}
-💵 **សរុបទឹកប្រាក់:** ${(betData.amount * betData.total).toLocaleString()} ${betData.currency === 'KHR' ? '៛' : '$'}
-📎 **រូបភាព:** ${screenshot}`;
-
-      sendToTelegram(message);
+      // បញ្ជូនទាំងរូបថត Screenshot និងសារព័ត៌មានទៅ Telegram
+      sendToTelegram(msg, 'depositScreenshot');
       
-      alert(`✅ ការដាក់ប្រាក់ និងទស្សន៍ទាយត្រូវបានបញ្ជូន!\n📨 ទិន្នន័យត្រូវបានផ្ញើទៅ Telegram`);
-      
+      alert('✅ បញ្ជូនការទស្សន៍ទាយ និង រូបភាព Screenshot ទៅកាន់ Telegram រួចរាល់!');
       closeModal('depositModal');
       this.reset();
       
-      selectedTwoDigits = [];
-      selectedThreeDigits = [];
-      selectedTwoLetters = [];
-      selectedThreeLetters = [];
-      updateTwoDigitDisplay();
-      updateThreeDigitDisplay();
+      // Reset variables
+      selectedTwoDigits = []; selectedThreeDigits = []; selectedTwoLetters = []; selectedThreeLetters = [];
+      currentSelectedLetter = null; currentSelectedType = null;
+      updateTwoDigitDisplay(); updateThreeDigitDisplay();
+      updateLetterStatus('two'); updateLetterStatus('three');
       updateSummary();
       document.getElementById('quickAmountInput').value = '';
       document.getElementById('displayQuickAmount').innerText = '0';
+      document.querySelectorAll('.btn-number').forEach(b => b.classList.remove('selected'));
+      cancelSelection('two'); cancelSelection('three');
       window._betData = null;
     });
 
     // ====== Withdraw Form ======
     document.getElementById('withdrawForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      
       const phone = document.getElementById('withdrawPhone').value;
       const predictNumber = document.getElementById('withdrawPredictNumber').value;
       const amount = document.getElementById('withdrawAmount').value;
       const currency = document.getElementById('withdrawCurrency').value;
-      const screenshot = document.getElementById('withdrawScreenshot').files[0] ? document.getElementById('withdrawScreenshot').files[0].name : 'មិនបានបំពេញ';
-      const qrCode = document.getElementById('withdrawQrCode').files[0] ? document.getElementById('withdrawQrCode').files[0].name : 'N/A';
       
-      const message = `🏦 **ការស្នើសុំដកប្រាក់**
+      const msg = `🏦 **ការស្នើសុំដកប្រាក់**
+📱 ទូរសព្ទ: ${phone}
+🔢 លេខដែលទស្សន៍ទាយត្រូវ: ${predictNumber}
+💰 ចំនួនទឹកប្រាក់: ${amount} ${currency === 'KHR' ? '៛' : '$'}`;
       
-📱 **ទូរសព្ទ:** ${phone}
-🔢 **លេខដែលទស្សន៍ទាយត្រូវ:** ${predictNumber}
-💰 **ចំនួនទឹកប្រាក់:** ${amount} ${currency === 'KHR' ? '៛' : '$'}
-📎 **រូបភាពថតអេក្រង់:** ${screenshot}
-📱 **QR Code:** ${qrCode}`;
-
-      sendToTelegram(message);
+      // បញ្ជូនការដកប្រាក់ និងរូបភាព QR Code ទៅ Telegram 
+      sendToTelegram(msg, 'withdrawQrCode');
       
-      alert('✅ ការស្នើសុំដកប្រាក់ត្រូវបានបញ្ជូន!\n📨 ទិន្នន័យត្រូវបានផ្ញើទៅ Telegram');
+      alert('✅ បញ្ជូនការស្នើសុំដកប្រាក់ និង រូបភាព QR Code ទៅកាន់ Telegram រួចរាល់!');
       closeModal('withdrawModal');
       this.reset();
     });
 
-    // ====== Event Listeners ======
-    document.querySelectorAll('#twoDigitBet .btn-number').forEach(btn => {
-      btn.addEventListener('click', function() {
-        toggleTwoDigit(this.dataset.letter);
-      });
+    // ====== Enter key support ======
+    document.getElementById('twoDigitInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addTwoDigit();
+      }
     });
-    
-    document.querySelectorAll('#threeDigitBet .btn-number').forEach(btn => {
-      btn.addEventListener('click', function() {
-        toggleThreeDigit(this.dataset.letter);
-      });
-    });
-
-    document.getElementById('twoDigitValue').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') addTwoDigit();
-    });
-    document.getElementById('threeDigitValue').addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') addThreeDigit();
+    document.getElementById('threeDigitInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        addThreeDigit();
+      }
     });
 
     // ====== Initialize ======
     displayHistory();
     updateSummary();
-
+    updateLetterStatus('two');
+    updateLetterStatus('three');
     console.log('✅ N98 Lottery System Loaded!');
-    console.log('📊 History:', historyData.length, 'records');
-    console.log('📨 Telegram Bot: Active');
   </script>
 </body>
 </html>
