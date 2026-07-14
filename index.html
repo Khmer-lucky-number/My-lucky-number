@@ -11,10 +11,11 @@
 
   <style>
     * { 
-      font-family: 'Kantumruy Pro', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
       box-sizing: border-box; 
+      font-family: 'Kantumruy Pro', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
+      margin:0; padding:0;
     }
-    body { margin:0; padding:0; background:#f0f4f8; }
+    body { background:#f0f4f8; }
     
     header { background:linear-gradient(135deg, #0078D7 0%, #005fa3 100%); color:white; padding:20px; text-align:center; box-shadow:0 4px 15px rgba(0,120,215,0.3); }
     header h1 { font-size:38px; font-weight:bold; margin:10px 0; text-shadow:2px 2px 4px rgba(0,0,0,0.3); letter-spacing:1px; }
@@ -22,9 +23,11 @@
     
     .nav-bar { background:white; padding:12px 20px; display:flex; justify-content:center; align-items:center; box-shadow:0 2px 5px rgba(0,0,0,0.1); position:sticky; top:0; z-index:100; }
     .nav-bar .nav-links { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; align-items:center; }
-    .nav-bar .nav-links a { color:#333; text-decoration:none; font-weight:bold; padding:8px 16px; border-radius:8px; transition:all 0.3s; font-size:14px; cursor:pointer; }
-    .nav-bar .nav-links a:hover { background:#0078D7; color:white; }
+    .nav-bar .nav-links a, .nav-bar .nav-links button { color:#333; text-decoration:none; font-weight:bold; padding:8px 16px; border-radius:8px; transition:all 0.3s; font-size:14px; cursor:pointer; border:none; background:none; }
+    .nav-bar .nav-links a:hover, .nav-bar .nav-links button:hover { background:#0078D7; color:white; }
     .nav-bar .nav-links a.active { background:#0078D7; color:white; box-shadow: 0 4px 8px rgba(0,120,215,0.2); }
+    .btn-nav-share { background: linear-gradient(135deg, #ff9800, #e65100) !important; color: white !important; }
+    .btn-nav-share:hover { opacity: 0.9; transform: translateY(-1px); }
     
     section { padding:15px; max-width:1100px; margin:0 auto; }
 
@@ -80,7 +83,7 @@
     @keyframes blinker { 50% { opacity: 0; } }
     
     .bet-box-container { background: white; border-radius: 16px; padding: 24px; margin: 20px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid #0078D7; }
-    .bet-box-header { border-bottom: 2px solid #f0f4f8; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .bet-box-header { border-bottom: 2px solid #f0f4f8; padding-bottom: 12px; margin-bottom: 20px; }
     .bet-box-header h2 { margin: 0; color: #0078D7; font-size: 22px; font-weight: bold; }
     
     .reward-info-table { width:100%; border-collapse:collapse; margin-bottom:15px; border:1px solid #dee2e6; border-radius:8px; overflow:hidden; }
@@ -141,7 +144,6 @@
     .btn-danger { background:linear-gradient(135deg, #dc3545, #b02a37); }
     .btn-amount { background:#17a2b8; padding:6px 14px; font-size:13px; border-radius:6px; }
     .btn-telegram { background: linear-gradient(135deg, #0088cc, #006699); color: white; }
-    .btn-share { background: linear-gradient(135deg, #ff9800, #e65100); color: white; }
     
     .selected-numbers-display { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; min-height:44px; padding:12px; background:#f8f9fa; border-radius:8px; border:2px dashed #dee2e6; align-items:center; }
     .selected-number-tag { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:6px 16px; border-radius:20px; font-size:15px; display:inline-flex; align-items:center; gap:10px; font-weight:bold; box-shadow:0 2px 8px rgba(0,120,215,0.2); }
@@ -167,8 +169,8 @@
     .alert-message { font-size: 15px; color: #4a5568; margin-bottom: 20px; line-height: 1.5; }
     
     .history-table { width:100%; border-collapse:collapse; margin-top:8px; border-radius:8px; overflow:hidden; }
-    .history-table th { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:8px; font-size:14px; text-align:center; }
-    .history-table td { padding:6px 8px; font-size:13px; text-align:center; border-bottom:1px solid #dee2e6; }
+    .history-table th { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:10px 8px; font-size:14px; text-align:center; }
+    .history-table td { padding:10px 8px; font-size:13px; text-align:center; border-bottom:1px solid #dee2e6; }
     .history-table tr:nth-child(even) { background:#f8f9fa; }
     
     .rules-section { background:white; padding:25px; border-radius:12px; margin-top:15px; border:1px solid #dee2e6; box-shadow:0 2px 10px rgba(0,0,0,0.05); }
@@ -205,6 +207,8 @@
       <a href="#" class="active" id="link-home" onclick="showSection('home')">🏠 ទំព័រដើម</a>
       <a href="#" id="link-history" onclick="showSection('history')">📊 ប្រវត្តិលទ្ធផល</a>
       <a href="#" id="link-rules" onclick="showSection('rules')">📋 ច្បាប់និងរបៀបប្រើប្រាស់</a>
+      <!-- ប៊ូតុងចែករំលែកតំណភ្ជាប់ ប្តូរមកដាក់នៅលើក្បែរច្បាប់និងរបៀបប្រើប្រាស់ -->
+      <button class="btn-nav-share" onclick="copyWebsiteLink()">🔗 ចែករំលែកគេហទំព័រ</button>
     </div>
   </nav>
 
@@ -235,6 +239,7 @@
       <div class="next-time" id="nextTimeLabel">🎯 កំពុងគណនា...</div>
     </div>
 
+    <!-- Home Section -->
     <div id="homeSection">
       <!-- 12:00 Result -->
       <div class="lottery-box">
@@ -264,8 +269,6 @@
       <div class="bet-box-container">
         <div class="bet-box-header">
           <h2>🎯 បន្ទប់ផ្សងសំណាងរហ័ស (A, B, C, D, E)</h2>
-          <!-- ប៊ូតុងចែករំលែកតំណភ្ជាប់ -->
-          <button class="btn btn-share" onclick="copyWebsiteLink()">🔗 ចែករំលែកគេហទំព័រ</button>
         </div>
 
         <table class="reward-info-table">
@@ -376,10 +379,21 @@
     <div id="historySection" style="display:none;">
       <div class="lottery-box">
         <div class="time-box">📊 ប្រវត្តិលទ្ធផលដែលបានចេញ</div>
-        <table class="history-table">
-          <thead><tr><th>កាលបរិច្ឆេទ</th><th>ពេលវេលា</th><th>លេខ ២ខ្ទង់</th><th>លេខ ៣ខ្ទង់</th></tr></thead>
-          <tbody id="historyBody"></tbody>
-        </table>
+        <div style="overflow-x:auto; margin-top:10px;">
+          <table class="history-table">
+            <thead>
+              <tr style="background: linear-gradient(135deg, #0078D7, #005fa3);">
+                <th>កាលបរិច្ឆេទ</th>
+                <th>ប៉ុស្តិ៍</th>
+                <th>លទ្ធផលវេន ១២:០០ (២ខ្ទង់)</th>
+                <th>លទ្ធផលវេន ១៦:០០ (៣ខ្ទង់)</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody">
+              <!-- កូដ JavaScript នឹងបញ្ចូលប្រវត្តិ ៧ថ្ងៃនៅទីនេះដោយស្វ័យប្រវត្ត -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -391,7 +405,7 @@
         <h4>១. ប្រភេទឆ្នោត និងដែនកំណត់ផ្សងសំណាង</h4>
         <ul>
           <li><strong>ការជ្រើសរើសដោយដៃ៖</strong> អតិថិជនមានសិទ្ធិជ្រើសរើសប្រភេទលេខ ២ខ្ទង់ ឬ ៣ខ្ទង់ និងប៉ុស្តិ៍អក្សរ (A, B, C, D, E) ដោយខ្លួនឯងគ្រប់ពេលវេលាដោយសេរី។</li>
-          <li><strong>ដែនកំណត់ចំនួនលេខ៖</strong> ការផ្ញើវិក្កយបត្រម្តង អាចជ្រើសរើសបានយ៉ាងច្រើនបំផុតចំនួន ១០ លេខ។</li>
+          <li><strong>ដែនកំណត់ចំនួនលេខ៖</strong> การផ្ញើវិក្កយបត្រម្តង អាចជ្រើសរើសបានយ៉ាងច្រើនបំផុតចំនួន ១០ លេខ។</li>
           <li><strong>ដែនកំណត់ទឹកប្រាក់៖</strong> ទឹកប្រាក់ចាក់អប្បបរមាគឺ ១,០០០៛ ឬ ០.២៥$ និងអតិបរមាមិនឱ្យលើសពី ៤០,០០០៛ ឬ ១០$ ក្នុងមួយលេខឡើយ ដើម្បីធានាសុវត្ថិភាពហិរញ្ញវត្ថុ។</li>
         </ul>
 
@@ -410,7 +424,7 @@
 
         <h4>៤. គោលការណ៍តម្លាភាព និងការគាំទ្រ</h4>
         <ul>
-          <li>រាល់ការឈ្នះរង្វាន់ទាំងអស់ត្រូវបានផ្ទៀងផ្ទាត់ដោយប្រព័ន្ធស្វ័យប្រវត្តិតាមរយៈបច្ចេកវិទ្យា Seeded-Random មិនមានការកែបន្លំឡើយ។</li>
+          <li>រាល់ការឈ្នះរង្វាន់ទាំងអស់ត្រូវបានផ្ទៀងផ្ទាត់ដោយប្រព័ន្ធស្វ័យប្រវត្តិតាមរយៈបច្គេកវិទ្យា Seeded-Random មិនមានការកែបន្លំឡើយ។</li>
           <li>ករណីមានចម្ងល់ ឬបញ្ហាបច្ចេកទេសទាក់ទងនឹងការដាក់-ដកប្រាក់ លោកអ្នកអាចចុចប៊ូតុង **"ទាក់ទងអ្នកគ្រប់គ្រងការទូទាត់"** ដើម្បីជជែកផ្ទាល់ជាមួយភ្នាក់ងារតាមតេឡេក្រាម។</li>
         </ul>
       </div>
@@ -565,7 +579,12 @@
       document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
       document.getElementById('rulesSection').style.display = section === 'rules' ? 'block' : 'none';
       document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      document.getElementById(`link-${section}`).classList.add('active');
+      const activeLink = document.getElementById(`link-${section}`);
+      if(activeLink) activeLink.classList.add('active');
+
+      if (section === 'history') {
+        renderGlobalHistoryResults();
+      }
     }
 
     function setBetType(type) {
@@ -695,7 +714,6 @@
 
     function submitQuickBet() {
       const now = new Date();
-      // ពិនិត្យលក្ខខណ្ឌម៉ោងទូទាត់មុនពេលអនុញ្ញាតឱ្យចាក់
       if (now.getHours() < 12 || now.getHours() >= 22) {
         showCustomAlert('ប្រព័ន្ធទូទាត់បិទ', '⚠️ ប្រព័ន្ធអនុញ្ញាតឱ្យទូទាត់ចាប់ពីម៉ោង ១២:០០ ថ្ងៃត្រង់ រហូតដល់ម៉ោង ១០:០០ យប់ប៉ុណ្ណោះ! រាល់ការចាក់របស់អ្នកនឹងត្រូវផ្អាកដំណើរការរង់ចាំផ្ទៀងផ្ទាត់ឡើងវិញនៅម៉ោង ០៨:០០ ព្រឹកថ្ងៃបន្ទាប់។', 'error');
         return;
@@ -751,6 +769,45 @@
         return { resTwo, resThree };
     }
 
+    // [មុខងារកែសម្រួល]៖ បង្ហាញប្រវត្តិលទ្ធផលឆ្នោតសាធារណៈថយក្រោយ ៧ ថ្ងៃសម្រាប់មនុស្សគ្រប់គ្នា
+    function renderGlobalHistoryResults() {
+      const tbody = document.getElementById('historyBody');
+      const letters = ['A', 'B', 'C', 'D', 'E'];
+      let html = '';
+
+      for (let i = 0; i < 7; i++) {
+        let d = new Date();
+        d.setDate(d.getDate() - i);
+        const seed = parseInt(d.getFullYear().toString() + (d.getMonth()+1).toString() + d.getDate().toString());
+        const dateStr = d.toLocaleDateString('km-KH', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+        letters.forEach((l, idx) => {
+          let rTwo = Math.floor(seededRandom(seed + idx + 12) * 90) + 10;
+          let rThree = Math.floor(seededRandom(seed + idx + 16) * 900) + 100;
+
+          if (idx === 0) {
+            html += `
+              <tr>
+                <td rowspan="5" style="vertical-align:middle; font-weight:bold; background:#fff;">${dateStr}</td>
+                <td style="font-weight:bold; color:#0078D7; background:#fdfdfd;">ប៉ុស្តិ៍ ${l}</td>
+                <td style="font-size:16px; font-weight:bold; color:#333;">${rTwo}</td>
+                <td style="font-size:16px; font-weight:bold; color:#333;">${rThree}</td>
+              </tr>
+            `;
+          } else {
+            html += `
+              <tr>
+                <td style="font-weight:bold; color:#0078D7; background:#fdfdfd;">ប៉ុស្តិ៍ ${l}</td>
+                <td style="font-size:16px; font-weight:bold; color:#333;">${rTwo}</td>
+                <td style="font-size:16px; font-weight:bold; color:#333;">${rThree}</td>
+              </tr>
+            `;
+          }
+        });
+      }
+      tbody.innerHTML = html;
+    }
+
     function checkWinLossStatuses() {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
       const now = new Date();
@@ -799,7 +856,6 @@
 
     function openWithdrawModal() {
       const now = new Date();
-      // លក្ខខណ្ឌបិទការដកប្រាក់រង្វាន់បន្ទាប់ពីម៉ោង ១០:០០ យប់ និងមុនម៉ោង ១២:០០ ថ្ងៃត្រង់
       if (now.getHours() < 12 || now.getHours() >= 22) {
         showCustomAlert('ប្រព័ន្ធទូទាត់បិទបណ្តោះអាសន្ន', '⚠️ ប្រព័ន្ធដកប្រាក់រង្វាន់ប្រចាំថ្ងៃត្រូវបានបិទបណ្តោះអាសន្នចាប់ពីម៉ោង ១០:០០ យប់ (22:00)! រាល់ការស្នើសុំដកប្រាក់ ឬអតិថិជនដែលខកខានផ្ញើសំណើ នឹងដំណើរការឡើងវិញនៅម៉ោង ០៨:០០ ព្រឹក ថ្ងៃបន្ទាប់។', 'error');
         return;
@@ -846,12 +902,10 @@
       btnSubmit.disabled = false;
     }
 
-    // [មុខងារថ្មី]៖ មុខងារចុចដើម្បីទាក់ទងអ្នកគ្រប់គ្រងតាម Telegram
     function contactAdminTelegram() {
       window.open('https://t.me/Application_Receiving_Officer', '_blank');
     }
 
-    // [មុខងារថ្មី]៖ មុខងារចម្លងតំណភ្ជាប់គេហទំព័រ
     function copyWebsiteLink() {
       const link = 'https://khmer-lucky-number.github.io/My-lucky-number/#';
       navigator.clipboard.writeText(link).then(() => {
