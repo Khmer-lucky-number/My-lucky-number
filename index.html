@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ប្រើប្រាស់ Font Kantumruy Pro ជាគោល */
     * { 
       font-family: 'Kantumruy Pro', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
       box-sizing: border-box; 
@@ -30,14 +29,12 @@
     
     section { padding:15px; max-width:1100px; margin:0 auto; }
 
-    /* Moving Background Animation */
     @keyframes moveBg {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    /* គំនូរជីវចលព្រិចៗនៃដួងតារានិងផ្កាយ */
     @keyframes twinkle {
       0%, 100% { opacity: 0.3; transform: scale(0.8); }
       50% { opacity: 1; transform: scale(1.2); }
@@ -92,17 +89,20 @@
     .reward-info-table td { padding:8px; font-size:13px; text-align:center; font-weight:bold; border:1px solid #dee2e6; }
     .text-respond { color:#d63000; font-weight:bold; }
 
+    /* ប៊ូតុងជ្រើសរើសប្រភេទឆ្នោតដោយដៃ */
+    .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+    .type-btn { flex: 1; padding: 12px; border: 2px solid #dee2e6; background: #fff; font-weight: bold; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.3s; font-size: 15px; }
+    .type-btn.active { border-color: #0078D7; background: #e8f4fd; color: #0078D7; box-shadow: 0 4px 8px rgba(0,120,215,0.15); }
+
     .letter-selector { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
     .letter-circle { width: 55px; height: 55px; border-radius: 50%; border: 3px solid #dee2e6; background: #f8f9fa; color: #333; font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
     .letter-circle:hover { border-color: #0078D7; background: #e8f4fd; transform: scale(1.1); }
     .letter-circle.active { background: linear-gradient(135deg, #0078D7, #005fa3); color: white; border-color: #0078D7; box-shadow: 0 4px 10px rgba(0,120,215,0.3); transform: scale(1.1); }
     
     .input-row { display: flex; gap: 12px; align-items: center; margin-bottom: 15px; background: #f8f9fa; padding: 15px; border-radius: 12px; border: 1px dashed #0078D7; flex-wrap: wrap; }
-    .input-row .auto-target { padding: 10px 15px; border: 2px solid #0078D7; border-radius: 8px; font-size: 15px; font-weight: bold; background: #e8f4fd; color: #0078D7; white-space: nowrap; flex: 0 1 auto; text-align: center; }
     .input-row input { flex: 1 1 200px; padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 15px; font-weight: bold; }
     .input-row input:focus { border-color: #0078D7; outline: none; }
     
-    /* Countdown Box */
     .countdown { 
       background: linear-gradient(135deg, #0a1128, #101f42, #1f3a60, #0a1128); 
       background-size: 300% 300%;
@@ -128,7 +128,6 @@
       text-shadow: 0 0 10px rgba(255, 56, 56, 0.8); position: relative; z-index: 1;
     }
     .countdown .next-time { font-size:15px; color:#a1b0cb; margin-top:10px; font-weight:bold; position: relative; z-index: 1; }
-    .countdown div:first-child { position: relative; z-index: 1; }
     
     .bet-summary { background:linear-gradient(135deg, #f8f9fa, #e9ecef); padding:12px 15px; border-radius:8px; margin:12px 0; border:2px solid #0078D7; }
     .bet-summary-item { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #dee2e6; font-size:15px; }
@@ -188,10 +187,8 @@
       .nav-bar { flex-direction:column; gap:8px; padding:10px; }
       .numbers div { min-width:50px; padding:10px 5px; font-size:14px; }
       .digital-clock-container { flex-direction: column; text-align: center; gap: 10px; padding: 15px; }
-      .clock-date { text-align: center; }
       .input-row { flex-direction: column; align-items: stretch; }
       .input-row input { width: 100%; }
-      .input-row .auto-target { width: 100%; }
       .input-row button { width: 100%; }
     }
   </style>
@@ -216,14 +213,12 @@
         <div class="star star-1"></div>
         <div class="star star-2"></div>
         <div class="star star-3"></div>
-        <div class="star star-4"></div>
-        <div class="star star-5"></div>
       </div>
-      <div style="position: relative; z-index: 1;">
+      <div>
         <div class="clock-title">🕒 ម៉ោងបច្ចុប្បន្ន</div>
         <div class="clock-time" id="widgetTime">00:00:00</div>
       </div>
-      <div style="position: relative; z-index: 1;">
+      <div>
         <div class="clock-date" id="widgetDate">កំពុងរៀបចំ...</div>
         <div style="font-size: 11px; color: #38bdf8; font-weight: bold; margin-top: 3px; animation: blinker 2s infinite;">● ពេលវេលាជាក់ស្តែង (Real-time)</div>
       </div>
@@ -231,13 +226,10 @@
 
     <div class="countdown" id="countdown">
       <div class="stars-bg">
-        <div class="star star-1"></div>
-        <div class="star star-2"></div>
-        <div class="star star-3"></div>
         <div class="star star-4"></div>
         <div class="star star-5"></div>
       </div>
-      <div style="font-size:18px; color:#ff3838; font-weight:bold; text-transform:uppercase; letter-spacing:1px; position: relative; z-index: 1; text-shadow: 0 0 8px rgba(255, 56, 56, 0.4);">⏳ ពេលវេលារង់ចាំលទ្ធផលបន្ទាប់</div>
+      <div style="font-size:18px; color:#ff3838; font-weight:bold; text-transform:uppercase; position: relative; z-index: 1;">⏳ ពេលវេលារង់ចាំលទ្ធផលបន្ទាប់</div>
       <div class="time-display" id="countdownDisplay">--:--:--</div>
       <div class="next-time" id="nextTimeLabel">🎯 កំពុងគណនា...</div>
     </div>
@@ -286,8 +278,15 @@
         <div style="background:#fff5f5; border:1px solid #ffb3b3; padding:10px; border-radius:8px; margin-bottom:15px; text-align:center;">
           <span style="color:#d63000; font-weight:bold; font-size:14px;">⚠️ ដែនកំណត់សុវត្ថិភាព៖ ចាក់បានយ៉ាងច្រើនបំផុត 10$ ឬ 40,000៛ ក្នុងមួយលេខ និងចាក់បានម្តងយ៉ាងច្រើន 10 លេខ។</span>
         </div>
+
+        <!-- [ត្រឡប់មកវិញ]៖ ប្រអប់ជ្រើសរើសប្រភេទឆ្នោតដោយដៃរបស់អតិថិជន -->
+        <p style="color:#6c757d; font-size: 13px; margin: 0 0 5px 0;">💡 ជំហានទី១៖ ជ្រើសរើសប្រភេទលេខឆ្នោតដែលចង់ចាក់៖</p>
+        <div class="type-selector">
+          <button type="button" class="type-btn active" id="btnTypeTwo" onclick="setBetType('two')">🔢 ប្រភេទលេខ ២ ខ្ទង់ (សង 70 ដង)</button>
+          <button type="button" class="type-btn" id="btnTypeThree" onclick="setBetType('three')">🎰 ប្រភេទលេខ ៣ ខ្ទង់ (សង 500 ដង)</button>
+        </div>
         
-        <p style="color:#6c757d; font-size: 13px; margin: 0;">💡 ជំហានទី១៖ ជ្រើសរើសអក្សរ A, B, C, D, E ខាងក្រោម៖</p>
+        <p style="color:#6c757d; font-size: 13px; margin: 0;">💡 ជំហានទី២៖ ជ្រើសរើសអក្សរ A, B, C, D, E ខាងក្រោម៖</p>
         <div class="letter-selector">
           <div class="letter-circle" id="circle_A" onclick="selectLetter('A')">A</div>
           <div class="letter-circle" id="circle_B" onclick="selectLetter('B')">B</div>
@@ -296,9 +295,8 @@
           <div class="letter-circle" id="circle_E" onclick="selectLetter('E')">E</div>
         </div>
 
-        <p style="color:#6c757d; font-size: 13px; margin: 0;">💡 ជំហានទី២៖ បញ្ចូលលេខទស្សន៍ទាយ (ប្រព័ន្ធកំណត់ម៉ោងចេញដោយស្វ័យប្រវត្តិ)៖</p>
+        <p style="color:#6c757d; font-size: 13px; margin: 0;">💡 ជំហានទី៣៖ បញ្ចូលលេខទស្សន៍ទាយរបស់អ្នក៖</p>
         <div class="input-row">
-          <div class="auto-target" id="betTypeDisplay">កំពុងកំណត់...</div>
           <input type="text" id="numberInput" placeholder="ជ្រើសរើសអក្សរខាងលើជាមុនសិន..." disabled>
           <button class="btn btn-primary" id="btnAddNumber" onclick="addBetNumber()" style="margin:0; padding:10px 20px;" disabled>➕ បន្ថែមលេខ</button>
         </div>
@@ -382,25 +380,11 @@
     <div id="rulesSection" style="display:none;">
       <div class="rules-section">
         <h3>📋 ច្បាប់ និងរបៀបប្រើប្រាស់គេហទំព័រ</h3>
-        
         <h4>១. ព័ត៌មានទូទៅអំពីល្បែងផ្សងសំណាង</h4>
         <ul>
-          <li><strong>បន្ទប់ផ្សងសំណាងរហ័ស (A, B, C, D, E)</strong> គឺជាកម្មវិធីជ្រើសរើសលេខផ្សងសំណាងពិតប្រាកដដែលដំណើរការរៀងរាល់ថ្ងៃ។</li>
+          <li><strong>បន្ទប់ផ្សងសំណាងរហ័ស (A, B, C, D, E)</strong> អនុញ្ញាតឱ្យលោកអ្នកជ្រើសរើសប្រភេទលេខ ២ខ្ទង់ ឬ ៣ខ្ទង់ មកចាក់ដោយសេរី។</li>
           <li>លទ្ធផលការផ្សាយឆ្នោតនឹងធ្វើឡើងជាពីរវេន៖ <strong>វេនទី១ (ម៉ោង ១២:០០ ថ្ងៃត្រង់)</strong> សម្រាប់ប្រភេទលេខ ២ខ្ទង់ និង <strong>វេនទី២ (ម៉ោង ១៦:០០ រសៀល)</strong> សម្រាប់ប្រភេទលេខ ៣ខ្ទង់។</li>
-          <li><strong>ច្បាប់ការចាក់៖</strong> ប្រព័ន្ធនឹងកំណត់យកម៉ោងចេញលទ្ធផលបន្ទាប់ដោយស្វ័យប្រវត្តិ។ រាល់ការចាក់របស់អ្នកនឹងត្រូវផ្ទៀងផ្ទាត់នៅពេលដែលម៉ោងគោលដៅបានមកដល់ពិតប្រាកដ។</li>
-          <li><strong>ការទូទាត់ប្រចាំថ្ងៃ៖</strong> ប្រព័ន្ធអនុញ្ញាតឱ្យទូទាត់ប្រាក់ចាក់ និងដកប្រាក់រង្វាន់ចាប់ពីពេលចេញលទ្ធផលរហូតដល់**ម៉ោង ១០:០០ យប់ (22:00)** ជាដាច់ខាត។</li>
-        </ul>
-
-        <h4>២. អត្រាប្រាក់រង្វាន់ (Payout Rates)</h4>
-        <ul>
-          <li><strong>លេខ ២ខ្ទង់ (ផ្សាយម៉ោង ១២:០០)៖</strong> រាល់ការចាក់ត្រូវ ១ ដុល្លារ ($1) នឹងទទួលបានប្រាក់រង្វាន់ត្រឡប់មកវិញ <strong>៧០ ដុល្លារ ($70)</strong>។</li>
-          <li><strong>លេខ ៣ខ្ទង់ (ផ្សាយម៉ោង ១៦:០០)៖</strong> រាល់ការចាក់ត្រូវ ១ ដុល្លារ ($1) នឹងទទួលបានប្រាក់រង្វាន់ត្រឡប់មកវិញ <strong>៥០០ ដុល្លារ ($500)</strong>។</li>
-        </ul>
-
-        <h4>៣. ដែនកំណត់ និងសុវត្ថិភាពហិរញ្ញវត្ថុ (Bet Limits)</h4>
-        <ul>
-          <li><strong>ទឹកប្រាក់ចាក់អតិបរមា៖</strong> អនុញ្ញាតឱ្យចាក់ច្រើនបំផុតត្រឹមតែ <strong>10$</strong> ឬ <strong>40,000៛</strong> ប៉ុណ្ណោះក្នុងមួយលេខចាក់។</li>
-          <li><strong>ចំនូនលេខចាក់អតិបរមា៖</strong> ជ្រើសរើសលេខមកចាក់បានយ៉ាងច្រើនបំផុត <strong>១០ គ្រាប់</strong> ក្នុងការផ្ញើតែមួយដង។</li>
+          <li><strong>ការទូទាត់ប្រចាំថ្ងៃ៖</strong> ប្រព័ន្ធអនុញ្ញាតឱ្យទូទាត់ប្រាក់ចាក់ និងដកប្រាក់រង្វាន់រហូតដល់**ម៉ោង ១០:០០ យប់ (22:00)**។ បន្ទាប់ពីម៉ោងនេះ ប្រព័ន្ធនឹងបិទបណ្តោះអាសន្ន និងដំណើរការឡើងវិញនៅ **ម៉ោង ០៨:០០ ព្រឹក ថ្ងៃបន្ទាប់**។</li>
         </ul>
       </div>
     </div>
@@ -429,8 +413,6 @@
           <option value="ABA">ABA Bank</option>
           <option value="ACLEDA">ACLEDA Bank</option>
           <option value="WING">Wing Bank</option>
-          <option value="CANADIA">Canadia Bank</option>
-          <option value="TRUEMONEY">TrueMoney</option>
         </select>
         
         <label>ឈ្មោះគណនីរបស់អ្នក *</label>
@@ -449,10 +431,11 @@
       <span class="close" onclick="closeModal('withdrawModal')">&times;</span>
       <h2>🏦 ស្នើសុំដកប្រាក់រង្វាន់</h2>
       
+      <!-- កែប្រែការបញ្ជាក់ម៉ោងដំណើរការឡើងវិញត្រង់នេះ -->
       <div class="withdraw-notice-box" id="withdrawSystemNotice">
         <span style="color:#d63000; font-weight:bold; font-size:14px; display:block; margin-bottom:5px;">⚠️ សេចក្តីជូនដំណឹងអំពីលក្ខខណ្ឌដកប្រាក់៖</span>
         <span style="font-size:13px; color:#4a5568; line-height:1.5; display:block;">
-          លោកអ្នកអាចដកប្រាក់បាន លុះត្រាតែ**បានចាក់លេខនៅក្នុងប្រព័ន្ធ និងបានចាក់ត្រូវ (ឈ្នះរង្វាន់)** តែប៉ុណ្ណោះ។ 
+          ប្រព័ន្ធដកប្រាក់រង្វាន់ប្រចាំថ្ងៃនឹងត្រូវ**បិទនៅម៉ោង ១០:០០ យប់ (22:00)** និង**បើកដំណើរការឡើងវិញនៅម៉ោង ០៨:០០ ព្រឹក ថ្ងៃស្អែក**។ សូមប្រាកដថាអ្នកបានចាក់ត្រូវ (ឈ្នះរង្វាន់) នៅក្នុងប្រព័ន្ធមុនពេលផ្ញើសំណើ។
         </span>
       </div>
       
@@ -462,7 +445,6 @@
           <option value="">-- សូមជ្រើសរើសលេខពីប្រវត្តិលេងរបស់អ្នក --</option>
         </select>
         <p style="font-size:12px; color:#28a745; margin:3px 0 10px 0;" id="withdrawSelectedDetails"></p>
-
         <p id="noWinningBetAlert" style="display:none; color:#dc3545; font-weight:bold; font-size:13px; background:#fff0f0; border:1px solid #ffcccc; padding:8px; border-radius:6px; margin:5px 0;">
           ⚠️ សោកស្តាយ! លោកអ្នកមិនមានប្រវត្តិឈ្នះរង្វាន់ដើម្បីធ្វើការដកប្រាក់ឡើយ។
         </p>
@@ -474,25 +456,19 @@
 
         <label>២. លេខទូរសព្ទទំនាក់ទំនងរបស់អ្នក *</label>
         <input type="tel" id="withdrawPhone" required placeholder="09x xxx xxx">
-        
         <label>៣. ធនាគារទទួលប្រាក់រង្វាន់ *</label>
         <select id="withdrawBank" required>
           <option value="">-- សូមជ្រើសរើសធនាគាររបស់អ្នក --</option>
           <option value="ABA">ABA Bank</option>
           <option value="ACLEDA">ACLEDA Bank</option>
           <option value="WING">Wing Bank</option>
-          <option value="CANADIA">Canadia Bank</option>
-          <option value="TRUEMONEY">TrueMoney</option>
         </select>
-
-        <label>៤. លេខគណនីធនាគារទទួលប្រាក់ (ប្រសិនបើមាន)</label>
+        <label>៤. លេខគណនីធនាគារទទួលប្រាក់</label>
         <input type="text" id="withdrawAccNo" placeholder="ឧ. 000 123 456">
-
-        <label>៥. ឈ្មោះគណនីធនាគារជាអក្សរឡាតាំង (ប្រសិនបើមាន)</label>
+        <label>៥. ឈ្មោះគណនីធនាគារ</label>
         <input type="text" id="withdrawAccName" placeholder="ឧ. KONG SOVAN">
-
-        <label>៦. រូបថត QR Code គណនីធនាគាររបស់អ្នក (ដើម្បីទទួលប្រាក់) *</label>
-        <input type="file" id="withdrawQrCode" accept="image/*" required style="padding: 5px;">
+        <label>៦. រូបថត QR Code គណនីធនាគាររបស់អ្នក *</label>
+        <input type="file" id="withdrawQrCode" accept="image/*" required>
         
         <button type="submit" class="btn btn-withdraw" id="btnSubmitWithdraw" style="width:100%; margin-top:15px; padding:12px; font-size:16px;">🚀 ផ្ញើសំណើដកប្រាក់រង្វាន់</button>
       </form>
@@ -518,10 +494,7 @@
     let winning_two_digit = {};
     let winning_three_digit = {};
 
-    let currentNextDrawType = 'two';
-    let currentNextDrawTime = 0;
-    let currentNextDrawLabel = '';
-
+    let currentBetType = 'two'; // កំណត់លំនាំដើមជាប្រភេទលេខ ២ខ្ទង់
     let selectedLetter = '';
     let betNumbers = [];
     let quickAmount = 0;
@@ -569,55 +542,36 @@
       document.getElementById(`link-${section}`).classList.add('active');
     }
 
-    // Auto update dynamic target settings for bets based on current hour
-    function updateNextDrawSettings() {
-      const now = new Date();
-      const hour = now.getHours();
-      let drawDate = new Date(now);
+    // មុខងារជ្រើសរើសប្រភេទឆ្នោតដោយដៃ
+    function setBetType(type) {
+      currentBetType = type;
+      document.getElementById('btnTypeTwo').classList.toggle('active', type === 'two');
+      document.getElementById('btnTypeThree').classList.toggle('active', type === 'three');
       
-      if (hour < 12) {
-          drawDate.setHours(12, 0, 0, 0);
-          currentNextDrawType = 'two';
-          currentNextDrawLabel = 'ម៉ោង 12:00 ថ្ងៃនេះ';
-      } else if (hour < 16) {
-          drawDate.setHours(16, 0, 0, 0);
-          currentNextDrawType = 'three';
-          currentNextDrawLabel = 'ម៉ោង 16:00 ថ្ងៃនេះ';
-      } else {
-          drawDate.setDate(drawDate.getDate() + 1);
-          drawDate.setHours(12, 0, 0, 0);
-          currentNextDrawType = 'two';
-          currentNextDrawLabel = 'ម៉ោង 12:00 ថ្ងៃស្អែក';
-      }
+      // លុបអក្សរដែលបានរើសចោលសិន ដើម្បីឱ្យអតិថិជនរើសអក្សរឡើងវិញត្រូវនឹងប្រភេទ
+      selectedLetter = '';
+      document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
       
-      currentNextDrawTime = drawDate.getTime();
-      const displayObj = document.getElementById('betTypeDisplay');
-      if (displayObj) {
-          displayObj.innerHTML = currentNextDrawType === 'two' ? 
-              `លេខ ២ខ្ទង់ (សម្រាប់ ${currentNextDrawLabel})` : 
-              `លេខ ៣ខ្ទង់ (សម្រាប់ ${currentNextDrawLabel})`;
-      }
-      adjustInputLength();
+      const input = document.getElementById('numberInput');
+      input.disabled = true;
+      input.value = '';
+      input.placeholder = 'ជ្រើសរើសអក្សរខាងលើជាមុនសិន...';
+      document.getElementById('btnAddNumber').disabled = true;
     }
 
     function selectLetter(letter) {
       selectedLetter = letter;
       document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
       document.getElementById(`circle_${letter}`).classList.add('active');
+      
       const input = document.getElementById('numberInput');
       input.disabled = false;
       document.getElementById('btnAddNumber').disabled = false;
-      adjustInputLength();
-      input.focus();
-    }
-
-    function adjustInputLength() {
-      const input = document.getElementById('numberInput');
-      const reqLen = currentNextDrawType === 'two' ? 2 : 3;
+      
+      const reqLen = currentBetType === 'two' ? 2 : 3;
       input.maxLength = reqLen;
-      if (!input.disabled) {
-          input.placeholder = `បញ្ចូលលេខ ${reqLen}ខ្ទង់ សម្រាប់អក្សរ ${selectedLetter}`;
-      }
+      input.placeholder = `បញ្ចូលលេខ ${reqLen}ខ្ទង់ សម្រាប់អក្សរ ${selectedLetter}`;
+      input.focus();
     }
 
     function addBetNumber() {
@@ -626,19 +580,38 @@
 
       const input = document.getElementById('numberInput');
       const value = input.value.trim();
-      const reqLen = currentNextDrawType === 'two' ? 2 : 3;
+      const reqLen = currentBetType === 'two' ? 2 : 3;
 
       if (!value || isNaN(value) || value.length !== reqLen) {
         showCustomAlert('បញ្ចូលលេខខុស', `⚠️ សូមបញ្ចូលលេខឱ្យបាន ${reqLen} ខ្ទង់!`, 'error');
         return;
       }
 
+      // គណនាម៉ោងរង់ចាំចេញលទ្ធផលរបស់លេខនេះ
+      const now = new Date();
+      let drawDate = new Date(now);
+      let targetLabel = '';
+      
+      if (currentBetType === 'two') {
+        if (now.getHours() < 12) {
+          drawDate.setHours(12, 0, 0, 0); targetLabel = 'ម៉ោង 12:00 ថ្ងៃនេះ';
+        } else {
+          drawDate.setDate(drawDate.getDate() + 1); drawDate.setHours(12, 0, 0, 0); targetLabel = 'ម៉ោង 12:00 ថ្ងៃស្អែក';
+        }
+      } else {
+        if (now.getHours() < 16) {
+          drawDate.setHours(16, 0, 0, 0); targetLabel = 'ម៉ោង 16:00 ថ្ងៃនេះ';
+        } else {
+          drawDate.setDate(drawDate.getDate() + 1); drawDate.setHours(16, 0, 0, 0); targetLabel = 'ម៉ោង 16:00 ថ្ងៃស្អែក';
+        }
+      }
+
       betNumbers.push({ 
           letter: selectedLetter, 
           number: value, 
-          type: currentNextDrawType,
-          drawTime: currentNextDrawTime,
-          drawLabel: currentNextDrawLabel
+          type: currentBetType,
+          drawTime: drawDate.getTime(),
+          drawLabel: targetLabel
       });
       
       input.value = '';
@@ -661,7 +634,7 @@
         return;
       }
       container.innerHTML = betNumbers.map((item, idx) => 
-        `<span class="selected-number-tag">${item.letter}-${item.number} <span class="remove" onclick="removeBet(${idx})">✕</span></span>`
+        `<span class="selected-number-tag">${item.letter}-${item.number} (${item.type === 'two' ? '2ខ្ទង់':'3ខ្ទង់'}) <span class="remove" onclick="removeBet(${idx})">✕</span></span>`
       ).join('');
     }
 
@@ -679,16 +652,11 @@
       const warning = document.getElementById('limitWarning');
 
       if (quickCurrency === 'USD' && amount > 10) {
-        warning.style.display = 'block';
-        quickAmount = 10;
-        document.getElementById('quickAmountInput').value = 10;
+        warning.style.display = 'block'; quickAmount = 10; document.getElementById('quickAmountInput').value = 10;
       } else if (quickCurrency === 'KHR' && amount > 40000) {
-        warning.style.display = 'block';
-        quickAmount = 40000;
-        document.getElementById('quickAmountInput').value = 40000;
+        warning.style.display = 'block'; quickAmount = 40000; document.getElementById('quickAmountInput').value = 40000;
       } else {
-        warning.style.display = 'none';
-        quickAmount = amount;
+        warning.style.display = 'none'; quickAmount = amount;
       }
       updateSummary();
     }
@@ -704,7 +672,7 @@
 
     function submitQuickBet() {
       if (betNumbers.length === 0 || quickAmount <= 0) return;
-      const all = betNumbers.map(i => `${i.letter}-${i.number}`).join(', ');
+      const all = betNumbers.map(i => `${i.letter}-${i.number}(${i.type==='two'?'2X':'3X'})`).join(', ');
       const sym = quickCurrency === 'KHR' ? '៛' : '$';
       
       document.getElementById('confirmNumbers').innerText = all;
@@ -741,13 +709,11 @@
       checkWinLossStatuses();
     }
 
-    // Generator function for retrieving results based on a specific date object/timestamp
     function getResultsForDate(timestamp) {
         const drawDate = new Date(timestamp);
         const seed = parseInt(drawDate.getFullYear().toString() + (drawDate.getMonth()+1).toString() + drawDate.getDate().toString());
         const letters = ['A','B','C','D','E'];
-        let resTwo = {};
-        let resThree = {};
+        let resTwo = {}; let resThree = {};
         letters.forEach((l, idx) => {
             resTwo[l] = String(Math.floor(seededRandom(seed + idx + 12) * 90) + 10);
             resThree[l] = String(Math.floor(seededRandom(seed + idx + 16) * 900) + 100);
@@ -761,27 +727,17 @@
       let updated = false;
 
       history.forEach(bet => {
-        if (bet.status === 'pending') {
-          // Check if current time has passed the target draw time of the bet
-          if (now.getTime() >= bet.targetDrawTime) {
-              const results = getResultsForDate(bet.targetDrawTime);
-              let isWin = false;
-              
-              if (bet.type === 'two') {
-                  isWin = (String(results.resTwo[bet.letter]) === String(bet.number));
-              } else if (bet.type === 'three') {
-                  isWin = (String(results.resThree[bet.letter]) === String(bet.number));
-              }
-              
-              bet.status = isWin ? 'win' : 'loss';
-              updated = true;
-          }
+        if (bet.status === 'pending' && now.getTime() >= bet.targetDrawTime) {
+            const results = getResultsForDate(bet.targetDrawTime);
+            let isWin = false;
+            if (bet.type === 'two') isWin = (String(results.resTwo[bet.letter]) === String(bet.number));
+            else if (bet.type === 'three') isWin = (String(results.resThree[bet.letter]) === String(bet.number));
+            bet.status = isWin ? 'win' : 'loss';
+            updated = true;
         }
       });
 
-      if (updated) {
-        localStorage.setItem('user_bet_history', JSON.stringify(history));
-      }
+      if (updated) localStorage.setItem('user_bet_history', JSON.stringify(history));
       renderUserBetHistory();
     }
 
@@ -794,20 +750,15 @@
       }
 
       tbody.innerHTML = history.slice().reverse().map(item => {
-        let statusHtml = '';
-        if (item.status === 'win') statusHtml = `<span class="status-badge status-win">🎉 ឈ្នះរង្វាន់</span>`;
-        else if (item.status === 'loss') statusHtml = `<span class="status-badge status-loss">❌ មិនត្រូវ</span>`;
-        else statusHtml = `<span class="status-badge status-pending">⏳ រង់ចាំលទ្ធផល</span>`;
-
-        const typeLabel = item.type === 'two' ? '២ខ្ទង់' : '៣ខ្ទង់';
-        const targetLabelInfo = item.targetDrawLabel ? `<br><span style="font-size:11px; color:#6c757d;">(${item.targetDrawLabel})</span>` : '';
-
+        let statusHtml = item.status === 'win' ? `<span class="status-badge status-win">🎉 ឈ្នះរង្វាន់</span>` : 
+                          (item.status === 'loss' ? `<span class="status-badge status-loss">❌ មិនត្រូវ</span>` : 
+                          `<span class="status-badge status-pending">⏳ រង់ចាំលទ្ធផល</span>`);
         return `
           <tr>
             <td>${item.time}</td>
             <td style="color:#5a32a3; font-weight:bold;">${item.phone || '-'}</td>
             <td style="color:#0078D7; font-weight:bold;">${item.num}</td>
-            <td>${typeLabel}${targetLabelInfo}</td>
+            <td>${item.type === 'two' ? '២ខ្ទង់' : '៣ខ្ទង់'}<br><span style="font-size:11px; color:#6c757d;">(${item.targetDrawLabel})</span></td>
             <td>${item.cost}</td>
             <td>${statusHtml}</td>
             <td style="color:#28a745; font-weight:bold;">${item.win}</td>
@@ -818,8 +769,9 @@
 
     function openWithdrawModal() {
       const now = new Date();
+      // [កែប្រែ]៖ បន្ថែមការបញ្ជាក់ម៉ោងដំណើរការឡើងវិញនៅក្នុង Message Box ព្រមានពេលប្រព័ន្ធបិទ
       if (now.getHours() >= 22) {
-        showCustomAlert('ប្រព័ន្ធទូទាត់បិទ', '⚠️ ប្រព័ន្ធទូទាត់ និងដកប្រាក់រង្វាន់ប្រចាំថ្ងៃត្រូវបានបិទនៅម៉ោង ១០:០០ យប់ហើយ! រាល់ការស្នើសុំដកប្រាក់ពេលនេះត្រូវបានចាត់ទុកជាមោឃៈសម្រាប់ថ្ងៃនោះ។', 'error');
+        showCustomAlert('ប្រព័ន្ធទូទាត់បិទ', '⚠️ ប្រព័ន្ធទូទាត់ និងដកប្រាក់រង្វាន់ប្រចាំថ្ងៃត្រូវបានបិទនៅម៉ោង ១០:០០ យប់ហើយ! រាល់ការស្នើសុំដកប្រាក់នឹងបើកដំណើរការជូនវិញនៅម៉ោង ០៨:០០ ព្រឹក ថ្ងៃស្អែក។', 'error');
         return;
       }
 
@@ -842,16 +794,12 @@
         btnSubmit.disabled = false;
       } else {
         noWinningAlert.style.display = 'block';
-        const option = document.createElement('option');
-        option.value = ""; option.text = "⚠️ គ្មានប្រវត្តិលេខត្រូវឆ្នោតដែលអាចដកបានទេ"; option.disabled = true;
-        select.appendChild(option);
         btnSubmit.disabled = true; 
       }
 
       document.getElementById('withdrawForm').reset();
       document.getElementById('withdrawSelectedDetails').innerText = '';
       document.getElementById('payoutRewardDisplay').innerText = '0.00';
-      document.getElementById('withdrawSelectBet').disabled = false;
       document.getElementById('withdrawModal').style.display = 'block';
     }
 
@@ -876,14 +824,13 @@
       const name = document.getElementById('depositAccountName').value;
       const sym = data.currency === 'KHR' ? '៛' : '$';
 
-      const msg = `📥 **ការចាក់ឆ្នោតថ្មី (N98)**\n👤 ឈ្មោះ: ${name}\n📱 ទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់ក្នុង១លេខ: ${data.amount} ${sym}\n💰 សរុបទឹកប្រាក់រួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}\n🎯 សម្រាប់: ${data.list[0].drawLabel}`;
+      const msg = `📥 **ការចាក់ឆ្នោតថ្មី (N98)**\n👤 ឈ្មោះ: ${name}\n📱 ទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់ក្នុង១លេខ: ${data.amount} ${sym}\n💰 សរុបទឹកប្រាក់រួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}`;
 
       sendToTelegram(msg, 'depositScreenshot');
       saveBetToHistory(data.list, data.amount, data.currency, phone);
       showCustomAlert('ជោគជ័យ', '✅ បញ្ជូនទិន្នន័យការទូទាត់បានជោគជ័យ! ប្រព័ន្ធកំពុងផ្ទៀងផ្ទាត់វិក្កយបត្ររបស់អ្នក។', 'success');
       closeModal('depositModal');
-      this.reset();
-      clearAllBets();
+      this.reset(); clearAllBets();
     });
 
     document.getElementById('withdrawForm').addEventListener('submit', function(e) {
@@ -892,15 +839,11 @@
       if (!select.value) return; 
       
       const bet = JSON.parse(select.value);
-      const accNoValue = document.getElementById('withdrawAccNo').value || "មិនបានបំពេញ";
-      const accNameValue = document.getElementById('withdrawAccName').value || "មិនបានបំពេញ";
-
-      const msg = `📤 **ស្នើសុំដកប្រាក់រង្វាន់ (N98)**\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារទទួល៖ ${document.getElementById('withdrawBank').value}\n💳 លេខគណនី៖ ${accNoValue}\n👤 ឈ្មោះគណនី៖ ${accNameValue}`;
+      const msg = `📤 **ស្នើសុំដកប្រាក់រង្វាន់ (N98)**\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារទទួល៖ ${document.getElementById('withdrawBank').value}\n💳 លេខគណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះគណនី៖ ${document.getElementById('withdrawAccName').value}`;
       
       sendToTelegram(msg, 'withdrawQrCode');
       showCustomAlert('ជោគជ័យ', '✅ បានផ្ញើសំណើដកប្រាក់រង្វាន់រួចរាល់! ភ្នាក់ងារនឹងផ្ទេរប្រាក់ជូនក្នុងពេលឆាប់ៗនេះ។', 'success');
-      closeModal('withdrawModal');
-      this.reset();
+      closeModal('withdrawModal'); this.reset();
     });
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
@@ -921,68 +864,44 @@
       if (hourState === 'waiting_12') {
         containerTwo.innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំលទ្ធផល...</span></div>`).join('');
         const yesterdaySeed = seed - 1;
-        containerThree.innerHTML = letters.map((l, idx) => {
-          let val = Math.floor(seededRandom(yesterdaySeed + idx + 16) * 900) + 100;
-          return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
-        }).join('');
+        containerThree.innerHTML = letters.map((l, idx) => `<div><span class="letter">${l}:</span> <span class="number">${Math.floor(seededRandom(yesterdaySeed + idx + 16) * 900) + 100}</span></div>`).join('');
       } else {
-        containerTwo.innerHTML = letters.map((l, idx) => {
-          let val = winning_two_digit[l];
-          return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
-        }).join('');
+        containerTwo.innerHTML = letters.map((l, idx) => `<div><span class="letter">${l}:</span> <span class="number">${winning_two_digit[l]}</span></div>`).join('');
         containerThree.innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំលទ្ធផល...</span></div>`).join('');
       }
     }
 
     function updateCountdown() {
-      const now = new Date();
-      const hour = now.getHours();
-      let target = new Date(now);
+      const now = new Date(); const hour = now.getHours(); let target = new Date(now);
       target.setSeconds(0); target.setMilliseconds(0);
       let targetHour, label, state;
 
-      if (hour < 12) { 
-        targetHour = 12; label = '12:00:00 (លេខ២ខ្ទង់)'; state = 'waiting_12';
-      } else if (hour < 16) { 
-        targetHour = 16; label = '16:00:00 (លេខ៣ខ្ទង់)'; state = 'waiting_16';
-      } else { 
-        target.setDate(target.getDate() + 1); targetHour = 12; label = '12:00:00 ថ្ងៃស្អែក'; state = 'waiting_12';
-      }
+      if (hour < 12) { targetHour = 12; label = '12:00:00 (លេខ២ខ្ទង់)'; state = 'waiting_12'; } 
+      else if (hour < 16) { targetHour = 16; label = '16:00:00 (លេខ៣ខ្ទង់)'; state = 'waiting_16'; } 
+      else { target.setDate(target.getDate() + 1); targetHour = 12; label = '12:00:00 ថ្ងៃស្អែក'; state = 'waiting_12'; }
 
       target.setHours(targetHour, 0, 0, 0);
       const diff = target - now;
       const display = document.getElementById('countdownDisplay');
 
       generateTodayResults(state);
-      updateNextDrawSettings();
       checkWinLossStatuses();
 
       if (diff <= 0) { display.innerHTML = '🎉 ចេញលទ្ធផល!'; return; }
-
-      const h = Math.floor(diff / (1000*60*60));
-      const m = Math.floor((diff % (1000*60*60)) / (1000*60));
-      const s = Math.floor((diff % (1000*60)) / 1000);
+      const h = Math.floor(diff / (1000*60*60)); const m = Math.floor((diff % (1000*60*60)) / (1000*60)); const s = Math.floor((diff % (1000*60)) / 1000);
       display.innerHTML = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       document.getElementById('nextTimeLabel').innerHTML = `🎯 គោលដៅបន្ទាប់៖ ${label}`;
     }
 
     function updateDigitalClockWidget() {
       const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      const s = String(now.getSeconds()).padStart(2, '0');
-      
-      document.getElementById('widgetTime').innerText = `${h}:${m}:${s}`;
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('widgetDate').innerText = now.toLocaleDateString('km-KH', options);
+      document.getElementById('widgetTime').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      document.getElementById('widgetDate').innerText = now.toLocaleDateString('km-KH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    updateNextDrawSettings();
-    checkWinLossStatuses();
     setInterval(updateCountdown, 1000);
     setInterval(updateDigitalClockWidget, 1000);
-    updateCountdown();
-    updateDigitalClockWidget();
+    updateCountdown(); updateDigitalClockWidget();
   </script>
 </body>
 </html>
