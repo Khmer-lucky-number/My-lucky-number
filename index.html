@@ -387,15 +387,15 @@
         <h3>📋 ច្បាប់ លក្ខខណ្ឌ និងរបៀបប្រើប្រាស់</h3>
         <h4>១. ច្បាប់ទូទៅនៃការលេងឆ្នោត៖</h4>
         <ul>
-          <li>ប្រព័ន្ធឆ្នោត N98 បើកដំណើរការផ្សងសំណាង ២៤ ម៉ោងលើ ២៤ ម៉ោង ជារៀងរាល់ថ្ងៃ。</li>
+          <li>ប្រព័ន្ធឆ្នោត N98 បើកដំណើរការផ្សងសំណាង ២៤ ម៉ោងលើ ២៤ ម៉ោង ជារៀងរាល់ថ្ងៃ។</li>
           <li>ការភ្នាល់ត្រូវតែធ្វើឡើងមុនម៉ោងលទ្ធផលចេញ ១០ នាទី បើពុំនោះទេ នឹងត្រូវគណនាចូលវេនបន្ទាប់។</li>
           <li>ដែនកំណត់នៃការចាក់៖ អប្បបរមា ១,០០០៛ ឬ ០.២៥$ និងអតិបរមា ៤០,០០០៛ ឬ ១០$ ក្នុងមួយលេខ។</li>
         </ul>
         
         <h4>២. អត្រាការទូទាត់ប្រាក់រង្វាន់៖</h4>
         <ul>
-          <li>ប្រភេទលេខ ២ ខ្ទង់ (វេន ១២:០០)៖ ចាក់ ១$ ទូទាត់សងវិញ ៧០$ (៧០ ដងនៃប្រាក់ចាក់)។</li>
-          <li>ប្រភេទលេខ ៣ ខ្ទង់ (វេន ១៦:០០)៖ ចាក់ ១$ ទូទាត់សងវិញ ៥០០$ (៥០០ ដងនៃប្រាក់ចាក់)។</li>
+          <li>ប្រភេទលេខ ២ ខ្ទង់ (វេន ១២:០០)៖ ចាក់ ១$ ទូទាត់សងវិញ ៧០$ (៧០ ដងនៃប្រាក់ចាក់)。</li>
+          <li>ប្រភេទលេខ ៣ ខ្ទង់ (វេន ១៦:០០)៖ ចាក់ ១$ ទូទាត់សងវិញ ៥០០$ (៥០០ ដងនៃប្រាក់ចាក់)。</li>
         </ul>
 
         <h4>៣. ពេលវេលានៃការស្នើសុំដកប្រាក់រង្វាន់៖</h4>
@@ -508,7 +508,7 @@
 
         <div id="manualBankInputArea" style="display:none; margin-top:8px;">
           <label style="color:#e65100;">✍️ សូមបញ្ចូលឈ្មោះធនាគារផ្សេងទៀតរបស់អ្នក៖</label>
-          <input type="text" id="withdrawBankManual" placeholder="ឧទាហរណ៍៖ Advanced Bank of Asia">
+          <input type="text" id="withdrawBankManual" placeholder="ឧទហរណ៍៖ Advanced Bank of Asia">
         </div>
 
         <label>៤. លេខគណនីធនាគារ *</label>
@@ -537,10 +537,13 @@
   </div>
 
   <script>
+    // ⚙️ config សម្រាប់ក្រុមដកប្រាក់តែមួយ (Withdraw Group)
     const TELEGRAM_WITHDRAW_CONFIG = {
       token: '8748063228:AAFlZqIUn8r6VN7zQbv_dks2skwvl6bjRpo',
       chatId: '-5535752176'
     };
+    
+    // ⚙️ config សម្រាប់ក្រុមកក់ ឬទស្សន៍ទាយ (Prediction/Bet Group)
     const TELEGRAM_BET_CONFIG = {
       token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc',
       chatId: '-5338881653'
@@ -562,7 +565,7 @@
       modal.style.display = 'block';
     }
 
-    // 🛠️ មុខងារផ្ញើទិន្នន័យ (រូបភាព និងសារ) ទៅកាន់ Telegram Bot ដោយប្រើ FormData យ៉ាងត្រឹមត្រូវ
+    // 🛠️ កែសម្រួល៖ មុខងារផ្ញើទិន្នន័យ (រូបភាព និងសារ) ទៅកាន់ Telegram Bot ដោយប្រើ FormData យ៉ាងត្រឹមត្រូវ
     async function sendTelegramNotification(message, fileInputId, config) {
       const fullMessage = `${message}\n\n🕐 ពេលវេលា: ${new Date().toLocaleString('km-KH')}`;
       const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
@@ -577,9 +580,12 @@
           
           const res = await fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { 
             method: 'POST', 
-            body: formData  // ទុកឱ្យ Browser កំណត់ Headers 'Content-Type' ដោយស្វ័យប្រវត្ត
+            body: formData
           });
-          if(!res.ok) throw new Error("មិនអាចបញ្ជូនរូបភាពបានទេ");
+          if(!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Telegram API Error: ${errorText}`);
+          }
         } else {
           // ប្រសិនបើគ្មានរូបភាព ផ្ញើជាអក្សរធម្មតាទៅកាន់ sendMessage API
           const res = await fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
@@ -587,12 +593,15 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: config.chatId, text: fullMessage })
           });
-          if(!res.ok) throw new Error("មិនអាចបញ្ជូនសារបានទេ");
+          if(!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Telegram API Error: ${errorText}`);
+          }
         }
         console.log("Telegram Notification sent successfully!");
       } catch (error) {
         console.error("Error sending notification to Telegram:", error);
-        throw error; // បោះ Error ទៅខាងក្រៅដើម្បីឱ្យស្រទាប់ Form ទទួលដឹង
+        throw error;
       }
     }
 
@@ -791,7 +800,7 @@
           option.text = `ត្រូវ៖ ${bet.num} | រង្វាន់៖ ${bet.win}`;
           select.appendChild(option);
         });
-        btnSubmit.disabled = true; // បិទទុកសិនរហូតដល់អ្នកប្រើបំពេញទិន្នន័យគ្រប់
+        btnSubmit.disabled = true;
       } else {
         noWinningAlert.style.display = 'block'; btnSubmit.disabled = true; 
       }
@@ -859,6 +868,8 @@
       const select = document.getElementById('withdrawSelectBet'); if (!select.value) return;
       const bet = JSON.parse(select.value);
       const reqType = document.getElementById('withdrawRequestType').value;
+      
+      // កំណត់ចំណងជើងសារផ្ញើទៅតេឡេក្រាមតាមប្រភេទដកប្រាក់
       const label = reqType === 'late_withdrawal' ? '⏰ **ស្នើសុំដកប្រាក់យឺត (កាលពីម្សិលមិញ)**' : '🏦 **ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)**';
       
       let chosenBank = document.getElementById('withdrawBank').value;
@@ -869,14 +880,13 @@
       const msg = `${label}\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ទឹកប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារ៖ ${chosenBank}\n💳 គណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះ៖ ${document.getElementById('withdrawAccName').value}`;
 
       try {
+        // កែសម្រួល៖ មុខងារដកប្រាក់ទាំងពីរនឹងប្រើប្រាស់ប្រភព Config តែមួយ (TELEGRAM_WITHDRAW_CONFIG) ទៅកាន់ Telegram Group តែមួយ
         await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
         
-        // កែប្រែស្ថានភាពនៅក្នុង localstorage ទៅជាបានដកលុយហើយ ដើម្បីកុំឱ្យជ្រើសរើសដកដដែលៗបានទៀត
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
-        // ស្វែងរកធាតុចាស់ដើម្បីដកចេញ ឬដូរ status
         history = history.map(item => {
           if(item.timestamp === bet.timestamp && item.num === bet.num) {
-            item.status = 'claimed'; // គូសចំណាំថាបានបើករង្វាន់រួច
+            item.status = 'claimed';
           }
           return item;
         });
