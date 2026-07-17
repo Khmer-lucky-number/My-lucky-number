@@ -31,10 +31,23 @@
     
     section { padding:15px; max-width:1100px; margin:0 auto; }
 
-    @keyframes moveBg {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* ចលនាស្ទីកគ័ររេចុះឡើង ឆ្វេងទៅស្តាំ */
+    @keyframes floatAnimation {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(6px, -6px) rotate(5deg); }
+      50% { transform: translate(0, -10px) rotate(-5deg); }
+      75% { transform: translate(-6px, -4px) rotate(3deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .sticker-float {
+      display: inline-block;
+      font-size: 28px;
+      animation: floatAnimation 4s ease-in-out infinite;
+      user-select: none;
+    }
+    .sticker-delay {
+      animation-delay: 2s;
     }
 
     @keyframes twinkle {
@@ -139,9 +152,10 @@
     .btn-amount { background:#17a2b8; padding:6px 14px; font-size:13px; border-radius:6px; }
     .btn-telegram { background: linear-gradient(135deg, #0088cc, #006699); color: white; }
     
-    /* រចនាប៊ូតុង ABA Pay ថ្មី */
+    /* រចនាប៊ូតុង ABA Pay */
     .btn-aba-pay { background: linear-gradient(135deg, #005fa3, #0078D7); color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,120,215,0.3); transition: all 0.3s; font-size: 16px; margin: 10px 0; width: 100%; border: none; cursor: pointer; }
-    .btn-aba-pay:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,120,215,0.4); background: linear-gradient(135deg, #0078D7, #005fa3); }
+    .btn-aba-pay:hover:not(.disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,120,215,0.4); background: linear-gradient(135deg, #0078D7, #005fa3); }
+    .btn-aba-pay.disabled { background: #ced4da !important; color: #6c757d !important; pointer-events: none; box-shadow: none !important; opacity: 0.7; }
 
     .selected-numbers-display { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; min-height:44px; padding:12px; background:#f8f9fa; border-radius:8px; border:2px dashed #dee2e6; align-items:center; }
     .selected-number-tag { background:linear-gradient(135deg, #0078D7, #005fa3); color:white; padding:6px 16px; border-radius:20px; font-size:15px; display:inline-flex; align-items:center; gap:10px; font-weight:bold; box-shadow:0 2px 8px rgba(0,120,215,0.2); }
@@ -210,28 +224,40 @@
   </nav>
 
   <section>
+    <!-- 🕒 ម៉ោងបច្ចុប្បន្ន ជាមួយស្ទីកគ័រមានចលនារេចុះឡើងឆ្វេងស្តាំ -->
     <div class="digital-clock-container" id="digitalClockWidget">
       <div class="stars-bg">
         <div class="star star-1"></div>
         <div class="star star-2"></div>
         <div class="star star-3"></div>
       </div>
-      <div>
-        <div class="clock-title">🕒 ម៉ោងបច្ចុប្បន្ន</div>
-        <div class="clock-time" id="widgetTime">00:00:00</div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="sticker-float">⏰</span>
+        <div>
+          <div class="clock-title">🕒 ម៉ោងបច្ចុប្បន្ន</div>
+          <div class="clock-time" id="widgetTime">00:00:00</div>
+        </div>
       </div>
-      <div>
-        <div class="clock-date" id="widgetDate">កំពុងរៀបចំ...</div>
-        <div style="font-size: 11px; color: #0078D7; font-weight: bold; margin-top: 3px; animation: blinker 2s infinite;">● ពេលវេលាជាក់ស្តែង (Real-time)</div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div>
+          <div class="clock-date" id="widgetDate">កំពុងរៀបចំ...</div>
+          <div style="font-size: 11px; color: #0078D7; font-weight: bold; margin-top: 3px; animation: blinker 2s infinite; text-align: right;">● Real-time</div>
+        </div>
+        <span class="sticker-float sticker-delay">🏦</span>
       </div>
     </div>
 
+    <!-- ⏳ ពេលវេលារង់ចាំលទ្ធផល ជាមួយស្ទីកគ័រមានចលនារេចុះឡើងឆ្វេងស្តាំ -->
     <div class="countdown" id="countdown">
       <div class="stars-bg">
         <div class="star star-4"></div>
         <div class="star star-5"></div>
       </div>
-      <div style="font-size:18px; color:#dc3545; font-weight:bold; text-transform:uppercase; position: relative; z-index: 1;">⏳ ពេលវេលារង់ចាំលទ្ធផលបន្ទាប់</div>
+      <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 5px;">
+        <span class="sticker-float">🎰</span>
+        <div style="font-size:18px; color:#dc3545; font-weight:bold; text-transform:uppercase; position: relative; z-index: 1;">⏳ ពេលវេលារង់ចាំលទ្ធផលបន្ទាប់</div>
+        <span class="sticker-float sticker-delay">💰</span>
+      </div>
       <div class="time-display" id="countdownDisplay">--:--:--</div>
       <div class="next-time" id="nextTimeLabel">🎯 កំពុងគណនា...</div>
     </div>
@@ -364,7 +390,7 @@
       <!-- ====== 🏦 ប្រព័ន្ធទូទាត់ និងដកប្រាក់ ====== -->
       <div class="lottery-box">
         <div class="time-box">🏦 ប្រព័ន្ធប្រតិបត្តិការហិរញ្ញវត្ថុ</div>
-        <p style="font-size: 13.5px; color:#4a5568; margin: 8px 0;">សមាជិកអាចចាក់ផ្សងសំណាងបាន ២៤ ម៉ោង គ្រប់ពេលវេលា។ ប្រព័ន្ធចាក់សោបណ្តោះអាសន្នតែលើការស្នើសុំដកប្រាក់រង្វាន់ប៉ុណ្ណោះ (ម៉ោង ១០:០០ យប់ ដល់ ១២:០០ ថ្ងៃត្រង់) Blanco។</p>
+        <p style="font-size: 13.5px; color:#4a5568; margin: 8px 0;">សមាជិកអាចចាក់ផ្សងសំណាងបាន ២៤ ម៉ោង គ្រប់ពេលវេលា។ ប្រព័ន្ធចាក់សោបណ្តោះអាសន្នលើការដកប្រាក់រង្វាន់ (ម៉ោង ១០:០០ យប់ ដល់ ១២:០០ ថ្ងៃត្រង់) Blanco។ ប៉ុន្តែលោកអ្នកអាចស្នើសុំការដកប្រាក់រង្វាន់ដែលខកខានកាលពីម្សិលមិញបានចាប់ពីម៉ោង ៨:០០ ព្រឹក ដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់។</p>
         <div class="action-group">
           <button class="btn btn-withdraw" onclick="openWithdrawModal()">🏦 ស្នើសុំដកប្រាក់រង្វាន់</button>
           <button class="btn btn-telegram" onclick="contactAdminTelegram()">✈️ ទាក់ទងអ្នកគ្រប់គ្រងការទូទាត់</button>
@@ -415,8 +441,9 @@
         <h4>៣. ច្បាប់ និងលក្ខខណ្ឌនៃការដកប្រាក់រង្វាន់</h4>
         <ul>
           <li><strong>ការទូទាត់ប្រាក់ចាក់៖</strong> ដំណើរការ ២៤ ម៉ោង (ចាក់ពេលណាក៏បាន)។</li>
-          <li><strong>ម៉ោងដកប្រាក់៖</strong> ប្រព័ន្ធអនុញ្ញាតឱ្យធ្វើការស្នើសុំដកប្រាក់រង្វាន់បាន **ចាប់ពីម៉ោង ១២:០០ ថ្ងៃត្រង់ រហូតដល់ម៉ោង ១០:០០ យប់ (22:00)** ជារៀងរាល់ថ្ងៃ។</li>
-          <li><strong>ការបិទប្រព័ន្ធដកប្រាក់បណ្តោះអាសន្ន៖</strong> ចាប់ពីម៉ោង **១០:០០ យប់ (22:00) រហូតដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់ថ្ងៃស្អែក មុខងារដកប្រាក់នឹងត្រូវបិទ** ដើម្បីគ្រប់គ្រងគណនេយ្យ។</li>
+          <li><strong>ម៉ោងដកប្រាក់ធម្មតា៖</strong> ប្រព័ន្ធអនុញ្ញាតឱ្យធ្វើការស្នើសុំដកប្រាក់រង្វាន់បាន **ចាប់ពីម៉ោង ១២:០០ ថ្ងៃត្រង់ រហូតដល់ម៉ោង ១០:០០ យប់ (22:00)** ជារៀងរាល់ថ្ងៃ។</li>
+          <li><strong>ការដកប្រាក់យឺត (ខកខានដកកាលពីម្សិលមិញ)៖</strong> លោកអ្នកអាចស្នើសុំដកប្រាក់រង្វាន់ដែលខកខានកាលពីម្សិលមិញបាន **ចាប់ពីម៉ោង ៨:០០ ព្រឹក ដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់** មុនពេលលទ្ធផលឆ្នោតថ្ងៃថ្មីចេញ។</li>
+          <li><strong>ការបិទប្រព័ន្ធដកប្រាក់បណ្តោះអាសន្ន៖</strong> ក្រៅពីម៉ោងប្រតិបត្តិការទាំងពីរខាងលើ មុខងារដកប្រាក់នឹងត្រូវបិទបណ្តោះអាសន្នដើម្បីគ្រប់គ្រងគណនេយ្យ។</li>
         </ul>
       </div>
     </div>
@@ -437,16 +464,15 @@
           <div class="bet-summary-item total"><span>💵 សរុបទឹកប្រាក់:</span><span id="confirmTotal">-</span></div>
         </div>
         
-        <!-- ប៊ូតុងចុចដើម្បីទូទាត់ប្រាក់ ABA លីងថ្មី -->
-        <a href="https://pay.ababank.com/oRF8/yi1odxjr" target="_blank" class="btn-aba-pay">
-          📱 ចុចទីនេះដើម្បីបើកកម្មវិធី ABA ដើម្បីទូទាត់ប្រាក់
-        </a>
+        <div style="background: #e8f4fd; border: 1px solid #b3d7f7; padding: 10px; border-radius: 8px; margin-bottom: 12px;">
+          <span style="color:#005fa3; font-weight:bold; font-size:13px; display:block; text-align:center;">💡 សូមបំពេញព័ត៌មានទាំង ៤ ខាងក្រោមជាមុនសិន ដើម្បីបើកដំណើរការប៊ូតុងទូទាត់ ABA!</span>
+        </div>
 
         <label>លេខទូរសព្ទរបស់អ្នក *</label>
-        <input type="tel" id="depositPhone" required placeholder="09x xxx xxx">
+        <input type="tel" id="depositPhone" required placeholder="សូមបញ្ចូលលេខទូរសព្ទរបស់អ្នកឱ្យបានត្រឹមត្រូវ" oninput="validateDepositForm()">
         
         <label>ធនាគារទូទាត់ប្រាក់ចាក់ *</label>
-        <select id="depositBank" required>
+        <select id="depositBank" required onchange="validateDepositForm()">
           <option value="">-- សូមជ្រើសរើសធនាគារទូទាត់ --</option>
           <option value="ABA">ABA Bank</option>
           <option value="ACLEDA">ACLEDA Bank</option>
@@ -454,10 +480,16 @@
         </select>
         
         <label>ឈ្មោះគណនីរបស់អ្នក *</label>
-        <input type="text" id="depositAccountName" required placeholder="ឧ. KONG SOVAN">
+        <input type="text" id="depositAccountName" required placeholder="ឧ. KONG SOVAN" oninput="validateDepositForm()">
         
         <label style="margin-top: 15px;">រូបថតវិក្កយបត្រ (Screenshot) *</label>
-        <input type="file" id="depositScreenshot" accept="image/*" required>
+        <input type="file" id="depositScreenshot" accept="image/*" required onchange="validateDepositForm()">
+
+        <!-- ប៊ូតុងចុចដើម្បីទូទាត់ប្រាក់ ABA (ចាក់សោរជាមុន) -->
+        <a href="https://pay.ababank.com/oRF8/yi1odxjr" target="_blank" class="btn-aba-pay disabled" id="btnAbaPayLink">
+          📱 ចុចទីនេះដើម្បីបើកកម្មវិធី ABA ដើម្បីទូទាត់ប្រាក់
+        </a>
+
         <button type="submit" class="btn btn-success" style="width:100%; margin-top:15px;">ផ្ញើការទូទាត់ទៅកាន់ភ្នាក់ងារ</button>
       </form>
     </div>
@@ -467,11 +499,11 @@
   <div class="modal" id="withdrawModal">
     <div class="modal-content" style="max-width: 550px;">
       <span class="close" onclick="closeModal('withdrawModal')">&times;</span>
-      <h2>🏦 ស្នើសុំដកប្រាក់រង្វាន់</h2>
+      <h2 id="withdrawModalTitle">🏦 ស្នើសុំដកប្រាក់រង្វាន់</h2>
       
       <div class="withdraw-notice-box" id="withdrawSystemNotice">
-        <span style="color:#d63000; font-weight:bold; font-size:14px; display:block; margin-bottom:5px;">⚠️ សេចក្តីជូនដំណឹងអំពីម៉ោងប្រតិបត្តិការ៖</span>
-        <span style="font-size:13px; color:#4a5568; line-height:1.5; display:block;">
+        <span style="color:#d63000; font-weight:bold; font-size:14px; display:block; margin-bottom:5px;" id="withdrawNoticeTitle">⚠️ សេចក្តីជូនដំណឹងអំពីម៉ោងប្រតិបត្តិការ៖</span>
+        <span style="font-size:13px; color:#4a5568; line-height:1.5; display:block;" id="withdrawNoticeDesc">
           ប្រព័ន្ធបើកទទួលសំណើដកប្រាក់**ចាប់ពីម៉ោង ១២:០០ ថ្ងៃត្រង់ ដល់ម៉ោង ១០:០០ យប់**។ សំណើដែលខកខាន ឬផ្ញើមកក្រោយម៉ោង ១០:០០ យប់ នឹងត្រូវ**ដំណើរការជូនវិញនៅម៉ោង ១២:០០ ថ្ងៃត្រង់ នៃថ្ងៃបន្ទាប់**។
         </span>
       </div>
@@ -492,7 +524,7 @@
         </div>
 
         <label>២. លេខទូរសព្ទទំនាក់ទំនងរបស់អ្នក *</label>
-        <input type="tel" id="withdrawPhone" required placeholder="09x xxx xxx">
+        <input type="tel" id="withdrawPhone" required placeholder="សូមបញ្ចូលលេខទូរសព្ទរបស់អ្នកឱ្យបានត្រឹមត្រូវ">
         <label>៣. ធនាគារទទួលប្រាក់រង្វាន់ *</label>
         <select id="withdrawBank" required>
           <option value="">-- សូមជ្រើសរើសធនាគាររបស់អ្នក --</option>
@@ -507,6 +539,8 @@
         <label>៦. រូបថត QR Code គណនីធនាគាររបស់អ្នក *</label>
         <input type="file" id="withdrawQrCode" accept="image/*" required>
         
+        <input type="hidden" id="withdrawRequestType" value="normal">
+
         <button type="submit" class="btn btn-withdraw" id="btnSubmitWithdraw" style="width:100%; margin-top:15px; padding:12px; font-size:16px;">🚀 ផ្ញើសំណើដកប្រាក់រង្វាន់</button>
       </form>
     </div>
@@ -523,10 +557,16 @@
   </div>
 
   <script>
-    const TELEGRAM_CONFIGS = [
-      { token: '8748063228:AAFlZqIUn8r6VN7zQbv_dks2skwvl6bjRpo', chatId: '-5535752176' },
-      { token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc', chatId: '-5338881653' }
-    ];
+    // ការបំបែក Token និង Chat ID តាមតួនាទីជាក់ស្តែង
+    const TELEGRAM_WITHDRAW_CONFIG = {
+      token: '8748063228:AAFlZqIUn8r6VN7zQbv_dks2skwvl6bjRpo',
+      chatId: '-5535752176'
+    };
+
+    const TELEGRAM_BET_CONFIG = {
+      token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc',
+      chatId: '-5338881653'
+    };
 
     let winning_two_digit = {};
     let winning_three_digit = {};
@@ -551,24 +591,39 @@
       modal.style.display = 'block';
     }
 
-    function sendToTelegram(message, fileInputId = null) {
+    // មុខងារផ្ញើទៅតេឡេក្រាមដោយឡែកពីគ្នា
+    function sendTelegramNotification(message, fileInputId, config) {
       const fullMessage = `📢 **N98 System**\n\n${message}\n\n🕐 ${new Date().toLocaleString('km-KH')}`;
-      TELEGRAM_CONFIGS.forEach(config => {
-        const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
-        if (fileInput && fileInput.files && fileInput.files[0]) {
-          const formData = new FormData();
-          formData.append('chat_id', config.chatId);
-          formData.append('photo', fileInput.files[0]);
-          formData.append('caption', fullMessage);
-          fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { method: 'POST', body: formData });
-        } else {
-          fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: config.chatId, text: fullMessage, parse_mode: 'Markdown' })
-          });
-        }
-      });
+      const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
+      
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        const formData = new FormData();
+        formData.append('chat_id', config.chatId);
+        formData.append('photo', fileInput.files[0]);
+        formData.append('caption', fullMessage);
+        fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { method: 'POST', body: formData });
+      } else {
+        fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: config.chatId, text: fullMessage, parse_mode: 'Markdown' })
+        });
+      }
+    }
+
+    // មុខងារត្រួតពិនិត្យ និងបើកសោរប៊ូតុង ABA Pay
+    function validateDepositForm() {
+      const phone = document.getElementById('depositPhone').value.trim();
+      const bank = document.getElementById('depositBank').value;
+      const accountName = document.getElementById('depositAccountName').value.trim();
+      const screenshot = document.getElementById('depositScreenshot').files.length;
+      const btnAba = document.getElementById('btnAbaPayLink');
+
+      if (phone !== "" && bank !== "" && accountName !== "" && screenshot > 0) {
+        btnAba.classList.remove('disabled');
+      } else {
+        btnAba.classList.add('disabled');
+      }
     }
 
     function showSection(section) {
@@ -718,6 +773,11 @@
       document.getElementById('confirmTotal').innerText = (quickAmount * betNumbers.length).toLocaleString() + ' ' + sym;
       
       window._betData = { numbers: all, amount: quickAmount, currency: quickCurrency, list: [...betNumbers] };
+      
+      // កំណត់ទម្រង់ប៊ូតុង ABA ឡើងវិញ
+      document.getElementById('depositForm').reset();
+      document.getElementById('btnAbaPayLink').classList.add('disabled');
+      
       document.getElementById('depositModal').style.display = 'block';
     }
 
@@ -844,11 +904,46 @@
       }).join('');
     }
 
+    // ប្រព័ន្ធដកប្រាក់ថ្មី៖ បន្ថែមការដកប្រាក់យឺត (ខកខានកាលពីម្សិលមិញ) ម៉ោង ៨:០០ ព្រឹក ដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់
     function openWithdrawModal() {
       const now = new Date();
-      if (now.getHours() < 12 || now.getHours() >= 22) {
-        showCustomAlert('ប្រព័ន្ធដកប្រាក់បិទបណ្តោះអាសន្ន', '⚠️ ប្រព័ន្ធដកប្រាក់រង្វាន់ប្រចាំថ្ងៃត្រូវបានបិទបណ្តោះអាសន្នចាប់ពីម៉ោង ១០:០០ យប់ (22:00) ដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់! រាល់ការស្នើសុំដកប្រាក់រង្វាន់ នឹងដំណើរការឡើងវិញនៅម៉ោង ១២:០០ ថ្ងៃត្រង់។', 'error');
+      const currentHour = now.getHours();
+      
+      let canWithdraw = false;
+      let isLateWithdrawal = false;
+
+      // ១. ម៉ោងដកប្រាក់ធម្មតា៖ ១២:០០ ថ្ងៃត្រង់ ដល់ម៉ោង ១០:០០ យប់
+      if (currentHour >= 12 && currentHour < 22) {
+        canWithdraw = true;
+        isLateWithdrawal = false;
+      }
+      // ២. ម៉ោងដកប្រាក់យឺត៖ ៨:០០ ព្រឹក ដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់ (សម្រាប់អ្នកខកខានម្សិលមិញ)
+      else if (currentHour >= 8 && currentHour < 12) {
+        canWithdraw = true;
+        isLateWithdrawal = true;
+      }
+
+      if (!canWithdraw) {
+        showCustomAlert('ប្រព័ន្ធដកប្រាក់បិទបណ្តោះអាសន្ន', '⚠️ ប្រព័ន្ធដកប្រាក់រង្វាន់ត្រូវបានបិទបណ្តោះអាសន្ន!\n\n- ម៉ោងដកធម្មតា៖ ១២:០០ ថ្ងៃត្រង់ - ១០:០០ យប់\n- ម៉ោងដកយឺត (ម្សិលមិញ)៖ ៨:០០ ព្រឹក - ១២:០០ ថ្ងៃត្រង់', 'error');
         return;
+      }
+
+      // កែសម្រួលព័ត៌មាននៅក្នុង Modal ទៅតាមស្ថានភាពម៉ោង
+      const modalTitle = document.getElementById('withdrawModalTitle');
+      const noticeTitle = document.getElementById('withdrawNoticeTitle');
+      const noticeDesc = document.getElementById('withdrawNoticeDesc');
+      const reqTypeInput = document.getElementById('withdrawRequestType');
+
+      if (isLateWithdrawal) {
+        modalTitle.innerText = "🏦 ស្នើសុំដកប្រាក់រង្វាន់ (ខកខានកាលពីម្សិលមិញ)";
+        noticeTitle.innerText = "⏰ ប្រតិបត្តិការដកប្រាក់ពិសេស (ម៉ោង ៨ព្រឹក - ១២ថ្ងៃត្រង់)";
+        noticeDesc.innerText = "ប្រព័ន្ធកំពុងបើកដំណើរការសម្រាប់តែសមាជិកដែលចាក់ត្រូវកាលពីម្សិលមិញ ប៉ុន្តែខកខានមិនទាន់បានស្នើសុំដកប្រាក់រង្វាន់ប៉ុណ្ណោះ។";
+        reqTypeInput.value = "late_withdrawal";
+      } else {
+        modalTitle.innerText = "🏦 ស្នើសុំដកប្រាក់រង្វាន់";
+        noticeTitle.innerText = "⚠️ សេចក្តីជូនដំណឹងអំពីម៉ោងប្រតិបត្តិការ៖";
+        noticeDesc.innerText = "ប្រព័ន្ធបើកទទួលសំណើដកប្រាក់ចាប់ពីម៉ោង ១២:០០ ថ្ងៃត្រង់ ដល់ម៉ោង ១០:០០ យប់។ សំណើដែលខកខាន ឬផ្ញើមកក្រោយម៉ោង ១០:០០ យប់ នឹងត្រូវដំណើរការជូនវិញនៅម៉ោង ១២:០០ ថ្ងៃត្រង់ នៃថ្ងៃបន្ទាប់។";
+        reqTypeInput.value = "normal";
       }
 
       const select = document.getElementById('withdrawSelectBet');
@@ -905,6 +1000,7 @@
       });
     }
 
+    // ការបញ្ជូនទិន្នន័យនៃការចាក់ (ទូទាត់ប្រាក់ចាក់) ទៅកាន់ Telegram Token 8790558091...
     document.getElementById('depositForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const data = window._betData;
@@ -915,22 +1011,30 @@
 
       const msg = `📥 **ការចាក់ឆ្នោតថ្មី (N98)**\n👤 ឈ្មោះ: ${name}\n📱 ទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់ក្នុង១លេខ: ${data.amount} ${sym}\n💰 សរុបទឹកប្រាក់រួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}`;
 
-      sendToTelegram(msg, 'depositScreenshot');
+      // បញ្ជូនទៅ Token 8790558091... (ការចាក់ឆ្នោត)
+      sendTelegramNotification(msg, 'depositScreenshot', TELEGRAM_BET_CONFIG);
+      
       saveBetToHistory(data.list, data.amount, data.currency, phone);
       showCustomAlert('ជោគជ័យ', '✅ បញ្ជូនទិន្នន័យការទូទាត់បានជោគជ័យ! ប្រព័ន្ធកំពុងផ្ទៀងផ្ទាត់វិក្កយបត្ររបស់អ្នក។', 'success');
       closeModal('depositModal');
       this.reset(); clearAllBets();
     });
 
+    // ការបញ្ជូនទិន្នន័យដកប្រាក់ (និងដកប្រាក់យឺត) ទៅកាន់ Telegram Token 8748063228...
     document.getElementById('withdrawForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const select = document.getElementById('withdrawSelectBet');
       if (!select.value) return; 
       
       const bet = JSON.parse(select.value);
-      const msg = `📤 **ស្នើសុំដកប្រាក់រង្វាន់ (N98)**\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារទទួល៖ ${document.getElementById('withdrawBank').value}\n💳 លេខគណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះគណនី៖ ${document.getElementById('withdrawAccName').value}`;
+      const reqType = document.getElementById('withdrawRequestType').value;
+      const titleLabel = reqType === 'late_withdrawal' ? '📤 **ស្នើសុំដកប្រាក់រង្វាន់យឺត (ខកខានកាលពីម្សិលមិញ)**' : '📤 **ស្នើសុំដកប្រាក់រង្វាន់ធម្មតា**';
       
-      sendToTelegram(msg, 'withdrawQrCode');
+      const msg = `${titleLabel}\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារទទួល៖ ${document.getElementById('withdrawBank').value}\n💳 លេខគណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះគណនី៖ ${document.getElementById('withdrawAccName').value}`;
+      
+      // បញ្ជូនទៅ Token 8748063228... (ការដកប្រាក់)
+      sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
+      
       showCustomAlert('ជោគជ័យ', '✅ បានផ្ញើសំណើដកប្រាក់រង្វាន់រួចរាល់! ភ្នាក់ងារនឹងផ្ទេរប្រាក់ជូនក្នុងពេលឆាប់ៗនេះ។', 'success');
       closeModal('withdrawModal'); this.reset();
     });
