@@ -131,6 +131,7 @@
     .btn-aba-pay:hover:not(.disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,120,215,0.4); }
     .btn-aba-pay.disabled { background: #ced4da !important; color: #6c757d !important; pointer-events: none; box-shadow: none !important; opacity: 0.7; }
 
+    /* ប៊ូតុងជ្រើសរើសធនាគារក្នុង Modal */
     .bank-sub-group { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 15px 0; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #dee2e6; }
     .btn-bank-choice { width: 100%; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; display: block; color: white; font-size: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s; }
     .btn-bank-choice:hover { transform: translateY(-1px); filter: brightness(1.1); }
@@ -386,9 +387,9 @@
         <h3>📋 ច្បាប់ លក្ខខណ្ឌ និងរបៀបប្រើប្រាស់</h3>
         <h4>១. ច្បាប់ទូទៅនៃការលេងឆ្នោត៖</h4>
         <ul>
-          <li>ប្រព័ន្ធឆ្នោត N98 បើកដំណើរការផ្សងសំណាង ២៤ ម៉ោងលើ ២៤ ម៉ោង ជារៀងរាល់ថ្ងៃ។</li>
+          <li>ប្រព័ន្ធឆ្នោត N98 បើកដំណើរការផ្សងសំណាង ២៤ ម៉ោងលើ ២៤ ម៉ោង ជារៀងរាល់ថ្ងៃ。</li>
           <li>ការភ្នាល់ត្រូវតែធ្វើឡើងមុនម៉ោងលទ្ធផលចេញ ១០ នាទី បើពុំនោះទេ នឹងត្រូវគណនាចូលវេនបន្ទាប់។</li>
-          <li>ដែនកំណត់នៃការចាក់៖ អប្បបរមា ១,០០០៛ ឬ ០.២៥$ និងអតិបរមា ៤០,០០០៛ ឬ ១០$ ក្នុងមួយលេខ។</li>
+          <li>ដែនកំណត់នៃការចាក់៖ អប្បបរមា ១,០០០៛ ឬ ០.២៥$ និងអតិបរមា ៤០,០០0៛ ឬ ១០$ ក្នុងមួយលេខ។</li>
         </ul>
         
         <h4>២. អត្រាការទូទាត់ប្រាក់រង្វាន់៖</h4>
@@ -507,7 +508,7 @@
 
         <div id="manualBankInputArea" style="display:none; margin-top:8px;">
           <label style="color:#e65100;">✍️ សូមបញ្ចូលឈ្មោះធនាគារផ្សេងទៀតរបស់អ្នក៖</label>
-          <input type="text" id="withdrawBankManual" placeholder="ឧទហរណ៍៖ Advanced Bank of Asia">
+          <input type="text" id="withdrawBankManual" placeholder="ឧទាហរណ៍៖ Advanced Bank of Asia">
         </div>
 
         <label>៤. លេខគណនីធនាគារ *</label>
@@ -536,77 +537,34 @@
   </div>
 
   <script>
-    // ============================================================
-    // ⚙️ CONFIGURATION - Telegram Bot Settings
-    // ============================================================
-    
-    // 📌 Withdraw Group (សម្រាប់ដកប្រាក់)
-    const TELEGRAM_WITHDRAW_CONFIG = {
-      token: '8748063228:AAFlZqIUn8r6VN7zQbv_dks2skwvl6bjRpo',
-      chatId: '-5535752176'
-    };
-
-    // 📌 Bet Group (សម្រាប់ចាក់ឆ្នោត)
+    // ⚙️ កំណត់រចនាសម្ព័ន្ធ Telegram ថ្មីតាមការស្នើសុំ (លុបចោលកូដស្ទួនចាស់ចេញ)
     const TELEGRAM_BET_CONFIG = {
-      token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc',
-      chatId: '-5338881653'
+      token: '8603184541:AAHmaJnY057ywvAhh04p1NfrIYiBPo8p8TI',
+      chatId: '-5428576653'
     };
 
-    // ============================================================
-    // Variables
-    // ============================================================
-    let winning_two_digit = {};
-    let winning_three_digit = {};
-    let currentBetType = 'two';
-    let selectedLetter = '';
-    let betNumbers = [];
-    let quickAmount = 0;
-    let quickCurrency = 'USD';
+    const TELEGRAM_WITHDRAW_CONFIG = {
+      token: '8822939753:AAHHgovBXqIyDPw9fBvvHG7M2oyaIGYhFIo',
+      chatId: '-5142906656'
+    };
 
-    // ============================================================
-    // Helper Functions
-    // ============================================================
+    let winning_two_digit = {}; let winning_three_digit = {};
+    let currentBetType = 'two'; let selectedLetter = ''; let betNumbers = [];
+    let quickAmount = 0; let quickCurrency = 'USD';
+
     function showCustomAlert(title, message, type = 'info') {
       const modal = document.getElementById('customAlertModal');
       const iconEl = document.getElementById('customAlertIcon');
       const titleEl = document.getElementById('customAlertTitle');
       const msgEl = document.getElementById('customAlertMessage');
-      titleEl.innerText = title;
-      msgEl.innerText = message;
-      if (type === 'success') {
-        iconEl.innerText = '✅';
-        iconEl.style.color = '#28a745';
-      } else if (type === 'error') {
-        iconEl.innerText = '⚠️';
-        iconEl.style.color = '#dc3545';
-      } else {
-        iconEl.innerText = '🔔';
-        iconEl.style.color = '#0078D7';
-      }
+      titleEl.innerText = title; msgEl.innerText = message;
+      if (type === 'success') { iconEl.innerText = '✅'; iconEl.style.color = '#28a745'; }
+      else if (type === 'error') { iconEl.innerText = '⚠️'; iconEl.style.color = '#dc3545'; }
+      else { iconEl.innerText = '🔔'; iconEl.style.color = '#0078D7'; }
       modal.style.display = 'block';
     }
 
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function contactAdminTelegram() {
-      window.open('https://t.me/Application_Receiving_Officer', '_blank');
-    }
-
-    function copyWebsiteLink() {
-      navigator.clipboard.writeText(window.location.href);
-      showCustomAlert('ជោគជ័យ', '📋 បានចម្លងតំណភ្ជាប់រួចរាល់!', 'success');
-    }
-
-    function seededRandom(seed) {
-      let x = Math.sin(seed) * 10000;
-      return x - Math.floor(x);
-    }
-
-    // ============================================================
-    // 📤 Send to Telegram (Fixed - no CORS issues)
-    // ============================================================
+    // 🛠️ មុខងារផ្ញើទិន្នន័យ (រូបភាព និងសារ) ទៅកាន់ Telegram Bot ដោយប្រើ FormData យ៉ាងត្រឹមត្រូវ
     async function sendTelegramNotification(message, fileInputId, config) {
       const fullMessage = `${message}\n\n🕐 ពេលវេលា: ${new Date().toLocaleString('km-KH')}`;
       const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
@@ -618,199 +576,24 @@
           formData.append('photo', fileInput.files[0]);
           formData.append('caption', fullMessage);
           
-          await fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors'
+          const res = await fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { 
+            method: 'POST', 
+            body: formData
           });
-          
-          console.log('✅ Photo sent to Telegram successfully');
-          return true;
+          if(!res.ok) throw new Error("មិនអាចបញ្ជូនរូបភាពបានទេ");
         } else {
-          await fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
+          const res = await fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: config.chatId,
-              text: fullMessage
-            }),
-            mode: 'no-cors'
+            body: JSON.stringify({ chat_id: config.chatId, text: fullMessage })
           });
-          
-          console.log('✅ Message sent to Telegram successfully');
-          return true;
+          if(!res.ok) throw new Error("មិនអាចបញ្ជូនសារបានទេ");
         }
+        console.log("Telegram Notification sent successfully!");
       } catch (error) {
-        console.error('❌ Error sending to Telegram:', error);
+        console.error("Error sending notification to Telegram:", error);
         throw error;
       }
-    }
-
-    // ============================================================
-    // UI Functions
-    // ============================================================
-    function showSection(section) {
-      document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
-      document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
-      document.getElementById('rulesSection').style.display = section === 'rules' ? 'block' : 'none';
-      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-      if (document.getElementById(`link-${section}`)) {
-        document.getElementById(`link-${section}`).classList.add('active');
-      }
-      if (section === 'history') renderGlobalHistoryResults();
-    }
-
-    function setBetType(type) {
-      currentBetType = type;
-      document.getElementById('btnTypeTwo').classList.toggle('active', type === 'two');
-      document.getElementById('btnTypeThree').classList.toggle('active', type === 'three');
-      selectedLetter = '';
-      document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
-      document.getElementById('numberInput').disabled = true;
-      document.getElementById('numberInput').value = '';
-      document.getElementById('numberInput').placeholder = 'ជ្រើសរើសអក្សរខាងលើជាមុនសិន...';
-      document.getElementById('btnAddNumber').disabled = true;
-    }
-
-    function selectLetter(letter) {
-      selectedLetter = letter;
-      document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
-      document.getElementById(`circle_${letter}`).classList.add('active');
-      const input = document.getElementById('numberInput');
-      input.disabled = false;
-      document.getElementById('btnAddNumber').disabled = false;
-      const reqLen = currentBetType === 'two' ? 2 : 3;
-      input.maxLength = reqLen;
-      input.placeholder = `បញ្ចូលលេខ ${reqLen}ខ្ទង់ សម្រាប់ប៉ុស្តិ៍ ${selectedLetter}`;
-      input.focus();
-    }
-
-    function addBetNumber() {
-      if (!selectedLetter) return;
-      if (betNumbers.length >= 10) {
-        showCustomAlert('ដែនកំណត់លេខ', '⚠️ ចាក់បានត្រឹមតែ ១០ លេខប៉ុណ្ណោះក្នុងម្តង!', 'error');
-        return;
-      }
-      const input = document.getElementById('numberInput');
-      const value = input.value.trim();
-      const reqLen = currentBetType === 'two' ? 2 : 3;
-
-      if (!value || isNaN(value) || value.length !== reqLen) {
-        showCustomAlert('បញ្ចូលលេខខុស', `⚠️ សូមបញ្ចូលលេខឱ្យបាន ${reqLen} ខ្ទង់!`, 'error');
-        return;
-      }
-
-      const now = new Date();
-      let drawDate = new Date(now);
-      let targetLabel = '';
-      if (currentBetType === 'two') {
-        if (now.getHours() < 12) {
-          drawDate.setHours(12, 0, 0, 0);
-          targetLabel = 'ម៉ោង 12:00 ថ្ងៃនេះ';
-        } else {
-          drawDate.setDate(drawDate.getDate() + 1);
-          drawDate.setHours(12, 0, 0, 0);
-          targetLabel = 'ម៉ោង 12:00 ថ្ងៃស្អែក';
-        }
-      } else {
-        if (now.getHours() < 16) {
-          drawDate.setHours(16, 0, 0, 0);
-          targetLabel = 'ម៉ោង 16:00 ថ្ងៃនេះ';
-        } else {
-          drawDate.setDate(drawDate.getDate() + 1);
-          drawDate.setHours(16, 0, 0, 0);
-          targetLabel = 'ម៉ោង 16:00 ថ្ងៃស្អែក';
-        }
-      }
-
-      betNumbers.push({
-        letter: selectedLetter,
-        number: value,
-        type: currentBetType,
-        drawTime: drawDate.getTime(),
-        drawLabel: targetLabel
-      });
-      input.value = '';
-      selectedLetter = '';
-      document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
-      input.disabled = true;
-      document.getElementById('btnAddNumber').disabled = true;
-      updateBetDisplay();
-      updateSummary();
-    }
-
-    function removeBet(idx) {
-      betNumbers.splice(idx, 1);
-      updateBetDisplay();
-      updateSummary();
-    }
-
-    function updateBetDisplay() {
-      const container = document.getElementById('selectedNumbersDisplay');
-      if (betNumbers.length === 0) {
-        container.innerHTML = '<span style="color:#6c757d; font-size:13px;">មិនទាន់មានការជ្រើសរើសលេខនៅឡើយទេ</span>';
-        return;
-      }
-      container.innerHTML = betNumbers.map((item, idx) =>
-        `<span class="selected-number-tag">${item.letter}-${item.number} (${item.type === 'two' ? '2ខ្ទង់' : '3ខ្ទង់'}) <span class="remove" onclick="removeBet(${idx})">✕</span></span>`
-      ).join('');
-    }
-
-    function selectQuickAmount(amount, currency) {
-      document.getElementById('quickAmountInput').value = amount;
-      document.getElementById('quickCurrency').value = currency === '៛' ? 'KHR' : 'USD';
-      updateQuickAmountDisplay();
-    }
-
-    function updateQuickAmountDisplay() {
-      const amount = parseFloat(document.getElementById('quickAmountInput').value) || 0;
-      quickCurrency = document.getElementById('quickCurrency').value;
-      const warning = document.getElementById('limitWarning');
-      if (quickCurrency === 'USD' && amount > 10) {
-        warning.style.display = 'block';
-        quickAmount = 10;
-        document.getElementById('quickAmountInput').value = 10;
-      } else if (quickCurrency === 'KHR' && amount > 40000) {
-        warning.style.display = 'block';
-        quickAmount = 40000;
-        document.getElementById('quickAmountInput').value = 40000;
-      } else {
-        warning.style.display = 'none';
-        quickAmount = amount;
-      }
-      updateSummary();
-    }
-
-    function updateSummary() {
-      const total = betNumbers.length;
-      document.getElementById('totalSelected').innerText = total;
-      document.getElementById('selectedCount').innerText = total;
-      const sym = quickCurrency === 'KHR' ? '៛' : '$';
-      document.getElementById('totalAmount').innerText = (quickAmount * total).toLocaleString() + ' ' + sym;
-      document.getElementById('btnSubmitBet').disabled = !(total > 0 && quickAmount > 0);
-    }
-
-    function submitQuickBet() {
-      if (betNumbers.length === 0 || quickAmount <= 0) return;
-      const all = betNumbers.map(i => `${i.letter}-${i.number}`).join(', ');
-      const sym = quickCurrency === 'KHR' ? '៛' : '$';
-      document.getElementById('confirmNumbers').innerText = all;
-      document.getElementById('confirmTotal').innerText = (quickAmount * betNumbers.length).toLocaleString() + ' ' + sym;
-      window._betData = {
-        numbers: all,
-        amount: quickAmount,
-        currency: quickCurrency,
-        list: [...betNumbers]
-      };
-
-      document.getElementById('depositForm').reset();
-      document.getElementById('btnLinkABA').classList.add('disabled');
-      document.getElementById('btnLinkAcleda').classList.add('disabled');
-      document.getElementById('screenshotArea').style.opacity = "0.5";
-      document.getElementById('screenshotArea').style.pointerEvents = "none";
-      document.getElementById('btnFinalDepositSubmit').disabled = true;
-
-      document.getElementById('depositModal').style.display = 'block';
     }
 
     function checkInputsForAbaButton() {
@@ -841,16 +624,139 @@
     function checkFinalSubmitButton() {
       const screenshot = document.getElementById('depositScreenshot').files.length;
       const btnSubmit = document.getElementById('btnFinalDepositSubmit');
-      if (screenshot > 0) {
-        btnSubmit.disabled = false;
+      if (screenshot > 0) { btnSubmit.disabled = false; } 
+      else { btnSubmit.disabled = true; }
+    }
+
+    function toggleManualBankInput() {
+      const bankSelect = document.getElementById('withdrawBank').value;
+      const manualArea = document.getElementById('manualBankInputArea');
+      const manualInput = document.getElementById('withdrawBankManual');
+      
+      if (bankSelect === 'MANUAL') {
+        manualArea.style.display = 'block';
+        manualInput.required = true;
       } else {
-        btnSubmit.disabled = true;
+        manualArea.style.display = 'none';
+        manualInput.required = false;
+        manualInput.value = '';
       }
     }
 
+    function showSection(section) {
+      document.getElementById('homeSection').style.display = section === 'home' ? 'block' : 'none';
+      document.getElementById('historySection').style.display = section === 'history' ? 'block' : 'none';
+      document.getElementById('rulesSection').style.display = section === 'rules' ? 'block' : 'none';
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      if(document.getElementById(`link-${section}`)) document.getElementById(`link-${section}`).classList.add('active');
+      if (section === 'history') renderGlobalHistoryResults();
+    }
+
+    function setBetType(type) {
+      currentBetType = type;
+      document.getElementById('btnTypeTwo').classList.toggle('active', type === 'two');
+      document.getElementById('btnTypeThree').classList.toggle('active', type === 'three');
+      selectedLetter = '';
+      document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
+      document.getElementById('numberInput').disabled = true;
+      document.getElementById('numberInput').value = '';
+      document.getElementById('numberInput').placeholder = 'ជ្រើសរើសអក្សរខាងលើជាមុនសិន...';
+      document.getElementById('btnAddNumber').disabled = true;
+    }
+
+    function selectLetter(letter) {
+      selectedLetter = letter;
+      document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
+      document.getElementById(`circle_${letter}`).classList.add('active');
+      const input = document.getElementById('numberInput');
+      input.disabled = false;
+      document.getElementById('btnAddNumber').disabled = false;
+      const reqLen = currentBetType === 'two' ? 2 : 3;
+      input.maxLength = reqLen;
+      input.placeholder = `បញ្ចូលលេខ ${reqLen}ខ្ទង់ សម្រាប់ប៉ុស្តិ៍ ${selectedLetter}`;
+      input.focus();
+    }
+
+    function addBetNumber() {
+      if (!selectedLetter) return;
+      if (betNumbers.length >= 10) { showCustomAlert('ដែនកំណត់លេខ', '⚠️ ចាក់បានត្រឹមតែ ១០ លេខប៉ុណ្ណោះក្នុងម្តង!', 'error'); return; }
+      const input = document.getElementById('numberInput');
+      const value = input.value.trim();
+      const reqLen = currentBetType === 'two' ? 2 : 3;
+
+      if (!value || isNaN(value) || value.length !== reqLen) {
+        showCustomAlert('បញ្ចូលលេខខុស', `⚠️ សូមបញ្ចូលលេខឱ្យបាន ${reqLen} ខ្ទង់!`, 'error'); return;
+      }
+
+      const now = new Date(); let drawDate = new Date(now); let targetLabel = '';
+      if (currentBetType === 'two') {
+        if (now.getHours() < 12) { drawDate.setHours(12, 0, 0, 0); targetLabel = 'ម៉ោង 12:00 ថ្ងៃនេះ'; } 
+        else { drawDate.setDate(drawDate.getDate() + 1); drawDate.setHours(12, 0, 0, 0); targetLabel = 'ម៉ោង 12:00 ថ្ងៃស្អែក'; }
+      } else {
+        if (now.getHours() < 16) { drawDate.setHours(16, 0, 0, 0); targetLabel = 'ម៉ោង 16:00 ថ្ងៃនេះ'; } 
+        else { drawDate.setDate(drawDate.getDate() + 1); drawDate.setHours(16, 0, 0, 0); targetLabel = 'ម៉ោង 16:00 ថ្ងៃស្អែក'; }
+      }
+
+      betNumbers.push({ letter: selectedLetter, number: value, type: currentBetType, drawTime: drawDate.getTime(), drawLabel: targetLabel });
+      input.value = ''; selectedLetter = '';
+      document.querySelectorAll('.letter-circle').forEach(el => el.classList.remove('active'));
+      input.disabled = true; document.getElementById('btnAddNumber').disabled = true;
+      updateBetDisplay(); updateSummary();
+    }
+
+    function removeBet(idx) { betNumbers.splice(idx, 1); updateBetDisplay(); updateSummary(); }
+
+    function updateBetDisplay() {
+      const container = document.getElementById('selectedNumbersDisplay');
+      if (betNumbers.length === 0) { container.innerHTML = '<span style="color:#6c757d; font-size:13px;">មិនទាន់មានការជ្រើសរើសលេខនៅឡើយទេ</span>'; return; }
+      container.innerHTML = betNumbers.map((item, idx) => `<span class="selected-number-tag">${item.letter}-${item.number} (${item.type === 'two'?'2ខ្ទង់':'3ខ្ទង់'}) <span class="remove" onclick="removeBet(${idx})">✕</span></span>`).join('');
+    }
+
+    function selectQuickAmount(amount, currency) {
+      document.getElementById('quickAmountInput').value = amount;
+      document.getElementById('quickCurrency').value = currency === '៛' ? 'KHR' : 'USD';
+      updateQuickAmountDisplay();
+    }
+
+    function updateQuickAmountDisplay() {
+      const amount = parseFloat(document.getElementById('quickAmountInput').value) || 0;
+      quickCurrency = document.getElementById('quickCurrency').value;
+      const warning = document.getElementById('limitWarning');
+      if (quickCurrency === 'USD' && amount > 10) { warning.style.display = 'block'; quickAmount = 10; document.getElementById('quickAmountInput').value = 10; } 
+      else if (quickCurrency === 'KHR' && amount > 40000) { warning.style.display = 'block'; quickAmount = 40000; document.getElementById('quickAmountInput').value = 40000; } 
+      else { warning.style.display = 'none'; quickAmount = amount; }
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const total = betNumbers.length;
+      document.getElementById('totalSelected').innerText = total;
+      document.getElementById('selectedCount').innerText = total;
+      const sym = quickCurrency === 'KHR' ? '៛' : '$';
+      document.getElementById('totalAmount').innerText = (quickAmount * total).toLocaleString() + ' ' + sym;
+      document.getElementById('btnSubmitBet').disabled = !(total > 0 && quickAmount > 0);
+    }
+
+    function submitQuickBet() {
+      if (betNumbers.length === 0 || quickAmount <= 0) return;
+      const all = betNumbers.map(i => `${i.letter}-${i.number}`).join(', ');
+      const sym = quickCurrency === 'KHR' ? '៛' : '$';
+      document.getElementById('confirmNumbers').innerText = all;
+      document.getElementById('confirmTotal').innerText = (quickAmount * betNumbers.length).toLocaleString() + ' ' + sym;
+      window._betData = { numbers: all, amount: quickAmount, currency: quickCurrency, list: [...betNumbers] };
+      
+      document.getElementById('depositForm').reset();
+      document.getElementById('btnLinkABA').classList.add('disabled');
+      document.getElementById('btnLinkAcleda').classList.add('disabled');
+      document.getElementById('screenshotArea').style.opacity = "0.5";
+      document.getElementById('screenshotArea').style.pointerEvents = "none";
+      document.getElementById('btnFinalDepositSubmit').disabled = true;
+
+      document.getElementById('depositModal').style.display = 'block';
+    }
+
     function openWithdrawModal(mode) {
-      const now = new Date();
-      const currentHour = now.getHours();
+      const now = new Date(); const currentHour = now.getHours();
       let isAllowed = false;
 
       if (mode === 'normal') {
@@ -866,18 +772,17 @@
       }
 
       if (!isAllowed) {
-        showCustomAlert('ប្រព័ន្ធបិទបណ្តោះអាសន្ន', '⚠️ មិនស្ថិតក្នុងម៉ោងប្រតិបត្តិការនៃប៊ូតុងដែលអ្នកបានចុចនោះទេ! សូមពិនិត្យមើលច្បាប់កំណត់ពេលវេលាឡើងវិញ។', 'error');
-        return;
+        showCustomAlert('ប្រព័ន្ធបិទបណ្តោះអាសន្ន', '⚠️ មិនស្ថិតក្នុងម៉ោងប្រតិបត្តិការនៃប៊ូតុងដែលអ្នកបានចុចនោះទេ! សូមពិនិត្យមើលច្បាប់កំណត់ពេលវេលាឡើងវិញ។', 'error'); return;
       }
 
       const select = document.getElementById('withdrawSelectBet');
       const btnSubmit = document.getElementById('btnSubmitWithdraw');
       const noWinningAlert = document.getElementById('noWinningBetAlert');
-
+      
       select.innerHTML = '<option value="">-- សូមជ្រើសរើសលេខពីប្រវត្តិលេងរបស់អ្នក --</option>';
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
       const winBets = history.filter(b => b.status === 'win');
-
+      
       if (winBets.length > 0) {
         noWinningAlert.style.display = 'none';
         winBets.reverse().forEach((bet) => {
@@ -888,8 +793,7 @@
         });
         btnSubmit.disabled = true;
       } else {
-        noWinningAlert.style.display = 'block';
-        btnSubmit.disabled = true;
+        noWinningAlert.style.display = 'block'; btnSubmit.disabled = true; 
       }
       document.getElementById('withdrawModal').style.display = 'block';
     }
@@ -897,10 +801,10 @@
     function onWithdrawBetSelected() {
       const select = document.getElementById('withdrawSelectBet');
       const btnSubmit = document.getElementById('btnSubmitWithdraw');
-      if (!select.value) {
-        document.getElementById('payoutRewardDisplay').innerText = '0.00';
+      if (!select.value) { 
+        document.getElementById('payoutRewardDisplay').innerText = '0.00'; 
         btnSubmit.disabled = true;
-        return;
+        return; 
       }
       const bet = JSON.parse(select.value);
       document.getElementById('withdrawSelectedDetails').innerText = `✅ លេខត្រូវ៖ ${bet.num} | រង្វាន់៖ ${bet.win}`;
@@ -908,92 +812,36 @@
       btnSubmit.disabled = false;
     }
 
-    function toggleManualBankInput() {
-      const bankSelect = document.getElementById('withdrawBank').value;
-      const manualArea = document.getElementById('manualBankInputArea');
-      const manualInput = document.getElementById('withdrawBankManual');
-
-      if (bankSelect === 'MANUAL') {
-        manualArea.style.display = 'block';
-        manualInput.required = true;
-      } else {
-        manualArea.style.display = 'none';
-        manualInput.required = false;
-        manualInput.value = '';
-      }
-    }
-
-    // ============================================================
-    // 📥 Deposit Form Submission
-    // ============================================================
+    // 📥 ផ្ញើការទូទាត់ចាក់ឆ្នោត (Deposit Form) -> ផ្ញើទៅកាន់ TELEGRAM_BET_CONFIG ថ្មី
     document.getElementById('depositForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-
       const btnSubmit = document.getElementById('btnFinalDepositSubmit');
       btnSubmit.disabled = true;
-      btnSubmit.innerText = "⏳ កំពុងបញ្ជូន...";
+      btnSubmit.innerText = "កំពុងបញ្ជូន...";
+
+      const data = window._betData; const phone = document.getElementById('depositPhone').value;
+      const bank = document.getElementById('depositBank').value; const name = document.getElementById('depositAccountName').value;
+      const sym = data.currency === 'KHR' ? '៛' : '$';
+
+      const msg = `📥 **ការទូទាត់ប្រាក់ចាក់ឆ្នោត (N98)**\n👤 ឈ្មោះគណនី: ${name}\n📱 លេខទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់/លេខ: ${data.amount} ${sym}\n💰 សរុបរួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}`;
 
       try {
-        const data = window._betData;
-        const phone = document.getElementById('depositPhone').value.trim();
-        const bank = document.getElementById('depositBank').value;
-        const accountName = document.getElementById('depositAccountName').value.trim();
-
-        if (!phone || !bank || !accountName) {
-          showCustomAlert('បញ្ចូលទិន្នន័យមិនពេញលេញ', '⚠️ សូមបំពេញព័ត៌មានទាំងអស់ឲ្យបានត្រឹមត្រូវ!', 'error');
-          btnSubmit.disabled = false;
-          btnSubmit.innerText = "ផ្ញើការទូទាត់ទៅកាន់ភ្នាក់ងារ";
-          return;
-        }
-
-        const sym = data.currency === 'KHR' ? '៛' : '$';
-        const totalAmount = (data.amount * data.list.length).toLocaleString();
-
-        let betDetails = '';
-        data.list.forEach((item, index) => {
-          betDetails += `\n   ${index + 1}. ${item.letter}-${item.number} (${item.type === 'two' ? '២ខ្ទង់' : '៣ខ្ទង់'}) - ${item.drawLabel}`;
-        });
-
-        const msg = `📥 **ការទូទាត់ប្រាក់ចាក់ឆ្នោត (N98)**\n` +
-          `━━━━━━━━━━━━━━━━━━━━\n` +
-          `👤 ឈ្មោះគណនី: ${accountName}\n` +
-          `📱 លេខទូរសព្ទ: ${phone}\n` +
-          `🏦 ធនាគារទូទាត់: ${bank}\n` +
-          `━━━━━━━━━━━━━━━━━━━━\n` +
-          `🔢 **លេខដែលបានចាក់៖**${betDetails}\n` +
-          `━━━━━━━━━━━━━━━━━━━━\n` +
-          `💵 ទឹកប្រាក់/លេខ: ${data.amount} ${sym}\n` +
-          `💰 **សរុបរួម: ${totalAmount} ${sym}**\n` +
-          `━━━━━━━━━━━━━━━━━━━━`;
-
         await sendTelegramNotification(msg, 'depositScreenshot', TELEGRAM_BET_CONFIG);
-
+        
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
         data.list.forEach(item => {
           history.push({
-            time: new Date().toLocaleString('km-KH'),
-            timestamp: new Date().getTime(),
-            targetDrawTime: item.drawTime,
-            targetDrawLabel: item.drawLabel,
-            phone: phone,
-            num: `${item.letter}-${item.number}`,
-            type: item.type,
-            cost: `${data.amount} ${sym}`,
-            win: `${(item.type === 'two' ? data.amount * 70 : data.amount * 500).toLocaleString()} ${sym}`,
-            status: 'pending'
+            time: new Date().toLocaleString('km-KH'), timestamp: new Date().getTime(),
+            targetDrawTime: item.drawTime, targetDrawLabel: item.drawLabel, phone: phone,
+            num: `${item.letter}-${item.number}`, type: item.type, cost: `${data.amount} ${sym}`,
+            win: `${(item.type === 'two' ? data.amount*70 : data.amount*500).toLocaleString()} ${sym}`, status: 'pending'
           });
         });
         localStorage.setItem('user_bet_history', JSON.stringify(history));
 
         showCustomAlert('ជោគជ័យ', '✅ បានផ្ញើវិក្កយបត្រទៅកាន់ភ្នាក់ងាររួចរាល់!', 'success');
-        closeModal('depositModal');
-        betNumbers = [];
-        updateBetDisplay();
-        updateSummary();
-        renderUserBetHistory();
-
-      } catch (error) {
-        console.error('❌ Error:', error);
+        closeModal('depositModal'); betNumbers = []; updateBetDisplay(); updateSummary();
+      } catch (err) {
         showCustomAlert('បរាជ័យ', '⚠️ មានបញ្ហាក្នុងការផ្ញើ! សូមព្យាយាមម្តងទៀត។', 'error');
       } finally {
         btnSubmit.disabled = false;
@@ -1001,80 +849,42 @@
       }
     });
 
-    // ============================================================
-    // 🏦 Withdraw Form Submission
-    // ============================================================
+    // 🏦 ស្នើសុំដកប្រាក់រង្វាន់ (Withdraw Form) -> ផ្ញើទៅកាន់ TELEGRAM_WITHDRAW_CONFIG ថ្មី
     document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
       e.preventDefault();
-
       const btnSubmit = document.getElementById('btnSubmitWithdraw');
       btnSubmit.disabled = true;
-      btnSubmit.innerText = "⏳ កំពុងបញ្ជូន...";
+      btnSubmit.innerText = "កំពុងបញ្ជូន...";
+
+      const select = document.getElementById('withdrawSelectBet'); if (!select.value) return;
+      const bet = JSON.parse(select.value);
+      const reqType = document.getElementById('withdrawRequestType').value;
+      const label = reqType === 'late_withdrawal' ? '⏰ **ស្នើសុំដកប្រាក់យឺត (កាលពីម្សិលមិញ)**' : '🏦 **ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)**';
+      
+      let chosenBank = document.getElementById('withdrawBank').value;
+      if (chosenBank === 'MANUAL') {
+        chosenBank = document.getElementById('withdrawBankManual').value.trim() || 'ធនាគារវាយបញ្ចូលដោយដៃ';
+      }
+
+      const msg = `${label}\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ទឹកប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារ៖ ${chosenBank}\n💳 គណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះ៖ ${document.getElementById('withdrawAccName').value}`;
 
       try {
-        const select = document.getElementById('withdrawSelectBet');
-        if (!select.value) {
-          showCustomAlert('បញ្ហាទិន្នន័យ', '⚠️ សូមជ្រើសរើសលេខដែលអ្នកបានចាក់ត្រូវ!', 'error');
-          btnSubmit.disabled = false;
-          btnSubmit.innerText = "🚀 ផ្ញើសំណើដកប្រាក់រង្វាន់";
-          return;
-        }
-
-        const bet = JSON.parse(select.value);
-        const reqType = document.getElementById('withdrawRequestType').value;
-        const phone = document.getElementById('withdrawPhone').value.trim();
-        let chosenBank = document.getElementById('withdrawBank').value;
-        const accNo = document.getElementById('withdrawAccNo').value.trim();
-        const accName = document.getElementById('withdrawAccName').value.trim();
-
-        if (!phone || !chosenBank || !accNo || !accName) {
-          showCustomAlert('បញ្ចូលទិន្នន័យមិនពេញលេញ', '⚠️ សូមបំពេញព័ត៌មានទាំងអស់ឲ្យបានត្រឹមត្រូវ!', 'error');
-          btnSubmit.disabled = false;
-          btnSubmit.innerText = "🚀 ផ្ញើសំណើដកប្រាក់រង្វាន់";
-          return;
-        }
-
-        if (chosenBank === 'MANUAL') {
-          chosenBank = document.getElementById('withdrawBankManual').value.trim() || 'ធនាគារវាយបញ្ចូលដោយដៃ';
-        }
-
-        const label = reqType === 'late_withdrawal' ?
-          '⏰ **ស្នើសុំដកប្រាក់យឺត (កាលពីម្សិលមិញ)**' :
-          '🏦 **ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)**';
-
-        const msg = `${label}\n` +
-          `━━━━━━━━━━━━━━━━━━━━\n` +
-          `📱 លេខទូរសព្ទ: ${phone}\n` +
-          `🔢 លេខត្រូវ: ${bet.num}\n` +
-          `💰 ទឹកប្រាក់រង្វាន់: ${bet.win}\n` +
-          `━━━━━━━━━━━━━━━━━━━━\n` +
-          `🏦 ធនាគារ: ${chosenBank}\n` +
-          `💳 លេខគណនី: ${accNo}\n` +
-          `👤 ឈ្មោះគណនី: ${accName}\n` +
-          `━━━━━━━━━━━━━━━━━━━━`;
-
         await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
-
+        
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
         history = history.map(item => {
-          if (item.timestamp === bet.timestamp && item.num === bet.num) {
+          if(item.timestamp === bet.timestamp && item.num === bet.num) {
             item.status = 'claimed';
-            item.withdrawTime = new Date().toLocaleString('km-KH');
-            item.withdrawBank = chosenBank;
-            item.withdrawAcc = accNo;
           }
           return item;
         });
         localStorage.setItem('user_bet_history', JSON.stringify(history));
-
-        showCustomAlert('ជោគជ័យ', '✅ បានផ្ញើសំណើដកប្រាក់រួចរាល់!', 'success');
-        closeModal('withdrawModal');
-        this.reset();
-        document.getElementById('manualBankInputArea').style.display = 'none';
         renderUserBetHistory();
 
-      } catch (error) {
-        console.error('❌ Error:', error);
+        showCustomAlert('ជោគជ័យ', '✅ បានផ្ញើសំណើដកប្រាក់រួចរាល់!', 'success');
+        closeModal('withdrawModal'); this.reset();
+        document.getElementById('manualBankInputArea').style.display = 'none';
+      } catch (err) {
         showCustomAlert('បរាជ័យ', '⚠️ មានបញ្ហាក្នុងការផ្ញើ! សូមព្យាយាមម្តងទៀត។', 'error');
       } finally {
         btnSubmit.disabled = false;
@@ -1082,21 +892,20 @@
       }
     });
 
-    // ============================================================
-    // History & Results Functions
-    // ============================================================
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function contactAdminTelegram() { window.open('https://t.me/Application_Receiving_Officer', '_blank'); }
+    function copyWebsiteLink() { navigator.clipboard.writeText('https://khmer-lucky-number.github.io/My-lucky-number/#'); showCustomAlert('ជោគជ័យ', '📋 បានចម្លងតំណភ្ជាប់រួចរាល់!', 'success'); }
+    function seededRandom(seed) { let x = Math.sin(seed) * 10000; return x - Math.floor(x); }
+
     function renderGlobalHistoryResults() {
-      const tbody = document.getElementById('historyBody');
-      const letters = ['A', 'B', 'C', 'D', 'E'];
-      let html = '';
+      const tbody = document.getElementById('historyBody'); const letters = ['A', 'B', 'C', 'D', 'E']; let html = '';
       for (let i = 0; i < 4; i++) {
-        let d = new Date();
-        d.setDate(d.getDate() - i);
-        const seed = parseInt(d.getFullYear().toString() + (d.getMonth() + 1).toString() + d.getDate().toString());
+        let d = new Date(); d.setDate(d.getDate() - i);
+        const seed = parseInt(d.getFullYear().toString() + (d.getMonth()+1).toString() + d.getDate().toString());
         letters.forEach((l, idx) => {
           let rTwo = Math.floor(seededRandom(seed + idx + 12) * 90) + 10;
           let rThree = Math.floor(seededRandom(seed + idx + 16) * 900) + 100;
-          html += `<tr>${idx === 0 ? `<td rowspan="5">${d.toLocaleDateString('km-KH')}</td>` : ''}<td>ប៉ុស្តិ៍ ${l}</td><td>${rTwo}</td><td>${rThree}</td></tr>`;
+          html += `<tr>${idx===0?`<td rowspan="5">${d.toLocaleDateString('km-KH')}</td>`:''}<td>ប៉ុស្តិ៍ ${l}</td><td>${rTwo}</td><td>${rThree}</td></tr>`;
         });
       }
       tbody.innerHTML = html;
@@ -1104,19 +913,14 @@
 
     function checkWinLossStatuses() {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
-      const now = new Date().getTime();
-      let updated = false;
+      const now = new Date().getTime(); let updated = false;
       history.forEach(bet => {
         if (bet.status === 'pending' && now >= bet.targetDrawTime) {
           const drawDate = new Date(bet.targetDrawTime);
-          const seed = parseInt(drawDate.getFullYear().toString() + (drawDate.getMonth() + 1).toString() + drawDate.getDate().toString());
-          const letters = ['A', 'B', 'C', 'D', 'E'];
-          const idx = letters.indexOf(bet.num.split('-')[0]);
-          let winNum = bet.type === 'two' ?
-            String(Math.floor(seededRandom(seed + idx + 12) * 90) + 10) :
-            String(Math.floor(seededRandom(seed + idx + 16) * 900) + 100);
-          bet.status = (winNum === bet.num.split('-')[1]) ? 'win' : 'loss';
-          updated = true;
+          const seed = parseInt(drawDate.getFullYear().toString() + (drawDate.getMonth()+1).toString() + drawDate.getDate().toString());
+          const letters = ['A','B','C','D','E']; const idx = letters.indexOf(bet.num.split('-')[0]);
+          let winNum = bet.type === 'two' ? String(Math.floor(seededRandom(seed + idx + 12) * 90) + 10) : String(Math.floor(seededRandom(seed + idx + 16) * 900) + 100);
+          bet.status = (winNum === bet.num.split('-')[1]) ? 'win' : 'loss'; updated = true;
         }
       });
       if (updated) localStorage.setItem('user_bet_history', JSON.stringify(history));
@@ -1126,90 +930,53 @@
     function renderUserBetHistory() {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
       const tbody = document.getElementById('userBetHistoryBody');
-      if (history.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិការចាក់នៅឡើយទេ</td></tr>`;
-        return;
-      }
+      if (history.length === 0) { tbody.innerHTML = `<tr><td colspan="7" style="color:#6c757d; padding:15px;">មិនទាន់មានប្រវត្តិការចាក់នៅឡើយទេ</td></tr>`; return; }
       tbody.innerHTML = history.slice().reverse().map(item => {
         let statusText = '';
-        if (item.status === 'win') statusText = '<span class="status-badge status-win">🎉 ឈ្នះ</span>';
-        else if (item.status === 'loss') statusText = '<span class="status-badge status-loss">❌ មិនត្រូវ</span>';
-        else if (item.status === 'claimed') statusText = '<span class="status-badge" style="background:#e6f4ea; color:#137333;">✅ បើករង្វាន់ហើយ</span>';
+        if(item.status === 'win') statusText = '<span class="status-badge status-win">🎉 ឈ្នះ</span>';
+        else if(item.status === 'loss') statusText = '<span class="status-badge status-loss">❌ មិនត្រូវ</span>';
+        else if(item.status === 'claimed') statusText = '<span class="status-badge" style="background:#e6f4ea; color:#137333;">✅ បើករង្វាន់ហើយ</span>';
         else statusText = '<span class="status-badge status-pending">⏳ រង់ចាំ</span>';
 
-        return `<tr><td>${item.time}</td><td style="font-weight:bold;">${item.phone}</td><td style="color:#0078D7; font-weight:bold;">${item.num}</td><td>${item.type === 'two' ? '២ខ្ទង់' : '៣ខ្ទង់'}<br><span style="font-size:11px; color:#6c757d;">(${item.targetDrawLabel})</span></td><td>${item.cost}</td><td>${statusText}</td><td style="color:#28a745; font-weight:bold;">${item.win}</td></tr>`;
+        return `<tr><td>${item.time}</td><td style="font-weight:bold;">${item.phone}</td><td style="color:#0078D7; font-weight:bold;">${item.num}</td><td>${item.type==='two'?'២ខ្ទង់':'៣ខ្ទង់'}<br><span style="font-size:11px; color:#6c757d;">(${item.targetDrawLabel})</span></td><td>${item.cost}</td><td>${statusText}</td><td style="color:#28a745; font-weight:bold;">${item.win}</td></tr>`;
       }).join('');
     }
 
     function updateCountdown() {
-      const now = new Date();
-      const hour = now.getHours();
-      let target = new Date(now);
-      target.setSeconds(0);
-      target.setMilliseconds(0);
-      let targetHour, label, state;
-      if (hour < 12) {
-        targetHour = 12;
-        label = '12:00:00 (លេខ២ខ្ទង់)';
-        state = 'waiting_12';
-      } else if (hour < 16) {
-        targetHour = 16;
-        label = '16:00:00 (លេខ៣ខ្ទង់)';
-        state = 'waiting_16';
-      } else {
-        target.setDate(target.getDate() + 1);
-        targetHour = 12;
-        label = '12:00:00 ថ្ងៃស្អែក';
-        state = 'waiting_12';
-      }
+      const now = new Date(); const hour = now.getHours(); let target = new Date(now);
+      target.setSeconds(0); target.setMilliseconds(0); let targetHour, label, state;
+      if (hour < 12) { targetHour = 12; label = '12:00:00 (លេខ២ខ្ទង់)'; state = 'waiting_12'; } 
+      else if (hour < 16) { targetHour = 16; label = '16:00:00 (លេខ៣ខ្ទង់)'; state = 'waiting_16'; } 
+      else { target.setDate(target.getDate() + 1); targetHour = 12; label = '12:00:00 ថ្ងៃស្អែក'; state = 'waiting_12'; }
       target.setHours(targetHour, 0, 0, 0);
-
+      
       const diff = target - now;
-      const seed = parseInt(now.getFullYear().toString() + (now.getMonth() + 1).toString() + now.getDate().toString());
-      const letters = ['A', 'B', 'C', 'D', 'E'];
-
+      const seed = parseInt(now.getFullYear().toString() + (now.getMonth()+1).toString() + now.getDate().toString());
+      const letters = ['A','B','C','D','E'];
+      
       if (state === 'waiting_12') {
-        document.getElementById('box_two_container').innerHTML = letters.map(l =>
-          `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`
-        ).join('');
-        document.getElementById('box_three_container').innerHTML = letters.map((l, idx) =>
-          `<div><span class="letter">${l}:</span> <span class="number">${Math.floor(seededRandom((seed - 1) + idx + 16) * 900) + 100}</span></div>`
-        ).join('');
+        document.getElementById('box_two_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
+        document.getElementById('box_three_container').innerHTML = letters.map((l, idx) => `<div><span class="letter">${l}:</span> <span class="number">${Math.floor(seededRandom((seed-1) + idx + 16) * 900) + 100}</span></div>`).join('');
       } else {
-        document.getElementById('box_two_container').innerHTML = letters.map((l, idx) =>
-          `<div><span class="letter">${l}:</span> <span class="number">${Math.floor(seededRandom(seed + idx + 12) * 90) + 10}</span></div>`
-        ).join('');
-        document.getElementById('box_three_container').innerHTML = letters.map(l =>
-          `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`
-        ).join('');
+        document.getElementById('box_two_container').innerHTML = letters.map((l, idx) => `<div><span class="letter">${l}:</span> <span class="number">${Math.floor(seededRandom(seed + idx + 12) * 90) + 10}</span></div>`).join('');
+        document.getElementById('box_three_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
       }
 
       checkWinLossStatuses();
       if (diff <= 0) return;
-      const h = Math.floor(diff / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      document.getElementById('countdownDisplay').innerHTML =
-        `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      const h = Math.floor(diff / 3600000); const m = Math.floor((diff % 3600000) / 60000); const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('countdownDisplay').innerHTML = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
       document.getElementById('nextTimeLabel').innerHTML = `🎯 គោលដៅបន្ទាប់៖ ${label}`;
     }
 
     function updateDigitalClockWidget() {
       const now = new Date();
-      document.getElementById('widgetTime').innerText =
-        `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-      document.getElementById('widgetDate').innerText =
-        now.toLocaleDateString('km-KH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('widgetTime').innerText = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      document.getElementById('widgetDate').innerText = now.toLocaleDateString('km-KH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    // ============================================================
-    // Initialize
-    // ============================================================
-    setInterval(updateCountdown, 1000);
-    setInterval(updateDigitalClockWidget, 1000);
-    updateCountdown();
-    updateDigitalClockWidget();
-    renderUserBetHistory();
+    setInterval(updateCountdown, 1000); setInterval(updateDigitalClockWidget, 1000);
+    updateCountdown(); updateDigitalClockWidget();
   </script>
 </body>
 </html>
