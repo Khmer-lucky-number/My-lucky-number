@@ -309,22 +309,23 @@
         <div>
           <label style="font-weight:bold; color:#0078D7; font-size:14px; display:block; margin-bottom:6px;">💰 ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ</label>
           <div class="amount-buttons">
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(500, '៛')">500៛</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1000, '៛')">1000៛</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5000, '៛')">5000៛</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10000, '៛')">10000៛</button>
-            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(40000, '៛')">40000៛</button>
+            <button type="button" class="btn btn-amount" onclick="selectQuickAmount(0.25, '$')">0.25$</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(1, '$')">1$</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5, '$')">5$</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10, '$')">10$</button>
           </div>
           <div style="display:flex; gap:8px; margin-top:8px; align-items:center;">
-            <input type="number" id="quickAmountInput" placeholder="ចំនួនទឹកប្រាក់ដោយដៃ" min="1" style="flex:1; padding:6px 10px;" oninput="updateQuickAmountDisplay()">
+            <input type="number" id="quickAmountInput" placeholder="ចំនួនទឹកប្រាក់ដោយដៃ" min="0.01" step="any" style="flex:1; padding:6px 10px;" oninput="updateQuickAmountDisplay()">
             <select id="quickCurrency" style="width:auto; padding:6px 10px;" onchange="updateQuickAmountDisplay()">
               <option value="USD">ដុល្លារ ($)</option>
               <option value="KHR">រៀល (៛)</option>
             </select>
           </div>
-          <span class="warning-text" id="limitWarning" style="display:none;">⚠️ ទឹកប្រាក់មិនអាចលើសពី 10$ ឬ 40,000៛ ក្នុងមួយលេខបានទេ!</span>
+          <span class="warning-text" id="limitWarning" style="display:none;">⚠️ ទឹកប្រាក់ត្រូវតែចាប់ពី 500៛ ឬ 0.25$ ឡើងទៅ និងមិនលើសពី 10$ ឬ 40,000៛!</span>
         </div>
 
         <div class="bet-summary">
@@ -343,7 +344,7 @@
           <table class="history-table" style="background:#fff;">
             <thead>
               <tr style="background: linear-gradient(135deg, #6f42c1, #5a32a3);">
-                <th>ម៉ោងចាក់</th><th>📱 លេខទូរសព្ទ</th><th>លេខចាក់</th><th>ប្រភេទ</th><th>ទឹកប្រាក់ចាក់</th><th>ស្ថានភាព</th><th>រង្វាន់បើត្រូវ</th>
+                <th>កាលបរិច្ឆេទចាក់</th><th>📱 លេខទូរសព្ទ</th><th>លេខចាក់</th><th>ប្រភេទ</th><th>ទឹកប្រាក់ចាក់</th><th>ស្ថានភាព</th><th>រង្វាន់បើត្រូវ</th>
               </tr>
             </thead>
             <tbody id="userBetHistoryBody">
@@ -393,12 +394,12 @@
         <ul>
           <li>ប្រព័ន្ធឆ្នោត N98 បើកទទួលការទស្សន៍ទាយផ្សងសំណាង ២៤ ម៉ោងលើ ២៤ ម៉ោង គ្មានថ្ងៃឈប់សម្រាក។</li>
           <li>ការភ្នាល់ត្រូវតែធ្វើឡើងយ៉ាងតិច ១០ នាទី មុនម៉ោងចេញលទ្ធផលផ្លូវការ។ រាល់ការបង់ប្រាក់យឺតយ៉ាវ នឹងត្រូវរុញទៅគណនាចូលក្នុងលទ្ធផលនៃវេនបន្ទាប់ដោយស្វ័យប្រវត្តិ។</li>
-          <li>ដែនកំណត់នៃការភ្នាល់៖ អប្បបរមា ១,០០០៛ ឬ ០.២៥$ និងអតិបរមា ៤០,០០០៛ ឬ ១០$ ក្នុងមួយលេខ ដើម្បីធានានូវសមធម៌ និងសុវត្ថិភាពហិរញ្ញវត្ថុរបស់សមាជិក។</li>
+          <li>ដែនកំណត់នៃការភ្នាល់៖ អប្បបរមា ៥០០៛ ឬ ០.២៥$ (អាចចាក់ចាប់ពី ៥០០៛ឡើងទៅក្នុងមួយលេខ) និងអតិបរមា ៤០,០០០៛ ឬ ១០$ ក្នុងមួយលេខ ដើម្បីធានានូវសមធម៌ និងសុវត្ថិភាពហិរញ្ញវត្ថុរបស់សមាជិក។</li>
         </ul>
         
         <h4>២. រចនាសម្ព័ន្ធប្រាក់រង្វាន់ និងអត្រាទូទាត់៖</h4>
         <ul>
-          <li><strong>ប្រភេទលេខ ២ ខ្ទង់ (ប៉ុស្តិ៍ A, B, C, D, E)៖</strong> ចេញលទ្ធផលនៅម៉ោង ១២:០០ ថ្ងៃត្រង់។ អត្រាឈ្នះរង្វាន់គឺ ១$ សង ៧០$ (ឬគុណនឹង ៧០ ដងនៃដើមទុនជាប្រាក់រៀល)។</li>
+          <li><strong>ប្រភេទលេខ ២ ខ្ទង់ (ប៉ុស្តិ៍ A, B, C, D, E)៖</strong> ចេញលទ្ធផលនៅម៉ោង ១២:០០ ថ្ងៃត្រង់ Presets។ អត្រាឈ្នះរង្វាន់គឺ ១$ សង ៧០$ (ឬគុណនឹង ៧០ ដងនៃដើមទុនជាប្រាក់រៀល)។</li>
           <li><strong>ប្រភេទលេខ ៣ ខ្ទង់ (ប៉ុស្តិ៍ A, B, C, D, E)៖</strong> ចេញលទ្ធផលនៅម៉ោង ១៦:០០ រសៀល។ អត្រាឈ្នះរង្វាន់គឺ ១$ សង ៥០០$ (ឬគុណនឹង ៥០០ ដងនៃដើមទុនជាប្រាក់រៀល)។</li>
         </ul>
 
@@ -409,7 +410,7 @@
           <li>រាល់ការស្នើសុំដកប្រាក់ សមាជិកត្រូវតែជ្រើសរើសលេខដែលបានចាក់ត្រូវពីប្រវត្តិនៃប្រព័ន្ធ និងភ្ជាប់មកជាមួយនូវរូបភាព QR Code ធនាគារដែលមានទិន្នន័យត្រឹមត្រូវ។</li>
         </ul>
 
-        <h4>៤. សុវត្ថិភាពទិន្នន័យ និងលក្ខខណ្ឌមោឃភាព៖</h4>
+        <h4>៤. សυវត្ថិភាពទិន្នន័យ និងលក្ខខណ្ឌមោឃភាព៖</h4>
         <ul>
           <li>រាល់ការផ្ញើវិក្កយបត្របង់ប្រាក់ចាក់ឆ្នោត (Screenshot) ត្រូវតែជារូបភាពពិត មិនមានការកាត់ត កែច្នៃ ឬប្រើប្រាស់វិក្កយបត្រចាស់ឡើយ។ ប្រព័ន្ធនឹងធ្វើការលុបគណនីចោលជាអចិន្ត្រៃយ៍ចំពោះសមាជិកណាដែលមានចេតនាបោកប្រាស់។</li>
           <li>ការសម្រេចរបស់គណៈកម្មការគ្រប់គ្រងឆ្នោតខ្មែរ N98 គឺជាការសម្រេចចុងក្រោយ និងមានសុពលភាពស្របច្បាប់។</li>
@@ -437,12 +438,20 @@
         <input type="tel" id="depositPhone" required placeholder="សូមបញ្ចូលលេខទូរសព្ទរបស់អ្នកឱ្យបានត្រឹមត្រូវ" oninput="checkInputsForAbaButton()">
         
         <label>ធនាគារទូទាត់ប្រាក់ចាក់ *</label>
-        <select id="depositBank" required onchange="checkInputsForAbaButton()">
+        <select id="depositBank" required onchange="toggleManualDepositBankInput()">
           <option value="">-- សូមជ្រើសរើសធនាគារទូទាត់ --</option>
           <option value="ABA">ABA Bank</option>
           <option value="ACLEDA">ACLEDA Bank</option>
           <option value="WING">Wing Bank</option>
+          <option value="TrueMoney">TrueMoney</option>
+          <option value="Canadia Bank">Canadia Bank</option>
+          <option value="MANUAL">✍️ វាយបញ្ចូលឈ្មោះធនាគារដោយដៃ</option>
         </select>
+
+        <div id="manualDepositBankArea" style="display:none; margin-top:8px;">
+          <label style="color:#e65100;">✍️ សូមបញ្ចូលឈ្មោះធនាគារផ្សេងទៀតរបស់អ្នក៖</label>
+          <input type="text" id="depositBankManual" placeholder="សូមវាយបញ្ចូលឈ្មោះធនាគារនៅទីនេះ..." oninput="checkInputsForAbaButton()">
+        </div>
         
         <label>ឈ្មោះគណនីរបស់អ្នក *</label>
         <input type="text" id="depositAccountName" required placeholder="ឧ. KONG SOVAN" oninput="checkInputsForAbaButton()">
@@ -516,11 +525,6 @@
           <option value="TrueMoney">TrueMoney</option>
           <option value="Canadia Bank">Canadia Bank</option>
           <option value="Sathapana Bank">Sathapana Bank</option>
-          <option value="J Trust Royal Bank">J Trust Royal Bank</option>
-          <option value="FTB Bank">FTB Bank</option>
-          <option value="Prince Bank">Prince Bank</option>
-          <option value="PPCBank">PPCBank</option>
-          <option value="Phillip Bank">Phillip Bank</option>
           <option value="MANUAL">✍️ វាយបញ្ចូលឈ្មោះធនាគារដោយដៃ</option>
         </select>
 
@@ -581,7 +585,7 @@
     }
 
     async function sendTelegramNotification(message, fileInputId, config) {
-      const fullMessage = `${message}\n\n🕐 ពេលវេលា: ${new Date().toLocaleString('km-KH')}`;
+      const fullMessage = `${message}\n\n🕐 ពេលវេលាប្រតិបត្តិការ: ${new Date().toLocaleString('km-KH')}`;
       const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
       
       try {
@@ -610,14 +614,36 @@
       }
     }
 
+    function toggleManualDepositBankInput() {
+      const bankSelect = document.getElementById('depositBank').value;
+      const manualArea = document.getElementById('manualDepositBankArea');
+      const manualInput = document.getElementById('depositBankManual');
+      
+      if (bankSelect === 'MANUAL') {
+        manualArea.style.display = 'block';
+        manualInput.required = true;
+      } else {
+        manualArea.style.display = 'none';
+        manualInput.required = false;
+        manualInput.value = '';
+      }
+      checkInputsForAbaButton();
+    }
+
     function checkInputsForAbaButton() {
       const phone = document.getElementById('depositPhone').value.trim();
       const bank = document.getElementById('depositBank').value;
+      const manualBank = document.getElementById('depositBankManual').value.trim();
       const accountName = document.getElementById('depositAccountName').value.trim();
       const btnABA = document.getElementById('btnLinkABA');
       const btnAcleda = document.getElementById('btnLinkAcleda');
 
-      if (phone !== "" && bank !== "" && accountName !== "") {
+      let isBankValid = bank !== "";
+      if (bank === 'MANUAL' && manualBank === "") {
+        isBankValid = false;
+      }
+
+      if (phone !== "" && isBankValid && accountName !== "") {
         btnABA.classList.remove('disabled');
         btnAcleda.classList.remove('disabled');
       } else {
@@ -735,9 +761,21 @@
       const amount = parseFloat(document.getElementById('quickAmountInput').value) || 0;
       quickCurrency = document.getElementById('quickCurrency').value;
       const warning = document.getElementById('limitWarning');
-      if (quickCurrency === 'USD' && amount > 10) { warning.style.display = 'block'; quickAmount = 10; document.getElementById('quickAmountInput').value = 10; } 
-      else if (quickCurrency === 'KHR' && amount > 40000) { warning.style.display = 'block'; quickAmount = 40000; document.getElementById('quickAmountInput').value = 40000; } 
-      else { warning.style.display = 'none'; quickAmount = amount; }
+      
+      let isInvalid = false;
+      if (quickCurrency === 'USD') {
+        if (amount < 0.25 || amount > 10) { isInvalid = true; }
+      } else {
+        if (amount < 500 || amount > 40000) { isInvalid = true; }
+      }
+
+      if (isInvalid) { 
+        warning.style.display = 'block'; 
+        quickAmount = 0; 
+      } else { 
+        warning.style.display = 'none'; 
+        quickAmount = amount; 
+      }
       updateSummary();
     }
 
@@ -759,6 +797,7 @@
       window._betData = { numbers: all, amount: quickAmount, currency: quickCurrency, list: [...betNumbers] };
       
       document.getElementById('depositForm').reset();
+      document.getElementById('manualDepositBankArea').style.display = 'none';
       document.getElementById('btnLinkABA').classList.add('disabled');
       document.getElementById('btnLinkAcleda').classList.add('disabled');
       document.getElementById('screenshotArea').style.opacity = "0.5";
@@ -832,10 +871,16 @@
       btnSubmit.innerText = "កំពុងបញ្ជូន...";
 
       const data = window._betData; const phone = document.getElementById('depositPhone').value;
-      const bank = document.getElementById('depositBank').value; const name = document.getElementById('depositAccountName').value;
+      const bank = document.getElementById('depositBank').value;
+      let displayBank = bank;
+      if (bank === 'MANUAL') {
+        displayBank = document.getElementById('depositBankManual').value.trim() || 'ធនាគារវាយបញ្ចូលដោយដៃ';
+      }
+      const name = document.getElementById('depositAccountName').value;
       const sym = data.currency === 'KHR' ? '៛' : '$';
+      const currentTimeString = new Date().toLocaleString('km-KH');
 
-      const msg = `📥 **ការទូទាត់ប្រាក់ចាក់ឆ្នោត (N98)**\n👤 ឈ្មោះគណនី: ${name}\n📱 លេខទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់/លេខ: ${data.amount} ${sym}\n💰 សរុបរួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}`;
+      const msg = `📥 **ការទូទាត់ប្រាក់ចាក់ឆ្នោត (N98)**\n👤 ឈ្មោះគណនី: ${name}\n📱 លេខទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${displayBank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់/លេខ: ${data.amount} ${sym}\n💰 សរុបរួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}\n📅 កាលបរិច្ឆេទចាក់: ${currentTimeString}`;
 
       try {
         await sendTelegramNotification(msg, 'depositScreenshot', TELEGRAM_BET_CONFIG);
@@ -843,7 +888,7 @@
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
         data.list.forEach(item => {
           history.push({
-            time: new Date().toLocaleString('km-KH'), timestamp: new Date().getTime(),
+            time: currentTimeString, timestamp: new Date().getTime(),
             targetDrawTime: item.drawTime, targetDrawLabel: item.drawLabel, phone: phone,
             num: `${item.letter}-${item.number}`, type: item.type, cost: `${data.amount} ${sym}`,
             win: `${(item.type === 'two' ? data.amount*70 : data.amount*500).toLocaleString()} ${sym}`, status: 'pending'
@@ -876,8 +921,9 @@
       if (chosenBank === 'MANUAL') {
         chosenBank = document.getElementById('withdrawBankManual').value.trim() || 'ធនាគារវាយបញ្ចូលដោយដៃ';
       }
+      const currentTimeString = new Date().toLocaleString('km-KH');
 
-      const msg = `${label}\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ទឹកប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារ៖ ${chosenBank}\n💳 គណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះ៖ ${document.getElementById('withdrawAccName').value}`;
+      const msg = `${label}\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ទឹកប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារ៖ ${chosenBank}\n💳 គណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះ៖ ${document.getElementById('withdrawAccName').value}\n📅 កាលបរិច្ឆេទសំណើ: ${currentTimeString}`;
 
       try {
         await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
@@ -949,7 +995,7 @@
         else if(item.status === 'claimed') statusText = '<span class="status-badge" style="background:#e6f4ea; color:#137333;">✅ បើករង្វាន់ហើយ</span>';
         else statusText = '<span class="status-badge status-pending">⏳ រង់ចាំ</span>';
 
-        return `<tr><td>${item.time}</td><td style="font-weight:bold;">${item.phone}</td><td style="color:#0078D7; font-weight:bold;">${item.num}</td><td>${item.type==='two'?'២ខ្ទង់':'៣ខ្ទង់'}<br><span style="font-size:11px; color:#6c757d;">(${item.targetDrawLabel})</span></td><td>${item.cost}</td><td>${statusText}</td><td style="color:#28a745; font-weight:bold;">${item.win}</td></tr>`;
+        return `<tr><td style="font-size:12px; line-height:1.4;">${item.time}</td><td style="font-weight:bold;">${item.phone}</td><td style="color:#0078D7; font-weight:bold;">${item.num}</td><td>${item.type==='two'?'២ខ្ទង់':'៣ខ្ទង់'}<br><span style="font-size:11px; color:#6c757d;">(${item.targetDrawLabel})</span></td><td>${item.cost}</td><td>${statusText}</td><td style="color:#28a745; font-weight:bold;">${item.win}</td></tr>`;
       }).join('');
     }
 
