@@ -243,10 +243,6 @@
       </div>
       <div class="time-display" id="countdownDisplay">--:--:--</div>
       <div class="next-time" id="nextTimeLabel">🎯 កំពុងគណនា...</div>
-      <!-- Admin Publish Button (hidden by default) -->
-      <button id="adminPublishBtn" onclick="publishOfficialResult()" style="display:none; margin-top:15px; background:#dc3545; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:bold;">
-        🔒 ប្រកាសលទ្ធផលផ្លូវការ (សម្រាប់អ្នកគ្រប់គ្រង)
-      </button>
     </div>
 
     <!-- Home Section -->
@@ -600,15 +596,14 @@
 
     let currentBetType = 'two'; let selectedLetter = ''; let betNumbers = [];
     let quickAmount = 0; let quickCurrency = 'USD';
-    let adminClickCount = 0;
 
-    // ===== SEEDED RANDOM (FROM OLD CODE) - DETERMINISTIC RESULTS =====
+    // ===== SEEDED RANDOM (DETERMINISTIC - SAME FOR ALL DEVICES) =====
     function seededRandom(seed) { 
       let x = Math.sin(seed) * 10000; 
       return x - Math.floor(x); 
     }
 
-    // ===== GET WINNING NUMBER USING SEEDED RANDOM (CROSS-DEVICE CONSISTENT) =====
+    // ===== GET WINNING NUMBER USING SEEDED RANDOM =====
     function getWinningNumber(targetLabel, letter, isThreeDigit) {
       const today = new Date();
       let dateForSeed = new Date(today);
@@ -636,7 +631,7 @@
       }
     }
 
-    // ===== RISK MANAGEMENT: 70% CAP (BUT USING DETERMINISTIC RESULTS FOR CONSISTENCY) =====
+    // ===== RISK MANAGEMENT: 70% CAP =====
     function calculateTotalRevenueFromHistory(targetLabel) {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
       let total = 0;
@@ -673,31 +668,19 @@
       return totalPayout;
     }
 
-    // ===== SAFE WINNING NUMBER WITH RISK SAFEGUARD + DETERMINISTIC =====
+    // ===== SAFE WINNING NUMBER WITH RISK SAFEGUARD =====
     function getSafeWinningNumber(targetLabel, letter, isThreeDigit) {
-      // First, try to get from localStorage (official published result)
-      const today = new Date().toISOString().split('T')[0];
-      const storedDate = localStorage.getItem('n98_official_date');
-      const storedTarget = localStorage.getItem('n98_official_target');
-      if (storedDate === today && storedTarget === targetLabel) {
-        const officialKey = `n98_official_${letter}_${targetLabel}`;
-        const officialVal = localStorage.getItem(officialKey);
-        if (officialVal) {
-          return officialVal;
-        }
-      }
-
-      // If no official result yet, use deterministic seeded random WITH risk cap check
+      // 1. Try deterministic result first
       const baseResult = getWinningNumber(targetLabel, letter, isThreeDigit);
       
-      // Check if this result would exceed 70% cap
+      // 2. Check if this result would exceed 70% cap
       let totalRevenue = calculateTotalRevenueFromHistory(targetLabel);
       if (totalRevenue === 0) return baseResult; // No bets yet, safe
       
       let payout = calculateTotalPayoutForNumber(targetLabel, letter, baseResult, isThreeDigit);
       let allowedMaxPayout = totalRevenue * 0.7;
       
-      // If payout exceeds cap, find a safer number
+      // 3. If payout exceeds cap, find a safer number
       if (payout > allowedMaxPayout) {
         const letters = ['A','B','C','D','E'];
         const idx = letters.indexOf(letter);
@@ -760,53 +743,6 @@
       } catch (error) {
         console.error("Telegram error:", error);
         throw error;
-      }
-    }
-
-    // ===== ADMIN PUBLISH OFFICIAL RESULT =====
-    async function publishOfficialResult() {
-      const password = prompt("សូមបញ្ចូលពាក្យសម្ងាត់សម្រាប់អ្នកគ្រប់គ្រង:");
-      if (password !== 'admin123') { 
-        showCustomAlert('បរាជ័យ', 'ពាក្យសម្ងាត់មិនត្រឹមត្រូវ!', 'error'); 
-        return; 
-      }
-      
-      const now = new Date();
-      const hour = now.getHours();
-      let targetLabel, isThreeDigit;
-      if (hour < 12) { targetLabel = '12:00'; isThreeDigit = false; }
-      else if (hour < 16) { targetLabel = '16:00'; isThreeDigit = true; }
-      else { targetLabel = '12:00'; isThreeDigit = false; }
-      
-      const letters = ['A','B','C','D','E'];
-      let results = {};
-      letters.forEach(l => {
-        results[l] = getSafeWinningNumber(targetLabel, l, isThreeDigit);
-      });
-      
-      const today = now.toISOString().split('T')[0];
-      const msg = `📢 **លទ្ធផលឆ្នោត N98 (ផ្លូវការ)**\n🕐 ម៉ោង ${targetLabel}\n📅 កាលបរិច្ឆេទ: ${today}\n${letters.map(l => `${l}: ${results[l]}`).join('\n')}`;
-      
-      try {
-        const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_RESULT_CONFIG.token}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: TELEGRAM_RESULT_CONFIG.chatId, text: msg })
-        });
-        if (!res.ok) throw new Error('Failed');
-        
-        // Save to localStorage for all devices to sync
-        letters.forEach(l => {
-          const key = `n98_official_${l}_${targetLabel}`;
-          localStorage.setItem(key, results[l]);
-        });
-        localStorage.setItem('n98_official_target', targetLabel);
-        localStorage.setItem('n98_official_date', today);
-        
-        showCustomAlert('ជោគជ័យ', 'បានប្រកាសលទ្ធផលផ្លូវការទៅ Telegram ហើយ!', 'success');
-        updateCountdown();
-      } catch(e) {
-        showCustomAlert('បរាជ័យ', 'មិនអាចប្រកាសលទ្ធផលបានទេ!', 'error');
       }
     }
 
@@ -1067,17 +1003,32 @@
       return newHistory;
     }
 
-    // ===== RENDER GLOBAL HISTORY =====
+    // ===== RENDER GLOBAL HISTORY (Only shows completed draws) =====
     function renderGlobalHistoryResults() {
       const tbody = document.getElementById('historyBody'); 
       const letters = ['A', 'B', 'C', 'D', 'E']; 
+      const now = new Date();
+      const currentHour = now.getHours();
       let html = '';
+      
       for (let i = 0; i < 4; i++) {
-        let d = new Date(); d.setDate(d.getDate() - i);
+        let d = new Date();
+        d.setDate(d.getDate() - i);
+        
+        // For today (i=0), only show results if the draw time has passed
+        let show12 = true, show16 = true;
+        if (i === 0) {
+          if (currentHour < 12) show12 = false;
+          if (currentHour < 16) show16 = false;
+        }
+        
         const seed = parseInt(d.getFullYear().toString() + (d.getMonth()+1).toString() + d.getDate().toString());
         letters.forEach((l, idx) => {
-          let rTwo = Math.floor(seededRandom(seed + idx + 12) * 90) + 10;
-          let rThree = Math.floor(seededRandom(seed + idx + 16) * 900) + 100;
+          let rTwo = (show12) ? Math.floor(seededRandom(seed + idx + 12) * 90) + 10 : '--';
+          let rThree = (show16) ? Math.floor(seededRandom(seed + idx + 16) * 900) + 100 : '---';
+          // If it's today and draw not happened yet, show "⏳" or "--" to avoid revealing future results
+          if (i === 0 && !show12) rTwo = '⏳';
+          if (i === 0 && !show16) rThree = '⏳';
           html += `<tr>${idx===0?`<td rowspan="5">${d.toLocaleDateString('km-KH')}</td>`:''}<td>ប៉ុស្តិ៍ ${l}</td><td>${rTwo}</td><td>${rThree}</td></tr>`;
         });
       }
@@ -1130,7 +1081,7 @@
       }).join('');
     }
 
-    // ===== UPDATE COUNTDOWN & DISPLAY RESULTS =====
+    // ===== UPDATE COUNTDOWN & DISPLAY RESULTS (AUTO-ANNOUNCE) =====
     let _announcing = false;
 
     function updateCountdown() {
@@ -1162,14 +1113,14 @@
       
       // Display results using deterministic seeded random
       if (state === 'waiting_12') {
-        // 12:00 not yet here → show pending for 12:00, show 16:00 results
+        // 12:00 not yet here → show pending for 12:00, show 16:00 results (from today)
         document.getElementById('box_two_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
         document.getElementById('box_three_container').innerHTML = letters.map(l => {
           let val = getSafeWinningNumber('16:00', l, true);
           return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
         }).join('');
       } else {
-        // 16:00 not yet here → show 12:00 results, pending for 16:00
+        // 16:00 not yet here → show 12:00 results (from today), pending for 16:00
         document.getElementById('box_two_container').innerHTML = letters.map(l => {
           let val = getSafeWinningNumber('12:00', l, false);
           return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
@@ -1177,7 +1128,7 @@
         document.getElementById('box_three_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
       }
 
-      // Auto-announce to Telegram when countdown reaches zero
+      // ===== AUTO-ANNOUNCE TO TELEGRAM WHEN COUNTDOWN REACHES ZERO =====
       if (diff <= 0 && !_announcing) {
         _announcing = true;
         let targetLabelToAnnounce = (state === 'waiting_12') ? '12:00' : '16:00';
@@ -1189,19 +1140,31 @@
           let results = letters2.map(l => `${l}: ${getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit)}`).join('\n');
           const msg = `📢 **លទ្ធផលឆ្នោត N98**\n🕐 ម៉ោង ${targetLabelToAnnounce}\n📅 ${todayKey}\n${results}`;
           
+          // Send to Telegram
           fetch(`https://api.telegram.org/bot${TELEGRAM_RESULT_CONFIG.token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: TELEGRAM_RESULT_CONFIG.chatId, text: msg })
           }).catch(e => console.error(e));
           
+          // Mark as announced to prevent duplicate
           localStorage.setItem(announceKey, 'true');
+          
+          // Also store the results locally so they can be synced across devices
+          letters2.forEach(l => {
+            const key = `n98_official_${l}_${targetLabelToAnnounce}`;
+            localStorage.setItem(key, getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit));
+          });
+          localStorage.setItem('n98_official_target', targetLabelToAnnounce);
+          localStorage.setItem('n98_official_date', todayKey);
         }
         setTimeout(() => { _announcing = false; }, 5000);
       }
 
+      // Check win/loss statuses (for the users)
       checkWinLossStatuses();
 
+      // Update countdown display
       if (diff <= 0) return;
       const h = Math.floor(diff / 3600000); 
       const m = Math.floor((diff % 3600000) / 60000); 
@@ -1321,18 +1284,6 @@
       } finally {
         btnSubmit.disabled = false;
         btnSubmit.innerText = "🚀 ផ្ញើសំណើដកប្រាក់រង្វាន់";
-      }
-    });
-
-    // ===== COUNTDOWN CLICK TO SHOW ADMIN BUTTON =====
-    document.getElementById('countdown').addEventListener('click', function(e) {
-      if (e.target.tagName !== 'BUTTON') {
-        adminClickCount++;
-        if (adminClickCount >= 5) {
-          document.getElementById('adminPublishBtn').style.display = 'block';
-          adminClickCount = 0;
-          showCustomAlert('បើកមុខងារ', 'ប៊ូតុងអ្នកគ្រប់គ្រងត្រូវបានបង្ហាញ! (សូមបញ្ចូលពាក្យសម្ងាត់ admin123)', 'info');
-        }
       }
     });
 
