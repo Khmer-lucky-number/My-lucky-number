@@ -131,7 +131,6 @@
     .btn-aba-pay:hover:not(.disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,120,215,0.4); }
     .btn-aba-pay.disabled { background: #ced4da !important; color: #6c757d !important; pointer-events: none; box-shadow: none !important; opacity: 0.7; }
 
-    /* ប៊ូតុងជ្រើសរើសធនាគារក្នុង Modal */
     .bank-sub-group { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 15px 0; background: #f8f9fa; padding: 12px; border-radius: 8px; border: 1px solid #dee2e6; }
     .btn-bank-choice { width: 100%; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; display: block; color: white; font-size: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: all 0.2s; }
     .btn-bank-choice:hover { transform: translateY(-1px); filter: brightness(1.1); }
@@ -537,17 +536,25 @@
   </div>
 
   <script>
-    // ⚙️ config សម្រាប់ក្រុមដកប្រាក់តែមួយ (Withdraw Group)
-    const TELEGRAM_WITHDRAW_CONFIG = {
-      token: '8748063228:AAFlZqIUn8r6VN7zQbv_dks2skwvl6bjRpo',
-      chatId: '-5535752176'
-    };
+    // ============================================================
+    // ⚙️ CONFIGURATION - កែសម្រួល Tokens និង Chat IDs ឲ្យបានត្រឹមត្រូវ
+    // ============================================================
     
-    // ⚙️ config សម្រាប់ក្រុមកក់ ឬទស្សន៍ទាយ (Prediction/Bet Group)
-    const TELEGRAM_BET_CONFIG = {
-      token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc',
-      chatId: '-5338881653'
+    // 📌 ក្រុមសម្រាប់ទទួលសំណើដកប្រាក់ (Withdraw Group)
+    const TELEGRAM_WITHDRAW_CONFIG = {
+      token: '8748063228:AAFlZqIUn8r6VN7zQbv_dks2skwvl6bjRpo',  // Token សម្រាប់ Withdraw Group
+      chatId: '-5535752176'  // Chat ID សម្រាប់ Withdraw Group
     };
+
+    // 📌 ក្រុមសម្រាប់ទទួលការទស្សន៍ទាយ/ចាក់ឆ្នោត (Bet Group)
+    const TELEGRAM_BET_CONFIG = {
+      token: '8790558091:AAGwRivgCppOxQNgMdngSdC1u8U6mz6pwwc',  // Token សម្រាប់ Bet Group
+      chatId: '-5338881653'  // Chat ID សម្រាប់ Bet Group
+    };
+
+    // ============================================================
+    // កូដដែលនៅសល់ដូចដើម (មិនត្រូវកែប្រែ)
+    // ============================================================
 
     let winning_two_digit = {}; let winning_three_digit = {};
     let currentBetType = 'two'; let selectedLetter = ''; let betNumbers = [];
@@ -565,14 +572,13 @@
       modal.style.display = 'block';
     }
 
-    // 🛠️ កែសម្រួល៖ មុខងារផ្ញើទិន្នន័យ (រូបភាព និងសារ) ទៅកាន់ Telegram Bot ដោយប្រើ FormData យ៉ាងត្រឹមត្រូវ
+    // 📤 មុខងារផ្ញើទិន្នន័យទៅ Telegram
     async function sendTelegramNotification(message, fileInputId, config) {
       const fullMessage = `${message}\n\n🕐 ពេលវេលា: ${new Date().toLocaleString('km-KH')}`;
       const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
       
       try {
         if (fileInput && fileInput.files && fileInput.files[0]) {
-          // ប្រសិនបើមានជ្រើសរើសរូបភាព ត្រូវប្រើ FormData និងផ្ញើទៅកាន់ sendPhoto API
           const formData = new FormData();
           formData.append('chat_id', config.chatId);
           formData.append('photo', fileInput.files[0]);
@@ -587,7 +593,6 @@
             throw new Error(`Telegram API Error: ${errorText}`);
           }
         } else {
-          // ប្រសិនបើគ្មានរូបភាព ផ្ញើជាអក្សរធម្មតាទៅកាន់ sendMessage API
           const res = await fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -598,12 +603,17 @@
             throw new Error(`Telegram API Error: ${errorText}`);
           }
         }
-        console.log("Telegram Notification sent successfully!");
+        console.log("✅ Telegram Notification sent successfully!");
+        return true;
       } catch (error) {
-        console.error("Error sending notification to Telegram:", error);
+        console.error("❌ Error sending notification to Telegram:", error);
         throw error;
       }
     }
+
+    // ============================================================
+    // មុខងារផ្សេងទៀត (មិនផ្លាស់ប្តូរ)
+    // ============================================================
 
     function checkInputsForAbaButton() {
       const phone = document.getElementById('depositPhone').value.trim();
@@ -821,35 +831,49 @@
       btnSubmit.disabled = false;
     }
 
+    // ============================================================
     // 📥 ផ្ញើការទូទាត់ចាក់ឆ្នោត (Deposit Form)
+    // ============================================================
     document.getElementById('depositForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btnSubmit = document.getElementById('btnFinalDepositSubmit');
       btnSubmit.disabled = true;
-      btnSubmit.innerText = "កំពុងបញ្ជូន...";
+      btnSubmit.innerText = "⏳ កំពុងបញ្ជូន...";
 
-      const data = window._betData; const phone = document.getElementById('depositPhone').value;
-      const bank = document.getElementById('depositBank').value; const name = document.getElementById('depositAccountName').value;
+      const data = window._betData; 
+      const phone = document.getElementById('depositPhone').value;
+      const bank = document.getElementById('depositBank').value; 
+      const name = document.getElementById('depositAccountName').value;
       const sym = data.currency === 'KHR' ? '៛' : '$';
 
       const msg = `📥 **ការទូទាត់ប្រាក់ចាក់ឆ្នោត (N98)**\n👤 ឈ្មោះគណនី: ${name}\n📱 លេខទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${bank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់/លេខ: ${data.amount} ${sym}\n💰 សរុបរួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}`;
 
       try {
+        // ✅ ផ្ញើទៅកាន់ Bet Group (TELEGRAM_BET_CONFIG)
         await sendTelegramNotification(msg, 'depositScreenshot', TELEGRAM_BET_CONFIG);
         
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
         data.list.forEach(item => {
           history.push({
-            time: new Date().toLocaleString('km-KH'), timestamp: new Date().getTime(),
-            targetDrawTime: item.drawTime, targetDrawLabel: item.drawLabel, phone: phone,
-            num: `${item.letter}-${item.number}`, type: item.type, cost: `${data.amount} ${sym}`,
-            win: `${(item.type === 'two' ? data.amount*70 : data.amount*500).toLocaleString()} ${sym}`, status: 'pending'
+            time: new Date().toLocaleString('km-KH'), 
+            timestamp: new Date().getTime(),
+            targetDrawTime: item.drawTime, 
+            targetDrawLabel: item.drawLabel, 
+            phone: phone,
+            num: `${item.letter}-${item.number}`, 
+            type: item.type, 
+            cost: `${data.amount} ${sym}`,
+            win: `${(item.type === 'two' ? data.amount*70 : data.amount*500).toLocaleString()} ${sym}`, 
+            status: 'pending'
           });
         });
         localStorage.setItem('user_bet_history', JSON.stringify(history));
 
         showCustomAlert('ជោគជ័យ', '✅ បានផ្ញើវិក្កយបត្រទៅកាន់ភ្នាក់ងាររួចរាល់!', 'success');
-        closeModal('depositModal'); betNumbers = []; updateBetDisplay(); updateSummary();
+        closeModal('depositModal'); 
+        betNumbers = []; 
+        updateBetDisplay(); 
+        updateSummary();
       } catch (err) {
         showCustomAlert('បរាជ័យ', '⚠️ មានបញ្ហាក្នុងការផ្ញើ! សូមព្យាយាមម្តងទៀត។', 'error');
       } finally {
@@ -858,18 +882,20 @@
       }
     });
 
+    // ============================================================
     // 🏦 ស្នើសុំដកប្រាក់រង្វាន់ (Withdraw Form)
+    // ============================================================
     document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btnSubmit = document.getElementById('btnSubmitWithdraw');
       btnSubmit.disabled = true;
-      btnSubmit.innerText = "កំពុងបញ្ជូន...";
+      btnSubmit.innerText = "⏳ កំពុងបញ្ជូន...";
 
-      const select = document.getElementById('withdrawSelectBet'); if (!select.value) return;
+      const select = document.getElementById('withdrawSelectBet'); 
+      if (!select.value) return;
       const bet = JSON.parse(select.value);
       const reqType = document.getElementById('withdrawRequestType').value;
       
-      // កំណត់ចំណងជើងសារផ្ញើទៅតេឡេក្រាមតាមប្រភេទដកប្រាក់
       const label = reqType === 'late_withdrawal' ? '⏰ **ស្នើសុំដកប្រាក់យឺត (កាលពីម្សិលមិញ)**' : '🏦 **ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)**';
       
       let chosenBank = document.getElementById('withdrawBank').value;
@@ -880,7 +906,7 @@
       const msg = `${label}\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ទឹកប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារ៖ ${chosenBank}\n💳 គណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះ៖ ${document.getElementById('withdrawAccName').value}`;
 
       try {
-        // កែសម្រួល៖ មុខងារដកប្រាក់ទាំងពីរនឹងប្រើប្រាស់ប្រភព Config តែមួយ (TELEGRAM_WITHDRAW_CONFIG) ទៅកាន់ Telegram Group តែមួយ
+        // ✅ ផ្ញើទៅកាន់ Withdraw Group (TELEGRAM_WITHDRAW_CONFIG)
         await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
         
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
@@ -894,7 +920,8 @@
         renderUserBetHistory();
 
         showCustomAlert('ជោគជ័យ', '✅ បានផ្ញើសំណើដកប្រាក់រួចរាល់!', 'success');
-        closeModal('withdrawModal'); this.reset();
+        closeModal('withdrawModal'); 
+        this.reset();
         document.getElementById('manualBankInputArea').style.display = 'none';
       } catch (err) {
         showCustomAlert('បរាជ័យ', '⚠️ មានបញ្ហាក្នុងការផ្ញើ! សូមព្យាយាមម្តងទៀត។', 'error');
@@ -904,6 +931,9 @@
       }
     });
 
+    // ============================================================
+    // មុខងារជំនួយផ្សេងទៀត
+    // ============================================================
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function contactAdminTelegram() { window.open('https://t.me/Application_Receiving_Officer', '_blank'); }
     function copyWebsiteLink() { navigator.clipboard.writeText('https://khmer-lucky-number.github.io/My-lucky-number/#'); showCustomAlert('ជោគជ័យ', '📋 បានចម្លងតំណភ្ជាប់រួចរាល់!', 'success'); }
@@ -987,8 +1017,10 @@
       document.getElementById('widgetDate').innerText = now.toLocaleDateString('km-KH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     }
 
-    setInterval(updateCountdown, 1000); setInterval(updateDigitalClockWidget, 1000);
-    updateCountdown(); updateDigitalClockWidget();
+    setInterval(updateCountdown, 1000); 
+    setInterval(updateDigitalClockWidget, 1000);
+    updateCountdown(); 
+    updateDigitalClockWidget();
   </script>
 </body>
 </html>
