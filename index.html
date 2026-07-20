@@ -557,13 +557,35 @@
         
         <label>៥. ឈ្មោះគណនីធនាគារ *</label>
         <input type="text" id="withdrawAccName" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក" required>
+
+        <!-- Late Withdrawal Specific Fields -->
+        <div id="lateReasonArea" style="display:none;">
+          <label>៦. មូលហេតុយឺតយ៉ាវ (សម្រាប់ដកប្រាក់យឺត) *</label>
+          <select id="withdrawLateReason">
+            <option value="ប្រព័ន្ធធនាគារមានបញ្ហា (Maintenance)">ប្រព័ន្ធធនាគារមានបញ្ហា (Maintenance)</option>
+            <option value="ភ្នាក់ងារផ្ទៀងផ្ទាត់ធ្លាក់ប្រព័ន្ធ">ភ្នាក់ងារផ្ទៀងផ្ទាត់ធ្លាក់ប្រព័ន្ធ</option>
+            <option value="សមាជិកភ្លេចដាក់ពាក្យស្នើសុំកាលពីម្សិលមិញ">សមាជិកភ្លេចដាក់ពាក្យស្នើសុំកាលពីម្សិលមិញ</option>
+          </select>
+        </div>
+
+        <div id="lateHistoryArea" style="display:none;">
+          <label>៧. រូបថតប្រវត្តិប្រតិបត្តិការចាក់ត្រូវ (Screenshot) *</label>
+          <input type="file" id="withdrawLateHistory" accept="image/*" required>
+          <p style="font-size:12px; color:#6c757d; margin-top:4px;">សូមថតអេក្រង់ (Screenshot) ប្រវត្តិដែលបង្ហាញថាអ្នកបានចាក់ត្រូវ ហើយមិនទាន់បានដកប្រាក់។</p>
+        </div>
         
-        <label>៦. រូបថត QR Code គណនីធនាគារ *</label>
+        <label id="lblQrCode">៦. រូបថត QR Code គណនីធនាគារ *</label>
         <input type="file" id="withdrawQrCode" accept="image/*" required>
         
         <input type="hidden" id="withdrawRequestType" value="normal">
         <button type="submit" class="btn btn-withdraw" id="btnSubmitWithdraw" style="width:100%; margin-top:15px;" disabled>🚀 ផ្ញើសំណើដកប្រាក់រង្វាន់</button>
       </form>
+
+      <div class="withdraw-instruction-box" id="withdrawInstructionBox">
+        <h4 id="withdrawInstructionTitle">💡 ណែនាំពីរបៀបប្រើប្រាស់៖</h4>
+        <ol id="withdrawInstructionList">
+        </ol>
+      </div>
     </div>
   </div>
 
@@ -607,7 +629,6 @@
     function getWinningNumber(targetLabel, letter, isThreeDigit) {
       const today = new Date();
       let dateForSeed = new Date(today);
-      // If it's past the draw time, use the draw date (which might be tomorrow)
       const hour = today.getHours();
       if (targetLabel === '12:00' && hour >= 12) {
         dateForSeed.setDate(dateForSeed.getDate() + 1);
@@ -670,22 +691,18 @@
 
     // ===== SAFE WINNING NUMBER WITH RISK SAFEGUARD =====
     function getSafeWinningNumber(targetLabel, letter, isThreeDigit) {
-      // 1. Try deterministic result first
       const baseResult = getWinningNumber(targetLabel, letter, isThreeDigit);
       
-      // 2. Check if this result would exceed 70% cap
       let totalRevenue = calculateTotalRevenueFromHistory(targetLabel);
-      if (totalRevenue === 0) return baseResult; // No bets yet, safe
+      if (totalRevenue === 0) return baseResult;
       
       let payout = calculateTotalPayoutForNumber(targetLabel, letter, baseResult, isThreeDigit);
       let allowedMaxPayout = totalRevenue * 0.7;
       
-      // 3. If payout exceeds cap, find a safer number
       if (payout > allowedMaxPayout) {
         const letters = ['A','B','C','D','E'];
         const idx = letters.indexOf(letter);
         const offset = targetLabel === '12:00' ? 12 : 16;
-        // Try different seeds (by shifting index) to find a lower payout number
         for (let shift = 1; shift < 10; shift++) {
           const seed = parseInt(
             new Date().getFullYear().toString() + 
@@ -699,7 +716,6 @@
             return testNum;
           }
         }
-        // Fallback: return the number with minimum payout found
         return baseResult;
       }
       
@@ -719,9 +735,8 @@
       modal.style.display = 'block';
     }
 
-    // ===== SEND TELEGRAM NOTIFICATION =====
+    // ===== SEND TELEGRAM NOTIFICATION (FORMATTED) =====
     async function sendTelegramNotification(message, fileInputId, config) {
-      const fullMessage = `${message}\n\n🕐 ${new Date().toLocaleString('km-KH')}`;
       const fileInput = fileInputId ? document.getElementById(fileInputId) : null;
       
       try {
@@ -729,14 +744,22 @@
           const formData = new FormData();
           formData.append('chat_id', config.chatId);
           formData.append('photo', fileInput.files[0]);
-          formData.append('caption', fullMessage);
-          const res = await fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { method: 'POST', body: formData });
+          formData.append('caption', message);
+          
+          const res = await fetch(`https://api.telegram.org/bot${config.token}/sendPhoto`, { 
+            method: 'POST', 
+            body: formData
+          });
           if(!res.ok) throw new Error("Failed to send photo");
         } else {
           const res = await fetch(`https://api.telegram.org/bot${config.token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ chat_id: config.chatId, text: fullMessage })
+            body: JSON.stringify({ 
+              chat_id: config.chatId, 
+              text: message,
+              parse_mode: 'Markdown' 
+            })
           });
           if(!res.ok) throw new Error("Failed to send message");
         }
@@ -942,11 +965,32 @@
         document.getElementById('withdrawModalTitle').innerText = "🏦 ស្នើសុំដកប្រាក់រង្វាន់ (វេនធម្មតា)";
         document.getElementById('withdrawNoticeDesc').innerText = "⚠️ ម៉ោងប្រតិបត្តិការធម្មតា៖ ១២:០០ ថ្ងៃត្រង់ ដល់ម៉ោង ១០:០០ យប់ ជារៀងរាល់ថ្ងៃ។";
         document.getElementById('withdrawRequestType').value = "normal";
+        document.getElementById('lateReasonArea').style.display = 'none';
+        document.getElementById('lateHistoryArea').style.display = 'none';
+        document.getElementById('withdrawLateHistory').required = false;
+        document.getElementById('lblQrCode').innerText = "៦. រូបថត QR Code គណនីធនាគារ *";
+        document.getElementById('withdrawInstructionTitle').innerText = "💡 ណែនាំពីរបៀបប្រើប្រាស់សម្រាប់ «🏦 ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)»៖";
+        document.getElementById('withdrawInstructionList').innerHTML = `
+          <li>សូមពិនិត្យមើលឈ្មោះគណនី និងលេខគណនីធនាគារឱ្យបានត្រឹមត្រូវ ១០០% មុននឹងចុចបញ្ជូនទិន្នន័យ។</li>
+          <li>ការដកប្រាក់រង្វាន់តាមប្រព័ន្ធធម្មតា នឹងត្រូវដំណើរការជូនទៅតាមលំដាប់លំដោយចន្លោះពី ៥ ទៅ ១៥ នាទី។</li>
+          <li>ប្រសិនបើមានការយឺតយ៉ាវលើសពីម៉ោងកំណត់ សូមទាក់ទងមកកាន់ភ្នាក់ងារគាំទ្រអតិថិជនជាបន្ទាន់។</li>
+        `;
       } else if (mode === 'late') {
         if (currentHour >= 8 && currentHour < 12) isAllowed = true;
         document.getElementById('withdrawModalTitle').innerText = "⏰ ដកប្រាក់យឺតកាលពីម្សិលមិញ (ម៉ោងពិសេស)";
         document.getElementById('withdrawNoticeDesc').innerText = "⚠️ ម៉ោងប្រតិបត្តិការពិសេស៖ ៨:០០ ព្រឹក ដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់ សម្រាប់អ្នកខកខានដកកាលពីម្សិលមិញ។";
         document.getElementById('withdrawRequestType').value = "late_withdrawal";
+        document.getElementById('lateReasonArea').style.display = 'block';
+        document.getElementById('lateHistoryArea').style.display = 'block';
+        document.getElementById('withdrawLateHistory').required = true;
+        document.getElementById('lblQrCode').innerText = "៨. រូបថត QR Code គណនីធនាគារ *";
+        document.getElementById('withdrawInstructionTitle').innerText = "💡 ណែនាំពីរបៀបប្រើប្រាស់សម្រាប់ «⏰ ដកប្រាក់យឺតកាលពីម្សិលមិញ»៖";
+        document.getElementById('withdrawInstructionList').innerHTML = `
+          <li>មុខងារនេះប្រើសម្រាប់តែជំរុញ និងដោះស្រាយរាល់ប្រតិបត្តិការដកប្រាក់ទាំងឡាយណាដែលបានកកស្ទះកាលពីម្សិលមិញប៉ុណ្ណោះ។</li>
+          <li><strong>សូមថតអេក្រង់ (Screenshot) ប្រវត្តិប្រតិបត្តិការចាក់ត្រូវ</strong> របស់អ្នកនៅក្នុងតារាង "ប្រវត្តិការចាក់របស់អ្នក" (ដែលបង្ហាញស្ថានភាព "ឈ្នះ") រួចផ្ទុកឡើង (Upload) ក្នុងប្រអប់ទី ៧។</li>
+          <li>បន្ទាប់មក សូមភ្ជាប់មកជាមួយនូវ រូបភាព QR Code គណនីធនាគាររបស់អ្នក ដើម្បីទទួលប្រាក់។</li>
+          <li>ក្រុមការងារបច្ចេកទេសនឹងធ្វើការពិនិត្យ និងវេរប្រាក់បង្វិលចូលទៅកាន់គណនីរបស់អ្នកវិញភ្លាមៗ ក្រោយការពិនិត្យជោគជ័យ។</li>
+        `;
       }
 
       if (!isAllowed) {
@@ -1015,7 +1059,6 @@
         let d = new Date();
         d.setDate(d.getDate() - i);
         
-        // For today (i=0), only show results if the draw time has passed
         let show12 = true, show16 = true;
         if (i === 0) {
           if (currentHour < 12) show12 = false;
@@ -1026,7 +1069,6 @@
         letters.forEach((l, idx) => {
           let rTwo = (show12) ? Math.floor(seededRandom(seed + idx + 12) * 90) + 10 : '--';
           let rThree = (show16) ? Math.floor(seededRandom(seed + idx + 16) * 900) + 100 : '---';
-          // If it's today and draw not happened yet, show "⏳" or "--" to avoid revealing future results
           if (i === 0 && !show12) rTwo = '⏳';
           if (i === 0 && !show16) rThree = '⏳';
           html += `<tr>${idx===0?`<td rowspan="5">${d.toLocaleDateString('km-KH')}</td>`:''}<td>ប៉ុស្តិ៍ ${l}</td><td>${rTwo}</td><td>${rThree}</td></tr>`;
@@ -1111,16 +1153,13 @@
       const diff = target - now;
       const letters = ['A','B','C','D','E'];
       
-      // Display results using deterministic seeded random
       if (state === 'waiting_12') {
-        // 12:00 not yet here → show pending for 12:00, show 16:00 results (from today)
         document.getElementById('box_two_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
         document.getElementById('box_three_container').innerHTML = letters.map(l => {
           let val = getSafeWinningNumber('16:00', l, true);
           return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
         }).join('');
       } else {
-        // 16:00 not yet here → show 12:00 results (from today), pending for 16:00
         document.getElementById('box_two_container').innerHTML = letters.map(l => {
           let val = getSafeWinningNumber('12:00', l, false);
           return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
@@ -1128,7 +1167,7 @@
         document.getElementById('box_three_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
       }
 
-      // ===== AUTO-ANNOUNCE TO TELEGRAM WHEN COUNTDOWN REACHES ZERO =====
+      // AUTO-ANNOUNCE TO TELEGRAM WHEN COUNTDOWN REACHES ZERO
       if (diff <= 0 && !_announcing) {
         _announcing = true;
         let targetLabelToAnnounce = (state === 'waiting_12') ? '12:00' : '16:00';
@@ -1140,17 +1179,14 @@
           let results = letters2.map(l => `${l}: ${getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit)}`).join('\n');
           const msg = `📢 **លទ្ធផលឆ្នោត N98**\n🕐 ម៉ោង ${targetLabelToAnnounce}\n📅 ${todayKey}\n${results}`;
           
-          // Send to Telegram
           fetch(`https://api.telegram.org/bot${TELEGRAM_RESULT_CONFIG.token}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ chat_id: TELEGRAM_RESULT_CONFIG.chatId, text: msg })
           }).catch(e => console.error(e));
           
-          // Mark as announced to prevent duplicate
           localStorage.setItem(announceKey, 'true');
           
-          // Also store the results locally so they can be synced across devices
           letters2.forEach(l => {
             const key = `n98_official_${l}_${targetLabelToAnnounce}`;
             localStorage.setItem(key, getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit));
@@ -1161,10 +1197,8 @@
         setTimeout(() => { _announcing = false; }, 5000);
       }
 
-      // Check win/loss statuses (for the users)
       checkWinLossStatuses();
 
-      // Update countdown display
       if (diff <= 0) return;
       const h = Math.floor(diff / 3600000); 
       const m = Math.floor((diff % 3600000) / 60000); 
@@ -1204,8 +1238,18 @@
       const name = document.getElementById('depositAccountName').value;
       const sym = data.currency === 'KHR' ? '៛' : '$';
       const currentTimeString = new Date().toLocaleString('km-KH');
-
-      const msg = `📥 **ការទូទាត់ប្រាក់ចាក់ឆ្នោត (N98)**\n👤 ឈ្មោះគណនី: ${name}\n📱 លេខទូរសព្ទ: ${phone}\n🏦 ធនាគារទូទាត់: ${displayBank}\n🔢 លេខលេង: ${data.numbers}\n💵 ទឹកប្រាក់/លេខ: ${data.amount} ${sym}\n💰 សរុបរួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}\n📅 កាលបរិច្ឆេទចាក់: ${currentTimeString}`;
+      const targetLabel = data.list[0] ? data.list[0].drawLabel : 'មិនបានបញ្ជាក់';
+      
+      const msg = 
+`📥 **ការទូទាត់ប្រាក់ចាក់ឆ្នោត (N98)**
+👤 ឈ្មោះគណនី: ${name}
+📱 លេខទូរសព្ទ: ${phone}
+🏦 ធនាគារទូទាត់: ${displayBank}
+🔢 លេខលេង: ${data.numbers}
+💵 ទឹកប្រាក់/លេខ: ${data.amount} ${sym}
+💰 សរុបរួម: ${(data.amount * data.list.length).toLocaleString()} ${sym}
+🕐 ចាក់សម្រាប់ម៉ោង: ${targetLabel}
+📅 កាលបរិច្ឆេទចាក់: ${currentTimeString}`;
 
       try {
         await sendTelegramNotification(msg, 'depositScreenshot', TELEGRAM_BET_CONFIG);
@@ -1252,7 +1296,10 @@
       if (!select.value) return;
       const bet = JSON.parse(select.value);
       const reqType = document.getElementById('withdrawRequestType').value;
-      const label = reqType === 'late_withdrawal' ? '⏰ **ស្នើសុំដកប្រាក់យឺត (កាលពីម្សិលមិញ)**' : '🏦 **ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)**';
+      
+      const title = reqType === 'late_withdrawal' 
+        ? '⏰ **របាយការណ៍៖ ដកប្រាក់យឺតកាលពីម្សិលមិញ**' 
+        : '🏦 **ការស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)**';
       
       let chosenBank = document.getElementById('withdrawBank').value;
       if (chosenBank === 'MANUAL') {
@@ -1260,9 +1307,29 @@
       }
       const currentTimeString = new Date().toLocaleString('km-KH');
 
-      const msg = `${label}\n📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}\n🔢 លេខត្រូវ៖ ${bet.num}\n💰 ទឹកប្រាក់រង្វាន់៖ ${bet.win}\n🏦 ធនាគារ៖ ${chosenBank}\n💳 គណនី៖ ${document.getElementById('withdrawAccNo').value}\n👤 ឈ្មោះ៖ ${document.getElementById('withdrawAccName').value}\n📅 កាលបរិច្ឆេទសំណើ: ${currentTimeString}`;
+      const msg = 
+`${title}
+🔢 លេខចាក់ត្រូវ: ${bet.num}
+🕐 កាលបរិច្ឆេទចាក់/ចាក់សម្រាប់ម៉ោង: ${bet.time} / ${bet.targetDrawLabel}
+👤 ឈ្មោះគណនីធនាគា: ${document.getElementById('withdrawAccName').value}
+📱 លេខទូរសព្ទ: ${document.getElementById('withdrawPhone').value}
+🏦 ទៅកាន់ធនាគារ: ${chosenBank}
+💳 លេខគណនីធនាគារ: ${document.getElementById('withdrawAccNo').value}
+💰 ចំនួនទឹកប្រាក់ដក: ${bet.win}
+📅 កាលបរិច្ឆេទស្នើសុំ: ${currentTimeString}`;
 
       try {
+        if (reqType === 'late_withdrawal') {
+          const lateHistoryFile = document.getElementById('withdrawLateHistory');
+          if (lateHistoryFile && lateHistoryFile.files && lateHistoryFile.files[0]) {
+            await sendTelegramNotification(
+              `📋 **ឯកសារភ្ជាប់ប្រវត្តិចាក់ត្រូវ**\nសម្រាប់លេខ: ${bet.num}`,
+              'withdrawLateHistory',
+              TELEGRAM_WITHDRAW_CONFIG
+            );
+          }
+        }
+        
         await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
         
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
