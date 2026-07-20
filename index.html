@@ -188,6 +188,49 @@
     
     .new-win-badge { background: #ffc107; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 10px; margin-left: 5px; animation: blinker 1s linear infinite; }
 
+    /* បន្ថែមការរចនាថ្មីសម្រាប់ផ្នែកបញ្ចូលទឹកប្រាក់ដោយដៃ */
+    .custom-amount-wrapper {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #0078D7;
+      box-shadow: 0 4px 10px rgba(0, 120, 215, 0.08);
+    }
+    .custom-amount-wrapper input {
+      flex: 2;
+      padding: 12px 15px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      transition: all 0.3s;
+      outline: none;
+    }
+    .custom-amount-wrapper input:focus {
+      border-color: #0078D7;
+      box-shadow: 0 0 8px rgba(0, 120, 215, 0.2);
+    }
+    .custom-amount-wrapper select {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e9ecef;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      background-color: #f8f9fa;
+      color: #0078D7;
+      cursor: pointer;
+      transition: all 0.3s;
+      outline: none;
+    }
+    .custom-amount-wrapper select:focus {
+      border-color: #0078D7;
+    }
+
     @media (max-width:768px) {
       header h1 { font-size:26px; }
       .nav-bar { flex-direction:column; gap:8px; padding:10px; }
@@ -195,6 +238,7 @@
       .digital-clock-container { flex-direction: column; text-align: center; gap: 10px; padding: 15px; }
       .input-row { flex-direction: column; align-items: stretch; }
       input, select, button { width: 100%; }
+      .custom-amount-wrapper { flex-direction: row; }
     }
   </style>
 </head>
@@ -208,7 +252,7 @@
     <div class="nav-links">
       <a href="#" class="active" id="link-home" onclick="showSection('home')">🏠 ទំព័រដើម</a>
       <a href="#" id="link-history" onclick="showSection('history')">📊 ប្រវត្តិលទ្ធផល</a>
-      <a href="#" id="link-rules" onclick="showSection('rules')">📋 មគ្គុទ្ទេសក៍ និងច្បាប់</a>
+      <a href="#" id="link-rules" onclick="showSection('rules')">📋 ច្បាប់និងរបៀបប្រើប្រាស</a>
       <button class="btn-nav-share" onclick="copyWebsiteLink()">🔗 ចែករំលែកគេហទំព័រ</button>
       <a href="https://t.me/+LK-keKzRqPcxYmM1" target="_blank" class="btn-nav-group">📢 ក្រុមប្រកាសលទ្ធផល</a>
     </div>
@@ -304,7 +348,7 @@
         </div>
 
         <div class="input-row">
-          <input type="text" id="numberInput" placeholder="ជ្រើសរើសអក្សរខាងលើជាមុនសិន..." disabled>
+          <input type="text" id="numberInput" placeholder="ជ្រើសរើសអក្សរខាងលើជាមុនសិន..." disabled oninput="convertKhmerToGlobalNumber(this)">
           <button class="btn btn-primary" id="btnAddNumber" onclick="addBetNumber()" style="margin:0; padding:10px 20px;" disabled>➕ បន្ថែមលេខ</button>
         </div>
 
@@ -328,9 +372,11 @@
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(5, '$')">5$</button>
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10, '$')">10$</button>
           </div>
-          <div style="display:flex; gap:8px; margin-top:8px; align-items:center;">
-            <input type="number" id="quickAmountInput" placeholder="ចំនួនទឹកប្រាក់ដោយដៃ" min="0.01" step="any" style="flex:1; padding:6px 10px;" oninput="updateQuickAmountDisplay()">
-            <select id="quickCurrency" style="width:auto; padding:6px 10px;" onchange="updateQuickAmountDisplay()">
+          
+          <!-- កែលម្អការរចនាប្រអប់បញ្ចូលប្រាក់ដោយដៃ និងជ្រើសរើសរូបិយប័ណ្ណថ្មី -->
+          <div class="custom-amount-wrapper">
+            <input type="number" id="quickAmountInput" placeholder="✍️ បញ្ចូលទឹកប្រាក់ដោយដៃទីនេះ..." min="0.01" step="any" oninput="updateQuickAmountDisplay()">
+            <select id="quickCurrency" onchange="updateQuickAmountDisplay()">
               <option value="USD">ដុល្លារ ($)</option>
               <option value="KHR">រៀល (៛)</option>
             </select>
@@ -398,19 +444,19 @@
     <!-- Rules Section -->
     <div id="rulesSection" style="display:none;">
       <div class="rules-section">
-        <h3>📋 មគ្គុទ្ទេសក៍ និងច្បាប់សម្រាប់អ្នកចាក់ឆ្នោត</h3>
+        <h3>📋 ច្បាប់និងរបៀបប្រើប្រាសសម្រាប់អ្នកចាក់ឆ្នោត</h3>
         
         <h4>១. របៀបចាក់ជាជំហានៗ (សម្រាប់អ្នកចាក់)</h4>
         <div class="step-highlight">១. ជ្រើសរើសប្រភេទលេខ (២ខ្ទង់ ឬ ៣ខ្ទង់)។</div>
         <div class="step-highlight">២. ចុចជ្រើសរើសអក្សរ A, B, C, D, ឬ E។</div>
         <div class="step-highlight">៣. បញ្ចូលលេខដែលអ្នកចង់ចាក់ (២ ឬ ៣ ខ្ទង់) រួចចុច "បន្ថែមលេខ"។</div>
-        <div class="step-highlight">៤. ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ (អប្បបរមា ៥០០៛ / ០.២៥$ និងអតិបរមា ៤០,០០០៛ / ១០$)។</div>
+        <div class="step-highlight">៤. ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ (អប្បបរមា ៥០០៛ / ០.២៥$ និងអតិបរមា ៤០,០០0៛ / ១០$)។</div>
         <div class="step-highlight">៥. ចុច "ផ្ញើការទស្សន៍ទាយ" បំពេញព័ត៌មាន និងបង់ប្រាក់តាម ABA ឬ ACLEDA។</div>
         <div class="step-highlight">៦. រង់ចាំមើលលទ្ធផលនៅម៉ោង ១២:០០ (វេនព្រឹក) ឬ ១៦:០០ (វេនរសៀល)។</div>
 
         <h4>២. ម៉ោងចេញលទ្ធផល និងអត្រាប្រាក់រង្វាន់</h4>
         <ul>
-          <li><strong>វេនម៉ោង ១២:០០ ថ្ងៃត្រង់</strong> - លេខ ២ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៧០ដុល្លារ</strong> (ឬគុណនឹង ៧០ដង)។</li>
+          <li><strong>វេនម៉ោង ១២:០០ ថ្ងៃត្រង់</strong> - លេខ ២ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៧០ដុល្លារ</strong> (ឬគុណនឹង ៧០ដង)။</li>
           <li><strong>វេនម៉ោង ១៦:០០ រសៀល</strong> - លេខ ៣ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៥០០ដុល្លារ</strong> (ឬគុណនឹង ៥០០ដង)។</li>
           <li><strong>កំណត់ពេលចាក់ចុងក្រោយ</strong>៖ អ្នកត្រូវតែបញ្ចប់ការចាក់យ៉ាងតិច ១០ នាទី មុនពេលចេញលទ្ធផល (ឧ. បើចង់ចាក់វេន ១២:០០ ត្រូវចាក់មុនម៉ោង ១១:៥០)។</li>
         </ul>
@@ -424,7 +470,7 @@
 
         <h4>៤. សុវត្ថិភាព និងសិទ្ធិអ្នកចាក់</h4>
         <ul>
-          <li>រាល់ការផ្ញើវិក្កយបត្រ (Screenshot) ត្រូវតែជារូបភាពពិត មិនកែច្នៃ ដើម្បីធានាសិទ្ធិទទួលបានរង្វាន់របស់អ្នក។</li>
+          <li>រាល់ការផ្ញើវិក្កយបត្រ (Screenshot) ត្រូវតែជារូបភាពពិត មិនកែច្នៃ ដើម្បីធានាសិទ្ធិទទួលបានរង្វាន់របស់អ្នក swam។</li>
           <li>ប្រសិនបើអ្នកឈ្នះរង្វាន់ ប្រព័ន្ធនឹងបង្ហាញ Popup ជូនដំណឹងភ្លាមៗ និងអនុញ្ញាតឲ្យអ្នកចុចដកប្រាក់បានភ្លាមៗ។</li>
           <li>រាល់បញ្ហាប្រតិបត្តិការ សូមទាក់ទងភ្នាក់ងារគ្រប់គ្រងតាមរយៈប៊ូតុង "✈️ ទាក់ទងអ្នកគ្រប់គ្រង" ខាងក្រោម។</li>
         </ul>
@@ -618,6 +664,17 @@
 
     let currentBetType = 'two'; let selectedLetter = ''; let betNumbers = [];
     let quickAmount = 0; let quickCurrency = 'USD';
+
+    // ===== មុខងារបំលែងលេខខ្មែរទៅជាលេខសកល =====
+    function convertKhmerToGlobalNumber(input) {
+      const khmerDigits = ['០', '១', '២', '៣', '៤', '៥', '៦', '៧', '៨', '៩'];
+      let value = input.value;
+      for (let i = 0; i < 10; i++) {
+        const regex = new RegExp(khmerDigits[i], 'g');
+        value = value.replace(regex, i);
+      }
+      input.value = value;
+    }
 
     // ===== SEEDED RANDOM (DETERMINISTIC - SAME FOR ALL DEVICES) =====
     function seededRandom(seed) { 
