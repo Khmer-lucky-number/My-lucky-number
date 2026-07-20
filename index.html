@@ -28,6 +28,9 @@
     .nav-bar .nav-links a.active { background:#0078D7; color:white; box-shadow: 0 4px 8px rgba(0,120,215,0.2); }
     .btn-nav-share { background: linear-gradient(135deg, #ff9800, #e65100) !important; color: white !important; }
     .btn-nav-share:hover { opacity: 0.9; transform: translateY(-1px); }
+    /* ADDED FOR REQUEST: Style for the new group button */
+    .btn-nav-group { background: linear-gradient(135deg, #0088cc, #006699) !important; color: white !important; }
+    .btn-nav-group:hover { opacity: 0.9; transform: translateY(-1px); }
     
     section { padding:15px; max-width:1100px; margin:0 auto; }
 
@@ -209,6 +212,8 @@
       <a href="#" id="link-history" onclick="showSection('history')">📊 ប្រវត្តិលទ្ធផល</a>
       <a href="#" id="link-rules" onclick="showSection('rules')">📋 មគ្គុទ្ទេសក៍ និងច្បាប់</a>
       <button class="btn-nav-share" onclick="copyWebsiteLink()">🔗 ចែករំលែកគេហទំព័រ</button>
+      <!-- ADDED FOR REQUEST: New Telegram Group Button -->
+      <a href="https://t.me/+LK-keKzRqPcxYmM1" target="_blank" class="btn-nav-group">📢 ក្រុមប្រកាសលទ្ធផល</a>
     </div>
   </nav>
 
@@ -393,7 +398,7 @@
       </div>
     </div>
 
-    <!-- Rules Section - REWRITTEN FOR BETTORS -->
+    <!-- Rules Section -->
     <div id="rulesSection" style="display:none;">
       <div class="rules-section">
         <h3>📋 មគ្គុទ្ទេសក៍ និងច្បាប់សម្រាប់អ្នកចាក់ឆ្នោត</h3>
@@ -556,6 +561,7 @@
         <label>៥. ឈ្មោះគណនីធនាគារ *</label>
         <input type="text" id="withdrawAccName" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក" required>
 
+        <!-- Late Withdrawal Specific Fields -->
         <div id="lateReasonArea" style="display:none;">
           <label>៦. មូលហេតុយឺតយ៉ាវ (សម្រាប់ដកប្រាក់យឺត) *</label>
           <select id="withdrawLateReason">
@@ -563,6 +569,13 @@
             <option value="ភ្នាក់ងារផ្ទៀងផ្ទាត់ធ្លាក់ប្រព័ន្ធ">ភ្នាក់ងារផ្ទៀងផ្ទាត់ធ្លាក់ប្រព័ន្ធ</option>
             <option value="សមាជិកភ្លេចដាក់ពាក្យស្នើសុំកាលពីម្សិលមិញ">សមាជិកភ្លេចដាក់ពាក្យស្នើសុំកាលពីម្សិលមិញ</option>
           </select>
+        </div>
+
+        <!-- ADDED FOR REQUEST: Screenshot for Late Withdrawal History -->
+        <div id="lateHistoryArea" style="display:none;">
+          <label>៧. រូបថតប្រវត្តិប្រតិបត្តិការចាក់ត្រូវ (Screenshot) *</label>
+          <input type="file" id="withdrawLateHistory" accept="image/*" required>
+          <p style="font-size:12px; color:#6c757d; margin-top:4px;">សូមថតអេក្រង់ (Screenshot) ប្រវត្តិដែលបង្ហាញថាអ្នកបានចាក់ត្រូវ ហើយមិនទាន់បានដកប្រាក់។</p>
         </div>
         
         <label id="lblQrCode">៦. រូបថត QR Code គណនីធនាគារ *</label>
@@ -591,6 +604,7 @@
   </div>
 
   <script>
+    // ===== TELEGRAM CONFIGURATIONS =====
     const TELEGRAM_BET_CONFIG = {
       token: '8603184541:AAHmaJnY057ywvAhh04p1NfrIYiBPo8p8TI',
       chatId: '-5428576653'
@@ -599,6 +613,12 @@
     const TELEGRAM_WITHDRAW_CONFIG = {
       token: '8822939753:AAHHgovBXqIyDPw9fBvvHG7M2oyaIGYhFIo',
       chatId: '-5142906656'
+    };
+
+    // ADDED FOR REQUEST: New config for result announcements
+    const TELEGRAM_RESULT_CONFIG = {
+      token: '8404060424:AAFSc2A5tAlEsmzOebSizHw2BHOy-Bnb834',
+      chatId: '-5197330296'
     };
 
     let currentBetType = 'two'; let selectedLetter = ''; let betNumbers = [];
@@ -617,11 +637,40 @@
       modal.style.display = 'block';
     }
 
-    // Check if current time is within 10 minutes of draw time (cutoff)
     function isWithinCutoff(drawTimeMs) {
       const now = Date.now();
       const diff = drawTimeMs - now;
       return diff < 10 * 60 * 1000; 
+    }
+
+    // ADDED FOR REQUEST: Send results to Telegram
+    async function sendResultToTelegram(targetLabel) {
+        const letters = ['A', 'B', 'C', 'D', 'E'];
+        let isThreeDigit = (targetLabel === '16:00');
+        let results = letters.map(l => `${l}: ${getSafeWinningNumber(targetLabel, l, isThreeDigit)}`).join('\n');
+        const msg = `📢 **លទ្ធផលឆ្នោត N98**\n🕐 ម៉ោង ${targetLabel}\n${results}`;
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_RESULT_CONFIG.token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: TELEGRAM_RESULT_CONFIG.chatId, text: msg })
+            });
+            if(!res.ok) console.error("Failed to send result to Telegram");
+        } catch (error) {
+            console.error("Error sending result to Telegram:", error);
+        }
+    }
+
+    // ADDED FOR REQUEST: Clean history older than 3 days
+    function cleanOldHistory() {
+        let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
+        const now = Date.now();
+        const threeDaysAgo = now - (3 * 24 * 60 * 60 * 1000);
+        let newHistory = history.filter(item => item.timestamp >= threeDaysAgo);
+        if (newHistory.length !== history.length) {
+          localStorage.setItem('user_bet_history', JSON.stringify(newHistory));
+        }
+        return newHistory;
     }
 
     async function sendTelegramNotification(message, fileInputId, config) {
@@ -776,7 +825,6 @@
         else { drawDate.setDate(drawDate.getDate() + 1); drawDate.setHours(16, 0, 0, 0); targetLabel = '16:00'; }
       }
 
-      // Check 10-minute cutoff rule
       if (isWithinCutoff(drawDate.getTime())) {
         showCustomAlert('ជិតដល់ម៉ោងកំណត់', `⚠️ នៅសល់តិចជាង ១០ នាទី មុនពេលចេញលទ្ធផល (${targetLabel})។ សូមចាក់សម្រាប់វេនបន្ទាប់!`, 'error');
         return;
@@ -837,7 +885,6 @@
     function submitQuickBet() {
       if (betNumbers.length === 0 || quickAmount <= 0) return;
       
-      // Check cutoff again before final submission
       for (let bet of betNumbers) {
         if (isWithinCutoff(bet.drawTime)) {
           showCustomAlert('ជិតដល់ម៉ោងកំណត់', '⚠️ លេខមួយចំនួនជិតដល់ម៉ោងចេញលទ្ធផលហើយ (តិចជាង ១០ នាទី)។ សូមចាក់វេនបន្ទាប់!', 'error');
@@ -867,6 +914,7 @@
       const btnSubmit = document.getElementById('btnSubmitWithdraw');
       const noWinningAlert = document.getElementById('noWinningBetAlert');
       const lateReasonArea = document.getElementById('lateReasonArea');
+      const lateHistoryArea = document.getElementById('lateHistoryArea'); // ADDED
       const lblQrCode = document.getElementById('lblQrCode');
       const instructionTitle = document.getElementById('withdrawInstructionTitle');
       const instructionList = document.getElementById('withdrawInstructionList');
@@ -893,6 +941,8 @@
         document.getElementById('withdrawNoticeDesc').innerText = "⚠️ ម៉ោងប្រតិបត្តិការធម្មតា៖ ១២:០០ ថ្ងៃត្រង់ ដល់ម៉ោង ២២:០០ យប់ ជារៀងរាល់ថ្ងៃ។";
         document.getElementById('withdrawRequestType').value = "normal";
         lateReasonArea.style.display = 'none';
+        lateHistoryArea.style.display = 'none'; // HIDE for normal
+        document.getElementById('withdrawLateHistory').required = false;
         lblQrCode.innerText = "៦. រូបថត QR Code គណនីធនាគារ *";
         
         instructionTitle.innerText = "💡 ណែនាំពីរបៀបប្រើប្រាស់សម្រាប់ «🏦 ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)»៖";
@@ -906,12 +956,16 @@
         document.getElementById('withdrawNoticeDesc').innerText = "⚠️ ម៉ោងប្រតិបត្តិការពិសេស៖ ៨:០០ ព្រឹក ដល់ម៉ោង ១២:០០ ថ្ងៃត្រង់ សម្រាប់អ្នកខកខានដកកាលពីម្សិលមិញ។";
         document.getElementById('withdrawRequestType').value = "late_withdrawal";
         lateReasonArea.style.display = 'block';
-        lblQrCode.innerText = "៧. រូបថត QR Code គណនីធនាគារ *";
+        lateHistoryArea.style.display = 'block'; // SHOW for late
+        document.getElementById('withdrawLateHistory').required = true;
+        lblQrCode.innerText = "៨. រូបថត QR Code គណនីធនាគារ *";
         
+        // ADDED FOR REQUEST: Updated instructions for Late Withdrawal
         instructionTitle.innerText = "💡 ណែនាំពីរបៀបប្រើប្រាស់សម្រាប់ «⏰ ដកប្រាក់យឺតកាលពីម្សិលមិញ»៖";
         instructionList.innerHTML = `
           <li>មុខងារនេះប្រើសម្រាប់តែជំរុញ និងដោះស្រាយរាល់ប្រតិបត្តិការដកប្រាក់ទាំងឡាយណាដែលបានកកស្ទះកាលពីម្សិលមិញប៉ុណ្ណោះ។</li>
-          <li>សូមភ្ជាប់មកជាមួយនូវ រូបភាពថតអេក្រង់ (Screenshot) នៃប្រវត្តិប្រតិបត្តិការដែលមានបញ្ហានោះ ដើម្បីងាយស្រួលផ្ទៀងផ្ទាត់។</li>
+          <li><strong>សូមថតអេក្រង់ (Screenshot) ប្រវត្តិប្រតិបត្តិការចាក់ត្រូវ</strong> របស់អ្នកនៅក្នុងតារាង "ប្រវត្តិការចាក់របស់អ្នក" (ដែលបង្ហាញស្ថានភាព "ឈ្នះ") រួចផ្ទុកឡើង (Upload) ក្នុងប្រអប់ទី ៧។</li>
+          <li>បន្ទាប់មក សូមភ្ជាប់មកជាមួយនូវ រូបភាព QR Code គណនីធនាគាររបស់អ្នក ដើម្បីទទួលប្រាក់។</li>
           <li>ក្រុមការងារបច្ចេកទេសនឹងធ្វើការពិនិត្យ និងវេរប្រាក់បង្វិលចូលទៅកាន់គណនីរបស់អ្នកវិញភ្លាមៗ ក្រោយការពិនិត្យជោគជ័យ។</li>
         `;
       }
@@ -933,9 +987,7 @@
       btnSubmit.disabled = false;
     }
 
-    // ===== SYSTEM RISK MANAGEMENT (KEPT AS PER ORIGINAL LOGIC, BUT TRANSPARENTLY NOTED) =====
-    // NOTE: This function intentionally minimizes payout to protect the house.
-    // If you want fair randomness, replace the entire logic with secureRandomInt(min,max).
+    // ===== SYSTEM RISK MANAGEMENT =====
     function calculateTotalRevenueFromHistory(targetLabel) {
       let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
       let total = 0;
@@ -974,10 +1026,9 @@
 
     function getSafeWinningNumber(targetLabel, letter, isThreeDigit) {
       let maxRevenue = calculateTotalRevenueFromHistory(targetLabel);
-      let allowedMaxPayout = maxRevenue * 0.7; // 70% cap
+      let allowedMaxPayout = maxRevenue * 0.7;
 
       let attempts = 0;
-      let finalNum = "";
       let minPayoutFound = Infinity;
       let absoluteBestNum = "";
 
@@ -1074,6 +1125,9 @@
     }
 
     // ===== COUNTDOWN & UI UPDATES =====
+    // ADDED FOR REQUEST: Track announced state to avoid spam
+    let _announcing = false;
+
     function updateCountdown() {
       const now = new Date(); const hour = now.getHours(); let target = new Date(now);
       target.setSeconds(0); target.setMilliseconds(0); let targetHour, label, state;
@@ -1093,7 +1147,26 @@
         document.getElementById('box_three_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
       }
 
-      // Check for wins every interval
+      // ADDED FOR REQUEST: Announce result when countdown reaches zero
+      if (diff <= 0 && !_announcing) {
+        _announcing = true;
+        let targetLabelToAnnounce = '';
+        if (state === 'waiting_12') {
+            targetLabelToAnnounce = '12:00';
+        } else {
+            targetLabelToAnnounce = '16:00';
+        }
+        // Use a flag in localStorage to prevent sending multiple times for the same round
+        const todayKey = now.toDateString();
+        const announceKey = `n98_announced_${targetLabelToAnnounce}_${todayKey}`;
+        if (!localStorage.getItem(announceKey)) {
+            sendResultToTelegram(targetLabelToAnnounce);
+            localStorage.setItem(announceKey, 'true');
+        }
+        // Reset announcing flag after a short delay to allow next round
+        setTimeout(() => { _announcing = false; }, 5000);
+      }
+
       checkForNewWins();
 
       if (diff <= 0) return;
@@ -1170,7 +1243,7 @@
       }
     });
 
-    // ===== WITHDRAW FORM HANDLER =====
+    // ===== WITHDRAW FORM HANDLER (MODIFIED) =====
     document.getElementById('withdrawForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const btnSubmit = document.getElementById('btnSubmitWithdraw');
@@ -1201,6 +1274,9 @@
               `💳 លេខគណនីធនាគារ: ${document.getElementById('withdrawAccNo').value}\n` +
               `💰 ចំនួនទឹកប្រាក់ដក: ${bet.win}\n` +
               `📅 កាលបរិច្ឆេទស្នើសុំ: ${formattedDate}`;
+        
+        await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
+
       } else {
         const reason = document.getElementById('withdrawLateReason').value;
         msg = `⏰ **របាយការណ៍៖ ដកប្រាក់យឺតកាលពីម្សិលមិញ**\n` +
@@ -1213,11 +1289,13 @@
               `💰 ចំនួនទឹកប្រាក់ដែលនៅទើរ: ${bet.win}\n` +
               `📅 កាលបរិច្ឆេទស្នើសុំ: ${formattedDate}\n` +
               `❌ មូលហេតុយឺតយ៉ាវ: ${reason}`;
+        
+        // ADDED FOR REQUEST: Send QR Code and History Screenshot for Late Withdrawal
+        await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
+        await sendTelegramNotification(`📋 **ឯកសារភ្ជាប់ប្រវត្តិចាក់ត្រូវ**\nសម្រាប់លេខ: ${bet.num}`, 'withdrawLateHistory', TELEGRAM_WITHDRAW_CONFIG);
       }
 
       try {
-        await sendTelegramNotification(msg, 'withdrawQrCode', TELEGRAM_WITHDRAW_CONFIG);
-        
         let history = JSON.parse(localStorage.getItem('user_bet_history')) || [];
         history = history.map(item => {
           if(item.timestamp === bet.timestamp && item.num === bet.num) {
@@ -1240,6 +1318,9 @@
     });
 
     // ===== INIT =====
+    // ADDED FOR REQUEST: Clean old history on load
+    cleanOldHistory();
+
     setInterval(updateCountdown, 1000); 
     setInterval(updateDigitalClockWidget, 1000);
     updateCountdown(); 
