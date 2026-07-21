@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="km">
 <head>
@@ -49,24 +50,6 @@
       50% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* === រចនាបន្ថែម៖ ការវិលនិងក្រឡុកគ្រាប់លេខ === */
-    @keyframes slotShuffle {
-      0% { transform: translateY(-5px); filter: blur(1px); color: #dc3545; }
-      50% { transform: translateY(5px); filter: blur(2px); color: #0078D7; }
-      100% { transform: translateY(-5px); filter: blur(1px); color: #ff9800; }
-    }
-    .shuffling {
-      display: inline-block;
-      animation: slotShuffle 0.15s infinite linear;
-      font-weight: bold;
-    }
-    .revealed {
-      color: #28a745 !important;
-      font-size: 20px !important;
-      transform: scale(1.15);
-      transition: all 0.4s ease-in-out;
-    }
-
     .digital-clock-container {
       background: #ffffff; border-radius: 16px; padding: 18px 25px; margin-bottom: 20px;
       display: flex; justify-content: space-between; align-items: center; border: 2px solid #0078D7;
@@ -90,9 +73,9 @@
     .time-box .badge { background:#0078D7; color:white; font-size:11px; padding:2px 12px; border-radius:12px; }
     
     .numbers { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
-    .numbers div { background:#f8f9fa; padding:14px 8px; border-radius:8px; text-align:center; flex:1; min-width:70px; transition:all 0.5s ease; font-weight:bold; font-size:16px; border:2px solid #e9ecef; overflow: hidden; }
+    .numbers div { background:#f8f9fa; padding:14px 8px; border-radius:8px; text-align:center; flex:1; min-width:70px; transition:all 0.5s ease; font-weight:bold; font-size:16px; border:2px solid #e9ecef; }
     .numbers div .letter { color:#0078D7; font-weight:bold; }
-    .numbers div .number { color:#333; font-weight:bold; font-size:18px; display: inline-block; }
+    .numbers div .number { color:#333; font-weight:bold; font-size:18px; }
     .numbers div .pending-label { color:#dc3545; font-size:12px; font-weight:bold; animation: blinker 1.5s linear infinite; }
     
     @keyframes blinker { 50% { opacity: 0; } }
@@ -206,6 +189,7 @@
     
     .new-win-badge { background: #ffc107; color: #000; padding: 2px 8px; border-radius: 12px; font-size: 10px; margin-left: 5px; animation: blinker 1s linear infinite; }
 
+    /* បន្ថែមការរចនាថ្មីសម្រាប់ផ្នែកបញ្ចូលទឹកប្រាក់ដោយដៃ */
     .custom-amount-wrapper {
       display: flex;
       gap: 10px;
@@ -390,6 +374,7 @@
             <button type="button" class="btn btn-amount" onclick="selectQuickAmount(10, '$')">10$</button>
           </div>
           
+          <!-- កែលម្អការរចនាប្រអប់បញ្ចូលប្រាក់ដោយដៃ និងជ្រើសរើសរូបិយប័ណ្ណថ្មី -->
           <div class="custom-amount-wrapper">
             <input type="number" id="quickAmountInput" placeholder="✍️ បញ្ចូលទឹកប្រាក់ដោយដៃទីនេះ..." min="0.01" step="any" oninput="updateQuickAmountDisplay()">
             <select id="quickCurrency" onchange="updateQuickAmountDisplay()">
@@ -472,7 +457,7 @@
 
         <h4>២. ម៉ោងចេញលទ្ធផល និងអត្រាប្រាក់រង្វាន់</h4>
         <ul>
-          <li><strong>វេនម៉ោង ១២:០០ ថ្ងៃត្រង់</strong> - លេខ ២ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៧០ដុល្លារ</strong> (ឬគុណនឹង ៧០ដង)។</li>
+          <li><strong>វេនម៉ោង ១២:០០ ថ្ងៃត្រង់</strong> - លេខ ២ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៧០ដុល្លារ</strong> (ឬគុណនឹង ៧០ដង)။</li>
           <li><strong>វេនម៉ោង ១៦:០០ រសៀល</strong> - លេខ ៣ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៥០០ដុល្លារ</strong> (ឬគុណនឹង ៥០០ដង)។</li>
           <li><strong>កំណត់ពេលចាក់ចុងក្រោយ</strong>៖ អ្នកត្រូវតែបញ្ចប់ការចាក់យ៉ាងតិច ១០ នាទី មុនពេលចេញលទ្ធផល (ឧ. បើចង់ចាក់វេន ១២:០០ ត្រូវចាក់មុនម៉ោង ១១:៥០)។</li>
         </ul>
@@ -488,7 +473,7 @@
         <ul>
           <li>រាល់ការផ្ញើវិក្កយបត្រ (Screenshot) ត្រូវតែជារូបភាពពិត មិនកែច្នៃ ដើម្បីធានាសិទ្ធិទទួលបានរង្វាន់របស់អ្នក swam។</li>
           <li>ប្រសិនបើអ្នកឈ្នះរង្វាន់ ប្រព័ន្ធនឹងបង្ហាញ Popup ជូនដំណឹងភ្លាមៗ និងអនុញ្ញាតឲ្យអ្នកចុចដកប្រាក់បានភ្លាមៗ។</li>
-          <li>រាល់បញ្ហាប្រតិបត្តិការ សូមទាក់ទងភ្នាក់ងារគ្រប់គ្រងតាមរយៈប៊ូតុង "✈️ ទាក់ទងអ្នកគ្រប់គ្រង" ខាងក្រោម。</li>
+          <li>រាល់បញ្ហាប្រតិបត្តិការ សូមទាក់ទងភ្នាក់ងារគ្រប់គ្រងតាមរយៈប៊ូតុង "✈️ ទាក់ទងអ្នកគ្រប់គ្រង" ខាងក្រោម។</li>
         </ul>
 
         <h4>៥. សំណួរញឹកញាប់ (FAQ)</h4>
@@ -636,7 +621,7 @@
           <p style="font-size:12px; color:#6c757d; margin-top:4px;">សូមថតអេក្រង់ (Screenshot) ប្រវត្តិដែលបង្ហាញថាអ្នកបានចាក់ត្រូវ ហើយមិនទាន់បានដកប្រាក់។</p>
         </div>
         
-        <label id="lblQrCode">六. រូបថត QR Code គណនីធនាគារ *</label>
+        <label id="lblQrCode">៦. រូបថត QR Code គណនីធនាគារ *</label>
         <input type="file" id="withdrawQrCode" accept="image/*" required>
         
         <input type="hidden" id="withdrawRequestType" value="normal">
@@ -802,7 +787,7 @@
       const titleEl = document.getElementById('customAlertTitle');
       const msgEl = document.getElementById('customAlertMessage');
       titleEl.innerText = title; msgEl.innerText = message;
-      if (type === 'success') { iconEl.innerText = '🎉'; iconEl.style.color = '#28a745'; }
+      if (type === 'success') { iconEl.innerText = '✅'; iconEl.style.color = '#28a745'; }
       else if (type === 'error') { iconEl.innerText = '⚠️'; iconEl.style.color = '#dc3545'; }
       else { iconEl.innerText = '🔔'; iconEl.style.color = '#0078D7'; }
       modal.style.display = 'block';
@@ -1196,24 +1181,10 @@
       }).join('');
     }
 
-    // ===== កែប្រែថ្មី៖ មុខងារជំនួយសម្រាប់បង្កើតការក្រឡុកលេខ (Shuffle Helper) =====
-    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-    
-    async function shuffleElement(elementId, finalValue) {
-      const el = document.getElementById(elementId);
-      if (!el) return;
-      el.innerHTML = `<span class="shuffling">??</span>`;
-      await sleep(1500); // ក្រឡុកវិលរយៈពេល ១.៥ វិនាទី
-      el.innerHTML = finalValue;
-      el.classList.add('revealed');
-      setTimeout(() => el.classList.remove('revealed'), 2000);
-    }
-
-    // ===== កែប្រែ៖ UPDATE COUNTDOWN & DISPLAY RESULTS (AUTO-ANNOUNCE WITH ANIMATION) =====
+    // ===== UPDATE COUNTDOWN & DISPLAY RESULTS (AUTO-ANNOUNCE) =====
     let _announcing = false;
-    let lastRenderState = ''; 
 
-    async function updateCountdown() {
+    function updateCountdown() {
       const now = new Date(); 
       const hour = now.getHours(); 
       let target = new Date(now);
@@ -1240,44 +1211,30 @@
       const diff = target - now;
       const letters = ['A','B','C','D','E'];
       
-      // ប្រសិនបើមិនទាន់ដល់ពេលចេញលទ្ធផលទេ គឺបង្ហាញធម្មតា (Static Render)
-      if (lastRenderState !== state && diff > 0) {
-        lastRenderState = state;
-        if (state === 'waiting_12') {
-          document.getElementById('box_two_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label" id="res_two_${l}">⏳ រង់ចាំ...</span></div>`).join('');
-          document.getElementById('box_three_container').innerHTML = letters.map(l => {
-            let val = getSafeWinningNumber('16:00', l, true);
-            return `<div><span class="letter">${l}:</span> <span class="number" id="res_three_${l}">${val}</span></div>`;
-          }).join('');
-        } else {
-          document.getElementById('box_two_container').innerHTML = letters.map(l => {
-            let val = getSafeWinningNumber('12:00', l, false);
-            return `<div><span class="letter">${l}:</span> <span class="number" id="res_two_${l}">${val}</span></div>`;
-          }).join('');
-          document.getElementById('box_three_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label" id="res_three_${l}">⏳ រង់ចាំ...</span></div>`).join('');
-        }
+      if (state === 'waiting_12') {
+        document.getElementById('box_two_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
+        document.getElementById('box_three_container').innerHTML = letters.map(l => {
+          let val = getSafeWinningNumber('16:00', l, true);
+          return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
+        }).join('');
+      } else {
+        document.getElementById('box_two_container').innerHTML = letters.map(l => {
+          let val = getSafeWinningNumber('12:00', l, false);
+          return `<div><span class="letter">${l}:</span> <span class="number">${val}</span></div>`;
+        }).join('');
+        document.getElementById('box_three_container').innerHTML = letters.map(l => `<div><span class="letter">${l}:</span> <span class="pending-label">⏳ រង់ចាំ...</span></div>`).join('');
       }
 
-      // ដំណើរការក្រឡុកគ្រាប់លេខ និងប្រកាសស្វ័យប្រវត្តិទៅកាន់ Telegram
+      // AUTO-ANNOUNCE TO TELEGRAM WHEN COUNTDOWN REACHES ZERO
       if (diff <= 0 && !_announcing) {
         _announcing = true;
         let targetLabelToAnnounce = (state === 'waiting_12') ? '12:00' : '16:00';
         const todayKey = now.toISOString().split('T')[0];
         const announceKey = `n98_announced_${targetLabelToAnnounce}_${todayKey}`;
-        
         if (!localStorage.getItem(announceKey)) {
+          const letters2 = ['A','B','C','D','E'];
           const isThreeDigit = (targetLabelToAnnounce === '16:00');
-          const prefixId = isThreeDigit ? 'res_three_' : 'res_two_';
-          
-          // ធ្វើការក្រឡុក និងបង្ហាញឡើងម្តងមួយប៉ុស្តិ៍ (A -> B -> C -> D -> E)
-          for (let i = 0; i < letters.length; i++) {
-            let l = letters[i];
-            let val = getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit);
-            await shuffleElement(`${prefixId}${l}`, val);
-            await sleep(500); // គម្លាតពេលចន្លោះពីប៉ុស្តិ៍មួយទៅប៉ុស្តិ៍មួយ ០.៥ វិនាទី
-          }
-
-          let results = letters.map(l => `${l}: ${getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit)}`).join('\n');
+          let results = letters2.map(l => `${l}: ${getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit)}`).join('\n');
           const msg = `📢 **លទ្ធផលឆ្នោត N98**\n🕐 ម៉ោង ${targetLabelToAnnounce}\n📅 ${todayKey}\n${results}`;
           
           fetch(`https://api.telegram.org/bot${TELEGRAM_RESULT_CONFIG.token}/sendMessage`, {
@@ -1288,14 +1245,14 @@
           
           localStorage.setItem(announceKey, 'true');
           
-          letters.forEach(l => {
+          letters2.forEach(l => {
             const key = `n98_official_${l}_${targetLabelToAnnounce}`;
             localStorage.setItem(key, getSafeWinningNumber(targetLabelToAnnounce, l, isThreeDigit));
           });
           localStorage.setItem('n98_official_target', targetLabelToAnnounce);
           localStorage.setItem('n98_official_date', todayKey);
         }
-        setTimeout(() => { _announcing = false; lastRenderState = ''; }, 5000);
+        setTimeout(() => { _announcing = false; }, 5000);
       }
 
       checkWinLossStatuses();
