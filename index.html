@@ -145,7 +145,7 @@
     .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); backdrop-filter:blur(5px); }
     .modal-content { background:white; margin: 3% auto; padding:25px; border-radius:16px; max-width:520px; width:92%; max-height:88vh; overflow-y:auto; box-shadow:0 10px 40px rgba(0,0,0,0.2); }
     .modal-content label { display:block; margin:12px 0 4px; font-weight:bold; font-size:14px; color:#333; }
-    .modal-content input, .modal-content select { width:100%; padding:10px 12px; border:2px solid #dee2e6; border-radius:8px; box-sizing:border-box; font-size:14px; margin-bottom: 5px; }
+    .modal-content input, .modal-content select, .modal-content textarea { width:100%; padding:10px 12px; border:2px solid #dee2e6; border-radius:8px; box-sizing:border-box; font-size:14px; margin-bottom: 5px; }
     .close { float:right; font-size:28px; font-weight:bold; cursor:pointer; color:#adb5bd; }
 
     .alert-modal-content { text-align: center; padding: 30px 20px; max-width: 400px; border-radius: 20px; }
@@ -220,7 +220,6 @@
       outline: none;
     }
 
-    /* Style បន្ថែមសម្រាប់ទម្រង់ណែនាំក្នុងបន្ទប់ផ្សងសំណាង */
     .quick-room-guide {
       background: #eef7ff;
       border: 1px solid #b6d4fe;
@@ -233,13 +232,46 @@
     }
     .quick-room-guide strong { color: #005fa3; }
 
+    /* ទី១៖ ការរចនាប្រអប់ព័ត៌មានជម្រើសដែលបានជ្រើសរើស ឱ្យមើលទៅស្អាតជាងមុន */
+    .styled-selection-card {
+      background: linear-gradient(135deg, #e8f4fd 0%, #ffffff 100%);
+      border: 2px solid #0078D7;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0, 120, 215, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .styled-selection-card .card-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .styled-selection-card .card-badge {
+      background: linear-gradient(135deg, #0078D7, #005fa3);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 6px rgba(0, 120, 215, 0.25);
+    }
+
     @media (max-width:768px) {
       header h1 { font-size:26px; }
       .nav-bar { flex-direction:column; gap:8px; padding:10px; }
       .numbers div { min-width:50px; padding:10px 5px; font-size:14px; }
       .digital-clock-container { flex-direction: column; text-align: center; gap: 10px; padding: 15px; }
       .input-row { flex-direction: column; align-items: stretch; }
-      input, select, button { width: 100%; }
+      input, select, button, textarea { width: 100%; }
       .custom-amount-wrapper { flex-direction: row; }
       .draw-time-selector, .type-selector { flex-direction: column; }
     }
@@ -257,8 +289,8 @@
       <a href="#" id="link-history" onclick="showSection('history')">📊 ប្រវត្តិលទ្ធផល</a>
       <a href="#" id="link-rules" onclick="showSection('rules')">📋 ច្បាប់និងរបៀបប្រើប្រាស</a>
       <button class="btn-nav-share" onclick="copyWebsiteLink()">🔗 ចែករំលែកគេហទំព័រ</button>
-      <!-- ទី៣៖ បញ្ចូលតំណរភ្ជាប់ Telegram ទៅក្នុងប៊ូតុងប្រកាសលទ្ធផល -->
-      <a href="https://t.me/+LK-keKzRqPcxYmM1" target="_blank" class="btn-nav-announce" style="display:inline-flex; align-items:center;">📢 ប្រកាសលទ្ធផល</a>
+      <!-- ទី៥ & ទី៣៖ ប្តូរឈ្មោះទៅជា "📢 គ្រុប់ប្រកាសលទ្ធផល" និងបើក Pop-up បង្ហាញព័ត៌មាន -->
+      <button class="btn-nav-announce" onclick="openAnnounceGroupModal()">📢 គ្រុប់ប្រកាសលទ្ធផល</button>
     </div>
   </nav>
 
@@ -324,7 +356,6 @@
           <h2>🎯 បន្ទប់ផ្សងសំណាងរហ័ស (A, B, C, D, E)</h2>
         </div>
 
-        <!-- ទី២៖ បន្ថែមការបង្ហាញពីរបៀបប្រើប្រាស់នៃបន្ទប់ផ្សងសំណាងរហ័ស -->
         <div class="quick-room-guide">
           💡 <strong>របៀបប្រើប្រាស់៖</strong><br>
           ១. ជ្រើសរើស <strong>វេនម៉ោងផ្សងសំណាង</strong> និង <strong>ប្រភេទលេខ (២ខ្ទង់ ឬ ៣ខ្ទង់)</strong> ខាងក្រោម។<br>
@@ -346,7 +377,6 @@
           <span style="color:#d63000; font-weight:bold; font-size:14px;">⚠️ ដែនកំណត់សុវត្ថិភាព៖ ចាក់បានយ៉ាងច្រើនបំផុត 10$ ឬ 40,000៛ ក្នុងមួយលេខ និងចាក់បានម្តងយ៉ាងច្រើន 10 លេខ។</span>
         </div>
 
-        <!-- ទី១៖ ប្តូរឈ្មោះតាមការស្នើសុំ -->
         <label style="font-weight:bold; color:#0078D7; font-size:15px; display:block; margin-bottom:10px;">
           ជ្រើសរើសវេនម៉ោងផ្សងសំណាង និងជ្រើសរើសប្រភេទលេខ ២ ខ្ទង់ឬ៣ខ្ទង់
         </label>
@@ -361,10 +391,10 @@
           <button type="button" class="type-btn" id="btnTypeThree" onclick="setBetType('three')">🔢 ប្រភេទលេខ ៣ ខ្ទង់</button>
         </div>
 
-        <!-- ទី២៖ បង្កើតប្រអប់បង្ហាញការជ្រើសរើសម៉ោង និងប្រភេទលេខ មុនពេលជ្រើសរើស A,B,C,D,E -->
-        <div style="margin-bottom: 15px;">
-          <label style="font-weight:bold; color:#2d3748; font-size:13px; display:block; margin-bottom:4px;">📌 ព័ត៌មានជម្រើសដែលបានជ្រើសរើស៖</label>
-          <input type="text" id="selectedConfigDisplay" value="វេនម៉ោង 12:00 | ប្រភេទលេខ ២ ខ្ទង់" readonly style="background:#e9ecef; border:2px solid #0078D7; color:#0078D7; font-weight:bold; text-align:center; cursor:not-allowed;">
+        <!-- ទី១៖ ការរចនាប្រអប់នៃ 📌 ព័ត៌មានជម្រើសដែលបានជ្រើសរើស រចនាថ្មីអោយស្រស់ស្អាត -->
+        <div class="styled-selection-card">
+          <div class="card-title">📌 ព័ត៌មានជម្រើសដែលបានជ្រើសរើស៖</div>
+          <div class="card-badge" id="selectedConfigDisplayBadge">វេនម៉ោង 12:00 | ប្រភេទលេខ ២ ខ្ទង់</div>
         </div>
         
         <div class="letter-selector">
@@ -446,8 +476,8 @@
         <div class="action-group">
           <button class="btn btn-withdraw" onclick="openWithdrawModal('normal')">🏦 ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)</button>
           <button class="btn btn-late-withdraw" onclick="openWithdrawModal('late')">⏰ ដកប្រាក់យឺតកាលពីម្សិលមិញ</button>
-          <!-- ទី៤៖ ជំនួសតំណភ្ជាប់ Telegram ទៅកាន់ Ahna8889999 -->
-          <button class="btn btn-telegram" onclick="contactAdminTelegram()">✈️ ទាក់ទងភ្នាក់ងារ</button>
+          <!-- ទី៤៖ ប៊ូតុងបើកផ្ទាំងបង្ហាញ Modal ✈️ ទាក់ទងភ្នាក់ងារ -->
+          <button class="btn btn-telegram" onclick="openAgentModal()">✈️ ទាក់ទងភ្នាក់ងារ</button>
         </div>
       </div>
     </div>
@@ -469,46 +499,47 @@
       </div>
     </div>
 
-    <!-- Rules Section -->
+    <!-- ទី៨៖ Rules Section (ធ្វើបច្ចុប្បន្នភាពរាល់ចំណុច) -->
     <div id="rulesSection" style="display:none;">
       <div class="rules-section">
-        <h3>📋 ច្បាប់និងរបៀបប្រើប្រាសសម្រាប់អ្នកចាក់ឆ្នោត</h3>
+        <h3>📋 ច្បាប់និងរបៀបប្រើប្រាសសម្រាប់អ្នកចាក់ឆ្នោត (បច្ចុប្បន្នភាព)</h3>
         
         <h4>១. របៀបចាក់ជាជំហានៗ (សម្រាប់អ្នកចាក់)</h4>
-        <div class="step-highlight">១. ជ្រើសរើសវេនម៉ោងដែលចង់ចាក់ (12:00 ឬ 16:00)។</div>
+        <div class="step-highlight">១. ជ្រើសរើសវេនម៉ោងដែលចង់ចាក់ (12:00 ថ្ងៃត្រង់ ឬ 16:00 រសៀល)។</div>
         <div class="step-highlight">២. ជ្រើសរើសប្រភេទលេខ (២ខ្ទង់ ឬ ៣ខ្ទង់)។</div>
-        <div class="step-highlight">៣. ចុចជ្រើសរើសអក្សរ A, B, C, D, ឬ E។</div>
-        <div class="step-highlight">៤. បញ្ចូលលេខដែលអ្នកចង់ចាក់ (២ ឬ ៣ ខ្ទង់) រួចចុច "បន្ថែមលេខ"។</div>
+        <div class="step-highlight">៣. ពិនិត្យ "📌 ព័ត៌មានជម្រើសដែលបានជ្រើសរើស" រួចចុចជ្រើសរើសអក្សរ A, B, C, D, ឬ E។</div>
+        <div class="step-highlight">៤. បញ្ចូលលេខដែលអ្នកចង់ចាក់ (២ ឬ ៣ ខ្ទង់) រួចចុច "បន្ថែមលេខ" (អតិបរមា ១០ លេខ)។</div>
         <div class="step-highlight">៥. ជ្រើសរើសទឹកប្រាក់ក្នុងមួយលេខ (អប្បបរមា ៥០០៛ / ០.២៥$ និងអតិបរមា ៤០,000៛ / ១០$)។</div>
-        <div class="step-highlight">៦. ចុច "ផ្ញើការទស្សន៍ទាយ" បំពេញព័ត៌មាន និងបង់ប្រាក់តាម ABA ឬ ACLEDA។</div>
-        <div class="step-highlight">៧. រង់ចាំមើលលទ្ធផលនៅម៉ោង ១២:០០ (វេនព្រឹក) ឬ ១៦:០០ (វេនរសៀល)។</div>
+        <div class="step-highlight">៦. ចុច "ផ្ញើការទស្សន៍ទាយឥឡូវនេះ" បំពេញព័ត៌មាន និងបង់ប្រាក់តាម ABA ឬ ACLEDA។</div>
+        <div class="step-highlight">៧. រង់ចាំមើលលទ្ធផលដែលបានចេញផ្សាយក្នុងប្រព័ន្ធ ឬចូល "📢 គ្រុប់ប្រកាសលទ្ធផល" Telegram។</div>
 
         <h4>២. ម៉ោងចេញលទ្ធផល និងអត្រាប្រាក់រង្វាន់</h4>
         <ul>
           <li><strong>វេនម៉ោង ១២:០០ ថ្ងៃត្រង់</strong> - លេខ ២ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៧០ដុល្លារ</strong> (ឬគុណនឹង ៧០ដង)។</li>
           <li><strong>វេនម៉ោង ១៦:០០ រសៀល</strong> - លេខ ៣ខ្ទង់ (ប៉ុស្តិ៍ A-E) ។ អត្រាឈ្នះ៖ <strong>ចាក់ ១ដុល្លារ សង ៥۰۰ដុល្លារ</strong> (ឬគុណនឹង ៥۰۰ដង)។</li>
-          <li><strong>កំណត់ពេលចាក់ចុងក្រោយ</strong>៖ អ្នកត្រូវតែបញ្ចប់ការចាក់យ៉ាងតិច ១០ នាទី មុនពេលចេញលទ្ធផល (ឧ. បើចង់ចាក់វេន ១២:០០ ត្រូវចាក់មុនម៉ោង ១១:៥០)។</li>
+          <li><strong>កំណត់ពេលចាក់ចុងក្រោយ</strong>៖ អ្នកត្រូវតែបញ្ចប់ការចាក់យ៉ាងតិច ១០ នាទី មុនពេលចេញលទ្ធផល (វេន ១២:០០ ផុតកំណត់ម៉ោង ១១:៥០ / វេន ១៦:00 ផុតកំណត់ម៉ោង ១៥:៥០)។</li>
+          <li><strong>ទី៧៖ សុពលភាពនៃការទស្សន៍ទាយ</strong>៖ សំបុត្រចាក់ និងការទស្សន៍ទាយឆ្នោតទាំងអស់ មានសុពលភាព <strong>៣ ថ្ងៃ</strong> ក្រោយពេលចេញលទ្ធផលដែលបានចាក់។</li>
         </ul>
 
         <h4>៣. លក្ខខណ្ឌទូទាត់ និងការដកប្រាក់</h4>
         <ul>
           <li><strong>ដកប្រាក់រង្វាន់តាមវេនធម្មតា</strong>៖ ដំណើរការចាប់ពីម៉ោង ១២:០០ ថ្ងៃត្រង់ ដល់ ២២:០០ យប់។ សូមចុចប៊ូតុង "ស្នើសុំដកប្រាក់រង្វាន់ (ធម្មតា)"។</li>
-          <li><strong>ដកប្រាក់យឺតកាលពីម្សិលមិញ</strong>៖ សម្រាប់អ្នកដែលខកខានដកកាលពីថ្ងៃមុន សូមប្រើប៊ូតុង "ដកប្រាក់យឺត" ចន្លោះម៉ោង ៨:០០ ព្រឹក ដល់ ១២:០០ ថ្ងៃត្រង់ប៉ុណ្ណោះ។</li>
-          <li><strong>ពេលវេលាវេរប្រាក់</strong>៖ បន្ទាប់ពីស្នើសុំដក ប្រព័ន្ធនឹងវេរប្រាក់ចូលគណនីរបស់អ្នកក្នុងរយៈពេល ៥-១៥ នាទី (សម្រាប់ករណីធម្មតា)។</li>
+          <li><strong>ដកប្រាក់យឺតកាលពីម្សិលមិញ</strong>៖ សម្រាប់អ្នកដែលខកខានដកកាលពីថ្ងៃមុន សូមប្រើប៊ូតុង "ដកប្រាក់យឺត" ចន្លោះម៉ោង ៨:០០ ព្រឹក ដល់ ១២:០០ ថ្ងៃត្រង់ ដោយបំពេញមូលហេតុជាក់ស្តែងក្នុងប្រអប់ដែលបានរៀបចំ។</li>
+          <li><strong>ពេលវេលាវេរប្រាក់</strong>៖ បន្ទាប់ពីស្នើសុំដក ប្រព័ន្ធនឹងវេរប្រាក់ចូលគណនីរបស់អ្នកក្នុងរយៈពេល ៥-១៥ នាទី។</li>
         </ul>
 
         <h4>៤. សុវត្ថិភាព និងសិទ្ធិអ្នកចាក់</h4>
         <ul>
           <li>រាល់ការផ្ញើវិក្កយបត្រ (Screenshot) ត្រូវតែជារូបភាពពិត មិនកែច្នៃ ដើម្បីធានាសិទ្ធិទទួលបានរង្វាន់របស់អ្នក។</li>
-          <li>ប្រសិនបើអ្នកឈ្នះរង្វាន់ ប្រព័ន្ធនឹងបង្ហាញ Popup ជូនដំណឹងភ្លាមៗ និងអនុញ្ញាតឲ្យអ្នកចុចដកប្រាក់បានភ្លាមៗ។</li>
+          <li>ប្រសិនបើអ្នកឈ្នះរង្វាន់ ប្រព័ន្ធនឹងបង្ហាញ Popup ជូនដំណឹង និងបញ្ជាក់ក្នុងប្រវត្តិថា "🎉 ឈ្នះរង្វាន់"។</li>
           <li>រាល់បញ្ហាប្រតិបត្តិការ សូមទាក់ទងភ្នាក់ងារគាំទ្រតាមរយៈប៊ូតុង "✈️ ទាក់ទងភ្នាក់ងារ" ខាងក្រោម។</li>
         </ul>
 
         <h4>៥. សំណួរញឹកញាប់ (FAQ)</h4>
         <ul>
           <li><strong>សំណួរ៖</strong> តើខ្ញុំអាចចាក់លើសពី ១០ លេខបានទេ? <br> <strong>ចម្លើយ៖</strong> ទេ ប្រព័ន្ធកំណត់ត្រឹម ១០ លេខក្នុងមួយវគ្គ ដើម្បីធានាគុណភាពសេវាកម្ម។</li>
-          <li><strong>សំណួរ៖</strong> បើខ្ញុំភ្លេចដកប្រាក់កាលពីម្សិលមិញ តើខ្ញុំអាចដកបានទេ? <br> <strong>ចម្លើយ៖</strong> បាន សូមប្រើប៊ូតុង "ដកប្រាក់យឺត" នៅពេលព្រឹក (៨:០០ ដល់ ១២:០០)។</li>
-          <li><strong>សំណួរ៖</strong> តើខ្ញុំអាចជឿទុកចិត្តលើលទ្ធផលបានទេ? <br> <strong>ចម្លើយ៖</strong> លទ្ធផលត្រូវបានគណនាដោយប្រព័ន្ធសុវត្ថិភាពខ្ពស់ និងមានតម្លាភាពសម្រាប់សមាជិកទាំងអស់។</li>
+          <li><strong>សំណួរ៖</strong> បើខ្ញុំភ្លេចដកប្រាក់កាលពីម្សិលមិញ តើខ្ញុំអាចដកបានទេ? <br> <strong>ចម្លើយ៖</strong> បាន សូមប្រើប៊ូតុង "ដកប្រាក់យឺត" នៅពេលព្រឹក (៨:០០ ដល់ ១២:០០) និងរៀបរាប់មូលហេតុក្នុងប្រអប់សរសេរ។</li>
+          <li><strong>សំណួរ៖</strong> តើខ្ញុំអាចចូលមើលលទ្ធផលនៅលើ Telegram បានដោយរបៀបណា? <br> <strong>ចម្លើយ៖</strong> ចុចលើប៊ូតុង "📢 គ្រុប់ប្រកាសលទ្ធផល" នៅលើរបារខាងលើ ដើម្បីមើលព័ត៌មាន និងចុចចូលគ្រុប់ Telegram ផ្លូវការ។</li>
         </ul>
       </div>
     </div>
@@ -575,10 +606,10 @@
         <h4>💡 ណែនាំពីរបៀបបង់ប្រាក់ដើម្បីចាក់៖</h4>
         <ol>
           <li>សូមបំពេញ<strong>លេខទូរសព្ទ ជ្រើសរើសធនាគារ</strong> និង<strong>វាយឈ្មោះគណនី</strong>របស់អ្នកឱ្យបានត្រឹមត្រូវជាមុនសិន skill។</li>
-          <li>បន្ទាប់មក ប៊ូតុងលីងធនាគារពណ៌ខៀវខាងលើនឹងបើកដំណើរការ។ សូម<strong>ចុចលើប៊ូតុងធនាគារណាមួយ</strong>ដើម្បីភ្ជាប់ទៅកាន់កម្មវិធីបង់ប្រាក់ដោយស្វ័យប្រវត្តិ skill。</li>
-          <li>ធ្វើការផ្ទេរប្រាក់ឱ្យគ្រប់ចំនួនទៅតាមទំហំទឹកប្រាក់សរុបដែលបានបង្ហាញក្នុងប្រអប់ពណ៌ប្រផេះខាងលើ skill。</li>
-          <li>នៅពេលផ្ទេរប្រាក់ជោគជ័យ សូម<strong>ថតរូបវិក្កយបត្រ (Screenshot)</strong> ទុក រួចយកមក<strong>ចុចបញ្ចូលក្នុងប្រអប់រូបថតវិក្កយបត្រ</strong>ខាងលើ skill。</li>
-          <li>ជាចុងក្រោយ ចុចប៊ូតុង <strong>"ផ្ញើការទូទាត់ទៅកាន់ភ្នាក់ងារ"</strong> ពណ៌បៃតង ដើម្បីបញ្ចប់ប្រតិបត្តិការ skill。</li>
+          <li>បន្ទាប់មក ប៊ូតុងលីងធនាគារពណ៌ខៀវខាងលើនឹងបើកដំណើរការ។ សូម<strong>ចុចលើប៊ូតុងធនាគារណាមួយ</strong>ដើម្បីភ្ជាប់ទៅកាន់កម្មវិធីបង់ប្រាក់ដោយស្វ័យប្រវត្តិ skill។</li>
+          <li>ធ្វើការផ្ទេរប្រាក់ឱ្យគ្រប់ចំនួនទៅតាមទំហំទឹកប្រាក់សរុបដែលបានបង្ហាញក្នុងប្រអប់ពណ៌ប្រផេះខាងលើ skill។</li>
+          <li>នៅពេលផ្ទេរប្រាក់ជោគជ័យ សូម<strong>ថតរូបវិក្កយបត្រ (Screenshot)</strong> ទុក រួចយកមក<strong>ចុចបញ្ចូលក្នុងប្រអប់រូបថតវិក្កយបត្រ</strong>ខាងលើ skill។</li>
+          <li>ជាចុងក្រោយ ចុចប៊ូតុង <strong>"ផ្ញើការទូទាត់ទៅកាន់ភ្នាក់ងារ"</strong> ពណ៌បៃតង ដើម្បីបញ្ចប់ប្រតិបត្តិការ skill។</li>
         </ol>
       </div>
     </div>
@@ -633,18 +664,23 @@
         <label>៥. ឈ្មោះគណនីធនាគារ *</label>
         <input type="text" id="withdrawAccName" placeholder="បញ្ចូលឈ្មោះរបស់អ្នក" required>
 
-        <!-- Late Withdrawal Specific Fields -->
+        <!-- ទី២៖ បន្ថែមប្រអប់សរសេរបំពេញដោយដៃសម្រាប់មូលហេតុនៃការដកប្រាក់យឺត -->
         <div id="lateReasonArea" style="display:none;">
           <label>៦. មូលហេតុយឺតយ៉ាវ (សម្រាប់ដកប្រាក់យឺត) *</label>
-          <select id="withdrawLateReason">
+          <select id="withdrawLateReason" onchange="toggleManualLateReason()">
             <option value="ប្រព័ន្ធធនាគារមានបញ្ហា (Maintenance)">ប្រព័ន្ធធនាគារមានបញ្ហា (Maintenance)</option>
             <option value="ភ្នាក់ងារផ្ទៀងផ្ទាត់ធ្លាក់ប្រព័ន្ធ">ភ្នាក់ងារផ្ទៀងផ្ទាត់ធ្លាក់ប្រព័ន្ធ</option>
             <option value="សមាជិកភ្លេចដាក់ពាក្យស្នើសុំកាលពីម្សិលមិញ">សមាជិកភ្លេចដាក់ពាក្យស្នើសុំកាលពីម្សិលមិញ</option>
+            <option value="OTHER">✍️ បំពេញមូលហេតុផ្សេងទៀតដោយដៃ...</option>
           </select>
+          <div id="manualLateReasonBox" style="margin-top:8px;">
+            <label style="color:#d63000; font-size:13px;">✍️ សូមរៀបរាប់មូលហេតុនៃការដកប្រាក់យឺតកាលពីម្សិលមិញ៖</label>
+            <textarea id="withdrawLateReasonManual" rows="3" placeholder="សូមសរសេរមូលហេតុរបស់អ្នកនៅទីនេះ..."></textarea>
+          </div>
         </div>
 
         <div id="lateHistoryArea" style="display:none;">
-          <label>៧. រូបថតប្រវត្តិប្រតិបត្តិការចាក់ត្រូវ (Screenshot) *</label>
+          <label id="lblLateHistory">៧. រូបថតប្រវត្តិប្រតិបត្តិការចាក់ត្រូវ (Screenshot) *</label>
           <input type="file" id="withdrawLateHistory" accept="image/*">
           <p style="font-size:12px; color:#6c757d; margin-top:4px;">សូមថតអេក្រង់ (Screenshot) ប្រវត្តិដែលបង្ហាញថាអ្នកបានចាក់ត្រូវ ហើយមិនទាន់បានដកប្រាក់ skill。</p>
         </div>
@@ -661,6 +697,36 @@
         <ol id="withdrawInstructionList">
         </ol>
       </div>
+    </div>
+  </div>
+
+  <!-- ====== 📢 ទី៣៖ Modal គ្រុប់ប្រកាសលទ្ធផល ====== -->
+  <div class="modal" id="announceGroupModal">
+    <div class="modal-content" style="text-align: center;">
+      <span class="close" onclick="closeModal('announceGroupModal')">&times;</span>
+      <div style="font-size: 50px; margin-bottom: 10px;">📢</div>
+      <h2 style="color:#0078D7; margin-bottom: 10px;">គ្រុប់ប្រកាសលទ្ធផលផ្លូវការ</h2>
+      <p style="font-size: 14.5px; color:#4a5568; line-height: 1.6; margin-bottom: 20px;">
+        សូមស្វាគមន៍មកកាន់ប្រព័ន្ធប្រកាសលទ្ធផល! មុខងារនេះត្រូវបានបង្កើតឡើងដើម្បីផ្តល់ជូននូវព័ត៌មានលទ្ធផលឆ្នោតខ្មែរ N98 ភ្លាមៗ និងជាក់លាក់ ទាំងវេន <strong>12:00 ថ្ងៃត្រង់</strong> និង <strong>16:00 រសៀល</strong>។ លោកអ្នកអាចចូលរួមជាមួយ Telegram Group ផ្លូវការដើម្បីទទួលបានការជូនដំណឹងរហ័សទាន់ចិត្ត!
+      </p>
+      <a href="https://t.me/+LK-keKzRqPcxYmM1" target="_blank" class="btn btn-telegram" style="width: 100%; padding: 12px; font-size: 16px; border-radius: 10px; text-decoration: none;">
+        👉 ចុចទីនេះដើម្បីចូលគ្រុប់ប្រកាសលទ្ធផល (Telegram)
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== ✈️ ទី៤៖ Modal ទាក់ទងភ្នាក់ងារ ====== -->
+  <div class="modal" id="agentModal">
+    <div class="modal-content" style="text-align: center;">
+      <span class="close" onclick="closeModal('agentModal')">&times;</span>
+      <div style="font-size: 50px; margin-bottom: 10px;">✈️</div>
+      <h2 style="color:#0078D7; margin-bottom: 10px;">សេវាបម្រើអតិថិជន និងភ្នាក់ងារគាំទ្រ</h2>
+      <p style="font-size: 14.5px; color:#4a5568; line-height: 1.6; margin-bottom: 20px;">
+        តើលោកអ្នកមានចម្ងល់ មានបញ្ហាក្នុងការចាក់ផ្សងសំណាង ការដាក់/ដកប្រាក់ ឬត្រូវការជំនួយបន្ថែមមែនទេ? ក្រុមការងារភ្នាក់ងារជំនាញរបស់យើងខ្ញុំរង់ចាំជួយសម្រួល និងដោះស្រាយជូន ២៤ ម៉ោង។
+      </p>
+      <button class="btn btn-telegram" onclick="contactAdminTelegram()" style="width: 100%; padding: 12px; font-size: 16px; border-radius: 10px;">
+        💬 ទំនាក់ទំនងភ្នាក់ងារផ្ទាល់ (@Ahna8889999)
+      </button>
     </div>
   </div>
 
@@ -743,11 +809,21 @@
       });
     }
 
-    // ទី៤៖ ប្តូរ Link ទាក់ទងភ្នាក់ងារ Telegram
     function contactAdminTelegram() {
       window.open("https://t.me/Ahna8889999", "_blank");
     }
 
+    // ទី៣៖ បើក Modal គ្រុប់ប្រកាសលទ្ធផល
+    function openAnnounceGroupModal() {
+      document.getElementById('announceGroupModal').style.display = 'block';
+    }
+
+    // ទី៤៖ បើក Modal ទាក់ទងភ្នាក់ងារ
+    function openAgentModal() {
+      document.getElementById('agentModal').style.display = 'block';
+    }
+
+    // ទី៧៖ កំណត់សុពលភាពទិន្នន័យ ៣ ថ្ងៃ
     function cleanOldData() {
       try {
         let history = JSON.parse(localStorage.getItem('khmer_lottery_results_history') || '[]');
@@ -781,7 +857,7 @@
     function updateConfigDisplayBox() {
       const timeText = selectedDrawTime === '12:00' ? '12:00 ថ្ងៃត្រង់' : '16:00 រសៀល';
       const typeText = currentBetType === 'two' ? '២ ខ្ទង់' : '៣ ខ្ទង់';
-      document.getElementById('selectedConfigDisplay').value = `វេនម៉ោង ${timeText} | ប្រភេទលេខ ${typeText}`;
+      document.getElementById('selectedConfigDisplayBadge').innerText = `វេនម៉ោង ${timeText} | ប្រភេទលេខ ${typeText}`;
     }
 
     function setBetType(type) {
@@ -1021,7 +1097,7 @@
       }
     }
 
-    // ទី៥៖ កែសម្រួលទម្រង់ផ្ញើសារ Telegram តាមលក្ខខណ្ឌដែលបានកំណត់
+    // ទី៦៖ រៀបចំទម្រង់ផ្ញើសារ Telegram ដោយយក ⏳ កាលបរិច្ឆេទផុតកំណត់ ដាក់នៅផ្នែកខាងក្រោមនៃ ⏰ កាលបរិច្ឆេទចាក់
     document.getElementById('depositForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -1044,7 +1120,6 @@
       const displayTotal = quickCurrency === 'USD' ? `${totalAmt.toFixed(2)}$` : `${totalAmt.toLocaleString()}៛`;
       const now = new Date();
 
-      // គណនាកាលបរិច្ឆេទ/វេលាផុតកំណត់ (១០ នាទី មុនម៉ោងចេញលទ្ធផល)
       let expireTime = selectedDrawTime === '12:00' ? '11:50 AM' : '03:50 PM';
 
       const newBet = {
@@ -1068,10 +1143,9 @@
       userBets.unshift(newBet);
       localStorage.setItem('khmer_lottery_user_bets', JSON.stringify(userBets));
 
-      // ទី៥៖ ទម្រង់សារលុប ID, បន្ថែមកាលបរិច្ឆេទផុតកំណត់ និងលក្ខខណ្ឌ
+      // ទី៦៖ តម្រៀបទីតាំងសារឡើងវិញ
       const messageText = `🎯 <b>ការទស្សន៍ទាយឆ្នោតថ្មី (New Bet)</b>\n\n` +
                           `🕒 វេនផ្សងសំណាង: <b>${selectedDrawTime}</b>\n` +
-                          `⏳ កាលបរិច្ឆេទផុតកំណត់: <b>${now.toLocaleDateString('km-KH')} ត្រឹមម៉ោង ${expireTime}</b>\n` +
                           `📱 លេខទូរសព្ទ: <code>${phone}</code>\n` +
                           `🏦 ធនាគារ: ${bank}\n` +
                           `👤 ឈ្មោះគណនី: ${accName}\n` +
@@ -1079,11 +1153,13 @@
                           `🎯 លេខចាក់: <b>${betNumbers.join(', ')}</b>\n` +
                           `💵 ក្នុងមួយលេខ: ${displayAmountPerNum}\n` +
                           `💰 ទឹកប្រាក់សរុប: <b>${displayTotal}</b>\n` +
-                          `⏰ កាលបរិច្ឆេទចាក់: ${now.toLocaleString('km-KH')}\n\n` +
+                          `⏰ កាលបរិច្ឆេទចាក់: ${now.toLocaleString('km-KH')}\n` +
+                          `⏳ កាលបរិច្ឆេទផុតកំណត់: <b>${now.toLocaleDateString('km-KH')} ត្រឹមម៉ោង ${expireTime}</b>\n\n` +
                           `📜 <b>លក្ខខណ្ឌនៃការចាក់ផ្សងសំណាង៖</b>\n` +
                           `• ការចាក់ត្រូវតែបញ្ចប់មុនពេលផុតកំណត់ 10 នាទីនៃវេននីមួយៗ។\n` +
                           `• វិក្កយបត្រត្រូវតែជារូបភាពពិតដែលបានទូទាត់ត្រឹមត្រូវ។\n` +
-                          `• ប្រាក់រង្វាន់នឹងត្រូវបានទូទាត់ជូនតាមប្រព័ន្ធស្វ័យប្រវត្តបន្ទាប់ពីប្រកាសលទ្ធផល។`;
+                          `• ប្រាក់រង្វាន់នឹងត្រូវបានទូទាត់ជូនតាមប្រព័ន្ធស្វ័យប្រវត្តបន្ទាប់ពីប្រកាសលទ្ធផល។\n` +
+                          `• ទី៧៖ ការទស្សន៍ទាយមានសុពលភាព ៣ ថ្ងៃបន្ទាប់ពីចេញលទ្ធផល។`;
 
       const formData = new FormData();
       formData.append('chat_id', TELEGRAM_BET_CONFIG.chatId);
@@ -1181,7 +1257,7 @@
 
       if (mode === 'late') {
         title.innerText = "⏰ ដកប្រាក់យឺតកាលពីម្សិលមិញ";
-        noticeDesc.innerHTML = "⚠️ <strong>ការជូនដំណឹង៖</strong> សម្រាប់អតិថិជនដែលខកខានមិនបានដកប្រាក់រង្វាន់កាលពីម្សិលមិញ សូមបំពេញព័ត៌មាន និងរូបថតភស្តុតាងឱ្យបានត្រឹមត្រូវ។";
+        noticeDesc.innerHTML = "⚠️ <strong>ការជូនដំណឹង៖</strong> សម្រាប់អតិថិជនដែលខកខានមិនបានដកប្រាក់រង្វាន់កាលពីម្សិលមិញ សូមបំពេញព័ត៌មាន មូលហេតុយឺតយ៉ាវ និងរូបថតភស្តុតាងឱ្យបានត្រឹមត្រូវ។ (សុពលភាពត្រឹម ៣ ថ្ងៃ)";
         lateReasonArea.style.display = 'block';
         lateHistoryArea.style.display = 'block';
         qrLbl.innerText = "៨. រូបថត QR Code គណនីធនាគារ *";
@@ -1191,7 +1267,7 @@
         instrList.innerHTML = `
           <li>ជ្រើសរើសលេខដែលអ្នកបានចាក់ត្រូវកាលពីម្សិលមិញ។</li>
           <li>បំពេញលេខទូរសព្ទ ឈ្មោះធនាគារ និងលេខគណនីរបស់អ្នកឱ្យបានត្រឹមត្រូវ។</li>
-          <li>ជ្រើសរើសមូលហេតុដែលខកខានមិនបានដកប្រាក់តាមពេលវេលាកំណត់។</li>
+          <li>ជ្រើសរើស ឬសរសេររៀបរាប់<strong>មូលហេតុយឺតយ៉ាវដោយដៃ</strong>ក្នុងប្រអប់ដែលបានផ្តល់ជូន។</li>
           <li><strong>ភ្ជាប់រូបថតប្រវត្តិប្រតិបត្តិការ (Screenshot)</strong> ដែលបញ្ជាក់ថាអ្នកបានចាក់ត្រូវ។</li>
           <li>ភ្ជាប់រូបថត QR Code គណនីធនាគារ រួចចុច "ផ្ញើសំណើដកប្រាក់"។</li>
         `;
@@ -1214,6 +1290,19 @@
 
       populateWithdrawBetOptions();
       modal.style.display = 'block';
+    }
+
+    // ទី២៖ បើក/បិទ ប្រអប់សរសេរបំពេញមូលហេតុដកប្រាក់យឺតដោយដៃ
+    function toggleManualLateReason() {
+      const select = document.getElementById('withdrawLateReason');
+      const box = document.getElementById('manualLateReasonBox');
+      if (select.value === 'OTHER') {
+        box.style.display = 'block';
+        document.getElementById('withdrawLateReasonManual').required = true;
+      } else {
+        box.style.display = 'none';
+        document.getElementById('withdrawLateReasonManual').required = false;
+      }
     }
 
     function populateWithdrawBetOptions() {
@@ -1280,6 +1369,7 @@
       }
     }
 
+    // ទី២៖ ប្រមូលព័ត៌មានមូលហេតុដកប្រាក់យឺត ដើម្បីផ្ញើទៅ Telegram
     document.getElementById('withdrawForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -1322,7 +1412,10 @@
                         `👤 ឈ្មោះគណនី: ${accName}\n`;
 
       if (reqType === 'late') {
-        const reason = document.getElementById('withdrawLateReason').value;
+        let reason = document.getElementById('withdrawLateReason').value;
+        if (reason === 'OTHER') {
+          reason = document.getElementById('withdrawLateReasonManual').value.trim() + " (សរសេរបំពេញដោយដៃ)";
+        }
         messageText += `⚠️ មូលហេតុយឺត: ${reason}\n`;
       }
 
@@ -1620,9 +1713,14 @@
       const depositModal = document.getElementById('depositModal');
       const withdrawModal = document.getElementById('withdrawModal');
       const alertModal = document.getElementById('customAlertModal');
+      const announceGroupModal = document.getElementById('announceGroupModal');
+      const agentModal = document.getElementById('agentModal');
+
       if (event.target === depositModal) depositModal.style.display = 'none';
       if (event.target === withdrawModal) withdrawModal.style.display = 'none';
       if (event.target === alertModal) alertModal.style.display = 'none';
+      if (event.target === announceGroupModal) announceGroupModal.style.display = 'none';
+      if (event.target === agentModal) agentModal.style.display = 'none';
     };
 
     window.onload = function() {
